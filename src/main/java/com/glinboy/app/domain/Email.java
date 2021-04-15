@@ -1,0 +1,123 @@
+package com.glinboy.app.domain;
+
+import java.io.Serializable;
+import javax.persistence.*;
+import javax.validation.constraints.*;
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
+import org.hibernate.annotations.Type;
+
+/**
+ * A Email.
+ */
+@Entity
+@Table(name = "email")
+@Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
+public class Email implements Serializable {
+
+    private static final long serialVersionUID = 1L;
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "sequenceGenerator")
+    @SequenceGenerator(name = "sequenceGenerator")
+    private Long id;
+
+    @NotNull
+    @Size(min = 8, max = 128)
+    @Pattern(regexp = "^[a-zA-Z0-9_+&*-]+(?:\\\\.[a-zA-Z0-9_+&*-]+)*@(?:[a-zA-Z0-9-]+\\\\.)+[a-zA-Z]{2,7}$")
+    @Column(name = "receiver", length = 128, nullable = false)
+    private String receiver;
+
+    @NotNull
+    @Size(min = 4, max = 128)
+    @Column(name = "subject", length = 128, nullable = false)
+    private String subject;
+
+    @Lob
+    @Type(type = "org.hibernate.type.TextType")
+    @Column(name = "content", nullable = false)
+    private String content;
+
+    // jhipster-needle-entity-add-field - JHipster will add fields here
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public Email id(Long id) {
+        this.id = id;
+        return this;
+    }
+
+    public String getReceiver() {
+        return this.receiver;
+    }
+
+    public Email receiver(String receiver) {
+        this.receiver = receiver;
+        return this;
+    }
+
+    public void setReceiver(String receiver) {
+        this.receiver = receiver;
+    }
+
+    public String getSubject() {
+        return this.subject;
+    }
+
+    public Email subject(String subject) {
+        this.subject = subject;
+        return this;
+    }
+
+    public void setSubject(String subject) {
+        this.subject = subject;
+    }
+
+    public String getContent() {
+        return this.content;
+    }
+
+    public Email content(String content) {
+        this.content = content;
+        return this;
+    }
+
+    public void setContent(String content) {
+        this.content = content;
+    }
+
+    // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (!(o instanceof Email)) {
+            return false;
+        }
+        return id != null && id.equals(((Email) o).id);
+    }
+
+    @Override
+    public int hashCode() {
+        // see https://vladmihalcea.com/how-to-implement-equals-and-hashcode-using-the-jpa-entity-identifier/
+        return getClass().hashCode();
+    }
+
+    // prettier-ignore
+    @Override
+    public String toString() {
+        return "Email{" +
+            "id=" + getId() +
+            ", receiver='" + getReceiver() + "'" +
+            ", subject='" + getSubject() + "'" +
+            ", content='" + getContent() + "'" +
+            "}";
+    }
+}
