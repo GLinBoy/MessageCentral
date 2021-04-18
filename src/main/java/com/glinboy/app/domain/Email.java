@@ -24,7 +24,7 @@ public class Email implements Serializable {
 
     @NotNull
     @Size(min = 8, max = 128)
-    @Pattern(regexp = "^[a-zA-Z0-9_+&*-]+(?:\\\\.[a-zA-Z0-9_+&*-]+)*@(?:[a-zA-Z0-9-]+\\\\.)+[a-zA-Z]{2,7}$")
+    @Pattern(regexp = "^[a-zA-Z0-9_+&*-]+(?:\\.[a-zA-Z0-9_+&*-]+)*@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,7}$")
     @Column(name = "receiver", length = 128, nullable = false)
     private String receiver;
 
