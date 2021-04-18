@@ -4,6 +4,7 @@ import javax.annotation.PostConstruct;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 
@@ -18,11 +19,14 @@ public class EmbeddedMailConfig {
 
 	private GreenMail greenMail;
 	
-	private Integer port = 2525;
+	@Value("${spring.mail.port}")
+	private Integer port;
 	
-	private String host = "localhost";
+	@Value("${spring.mail.host}")
+	private String host;
 	
-	private String protocol = "smtp";
+	@Value("${spring.mail.protocol}")
+	private String protocol;
 
 	@PostConstruct
 	public void setupMailServer() {
