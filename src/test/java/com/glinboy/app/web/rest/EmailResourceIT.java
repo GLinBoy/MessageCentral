@@ -15,10 +15,13 @@ import java.util.List;
 import java.util.Random;
 import java.util.concurrent.atomic.AtomicLong;
 
+import javax.mail.Message.RecipientType;
+import javax.mail.internet.MimeMessage;
 import javax.persistence.EntityManager;
 
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -30,6 +33,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.glinboy.app.IntegrationTest;
+import com.glinboy.app.config.ApplicationProperties;
 import com.glinboy.app.domain.Email;
 import com.glinboy.app.repository.EmailRepository;
 import com.glinboy.app.service.dto.EmailDTO;
@@ -72,6 +76,9 @@ class EmailResourceIT {
 
 	@Autowired
 	private MockMvc restEmailMockMvc;
+	
+	@Autowired
+	private ApplicationProperties properties;
 
 	private static final Integer port = 2525;
 
@@ -125,7 +132,7 @@ class EmailResourceIT {
 	public void initTest() {
 		email = createEntity(em);
 	}
-	
+
 	@Test
 	void checkMailServer() {
 		assertThat(EmailResourceIT.greenMail.isRunning()).isEqualTo(Boolean.TRUE);
@@ -147,6 +154,20 @@ class EmailResourceIT {
 		assertThat(testEmail.getReceiver()).isEqualTo(DEFAULT_RECEIVER);
 		assertThat(testEmail.getSubject()).isEqualTo(DEFAULT_SUBJECT);
 		assertThat(testEmail.getContent()).isEqualTo(DEFAULT_CONTENT);
+
+		 boolean ok = greenMail.waitForIncomingEmail(10_000, 1);
+
+		if (ok) {
+			MimeMessage testMessage = greenMail.getReceivedMessages()[0];
+			assertThat(testMessage.getSubject()).isEqualTo(emailDTO.getSubject());
+			assertThat(testMessage.getRecipients(RecipientType.TO)[0].toString()).hasToString(emailDTO.getReceiver());
+			assertThat(testMessage.getFrom()[0].toString()).hasToString(properties.getEmail().getFrom());
+
+			String emailContent = (String) testMessage.getContent();
+			assertThat(emailContent.replaceAll("\\r\\n|\\r|\\n", "")).isEqualTo(emailDTO.getContent());
+		} else {
+			Assertions.fail("email not sent");
+		}
 	}
 
 	@Test
