@@ -125,6 +125,11 @@ class EmailResourceIT {
 	public void initTest() {
 		email = createEntity(em);
 	}
+	
+	@Test
+	void checkMailServer() {
+		assertThat(EmailResourceIT.greenMail.isRunning()).isEqualTo(Boolean.TRUE);
+	}
 
 	@Test
 	@Transactional
