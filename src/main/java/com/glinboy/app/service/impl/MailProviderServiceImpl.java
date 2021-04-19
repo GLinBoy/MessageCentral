@@ -6,6 +6,7 @@ import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 
+import com.glinboy.app.config.ApplicationProperties;
 import com.glinboy.app.service.MailProviderService;
 import com.glinboy.app.service.dto.EmailDTO;
 
@@ -14,16 +15,20 @@ public class MailProviderServiceImpl implements MailProviderService<EmailDTO> {
 
 	private final Logger log = LoggerFactory.getLogger(MailProviderServiceImpl.class);
 	
+	private final ApplicationProperties properties;
+	
 	private final JavaMailSender emailSender;
 
-	public MailProviderServiceImpl(JavaMailSender emailSender) {
+	public MailProviderServiceImpl(JavaMailSender emailSender,
+			ApplicationProperties properties) {
 		this.emailSender = emailSender;
+		this.properties = properties;
 	}
 
 	@Override
 	public void sendEmail(EmailDTO emailDTO) {
 		SimpleMailMessage message = new SimpleMailMessage();
-		message.setFrom("noreply@baeldung.com");
+		message.setFrom(properties.getEmail().getFrom());
 		message.setTo(emailDTO.getReceiver());
 		message.setSubject(emailDTO.getSubject());
 		message.setText(emailDTO.getContent());
