@@ -83,6 +83,12 @@ spring:
     locator:
       discovery:
         enabled: true
+  activemq:
+    in-memory: true
+    pool:
+      enabled: false
+    packages:
+      trust-all: true
 
 server:
   port: 8080
