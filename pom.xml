@@ -327,6 +327,10 @@
 		</dependency>
 		<!-- jhipster-needle-maven-add-dependency -->
 		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-activemq</artifactId>
+		</dependency>
+		<dependency>
 			<groupId>com.icegreen</groupId>
 			<artifactId>greenmail</artifactId>
 			<version>${greenmail.version}</version>
