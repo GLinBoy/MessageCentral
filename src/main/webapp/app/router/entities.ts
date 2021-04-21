@@ -8,6 +8,12 @@ const Email = () => import('@/entities/email/email.vue');
 const EmailUpdate = () => import('@/entities/email/email-update.vue');
 // prettier-ignore
 const EmailDetails = () => import('@/entities/email/email-details.vue');
+// prettier-ignore
+const ShortMessage = () => import('@/entities/short-message/short-message.vue');
+// prettier-ignore
+const ShortMessageUpdate = () => import('@/entities/short-message/short-message-update.vue');
+// prettier-ignore
+const ShortMessageDetails = () => import('@/entities/short-message/short-message-details.vue');
 // jhipster-needle-add-entity-to-router-import - JHipster will import entities to the router here
 
 export default [
@@ -33,6 +39,30 @@ export default [
     path: '/email/:emailId/view',
     name: 'EmailView',
     component: EmailDetails,
+    meta: { authorities: [Authority.USER] },
+  },
+  {
+    path: '/short-message',
+    name: 'ShortMessage',
+    component: ShortMessage,
+    meta: { authorities: [Authority.USER] },
+  },
+  {
+    path: '/short-message/new',
+    name: 'ShortMessageCreate',
+    component: ShortMessageUpdate,
+    meta: { authorities: [Authority.USER] },
+  },
+  {
+    path: '/short-message/:shortMessageId/edit',
+    name: 'ShortMessageEdit',
+    component: ShortMessageUpdate,
+    meta: { authorities: [Authority.USER] },
+  },
+  {
+    path: '/short-message/:shortMessageId/view',
+    name: 'ShortMessageView',
+    component: ShortMessageDetails,
     meta: { authorities: [Authority.USER] },
   },
   // jhipster-needle-add-entity-to-router - JHipster will add entities to the router here
