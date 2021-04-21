@@ -8,6 +8,7 @@
       "entities": {
         "main": "ماهیت ها",
         "email": "Email",
+        "shortMessage": "Short Message",
         "jhipster-needle-menu-add-entry": "JHipster will add additional entities here (do not translate!)"
       },
       "account": {
