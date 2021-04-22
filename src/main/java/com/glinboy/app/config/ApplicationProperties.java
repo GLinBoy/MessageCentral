@@ -60,9 +60,14 @@ public class ApplicationProperties {
 	public static class Credential {
 
 		private final Twilio twilio = new Twilio();
+		private final Kavenegar kavenegar = new Kavenegar();
 
 		public Twilio getTwilio() {
 			return twilio;
+		}
+
+		public Kavenegar getKavenegar() {
+			return kavenegar;
 		}
 
 		public static class Twilio {
@@ -77,6 +82,19 @@ public class ApplicationProperties {
 			public void setAccountSid(String accountSid) {
 				this.accountSid = accountSid;
 			}
+
+			public String getToken() {
+				return token;
+			}
+
+			public void setToken(String token) {
+				this.token = token;
+			}
+		}
+		
+		public static class Kavenegar {
+			
+			private String token;
 
 			public String getToken() {
 				return token;
