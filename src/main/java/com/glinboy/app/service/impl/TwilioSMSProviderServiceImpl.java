@@ -33,7 +33,7 @@ public class TwilioSMSProviderServiceImpl implements ShortMessageProviderService
 
 	@Override
 	public void sendSMS(ShortMessageDTO shortMessageDTO) {
-		jmsTemplate.convertAndSend("SMSBOX", shortMessageDTO);
+		jmsTemplate.convertAndSend("TWILIO_SMSBOX", shortMessageDTO);
 	}
 
 	private void deliverSMS(ShortMessageDTO shortMessageDTO) {
@@ -50,7 +50,7 @@ public class TwilioSMSProviderServiceImpl implements ShortMessageProviderService
 	}
 
 	@Override
-	@JmsListener(destination = "SMSBOX")
+	@JmsListener(destination = "TWILIO_SMSBOX")
 	public void onMessage(Message message) {
 		try {
 			ObjectMessage objectMessage = (ObjectMessage) message;
