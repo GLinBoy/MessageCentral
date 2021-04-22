@@ -142,5 +142,13 @@ jhipster:
 # ===================================================================
 
 application:
+  credential:
+    # For dev env, you can get Test credential from your account
+    # Check https://www.twilio.com/docs/iam/test-credentials for more information
+    twilio:
+      accountSid: TWILIO_ACCOUNT_SID
+      token: TWILIO_AUTH_TOKEN
   email:
     from: noreply@localhost
+  sms:
+    from: +XXXXXXXXXXX

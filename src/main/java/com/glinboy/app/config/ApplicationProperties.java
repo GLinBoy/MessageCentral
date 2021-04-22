@@ -12,12 +12,25 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 public class ApplicationProperties {
 
 	private final Email email = new Email();
+	
+	private final SMS sms = new SMS();
+
+	private final Credential credential = new Credential();
 
 	public Email getEmail() {
 		return email;
 	}
 
+	public SMS getSms() {
+		return sms;
+	}
+
+	public Credential getCredential() {
+		return credential;
+	}
+
 	public static class Email {
+
 		private String from;
 
 		public String getFrom() {
@@ -28,5 +41,50 @@ public class ApplicationProperties {
 			this.from = from;
 		}
 
+	}
+
+	public static class SMS {
+
+		private String from;
+
+		public String getFrom() {
+			return from;
+		}
+
+		public void setFrom(String from) {
+			this.from = from;
+		}
+
+	}
+
+	public static class Credential {
+
+		private final Twilio twilio = new Twilio();
+
+		public Twilio getTwilio() {
+			return twilio;
+		}
+
+		public static class Twilio {
+
+			private String accountSid;
+			private String token;
+
+			public String getAccountSid() {
+				return accountSid;
+			}
+
+			public void setAccountSid(String accountSid) {
+				this.accountSid = accountSid;
+			}
+
+			public String getToken() {
+				return token;
+			}
+
+			public void setToken(String token) {
+				this.token = token;
+			}
+		}
 	}
 }
