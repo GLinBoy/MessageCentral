@@ -136,6 +136,8 @@ application:
     twilio:
       accountSid: TWILIO_ACCOUNT_SID
       token: TWILIO_AUTH_TOKEN
+    kavenegar:
+      token: KAVENEGAR_AUTH_TOKEN
   email:
     from: noreply@localhost
   sms:
