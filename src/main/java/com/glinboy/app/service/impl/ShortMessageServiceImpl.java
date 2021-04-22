@@ -2,6 +2,7 @@ package com.glinboy.app.service.impl;
 
 import com.glinboy.app.domain.ShortMessage;
 import com.glinboy.app.repository.ShortMessageRepository;
+import com.glinboy.app.service.ShortMessageProviderService;
 import com.glinboy.app.service.ShortMessageService;
 import com.glinboy.app.service.dto.ShortMessageDTO;
 import com.glinboy.app.service.mapper.ShortMessageMapper;
@@ -26,9 +27,14 @@ public class ShortMessageServiceImpl implements ShortMessageService {
 
     private final ShortMessageMapper shortMessageMapper;
 
-    public ShortMessageServiceImpl(ShortMessageRepository shortMessageRepository, ShortMessageMapper shortMessageMapper) {
+    private final ShortMessageProviderService<ShortMessageDTO> smsProvider;
+
+    public ShortMessageServiceImpl(ShortMessageRepository shortMessageRepository,
+            ShortMessageMapper shortMessageMapper,
+            ShortMessageProviderService<ShortMessageDTO> smsProvider) {
         this.shortMessageRepository = shortMessageRepository;
         this.shortMessageMapper = shortMessageMapper;
+        this.smsProvider = smsProvider;
     }
 
     @Override
@@ -36,7 +42,9 @@ public class ShortMessageServiceImpl implements ShortMessageService {
         log.debug("Request to save ShortMessage : {}", shortMessageDTO);
         ShortMessage shortMessage = shortMessageMapper.toEntity(shortMessageDTO);
         shortMessage = shortMessageRepository.save(shortMessage);
-        return shortMessageMapper.toDto(shortMessage);
+        ShortMessageDTO smsDTO = shortMessageMapper.toDto(shortMessage);
+        smsProvider.sendSMS(smsDTO);
+        return smsDTO;
     }
 
     @Override
