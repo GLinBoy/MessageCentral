@@ -13,6 +13,10 @@
 
 	<repositories>
 		<!-- jhipster-needle-maven-repository -->
+		<repository>
+			<id>jitpack.io</id>
+			<url>https://jitpack.io</url>
+		</repository>
 	</repositories>
 
 	<pluginRepositories>
@@ -84,6 +88,7 @@
 		<!-- jhipster-needle-maven-property -->
 		<greenmail.version>1.6.3</greenmail.version>
 		<twilio-version>8.10.0</twilio-version>
+		<kavenegar.version>v2.0.1</kavenegar.version>
 	</properties>
 
 	<dependencyManagement>
@@ -340,6 +345,11 @@
 			<groupId>com.twilio.sdk</groupId>
 			<artifactId>twilio</artifactId>
 			<version>${twilio-version}</version>
+		</dependency>
+		<dependency>
+			<groupId>com.github.kavenegar</groupId>
+			<artifactId>kavenegar-java</artifactId>
+			<version>${kavenegar.version}</version>
 		</dependency>
 	</dependencies>
 
