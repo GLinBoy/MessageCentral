@@ -2,27 +2,38 @@ package com.glinboy.app.web.rest;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.hasItem;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.mockito.Mockito.doNothing;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import com.glinboy.app.IntegrationTest;
-import com.glinboy.app.domain.ShortMessage;
-import com.glinboy.app.repository.ShortMessageRepository;
-import com.glinboy.app.service.criteria.ShortMessageCriteria;
-import com.glinboy.app.service.dto.ShortMessageDTO;
-import com.glinboy.app.service.mapper.ShortMessageMapper;
 import java.util.List;
 import java.util.Random;
 import java.util.concurrent.atomic.AtomicLong;
+
 import javax.persistence.EntityManager;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
+
+import com.glinboy.app.IntegrationTest;
+import com.glinboy.app.domain.ShortMessage;
+import com.glinboy.app.repository.ShortMessageRepository;
+import com.glinboy.app.service.ShortMessageProviderService;
+import com.glinboy.app.service.dto.ShortMessageDTO;
+import com.glinboy.app.service.mapper.ShortMessageMapper;
 
 /**
  * Integration tests for the {@link ShortMessageResource} REST controller.
@@ -55,6 +66,9 @@ class ShortMessageResourceIT {
 
     @Autowired
     private MockMvc restShortMessageMockMvc;
+
+    @Mock
+    private ShortMessageProviderService<ShortMessageDTO> smsProvider; 
 
     private ShortMessage shortMessage;
 
@@ -91,6 +105,7 @@ class ShortMessageResourceIT {
         int databaseSizeBeforeCreate = shortMessageRepository.findAll().size();
         // Create the ShortMessage
         ShortMessageDTO shortMessageDTO = shortMessageMapper.toDto(shortMessage);
+        doNothing().when(smsProvider).sendSMS(shortMessageDTO);
         restShortMessageMockMvc
             .perform(
                 post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(shortMessageDTO))
