@@ -151,6 +151,8 @@ application:
     kavenegar:
       token: KAVENEGAR_AUTH_TOKEN
   email:
+    provider: mail-server
     from: noreply@localhost
   sms:
+    provider: twilio
     from: +XXXXXXXXXXX

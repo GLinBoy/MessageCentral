@@ -31,7 +31,16 @@ public class ApplicationProperties {
 
 	public static class Email {
 
+		private String provider;
 		private String from;
+
+		public String getProvider() {
+			return provider;
+		}
+
+		public void setProvider(String provider) {
+			this.provider = provider;
+		}
 
 		public String getFrom() {
 			return from;
@@ -45,7 +54,16 @@ public class ApplicationProperties {
 
 	public static class SMS {
 
+		private String provider;
 		private String from;
+
+		public String getProvider() {
+			return provider;
+		}
+
+		public void setProvider(String provider) {
+			this.provider = provider;
+		}
 
 		public String getFrom() {
 			return from;
