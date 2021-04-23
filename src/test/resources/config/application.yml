@@ -139,6 +139,8 @@ application:
     kavenegar:
       token: KAVENEGAR_AUTH_TOKEN
   email:
+    provider: smtp
     from: noreply@localhost
   sms:
+    provider: twilio
     from: +XXXXXXXXXXX
