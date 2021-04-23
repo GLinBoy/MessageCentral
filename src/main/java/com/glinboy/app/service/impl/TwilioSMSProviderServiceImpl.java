@@ -7,6 +7,7 @@ import javax.jms.ObjectMessage;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.jms.annotation.JmsListener;
 import org.springframework.jms.core.JmsTemplate;
 import org.springframework.stereotype.Service;
@@ -18,6 +19,7 @@ import com.twilio.Twilio;
 import com.twilio.type.PhoneNumber;
 
 @Service
+@ConditionalOnProperty(value = "application.sms.provider", havingValue = "twilio", matchIfMissing = true)
 public class TwilioSMSProviderServiceImpl implements ShortMessageProviderService<ShortMessageDTO>, MessageListener {
 
 	private final Logger log = LoggerFactory.getLogger(TwilioSMSProviderServiceImpl.class);
@@ -39,11 +41,9 @@ public class TwilioSMSProviderServiceImpl implements ShortMessageProviderService
 	private void deliverSMS(ShortMessageDTO shortMessageDTO) {
 		Twilio.init(properties.getCredential().getTwilio().getAccountSid(),
 				properties.getCredential().getTwilio().getToken());
-		com.twilio.rest.api.v2010.account.Message message = 
-				com.twilio.rest.api.v2010.account.Message.creator(
-				new PhoneNumber(shortMessageDTO.getPhoneNumber()),
-				new PhoneNumber(properties.getSms().getFrom()),
-				shortMessageDTO.getContent())
+		com.twilio.rest.api.v2010.account.Message message = com.twilio.rest.api.v2010.account.Message
+				.creator(new PhoneNumber(shortMessageDTO.getPhoneNumber()),
+						new PhoneNumber(properties.getSms().getFrom()), shortMessageDTO.getContent())
 				.create();
 		log.info("SMS sended! {}", shortMessageDTO);
 		log.info("SMS Result {}", message);

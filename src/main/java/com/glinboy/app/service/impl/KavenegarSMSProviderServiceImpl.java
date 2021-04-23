@@ -7,7 +7,7 @@ import javax.jms.ObjectMessage;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.context.annotation.Primary;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.jms.annotation.JmsListener;
 import org.springframework.jms.core.JmsTemplate;
 import org.springframework.stereotype.Service;
@@ -21,7 +21,7 @@ import com.kavenegar.sdk.excepctions.HttpException;
 import com.kavenegar.sdk.models.SendResult;
 
 @Service
-@Primary
+@ConditionalOnProperty(value = "application.sms.provider", havingValue = "kavenegar")
 public class KavenegarSMSProviderServiceImpl implements ShortMessageProviderService<ShortMessageDTO>, MessageListener {
 
 	private final Logger log = LoggerFactory.getLogger(KavenegarSMSProviderServiceImpl.class);
