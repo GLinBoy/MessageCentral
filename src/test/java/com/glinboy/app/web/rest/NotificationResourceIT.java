@@ -2,12 +2,14 @@ package com.glinboy.app.web.rest;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.hasItem;
+import static org.mockito.Mockito.doNothing;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 import com.glinboy.app.IntegrationTest;
 import com.glinboy.app.domain.Notification;
 import com.glinboy.app.repository.NotificationRepository;
+import com.glinboy.app.service.NotificationProviderService;
 import com.glinboy.app.service.criteria.NotificationCriteria;
 import com.glinboy.app.service.dto.NotificationDTO;
 import com.glinboy.app.service.mapper.NotificationMapper;
@@ -17,6 +19,7 @@ import java.util.concurrent.atomic.AtomicLong;
 import javax.persistence.EntityManager;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.http.MediaType;
@@ -65,6 +68,9 @@ class NotificationResourceIT {
     @Autowired
     private MockMvc restNotificationMockMvc;
 
+    @Mock
+    private NotificationProviderService<NotificationDTO> notificationProviderService;
+
     private Notification notification;
 
     /**
@@ -110,6 +116,7 @@ class NotificationResourceIT {
         int databaseSizeBeforeCreate = notificationRepository.findAll().size();
         // Create the Notification
         NotificationDTO notificationDTO = notificationMapper.toDto(notification);
+        doNothing().when(notificationProviderService).sendNotification(notificationDTO);
         restNotificationMockMvc
             .perform(
                 post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(notificationDTO))
