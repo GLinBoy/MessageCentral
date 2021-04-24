@@ -15,6 +15,8 @@ public class ApplicationProperties {
 	
 	private final SMS sms = new SMS();
 
+	private final Notification notification = new Notification();
+
 	private final Credential credential = new Credential();
 
 	public Email getEmail() {
@@ -23,6 +25,10 @@ public class ApplicationProperties {
 
 	public SMS getSms() {
 		return sms;
+	}
+
+	public Notification getNotification() {
+		return notification;
 	}
 
 	public Credential getCredential() {
@@ -73,6 +79,28 @@ public class ApplicationProperties {
 			this.from = from;
 		}
 
+	}
+	
+	public static class Notification {
+		
+		private final Firebase firebase = new Firebase();
+		
+		public Firebase getFirebase() {
+			return firebase;
+		}
+
+		public static class Firebase {
+			
+			private String filePath;
+
+			public String getFilePath() {
+				return filePath;
+			}
+
+			public void setFilePath(String filePath) {
+				this.filePath = filePath;
+			}
+		}
 	}
 
 	public static class Credential {

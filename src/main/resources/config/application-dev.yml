@@ -156,3 +156,7 @@ application:
   sms:
     provider: twilio
     from: +XXXXXXXXXXX
+  notification:
+    firebase:
+      file-path: firebase-service-account.json
+
