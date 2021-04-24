@@ -29,6 +29,7 @@ import UserOAuth2Service from '@/entities/user/user.oauth2.service';
 
 import EmailService from '@/entities/email/email.service';
 import ShortMessageService from '@/entities/short-message/short-message.service';
+import NotificationService from '@/entities/notification/notification.service';
 // jhipster-needle-add-entity-service-to-main-import - JHipster will import entities services here
 
 /* tslint:enable */
@@ -89,6 +90,7 @@ new Vue({
     translationService: () => translationService,
     emailService: () => new EmailService(),
     shortMessageService: () => new ShortMessageService(),
+    notificationService: () => new NotificationService(),
     // jhipster-needle-add-entity-service-to-main - JHipster will import entities services here
     accountService: () => accountService,
   },
