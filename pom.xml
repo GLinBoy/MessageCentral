@@ -89,6 +89,7 @@
 		<greenmail.version>1.6.3</greenmail.version>
 		<twilio-version>8.10.0</twilio-version>
 		<kavenegar.version>v2.0.1</kavenegar.version>
+		<firebase-admin.version>7.1.1</firebase-admin.version>
 	</properties>
 
 	<dependencyManagement>
@@ -350,6 +351,11 @@
 			<groupId>com.github.kavenegar</groupId>
 			<artifactId>kavenegar-java</artifactId>
 			<version>${kavenegar.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>com.google.firebase</groupId>
+			<artifactId>firebase-admin</artifactId>
+			<version>${firebase-admin.version}</version>
 		</dependency>
 	</dependencies>
 
