@@ -45,7 +45,7 @@ public class TwilioSMSProviderServiceImpl implements ShortMessageProviderService
 				.creator(new PhoneNumber(shortMessageDTO.getPhoneNumber()),
 						new PhoneNumber(properties.getSms().getFrom()), shortMessageDTO.getContent())
 				.create();
-		log.info("SMS sended! {}", shortMessageDTO);
+		log.info("SMS sent! {}", shortMessageDTO);
 		log.info("SMS Result {}", message);
 	}
 
@@ -57,7 +57,7 @@ public class TwilioSMSProviderServiceImpl implements ShortMessageProviderService
 			ShortMessageDTO shortMessageDTO = (ShortMessageDTO) objectMessage.getObject();
 			deliverSMS(shortMessageDTO);
 		} catch (JMSException e) {
-			log.error("Parsing message failed.", e);
+			log.error("Parsing message failed: {}", e.getMessage(), e);
 		}
 	}
 

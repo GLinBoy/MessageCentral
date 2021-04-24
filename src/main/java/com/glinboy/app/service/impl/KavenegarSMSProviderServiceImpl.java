@@ -45,7 +45,7 @@ public class KavenegarSMSProviderServiceImpl implements ShortMessageProviderServ
 			KavenegarApi api = new KavenegarApi(properties.getCredential().getKavenegar().getToken());
 			SendResult result = api.send(properties.getSms().getFrom(),
 					shortMessageDTO.getPhoneNumber(), shortMessageDTO.getContent());
-			log.info("SMS sended! {}", shortMessageDTO);
+			log.info("SMS sent! {}", shortMessageDTO);
 			log.info("SMS Result {}", result);
 		} catch (HttpException ex) { // در صورتی که خروجی وب سرویس 200 نباشد این خطارخ می دهد.
 			log.error("HttpException: {}", ex.getMessage(), ex);
@@ -62,7 +62,7 @@ public class KavenegarSMSProviderServiceImpl implements ShortMessageProviderServ
 			ShortMessageDTO shortMessageDTO = (ShortMessageDTO) objectMessage.getObject();
 			deliverSMS(shortMessageDTO);
 		} catch (JMSException e) {
-			log.error("Parsing message failed.", e);
+			log.error("Parsing message failed: {}", e.getMessage(), e);
 		}
 	}
 

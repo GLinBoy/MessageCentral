@@ -50,7 +50,7 @@ public class MailProviderServiceImpl implements MailProviderService<EmailDTO>, M
 		message.setSubject(emailDTO.getSubject());
 		message.setText(emailDTO.getContent());
 		emailSender.send(message);
-		log.info("Mail sended! {}", emailDTO);
+		log.info("Mail sent! {}", emailDTO);
 	}
 
 	@Override
@@ -61,7 +61,7 @@ public class MailProviderServiceImpl implements MailProviderService<EmailDTO>, M
 			EmailDTO emailDTO = (EmailDTO)objectMessage.getObject();
 			deliverEmail(emailDTO);
 		} catch (JMSException e) {
-			log.error("Parsing message failed.", e);
+			log.error("Parsing message failed: {}", e.getMessage(), e);
 		}
 	}
 
