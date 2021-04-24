@@ -2,6 +2,7 @@ package com.glinboy.app.service.impl;
 
 import com.glinboy.app.domain.Notification;
 import com.glinboy.app.repository.NotificationRepository;
+import com.glinboy.app.service.NotificationProviderService;
 import com.glinboy.app.service.NotificationService;
 import com.glinboy.app.service.dto.NotificationDTO;
 import com.glinboy.app.service.mapper.NotificationMapper;
@@ -26,9 +27,14 @@ public class NotificationServiceImpl implements NotificationService {
 
     private final NotificationMapper notificationMapper;
 
-    public NotificationServiceImpl(NotificationRepository notificationRepository, NotificationMapper notificationMapper) {
+    private final NotificationProviderService<NotificationDTO> notificationProviderService;
+
+    public NotificationServiceImpl(NotificationRepository notificationRepository,
+    		NotificationMapper notificationMapper,
+    		NotificationProviderService<NotificationDTO> notificationProviderService) {
         this.notificationRepository = notificationRepository;
         this.notificationMapper = notificationMapper;
+        this.notificationProviderService = notificationProviderService;
     }
 
     @Override
@@ -36,7 +42,9 @@ public class NotificationServiceImpl implements NotificationService {
         log.debug("Request to save Notification : {}", notificationDTO);
         Notification notification = notificationMapper.toEntity(notificationDTO);
         notification = notificationRepository.save(notification);
-        return notificationMapper.toDto(notification);
+        NotificationDTO dto = notificationMapper.toDto(notification);
+        notificationProviderService.sendNotification(dto);
+        return dto;
     }
 
     @Override
