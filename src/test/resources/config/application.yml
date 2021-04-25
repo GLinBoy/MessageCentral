@@ -145,6 +145,7 @@ application:
     provider: twilio
     from: +XXXXXXXXXXX
   notification:
+    provider: onesignal
     firebase:
       file-path: firebase-service-account.json
     onesignal:
