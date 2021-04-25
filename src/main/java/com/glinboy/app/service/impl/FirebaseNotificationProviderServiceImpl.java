@@ -38,7 +38,7 @@ public class FirebaseNotificationProviderServiceImpl
 		jmsTemplate.convertAndSend("FIREBASE_NOTIFICATIONBOX", notificationDTO);
 	}
 
-	private void deliverSMS(NotificationDTO notificationDTO) {
+	private void deliverNotification(NotificationDTO notificationDTO) {
 		try {
 			Notification notification = Notification.builder()
 					.setTitle(notificationDTO.getSubject())
@@ -64,7 +64,7 @@ public class FirebaseNotificationProviderServiceImpl
 		try {
 			ObjectMessage objectMessage = (ObjectMessage) message;
 			NotificationDTO notificationDTO = (NotificationDTO) objectMessage.getObject();
-			deliverSMS(notificationDTO);
+			deliverNotification(notificationDTO);
 		} catch (JMSException e) {
 			log.error("Parsing message failed: {}", e.getMessage(), e);
 		}
