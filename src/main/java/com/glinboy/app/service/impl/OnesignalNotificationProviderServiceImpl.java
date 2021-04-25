@@ -12,7 +12,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.context.annotation.Primary;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -26,7 +26,7 @@ import com.glinboy.app.service.NotificationProviderService;
 import com.glinboy.app.service.dto.NotificationDTO;
 
 @Service
-@Primary
+@ConditionalOnProperty(value = "application.notification.provider", havingValue = "onesignal", matchIfMissing = true)
 public class OnesignalNotificationProviderServiceImpl
 	implements NotificationProviderService<NotificationDTO>, MessageListener {
 

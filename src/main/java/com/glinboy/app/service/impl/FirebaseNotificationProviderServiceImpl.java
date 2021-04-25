@@ -7,6 +7,7 @@ import javax.jms.ObjectMessage;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.jms.annotation.JmsListener;
 import org.springframework.jms.core.JmsTemplate;
 import org.springframework.stereotype.Service;
@@ -18,6 +19,7 @@ import com.google.firebase.messaging.FirebaseMessagingException;
 import com.google.firebase.messaging.Notification;
 
 @Service
+@ConditionalOnProperty(value = "application.notification.provider", havingValue = "firebase")
 public class FirebaseNotificationProviderServiceImpl
 		implements NotificationProviderService<NotificationDTO>, MessageListener {
 
