@@ -83,8 +83,17 @@ public class ApplicationProperties {
 	
 	public static class Notification {
 		
+		private String provider;
 		private final Firebase firebase = new Firebase();
 		private final Onesignal onesignal =  new Onesignal();
+
+		public String getProvider() {
+			return provider;
+		}
+
+		public void setProvider(String provider) {
+			this.provider = provider;
+		}
 		
 		public Firebase getFirebase() {
 			return firebase;
