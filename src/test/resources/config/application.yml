@@ -82,12 +82,12 @@ spring:
         size: 1
   thymeleaf:
     mode: HTML
-  activemq:
-    in-memory: true
-    pool:
-      enabled: false
-    packages:
-      trust-all: true
+  artemis:
+    mode: embedded
+    host: localhost
+    port: 61616
+  jms:
+    pub-sub-domain: true
 
 server:
   port: 10344
