@@ -159,4 +159,7 @@ application:
   notification:
     firebase:
       file-path: firebase-service-account.json
+    onesignal:
+      url: https://onesignal.com/api/v1/notifications
+      app-id: XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX
 

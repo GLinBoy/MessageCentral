@@ -84,9 +84,14 @@ public class ApplicationProperties {
 	public static class Notification {
 		
 		private final Firebase firebase = new Firebase();
+		private final Onesignal onesignal =  new Onesignal();
 		
 		public Firebase getFirebase() {
 			return firebase;
+		}
+
+		public Onesignal getOnesignal() {
+			return onesignal;
 		}
 
 		public static class Firebase {
@@ -99,6 +104,25 @@ public class ApplicationProperties {
 
 			public void setFilePath(String filePath) {
 				this.filePath = filePath;
+			}
+		}
+		
+		public static class Onesignal {
+			
+			private String url;
+			private String appId;
+
+			public String getUrl() {
+				return url;
+			}
+			public void setUrl(String url) {
+				this.url = url;
+			}
+			public String getAppId() {
+				return appId;
+			}
+			public void setAppId(String appId) {
+				this.appId = appId;
 			}
 		}
 	}
