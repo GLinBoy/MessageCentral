@@ -15,4 +15,7 @@ public interface NotificationDataMapper extends EntityMapper<NotificationDataDTO
     @BeanMapping(ignoreByDefault = true)
     @Mapping(target = "id", source = "id")
     NotificationDataDTO toDtoId(NotificationData notificationData);
+    
+    @Mapping(source = "notification.id", target = "notificationId")
+    NotificationDataDTO toDto(NotificationData notificationData);
 }
