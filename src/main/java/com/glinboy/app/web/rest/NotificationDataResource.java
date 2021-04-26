@@ -22,8 +22,8 @@ import tech.jhipster.web.util.ResponseUtil;
 /**
  * REST controller for managing {@link com.glinboy.app.domain.NotificationData}.
  */
-@RestController
-@RequestMapping("/api")
+//@RestController
+//@RequestMapping("/api")
 @Transactional
 public class NotificationDataResource {
 
