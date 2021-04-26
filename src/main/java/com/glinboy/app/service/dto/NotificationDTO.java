@@ -1,7 +1,11 @@
 package com.glinboy.app.service.dto;
 
 import java.io.Serializable;
+import java.util.HashSet;
 import java.util.Objects;
+import java.util.Set;
+import java.util.stream.Collectors;
+
 import javax.validation.constraints.*;
 
 /**
@@ -29,6 +33,8 @@ public class NotificationDTO implements Serializable {
 
     @Size(max = 256)
     private String image;
+
+    private Set<NotificationDataDTO> data = new HashSet<>();
 
     public Long getId() {
         return id;
@@ -78,6 +84,14 @@ public class NotificationDTO implements Serializable {
         this.image = image;
     }
 
+    public Set<NotificationDataDTO> getData() {
+        return data;
+    }
+
+    public void setImage(Set<NotificationDataDTO> data) {
+        this.data = data;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -109,6 +123,8 @@ public class NotificationDTO implements Serializable {
             ", subject='" + getSubject() + "'" +
             ", content='" + getContent() + "'" +
             ", image='" + getImage() + "'" +
+            ", data='" + getData().stream().map(NotificationDataDTO::toString)
+                .collect(Collectors.joining(", ")) + "'" +
             "}";
     }
 }
