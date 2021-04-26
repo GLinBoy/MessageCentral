@@ -40,8 +40,9 @@ public class NotificationServiceImpl implements NotificationService {
     @Override
     public NotificationDTO save(NotificationDTO notificationDTO) {
         log.debug("Request to save Notification : {}", notificationDTO);
-        Notification notification = notificationMapper.toEntity(notificationDTO);
-        notification = notificationRepository.save(notification);
+        final Notification notification = notificationMapper.toEntity(notificationDTO);
+        notification.getData().forEach(d -> d.setNotification(notification));
+        notificationRepository.save(notification);
         NotificationDTO dto = notificationMapper.toDto(notification);
         notificationProviderService.sendNotification(dto);
         return dto;
