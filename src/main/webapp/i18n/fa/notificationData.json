@@ -1,0 +1,26 @@
+{
+  "messageCentralApp": {
+    "notificationData": {
+      "home": {
+        "title": "Notification Data",
+        "refreshListLabel": "Refresh list",
+        "createLabel": "Create a new Notification Data",
+        "createOrEditLabel": "Create or edit a Notification Data",
+        "notFound": "No Notification Data found"
+      },
+      "created": "A new Notification Data is created with identifier {{ param }}",
+      "updated": "A Notification Data is updated with identifier {{ param }}",
+      "deleted": "A Notification Data is deleted with identifier {{ param }}",
+      "delete": {
+        "question": "Are you sure you want to delete Notification Data {{ id }}?"
+      },
+      "detail": {
+        "title": "Notification Data"
+      },
+      "id": "ID",
+      "key": "Key",
+      "value": "Value",
+      "notification": "Notification"
+    }
+  }
+}

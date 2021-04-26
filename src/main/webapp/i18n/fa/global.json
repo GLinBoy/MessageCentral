@@ -10,6 +10,7 @@
         "email": "Email",
         "shortMessage": "Short Message",
         "notification": "Notification",
+        "notificationData": "Notification Data",
         "jhipster-needle-menu-add-entry": "JHipster will add additional entities here (do not translate!)"
       },
       "account": {

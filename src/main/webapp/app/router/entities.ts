@@ -20,6 +20,12 @@ const Notification = () => import('@/entities/notification/notification.vue');
 const NotificationUpdate = () => import('@/entities/notification/notification-update.vue');
 // prettier-ignore
 const NotificationDetails = () => import('@/entities/notification/notification-details.vue');
+// prettier-ignore
+const NotificationData = () => import('@/entities/notification-data/notification-data.vue');
+// prettier-ignore
+const NotificationDataUpdate = () => import('@/entities/notification-data/notification-data-update.vue');
+// prettier-ignore
+const NotificationDataDetails = () => import('@/entities/notification-data/notification-data-details.vue');
 // jhipster-needle-add-entity-to-router-import - JHipster will import entities to the router here
 
 export default [
@@ -93,6 +99,30 @@ export default [
     path: '/notification/:notificationId/view',
     name: 'NotificationView',
     component: NotificationDetails,
+    meta: { authorities: [Authority.USER] },
+  },
+  {
+    path: '/notification-data',
+    name: 'NotificationData',
+    component: NotificationData,
+    meta: { authorities: [Authority.USER] },
+  },
+  {
+    path: '/notification-data/new',
+    name: 'NotificationDataCreate',
+    component: NotificationDataUpdate,
+    meta: { authorities: [Authority.USER] },
+  },
+  {
+    path: '/notification-data/:notificationDataId/edit',
+    name: 'NotificationDataEdit',
+    component: NotificationDataUpdate,
+    meta: { authorities: [Authority.USER] },
+  },
+  {
+    path: '/notification-data/:notificationDataId/view',
+    name: 'NotificationDataView',
+    component: NotificationDataDetails,
     meta: { authorities: [Authority.USER] },
   },
   // jhipster-needle-add-entity-to-router - JHipster will add entities to the router here

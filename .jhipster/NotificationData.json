@@ -1,0 +1,30 @@
+{
+  "fields": [
+    {
+      "fieldName": "key",
+      "fieldType": "String",
+      "fieldValidateRules": ["required", "maxlength"],
+      "fieldValidateRulesMaxlength": "128"
+    },
+    {
+      "fieldName": "value",
+      "fieldType": "String",
+      "fieldValidateRules": ["required", "maxlength"],
+      "fieldValidateRulesMaxlength": "256"
+    }
+  ],
+  "relationships": [
+    {
+      "relationshipName": "notification",
+      "otherEntityName": "notification",
+      "relationshipType": "many-to-one",
+      "relationshipValidateRules": ["required"],
+      "otherEntityField": "id"
+    }
+  ],
+  "service": "no",
+  "readOnly": false,
+  "pagination": "no",
+  "name": "NotificationData",
+  "changelogDate": "20210426100905"
+}
