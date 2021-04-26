@@ -12,7 +12,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 public class ApplicationProperties {
 
 	private final Email email = new Email();
-	
+
 	private final SMS sms = new SMS();
 
 	private final Notification notification = new Notification();
@@ -80,12 +80,13 @@ public class ApplicationProperties {
 		}
 
 	}
-	
+
 	public static class Notification {
-		
+
 		private String provider;
 		private final Firebase firebase = new Firebase();
-		private final Onesignal onesignal =  new Onesignal();
+		private final Onesignal onesignal = new Onesignal();
+		private final Pushe pushe = new Pushe();
 
 		public String getProvider() {
 			return provider;
@@ -94,7 +95,7 @@ public class ApplicationProperties {
 		public void setProvider(String provider) {
 			this.provider = provider;
 		}
-		
+
 		public Firebase getFirebase() {
 			return firebase;
 		}
@@ -102,9 +103,13 @@ public class ApplicationProperties {
 		public Onesignal getOnesignal() {
 			return onesignal;
 		}
+		
+		public Pushe getPushe() {
+			return pushe;
+		}
 
 		public static class Firebase {
-			
+
 			private String filePath;
 
 			public String getFilePath() {
@@ -115,21 +120,55 @@ public class ApplicationProperties {
 				this.filePath = filePath;
 			}
 		}
-		
+
 		public static class Onesignal {
-			
+
 			private String url;
 			private String appId;
 
 			public String getUrl() {
 				return url;
 			}
+
 			public void setUrl(String url) {
 				this.url = url;
 			}
+
 			public String getAppId() {
 				return appId;
 			}
+
+			public void setAppId(String appId) {
+				this.appId = appId;
+			}
+		}
+
+		public static class Pushe {
+
+			private String url;
+			private String token;
+			private String appId;
+
+			public String getUrl() {
+				return url;
+			}
+
+			public void setUrl(String url) {
+				this.url = url;
+			}
+
+			public String getToken() {
+				return token;
+			}
+
+			public void setToken(String token) {
+				this.token = token;
+			}
+
+			public String getAppId() {
+				return appId;
+			}
+
 			public void setAppId(String appId) {
 				this.appId = appId;
 			}
@@ -170,9 +209,9 @@ public class ApplicationProperties {
 				this.token = token;
 			}
 		}
-		
+
 		public static class Kavenegar {
-			
+
 			private String token;
 
 			public String getToken() {

@@ -151,4 +151,8 @@ application:
     onesignal:
       url: https://onesignal.com/api/v1/notifications
       app-id: XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX
+    pushe:
+      url: https://api.pushe.co/v2/messaging/notifications/
+      token: XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+      app-id: XXXXXXXXXXXXXXXX
 
