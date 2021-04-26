@@ -55,6 +55,7 @@ public class CacheConfiguration {
             createCache(cm, com.glinboy.app.domain.ShortMessage.class.getName());
             createCache(cm, com.glinboy.app.domain.Notification.class.getName());
             createCache(cm, com.glinboy.app.domain.NotificationData.class.getName());
+            createCache(cm, com.glinboy.app.domain.Notification.class.getName() + ".data");
             // jhipster-needle-ehcache-add-entry
         };
     }

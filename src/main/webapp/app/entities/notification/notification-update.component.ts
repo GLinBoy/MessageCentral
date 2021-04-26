@@ -2,6 +2,9 @@ import { Component, Vue, Inject } from 'vue-property-decorator';
 
 import { required, maxLength } from 'vuelidate/lib/validators';
 
+import NotificationDataService from '@/entities/notification-data/notification-data.service';
+import { INotificationData } from '@/shared/model/notification-data.model';
+
 import { INotification, Notification } from '@/shared/model/notification.model';
 import NotificationService from './notification.service';
 
@@ -35,6 +38,10 @@ const validations: any = {
 export default class NotificationUpdate extends Vue {
   @Inject('notificationService') private notificationService: () => NotificationService;
   public notification: INotification = new Notification();
+
+  @Inject('notificationDataService') private notificationDataService: () => NotificationDataService;
+
+  public notificationData: INotificationData[] = [];
   public isSaving = false;
   public currentLanguage = '';
 
@@ -43,6 +50,7 @@ export default class NotificationUpdate extends Vue {
       if (to.params.notificationId) {
         vm.retrieveNotification(to.params.notificationId);
       }
+      vm.initRelationships();
     });
   }
 
@@ -103,5 +111,11 @@ export default class NotificationUpdate extends Vue {
     this.$router.go(-1);
   }
 
-  public initRelationships(): void {}
+  public initRelationships(): void {
+    this.notificationDataService()
+      .retrieve()
+      .then(res => {
+        this.notificationData = res.data;
+      });
+  }
 }

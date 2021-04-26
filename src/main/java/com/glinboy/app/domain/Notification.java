@@ -1,6 +1,9 @@
 package com.glinboy.app.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import java.io.Serializable;
+import java.util.HashSet;
+import java.util.Set;
 import javax.persistence.*;
 import javax.validation.constraints.*;
 import org.hibernate.annotations.Cache;
@@ -44,6 +47,11 @@ public class Notification implements Serializable {
     @Size(max = 256)
     @Column(name = "image", length = 256)
     private String image;
+
+    @OneToMany(mappedBy = "notification")
+    @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
+    @JsonIgnoreProperties(value = { "notification" }, allowSetters = true)
+    private Set<NotificationData> data = new HashSet<>();
 
     // jhipster-needle-entity-add-field - JHipster will add fields here
     public Long getId() {
@@ -122,6 +130,37 @@ public class Notification implements Serializable {
 
     public void setImage(String image) {
         this.image = image;
+    }
+
+    public Set<NotificationData> getData() {
+        return this.data;
+    }
+
+    public Notification data(Set<NotificationData> notificationData) {
+        this.setData(notificationData);
+        return this;
+    }
+
+    public Notification addData(NotificationData notificationData) {
+        this.data.add(notificationData);
+        notificationData.setNotification(this);
+        return this;
+    }
+
+    public Notification removeData(NotificationData notificationData) {
+        this.data.remove(notificationData);
+        notificationData.setNotification(null);
+        return this;
+    }
+
+    public void setData(Set<NotificationData> notificationData) {
+        if (this.data != null) {
+            this.data.forEach(i -> i.setNotification(null));
+        }
+        if (notificationData != null) {
+            notificationData.forEach(i -> i.setNotification(this));
+        }
+        this.data = notificationData;
     }
 
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here

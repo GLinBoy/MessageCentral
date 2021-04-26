@@ -1,5 +1,6 @@
 package com.glinboy.app.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import java.io.Serializable;
 import javax.persistence.*;
 import javax.validation.constraints.*;
@@ -33,6 +34,7 @@ public class NotificationData implements Serializable {
 
     @ManyToOne(optional = false)
     @NotNull
+    @JsonIgnoreProperties(value = { "data" }, allowSetters = true)
     private Notification notification;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here

@@ -8,6 +8,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import com.glinboy.app.IntegrationTest;
 import com.glinboy.app.domain.Notification;
+import com.glinboy.app.domain.NotificationData;
 import com.glinboy.app.repository.NotificationRepository;
 import com.glinboy.app.service.NotificationProviderService;
 import com.glinboy.app.service.criteria.NotificationCriteria;
@@ -679,6 +680,25 @@ class NotificationResourceIT {
 
         // Get all the notificationList where image does not contain UPDATED_IMAGE
         defaultNotificationShouldBeFound("image.doesNotContain=" + UPDATED_IMAGE);
+    }
+
+    @Test
+    @Transactional
+    void getAllNotificationsByDataIsEqualToSomething() throws Exception {
+        // Initialize the database
+        notificationRepository.saveAndFlush(notification);
+        NotificationData data = NotificationDataResourceIT.createEntity(em);
+        em.persist(data);
+        em.flush();
+        notification.addData(data);
+        notificationRepository.saveAndFlush(notification);
+        Long dataId = data.getId();
+
+        // Get all the notificationList where data equals to dataId
+        defaultNotificationShouldBeFound("dataId.equals=" + dataId);
+
+        // Get all the notificationList where data equals to (dataId + 1)
+        defaultNotificationShouldNotBeFound("dataId.equals=" + (dataId + 1));
     }
 
     /**

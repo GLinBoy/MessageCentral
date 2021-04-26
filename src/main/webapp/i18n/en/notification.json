@@ -22,7 +22,8 @@
       "token": "Token",
       "subject": "Subject",
       "content": "Content",
-      "image": "Image"
+      "image": "Image",
+      "data": "Data"
     }
   }
 }

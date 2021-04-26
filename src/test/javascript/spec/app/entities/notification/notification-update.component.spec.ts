@@ -8,6 +8,8 @@ import NotificationUpdateComponent from '@/entities/notification/notification-up
 import NotificationClass from '@/entities/notification/notification-update.component';
 import NotificationService from '@/entities/notification/notification.service';
 
+import NotificationDataService from '@/entities/notification-data/notification-data.service';
+
 const localVue = createLocalVue();
 
 config.initVueApp(localVue);
@@ -37,6 +39,8 @@ describe('Component Tests', () => {
         router,
         provide: {
           notificationService: () => notificationServiceStub,
+
+          notificationDataService: () => new NotificationDataService(),
         },
       });
       comp = wrapper.vm;

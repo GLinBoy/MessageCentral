@@ -31,7 +31,14 @@
       "fieldValidateRulesMaxlength": "256"
     }
   ],
-  "relationships": [],
+  "relationships": [
+    {
+      "relationshipName": "data",
+      "otherEntityName": "notificationData",
+      "relationshipType": "one-to-many",
+      "otherEntityRelationshipName": "notification"
+    }
+  ],
   "service": "serviceImpl",
   "dto": "mapstruct",
   "jpaMetamodelFiltering": true,

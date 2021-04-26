@@ -36,6 +36,8 @@ public class NotificationCriteria implements Serializable, Criteria {
 
     private StringFilter image;
 
+    private LongFilter dataId;
+
     public NotificationCriteria() {}
 
     public NotificationCriteria(NotificationCriteria other) {
@@ -45,6 +47,7 @@ public class NotificationCriteria implements Serializable, Criteria {
         this.subject = other.subject == null ? null : other.subject.copy();
         this.content = other.content == null ? null : other.content.copy();
         this.image = other.image == null ? null : other.image.copy();
+        this.dataId = other.dataId == null ? null : other.dataId.copy();
     }
 
     @Override
@@ -142,6 +145,21 @@ public class NotificationCriteria implements Serializable, Criteria {
         this.image = image;
     }
 
+    public LongFilter getDataId() {
+        return dataId;
+    }
+
+    public LongFilter dataId() {
+        if (dataId == null) {
+            dataId = new LongFilter();
+        }
+        return dataId;
+    }
+
+    public void setDataId(LongFilter dataId) {
+        this.dataId = dataId;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -157,13 +175,14 @@ public class NotificationCriteria implements Serializable, Criteria {
             Objects.equals(token, that.token) &&
             Objects.equals(subject, that.subject) &&
             Objects.equals(content, that.content) &&
-            Objects.equals(image, that.image)
+            Objects.equals(image, that.image) &&
+            Objects.equals(dataId, that.dataId)
         );
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, username, token, subject, content, image);
+        return Objects.hash(id, username, token, subject, content, image, dataId);
     }
 
     // prettier-ignore
@@ -176,6 +195,7 @@ public class NotificationCriteria implements Serializable, Criteria {
             (subject != null ? "subject=" + subject + ", " : "") +
             (content != null ? "content=" + content + ", " : "") +
             (image != null ? "image=" + image + ", " : "") +
+            (dataId != null ? "dataId=" + dataId + ", " : "") +
             "}";
     }
 }
