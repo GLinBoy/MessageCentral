@@ -2,12 +2,14 @@ package com.glinboy.app.service.impl;
 
 import java.nio.charset.StandardCharsets;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.jms.JMSException;
 import javax.jms.Message;
 import javax.jms.MessageListener;
 import javax.jms.ObjectMessage;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.slf4j.Logger;
@@ -24,6 +26,7 @@ import org.springframework.web.client.RestTemplate;
 import com.glinboy.app.config.ApplicationProperties;
 import com.glinboy.app.service.NotificationProviderService;
 import com.glinboy.app.service.dto.NotificationDTO;
+import com.glinboy.app.service.dto.NotificationDataDTO;
 
 @Service
 @ConditionalOnProperty(value = "application.notification.provider", havingValue = "onesignal", matchIfMissing = true)
@@ -61,6 +64,11 @@ public class OnesignalNotificationProviderServiceImpl
 		JSONObject contents = new JSONObject();
 		contents.put("en", notificationDTO.getContent());
 		requestBody.put("contents", contents);
+		if(!CollectionUtils.isEmpty(notificationDTO.getData())) {
+			requestBody.put("data", notificationDTO.getData().stream()
+					.collect(Collectors.toMap(NotificationDataDTO::getKey,
+							NotificationDataDTO::getValue)));
+		}
 		HttpEntity<String> request = 
 				new HttpEntity<>(requestBody.toString(), headers);
 		String result = restTemplate.postForObject(properties.getNotification().getOnesignal().getUrl(),
