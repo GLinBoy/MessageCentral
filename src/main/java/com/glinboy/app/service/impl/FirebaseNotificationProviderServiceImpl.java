@@ -1,10 +1,13 @@
 package com.glinboy.app.service.impl;
 
+import java.util.stream.Collectors;
+
 import javax.jms.JMSException;
 import javax.jms.Message;
 import javax.jms.MessageListener;
 import javax.jms.ObjectMessage;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
@@ -14,8 +17,10 @@ import org.springframework.stereotype.Service;
 
 import com.glinboy.app.service.NotificationProviderService;
 import com.glinboy.app.service.dto.NotificationDTO;
+import com.glinboy.app.service.dto.NotificationDataDTO;
 import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.firebase.messaging.FirebaseMessagingException;
+import com.google.firebase.messaging.Message.Builder;
 import com.google.firebase.messaging.Notification;
 
 @Service
@@ -47,12 +52,16 @@ public class FirebaseNotificationProviderServiceImpl
 					.setBody(notificationDTO.getContent())
 					.build();
 
-			com.google.firebase.messaging.Message message = com.google.firebase.messaging.Message.builder()
+			Builder message = com.google.firebase.messaging.Message.builder()
 					.setToken(notificationDTO.getToken())
-					.setNotification(notification)
-					.build();
+					.setNotification(notification);
+			if(!CollectionUtils.isEmpty(notificationDTO.getData())) {
+				message.putAllData(notificationDTO.getData().stream()
+						.collect(Collectors.toMap(NotificationDataDTO::getKey,
+								NotificationDataDTO::getValue)));
+			}
 
-			String result = firebaseMessaging.send(message);
+			String result = firebaseMessaging.send(message.build());
 			log.info("Notification sent! {}", notificationDTO);
 			log.info("Notification Result {}", result);
 		} catch (FirebaseMessagingException ex) {
