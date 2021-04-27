@@ -16,6 +16,7 @@ import com.glinboy.app.service.dto.NotificationDTO;
 import com.glinboy.app.service.mapper.NotificationMapper;
 import java.util.List;
 import java.util.Random;
+import java.util.Set;
 import java.util.concurrent.atomic.AtomicLong;
 import javax.persistence.EntityManager;
 import org.junit.jupiter.api.BeforeEach;
@@ -51,6 +52,9 @@ class NotificationResourceIT {
     private static final String DEFAULT_IMAGE = "AAAAAAAAAA";
     private static final String UPDATED_IMAGE = "BBBBBBBBBB";
 
+    private static final String DEFAULT_KEY = "AAAAAAAAAA";
+    private static final String DEFAULT_VALUE = "BBBBBBBBBB";
+
     private static final String ENTITY_API_URL = "/api/notifications";
     private static final String ENTITY_API_URL_ID = ENTITY_API_URL + "/{id}";
 
@@ -73,6 +77,8 @@ class NotificationResourceIT {
     private NotificationProviderService<NotificationDTO> notificationProviderService;
 
     private Notification notification;
+    
+    private NotificationData notificationData;
 
     /**
      * Create an entity for this test.
@@ -133,6 +139,46 @@ class NotificationResourceIT {
         assertThat(testNotification.getSubject()).isEqualTo(DEFAULT_SUBJECT);
         assertThat(testNotification.getContent()).isEqualTo(DEFAULT_CONTENT);
         assertThat(testNotification.getImage()).isEqualTo(DEFAULT_IMAGE);
+    }
+
+    @Test
+    @Transactional
+    /**
+     * Added for issue:
+     * https://github.com/GLinBoy/MessageCentral/issues/42
+     * @throws Exception
+     */
+    void createNotificationWithData() throws Exception {
+        int databaseSizeBeforeCreate = notificationRepository.findAll().size();
+        // Create Data
+        notificationData = new NotificationData();
+        notificationData.setKey(DEFAULT_KEY);
+        notificationData.setValue(DEFAULT_VALUE);
+        notification.setData(Set.of(notificationData));
+        // Create the Notification
+        NotificationDTO notificationDTO = notificationMapper.toDto(notification);
+        doNothing().when(notificationProviderService).sendNotification(notificationDTO);
+        restNotificationMockMvc
+            .perform(
+                post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(notificationDTO))
+            )
+            .andExpect(status().isCreated());
+
+        // Validate the Notification in the database
+        List<Notification> notificationList = notificationRepository.findAll();
+        assertThat(notificationList).hasSize(databaseSizeBeforeCreate + 1);
+        Notification testNotification = notificationList.get(notificationList.size() - 1);
+        assertThat(testNotification.getUsername()).isEqualTo(DEFAULT_USERNAME);
+        assertThat(testNotification.getToken()).isEqualTo(DEFAULT_TOKEN);
+        assertThat(testNotification.getSubject()).isEqualTo(DEFAULT_SUBJECT);
+        assertThat(testNotification.getContent()).isEqualTo(DEFAULT_CONTENT);
+        assertThat(testNotification.getImage()).isEqualTo(DEFAULT_IMAGE);
+        assertThat(testNotification.getData()).isNotEmpty();
+        assertThat(testNotification.getData().size()).isEqualTo(1);
+        assertThat(testNotification.getData().stream().anyMatch(d -> d.getKey().equals(DEFAULT_KEY))).isTrue();
+        assertThat(testNotification.getData().stream().anyMatch(d -> d.getValue().equals(DEFAULT_VALUE))).isTrue();
+        assertThat(testNotification.getData().stream().anyMatch(d -> d.getId() == null)).isFalse();
+        assertThat(testNotification.getData().stream().anyMatch(d -> d.getNotification() == null)).isFalse();
     }
 
     @Test
