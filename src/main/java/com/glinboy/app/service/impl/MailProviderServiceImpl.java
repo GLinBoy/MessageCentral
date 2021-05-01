@@ -1,5 +1,8 @@
 package com.glinboy.app.service.impl;
 
+import java.util.Arrays;
+import java.util.List;
+
 import javax.jms.JMSException;
 import javax.jms.Message;
 import javax.jms.MessageListener;
@@ -42,15 +45,25 @@ public class MailProviderServiceImpl implements MailProviderService<EmailDTO>, M
 	public void sendEmail(EmailDTO emailDTO) {
 		jmsTemplate.convertAndSend("MAILBOX", emailDTO);
 	}
+
+	@Override
+	public void sendEmail(List<EmailDTO> emailsDTO) {
+		emailsDTO.forEach(e -> jmsTemplate.convertAndSend("MAILBOX", e));
+	}
 	
-	private void deliverEmail(EmailDTO emailDTO) {
-		SimpleMailMessage message = new SimpleMailMessage();
-		message.setFrom(properties.getEmail().getFrom());
-		message.setTo(emailDTO.getReceiver());
-		message.setSubject(emailDTO.getSubject());
-		message.setText(emailDTO.getContent());
-		emailSender.send(message);
-		log.info("Mail sent! {}", emailDTO);
+	private void deliverEmail(EmailDTO ... emailsDTO) {
+		SimpleMailMessage[] messages = new SimpleMailMessage[emailsDTO.length];
+		for(int i = 0; i < emailsDTO.length; i++) {
+			EmailDTO emailDTO = emailsDTO[i];
+			SimpleMailMessage message = new SimpleMailMessage();
+			message.setFrom(properties.getEmail().getFrom());
+			message.setTo(emailDTO.getReceiver());
+			message.setSubject(emailDTO.getSubject());
+			message.setText(emailDTO.getContent());
+			messages[i] = message;
+		}
+		emailSender.send(messages);
+		log.info("Mail(s) sent! {}", Arrays.toString(emailsDTO));
 	}
 
 	@Override

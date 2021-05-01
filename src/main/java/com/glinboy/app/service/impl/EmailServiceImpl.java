@@ -55,13 +55,13 @@ public class EmailServiceImpl implements EmailService {
 	}
 
 	@Override
-	public void save(List<EmailsDTO> emailsDTO) {
+	public List<EmailDTO> save(List<EmailsDTO> emailsDTO) {
 		log.debug("Request to save Emails : {}", emailsDTO);
-		List<EmailDTO> emails = emailsDTO.stream()
+		List<Email> emails = emailsDTO.stream()
 			.flatMap( es -> Set.copyOf(es.getReceivers())
 				.stream().filter(r -> r.matches(Patterns.EMAIL_PATTERN))
 				.map(r -> {
-					EmailDTO e = new EmailDTO();
+					Email e = new Email();
 					e.setReceiver(r);
 					e.setSubject(es.getSubject());
 					e.setContent(es.getContent());
@@ -69,6 +69,10 @@ public class EmailServiceImpl implements EmailService {
 				}))
 			.collect(Collectors.toList());
 		log.info("List of {} Emails: {}", emails.size(), emails);
+		emails = this.emailRepository.saveAll(emails);
+		List<EmailDTO> dtoList = this.emailMapper.toDto(emails);
+		this.mailProviderService.sendEmail(dtoList);
+		return dtoList;
 	}
 
 	@Override

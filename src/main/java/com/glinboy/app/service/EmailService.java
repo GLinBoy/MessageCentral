@@ -54,5 +54,5 @@ public interface EmailService {
      */
     void delete(Long id);
 
-    void save(@Valid List<EmailsDTO> emailsDTO);
+    List<EmailDTO> save(@Valid List<EmailsDTO> emailsDTO);
 }
