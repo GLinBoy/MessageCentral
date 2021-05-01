@@ -5,8 +5,15 @@ import com.glinboy.app.repository.EmailRepository;
 import com.glinboy.app.service.EmailService;
 import com.glinboy.app.service.MailProviderService;
 import com.glinboy.app.service.dto.EmailDTO;
+import com.glinboy.app.service.dto.EmailsDTO;
 import com.glinboy.app.service.mapper.EmailMapper;
+import com.glinboy.app.util.Patterns;
+
+import java.util.List;
 import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -45,6 +52,23 @@ public class EmailServiceImpl implements EmailService {
 		EmailDTO e = emailMapper.toDto(email);
 		mailProviderService.sendEmail(e);
 		return e;
+	}
+
+	@Override
+	public void save(List<EmailsDTO> emailsDTO) {
+		log.debug("Request to save Emails : {}", emailsDTO);
+		List<EmailDTO> emails = emailsDTO.stream()
+			.flatMap( es -> Set.copyOf(es.getReceivers())
+				.stream().filter(r -> r.matches(Patterns.EMAIL_PATTERN))
+				.map(r -> {
+					EmailDTO e = new EmailDTO();
+					e.setReceiver(r);
+					e.setSubject(es.getSubject());
+					e.setContent(es.getContent());
+					return e;
+				}))
+			.collect(Collectors.toList());
+		log.info("List of {} Emails: {}", emails.size(), emails);
 	}
 
 	@Override
