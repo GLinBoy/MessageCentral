@@ -1,6 +1,7 @@
 package com.glinboy.app.service.dto;
 
 import java.io.Serializable;
+import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -8,10 +9,9 @@ import java.util.stream.Collectors;
 import javax.persistence.Lob;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
-import com.glinboy.app.util.Patterns;
+import org.apache.commons.collections.CollectionUtils;
 
 /**
  * A DTO for the {@link com.glinboy.app.domain.Email} entity.
@@ -19,7 +19,7 @@ import com.glinboy.app.util.Patterns;
 public class EmailsDTO implements Serializable {
 
     @NotEmpty
-    private Set<String> receivers;
+    private Set<String> receivers = new HashSet<>();
 
     @NotNull
     @Size(min = 4, max = 128)
@@ -63,10 +63,11 @@ public class EmailsDTO implements Serializable {
         }
 
         EmailsDTO emailsDTO = (EmailsDTO) o;
-        return Objects.equals(this.receivers.size(), emailsDTO.receivers.size()) &&
+        return !CollectionUtils.isEmpty(this.receivers) &&
+                this.receivers.size() == emailsDTO.receivers.size() &&
                 this.receivers.containsAll(emailsDTO.receivers) &&
-                Objects.equals(this.subject, emailsDTO.subject) &&
-                Objects.equals(this.content, emailsDTO.content);
+                (this.subject == null ? emailsDTO.subject == null : this.subject.equals(emailsDTO.subject)) &&
+                (this.content == null ? emailsDTO.content == null : this.content.equals(emailsDTO.content));
     }
 
     @Override
@@ -78,7 +79,7 @@ public class EmailsDTO implements Serializable {
     @Override
     public String toString() {
         return "EmailDTO{" +
-            ", receivers='" + getReceivers().stream().collect(Collectors.joining(", ")) + "'" +
+            "receivers='" + getReceivers().stream().collect(Collectors.joining(", ")) + "'" +
             ", subject='" + getSubject() + "'" +
             ", content='" + getContent() + "'" +
             "}";
