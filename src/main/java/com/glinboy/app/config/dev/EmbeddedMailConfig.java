@@ -1,6 +1,7 @@
 package com.glinboy.app.config.dev;
 
 import javax.annotation.PostConstruct;
+import javax.annotation.PreDestroy;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -30,11 +31,16 @@ public class EmbeddedMailConfig {
 
 	@PostConstruct
 	public void setupMailServer() {
-		greenMail = new GreenMail(new ServerSetup(port, host, protocol));
-		greenMail.start();
-		log.info("Mail Server Started");
+		if(greenMail == null || !greenMail.isRunning()) {
+			greenMail = new GreenMail(new ServerSetup(port, host, protocol));
+			greenMail.start();
+			log.info("Mail Server Started");
+		} else {
+			log.info("Server is up!");
+		}
 	}
 
+	@PreDestroy
 	public void stopMailServer() {
 		greenMail.stop();
 		log.info("Mail Server Stoped");
