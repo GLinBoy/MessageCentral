@@ -13,7 +13,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import java.util.List;
 import java.util.Random;
+import java.util.Set;
 import java.util.concurrent.atomic.AtomicLong;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 import javax.mail.Message.RecipientType;
 import javax.mail.internet.MimeMessage;
@@ -37,6 +40,7 @@ import com.glinboy.app.config.ApplicationProperties;
 import com.glinboy.app.domain.Email;
 import com.glinboy.app.repository.EmailRepository;
 import com.glinboy.app.service.dto.EmailDTO;
+import com.glinboy.app.service.dto.EmailsDTO;
 import com.glinboy.app.service.mapper.EmailMapper;
 import com.icegreen.greenmail.store.FolderException;
 import com.icegreen.greenmail.util.GreenMail;
@@ -61,6 +65,7 @@ class EmailResourceIT {
 
 	private static final String ENTITY_API_URL = "/api/emails";
 	private static final String ENTITY_API_URL_ID = ENTITY_API_URL + "/{id}";
+	private static final String ENTITY_API_URL_MULTIPLE = "/api/emails/multiple";
 
 	private static Random random = new Random();
 	private static AtomicLong count = new AtomicLong(random.nextInt() + (2 * Integer.MAX_VALUE));
@@ -76,7 +81,7 @@ class EmailResourceIT {
 
 	@Autowired
 	private MockMvc restEmailMockMvc;
-	
+
 	@Autowired
 	private ApplicationProperties properties;
 
@@ -118,6 +123,30 @@ class EmailResourceIT {
 	}
 
 	/**
+	 * Create an entity for this test.
+	 *
+	 * This is a static method, as tests for other entities might also need it, if
+	 * they test an entity which requires the current entity.
+	 */
+	public static List<EmailsDTO> createEmailsDTO(int emailsDTOCount, int reciversCount) {
+		List<EmailsDTO> emailsDTO = IntStream.range(0, emailsDTOCount)
+				.mapToObj(i -> {
+					Set<String> rs = IntStream.range(0, reciversCount)
+						.mapToObj(j -> String.format("test_%d_%d@localhost.com", i, j))
+						.collect(Collectors.toSet());
+					EmailsDTO e = new EmailsDTO();
+					e.setReceivers(rs);
+					e.setSubject(String.format("SUBJECT_%d", i));
+					e.setContent(String.format("CONETNT_%d", i));
+					return e;
+				})
+				.collect(Collectors.toList());
+		assertThat(emailsDTO.size()).isEqualTo(emailsDTOCount);
+		emailsDTO.forEach(es -> assertThat(es.getReceivers().size()).isEqualTo(reciversCount));
+		return emailsDTO;
+	}
+
+	/**
 	 * Create an updated entity for this test.
 	 *
 	 * This is a static method, as tests for other entities might also need it, if
@@ -155,7 +184,7 @@ class EmailResourceIT {
 		assertThat(testEmail.getSubject()).isEqualTo(DEFAULT_SUBJECT);
 		assertThat(testEmail.getContent()).isEqualTo(DEFAULT_CONTENT);
 
-		 boolean ok = greenMail.waitForIncomingEmail(10_000, 1);
+		boolean ok = greenMail.waitForIncomingEmail(10_000, 1);
 
 		if (ok) {
 			MimeMessage testMessage = greenMail.getReceivedMessages()[0];
@@ -165,6 +194,31 @@ class EmailResourceIT {
 
 			String emailContent = (String) testMessage.getContent();
 			assertThat(emailContent.replaceAll("\\r\\n|\\r|\\n", "")).isEqualTo(emailDTO.getContent());
+		} else {
+			Assertions.fail("email not sent");
+		}
+	}
+
+	@Test
+	@Transactional
+	void createBulkEmail() throws Exception {
+		int databaseSizeBeforeCreate = emailRepository.findAll().size();
+		// Create the multi Email
+		int emailsCount = 2;
+		int reciverCount = 5;
+		List<EmailsDTO> emailsDTO = createEmailsDTO(emailsCount, reciverCount);
+		restEmailMockMvc.perform(post(ENTITY_API_URL_MULTIPLE).contentType(MediaType.APPLICATION_JSON)
+				.content(TestUtil.convertObjectToJsonBytes(emailsDTO))).andExpect(status().isOk());
+
+		// Validate the Email in the database
+		List<Email> emailList = emailRepository.findAll();
+		assertThat(emailList).hasSize(databaseSizeBeforeCreate + emailsCount * reciverCount);
+
+		boolean ok = greenMail.waitForIncomingEmail(10_000, 10);
+
+		if (ok) {
+			MimeMessage[] testMessages = greenMail.getReceivedMessages();
+			assertThat(testMessages).hasSize(emailsCount * reciverCount);
 		} else {
 			Assertions.fail("email not sent");
 		}
