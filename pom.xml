@@ -1028,6 +1028,17 @@
 					<plugin>
 						<groupId>org.springframework.boot</groupId>
 						<artifactId>spring-boot-maven-plugin</artifactId>
+						<configuration>
+							<arguments>
+								<argument>-XX:+UseZGC</argument>
+								<argument>-Xlog:gc*:file=log/message-central.gc.log</argument>
+								<argument>-XX:+HeapDumpOnOutOfMemoryError</argument>
+								<argument>-XX:HeapDumpPath=log/crashes/message-central.hprof</argument>
+								<argument>-Xss256k</argument>
+								<argument>-Dsun.net.client.defaultConnectTimeout=2000</argument>
+								<argument>-Dsun.net.client.defaultReadTimeout=2000</argument>
+							</arguments>
+						</configuration>
 						<executions>
 							<execution>
 								<goals>
