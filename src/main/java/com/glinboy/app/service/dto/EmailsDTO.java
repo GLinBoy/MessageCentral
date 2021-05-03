@@ -72,7 +72,7 @@ public class EmailsDTO implements Serializable {
 
     @Override
     public int hashCode() {
-        return Objects.hash(this.subject + this.content);
+        return Objects.hash(getReceivers().stream().collect(Collectors.joining(", ")) + this.subject + this.content);
     }
 
     // prettier-ignore
