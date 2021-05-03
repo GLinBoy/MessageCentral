@@ -94,7 +94,7 @@ public class EmailResource {
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PostMapping("/emails/multiple")
-    public ResponseEntity<EmailDTO> createEmails(@Valid @RequestBody List<EmailsDTO> emailsDTO) throws URISyntaxException {
+    public ResponseEntity<Void> createEmails(@Valid @RequestBody List<EmailsDTO> emailsDTO) throws URISyntaxException {
         log.debug("REST request to save Emails : {}",
                 emailsDTO.stream().map(EmailsDTO::toString).collect(Collectors.joining(",\n")));
         emailService.save(emailsDTO);
