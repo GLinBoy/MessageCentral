@@ -1,5 +1,7 @@
 package com.glinboy.app.service.impl;
 
+import java.util.List;
+
 import javax.jms.JMSException;
 import javax.jms.Message;
 import javax.jms.MessageListener;
@@ -36,6 +38,11 @@ public class TwilioSMSProviderServiceImpl implements ShortMessageProviderService
 	@Override
 	public void sendSMS(ShortMessageDTO shortMessageDTO) {
 		jmsTemplate.convertAndSend("TWILIO_SMSBOX", shortMessageDTO);
+	}
+
+	@Override
+	public void sendSMS(List<ShortMessageDTO> shortMessagesDTO) {
+		shortMessagesDTO.forEach(s -> jmsTemplate.convertAndSend("TWILIO_SMSBOX", s));
 	}
 
 	private void deliverSMS(ShortMessageDTO shortMessageDTO) {
