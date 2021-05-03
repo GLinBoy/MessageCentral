@@ -1,5 +1,7 @@
 package com.glinboy.app.service.impl;
 
+import java.util.List;
+
 import javax.jms.JMSException;
 import javax.jms.Message;
 import javax.jms.MessageListener;
@@ -38,6 +40,11 @@ public class KavenegarSMSProviderServiceImpl implements ShortMessageProviderServ
 	@Override
 	public void sendSMS(ShortMessageDTO shortMessageDTO) {
 		jmsTemplate.convertAndSend("KAVENEGAR_SMSBOX", shortMessageDTO);
+	}
+	
+	@Override
+	public void sendSMS(List<ShortMessageDTO> shortMessagesDTO) {
+		shortMessagesDTO.forEach(s -> jmsTemplate.convertAndSend("KAVENEGAR_SMSBOX", s));
 	}
 
 	private void deliverSMS(ShortMessageDTO shortMessageDTO) {
