@@ -1,18 +1,25 @@
 package com.glinboy.app.service.impl;
 
-import com.glinboy.app.domain.ShortMessage;
-import com.glinboy.app.repository.ShortMessageRepository;
-import com.glinboy.app.service.ShortMessageProviderService;
-import com.glinboy.app.service.ShortMessageService;
-import com.glinboy.app.service.dto.ShortMessageDTO;
-import com.glinboy.app.service.mapper.ShortMessageMapper;
+import java.util.List;
 import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import com.glinboy.app.domain.ShortMessage;
+import com.glinboy.app.repository.ShortMessageRepository;
+import com.glinboy.app.service.ShortMessageProviderService;
+import com.glinboy.app.service.ShortMessageService;
+import com.glinboy.app.service.dto.ShortMessageDTO;
+import com.glinboy.app.service.dto.ShortMessagesDTO;
+import com.glinboy.app.service.mapper.ShortMessageMapper;
+import com.glinboy.app.util.Patterns;
 
 /**
  * Service Implementation for managing {@link ShortMessage}.
@@ -45,6 +52,26 @@ public class ShortMessageServiceImpl implements ShortMessageService {
         ShortMessageDTO smsDTO = shortMessageMapper.toDto(shortMessage);
         smsProvider.sendSMS(smsDTO);
         return smsDTO;
+    }
+
+    @Override
+    public List<ShortMessageDTO> save(List<ShortMessagesDTO> shortMessagesDTO) {
+        log.debug("Request to save ShortMessage : {}", shortMessagesDTO);
+        List<ShortMessage> messages = shortMessagesDTO.stream()
+                .flatMap( ss -> Set.copyOf(ss.getPhoneNumbers())
+                .stream().filter(p -> p.matches(Patterns.SMS_PATTERN))
+                .map(p -> {
+                    ShortMessage s = new ShortMessage();
+                    s.phoneNumber(p);
+                    s.setContent(ss.getContent());
+                    return s;
+                    }))
+                .collect(Collectors.toList());
+        log.info("List of {} Emails: {}", messages.size(), messages);
+        messages = this.shortMessageRepository.saveAll(messages);
+        List<ShortMessageDTO> dtoList = this.shortMessageMapper.toDto(messages);
+        this.smsProvider.sendSMS(dtoList);
+        return dtoList;
     }
 
     @Override

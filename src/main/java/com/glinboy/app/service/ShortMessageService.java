@@ -1,7 +1,13 @@
 package com.glinboy.app.service;
 
 import com.glinboy.app.service.dto.ShortMessageDTO;
+import com.glinboy.app.service.dto.ShortMessagesDTO;
+
+import java.util.List;
 import java.util.Optional;
+
+import javax.validation.Valid;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -47,4 +53,6 @@ public interface ShortMessageService {
      * @param id the id of the entity.
      */
     void delete(Long id);
+
+    List<ShortMessageDTO> save(@Valid List<ShortMessagesDTO> shortMessagesDTO);
 }
