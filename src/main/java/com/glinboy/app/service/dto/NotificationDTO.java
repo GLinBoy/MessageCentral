@@ -88,7 +88,7 @@ public class NotificationDTO implements Serializable {
         return data;
     }
 
-    public void setImage(Set<NotificationDataDTO> data) {
+    public void setData(Set<NotificationDataDTO> data) {
         this.data = data;
     }
 
