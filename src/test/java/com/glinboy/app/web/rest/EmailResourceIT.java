@@ -123,7 +123,7 @@ class EmailResourceIT {
 	}
 
 	/**
-	 * Create an entity for this test.
+	 * Create multiple entities for this test.
 	 *
 	 * This is a static method, as tests for other entities might also need it, if
 	 * they test an entity which requires the current entity.
@@ -203,7 +203,7 @@ class EmailResourceIT {
 	@Transactional
 	void createBulkEmail() throws Exception {
 		int databaseSizeBeforeCreate = emailRepository.findAll().size();
-		// Create the multi Email
+		// Create multiple Email
 		int emailsCount = 2;
 		int reciverCount = 5;
 		List<EmailsDTO> emailsDTO = createEmailsDTO(emailsCount, reciverCount);
@@ -212,7 +212,7 @@ class EmailResourceIT {
 
 		// Validate the Email in the database
 		List<Email> emailList = emailRepository.findAll();
-		assertThat(emailList).hasSize(databaseSizeBeforeCreate + emailsCount * reciverCount);
+		assertThat(emailList).hasSize(databaseSizeBeforeCreate + (emailsCount * reciverCount));
 
 		boolean ok = greenMail.waitForIncomingEmail(10_000, 10);
 
