@@ -14,7 +14,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import java.util.List;
 import java.util.Random;
+import java.util.Set;
 import java.util.concurrent.atomic.AtomicLong;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 import javax.persistence.EntityManager;
 
@@ -33,6 +36,7 @@ import com.glinboy.app.domain.ShortMessage;
 import com.glinboy.app.repository.ShortMessageRepository;
 import com.glinboy.app.service.ShortMessageProviderService;
 import com.glinboy.app.service.dto.ShortMessageDTO;
+import com.glinboy.app.service.dto.ShortMessagesDTO;
 import com.glinboy.app.service.mapper.ShortMessageMapper;
 
 /**
@@ -51,6 +55,7 @@ class ShortMessageResourceIT {
 
     private static final String ENTITY_API_URL = "/api/short-messages";
     private static final String ENTITY_API_URL_ID = ENTITY_API_URL + "/{id}";
+    private static final String ENTITY_API_URL_MULTIPLE = "/api/short-messages/multiple";
 
     private static Random random = new Random();
     private static AtomicLong count = new AtomicLong(random.nextInt() + (2 * Integer.MAX_VALUE));
@@ -82,6 +87,29 @@ class ShortMessageResourceIT {
         ShortMessage shortMessage = new ShortMessage().phoneNumber(DEFAULT_PHONE_NUMBER).content(DEFAULT_CONTENT);
         return shortMessage;
     }
+
+	/**
+	 * Create multiple entity for this test.
+	 *
+	 * This is a static method, as tests for other entities might also need it, if
+	 * they test an entity which requires the current entity.
+	 */
+	public static List<ShortMessagesDTO> createEmailsDTO(int smsDTOCount, int numbersCount) {
+		List<ShortMessagesDTO> shortMessagesDTO = IntStream.range(0, smsDTOCount)
+				.mapToObj(i -> {
+					Set<String> rs = IntStream.range(0, numbersCount)
+						.mapToObj(j -> String.format("+98912989287%d", j))
+						.collect(Collectors.toSet());
+					ShortMessagesDTO s = new ShortMessagesDTO();
+					s.setPhoneNumber(rs);
+					s.setContent(String.format("CONETNT_%d", i));
+					return s;
+				})
+				.collect(Collectors.toList());
+		assertThat(shortMessagesDTO.size()).isEqualTo(smsDTOCount);
+		shortMessagesDTO.forEach(es -> assertThat(es.getPhoneNumbers().size()).isEqualTo(numbersCount));
+		return shortMessagesDTO;
+	}
 
     /**
      * Create an updated entity for this test.
@@ -118,6 +146,27 @@ class ShortMessageResourceIT {
         ShortMessage testShortMessage = shortMessageList.get(shortMessageList.size() - 1);
         assertThat(testShortMessage.getPhoneNumber()).isEqualTo(DEFAULT_PHONE_NUMBER);
         assertThat(testShortMessage.getContent()).isEqualTo(DEFAULT_CONTENT);
+    }
+
+    @Test
+    @Transactional
+    void createBulkShortMessage() throws Exception {
+        int databaseSizeBeforeCreate = shortMessageRepository.findAll().size();
+        // Create Multiple ShortMessage
+        int smsCount = 2;
+        int numbersCount = 5;
+        List<ShortMessagesDTO> shortMessagesDTOs = createEmailsDTO(smsCount, numbersCount);
+        doNothing().when(smsProvider).sendSMS(List.of());
+        restShortMessageMockMvc
+            .perform(
+                post(ENTITY_API_URL_MULTIPLE).contentType(MediaType.APPLICATION_JSON)
+                .content(TestUtil.convertObjectToJsonBytes(shortMessagesDTOs))
+            )
+            .andExpect(status().isOk());
+
+        // Validate the ShortMessage in the database
+        List<ShortMessage> shortMessageList = shortMessageRepository.findAll();
+        assertThat(shortMessageList).hasSize(databaseSizeBeforeCreate + (smsCount * numbersCount));
     }
 
     @Test
