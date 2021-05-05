@@ -49,6 +49,11 @@ public class OnesignalNotificationProviderServiceImpl
 	public void sendNotification(NotificationDTO notificationDTO) {
 		jmsTemplate.convertAndSend("ONESIGNAL_NOTIFICATIONBOX", notificationDTO);
 	}
+
+	@Override
+	public void sendNotification(List<NotificationDTO> notificationDTOs) {
+		notificationDTOs.forEach(n -> jmsTemplate.convertAndSend("ONESIGNAL_NOTIFICATIONBOX", n));
+	}
 	
 	private void deliverNotification(NotificationDTO notificationDTO) {
 		RestTemplate restTemplate = new RestTemplate();
