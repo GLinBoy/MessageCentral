@@ -1,7 +1,13 @@
 package com.glinboy.app.service;
 
 import com.glinboy.app.service.dto.NotificationDTO;
+import com.glinboy.app.service.dto.NotificationsDTO;
+
+import java.util.List;
 import java.util.Optional;
+
+import javax.validation.Valid;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -47,4 +53,6 @@ public interface NotificationService {
      * @param id the id of the entity.
      */
     void delete(Long id);
+
+    List<NotificationDTO> save(@Valid List<NotificationsDTO> notificationsDTO);
 }

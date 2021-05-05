@@ -1,18 +1,24 @@
 package com.glinboy.app.service.impl;
 
-import com.glinboy.app.domain.Notification;
-import com.glinboy.app.repository.NotificationRepository;
-import com.glinboy.app.service.NotificationProviderService;
-import com.glinboy.app.service.NotificationService;
-import com.glinboy.app.service.dto.NotificationDTO;
-import com.glinboy.app.service.mapper.NotificationMapper;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import com.glinboy.app.domain.Notification;
+import com.glinboy.app.repository.NotificationRepository;
+import com.glinboy.app.service.NotificationProviderService;
+import com.glinboy.app.service.NotificationService;
+import com.glinboy.app.service.dto.NotificationDTO;
+import com.glinboy.app.service.dto.NotificationsDTO;
+import com.glinboy.app.service.mapper.NotificationDataMapper;
+import com.glinboy.app.service.mapper.NotificationMapper;
 
 /**
  * Service Implementation for managing {@link Notification}.
@@ -27,14 +33,18 @@ public class NotificationServiceImpl implements NotificationService {
 
     private final NotificationMapper notificationMapper;
 
+    private final NotificationDataMapper notificationDataMapper;
+
     private final NotificationProviderService<NotificationDTO> notificationProviderService;
 
     public NotificationServiceImpl(NotificationRepository notificationRepository,
-    		NotificationMapper notificationMapper,
-    		NotificationProviderService<NotificationDTO> notificationProviderService) {
+            NotificationMapper notificationMapper,
+            NotificationProviderService<NotificationDTO> notificationProviderService,
+            NotificationDataMapper notificationDataMapper) {
         this.notificationRepository = notificationRepository;
         this.notificationMapper = notificationMapper;
         this.notificationProviderService = notificationProviderService;
+        this.notificationDataMapper = notificationDataMapper;
     }
 
     @Override
@@ -45,6 +55,32 @@ public class NotificationServiceImpl implements NotificationService {
         NotificationDTO dto = notificationMapper.toDto(notificationRepository.save(notification));
         notificationProviderService.sendNotification(dto);
         return dto;
+    }
+
+    @Override
+    public List<NotificationDTO> save(List<NotificationsDTO> notificationsDTO) {
+        log.debug("Request to save Notification : {}", notificationsDTO);
+        List<Notification> notifications = notificationsDTO.stream()
+                .flatMap( ns -> ns.getReceivers().keySet()
+                    .stream().filter(rk -> rk.length() <= 64 &&
+                            ns.getReceivers().get(rk).length() <= 164)
+                    .map(r -> {
+                        Notification n = new Notification();
+                        n.setUsername(r);
+                        n.setToken(ns.getReceivers().get(r));
+                        n.setSubject(ns.getSubject());
+                        n.setContent(ns.getContent());
+                        n.setImage(ns.getImage());
+                        n.setData(ns.getData().stream().map(notificationDataMapper::toEntity)
+                                .collect(Collectors.toSet()));
+                        return n;
+                        }))
+                .collect(Collectors.toList());
+            log.info("List of {} Emails: {}", notifications.size(), notifications);
+            notifications = this.notificationRepository.saveAll(notifications);
+            List<NotificationDTO> dtoList = this.notificationMapper.toDto(notifications);
+            this.notificationProviderService.sendNotification(dtoList);
+            return dtoList;
     }
 
     @Override
