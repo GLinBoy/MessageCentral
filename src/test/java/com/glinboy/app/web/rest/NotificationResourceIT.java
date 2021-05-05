@@ -3,22 +3,26 @@ package com.glinboy.app.web.rest;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.hasItem;
 import static org.mockito.Mockito.doNothing;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import com.glinboy.app.IntegrationTest;
-import com.glinboy.app.domain.Notification;
-import com.glinboy.app.domain.NotificationData;
-import com.glinboy.app.repository.NotificationRepository;
-import com.glinboy.app.service.NotificationProviderService;
-import com.glinboy.app.service.criteria.NotificationCriteria;
-import com.glinboy.app.service.dto.NotificationDTO;
-import com.glinboy.app.service.mapper.NotificationMapper;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicLong;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
+
 import javax.persistence.EntityManager;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
@@ -28,6 +32,15 @@ import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
+
+import com.glinboy.app.IntegrationTest;
+import com.glinboy.app.domain.Notification;
+import com.glinboy.app.domain.NotificationData;
+import com.glinboy.app.repository.NotificationRepository;
+import com.glinboy.app.service.NotificationProviderService;
+import com.glinboy.app.service.dto.NotificationDTO;
+import com.glinboy.app.service.dto.NotificationsDTO;
+import com.glinboy.app.service.mapper.NotificationMapper;
 
 /**
  * Integration tests for the {@link NotificationResource} REST controller.
@@ -57,6 +70,7 @@ class NotificationResourceIT {
 
     private static final String ENTITY_API_URL = "/api/notifications";
     private static final String ENTITY_API_URL_ID = ENTITY_API_URL + "/{id}";
+	private static final String ENTITY_API_URL_MULTIPLE = "/api/notifications/multiple";
 
     private static Random random = new Random();
     private static AtomicLong count = new AtomicLong(random.nextInt() + (2 * Integer.MAX_VALUE));
@@ -77,7 +91,7 @@ class NotificationResourceIT {
     private NotificationProviderService<NotificationDTO> notificationProviderService;
 
     private Notification notification;
-    
+
     private NotificationData notificationData;
 
     /**
@@ -94,6 +108,31 @@ class NotificationResourceIT {
             .content(DEFAULT_CONTENT)
             .image(DEFAULT_IMAGE);
         return notification;
+    }
+
+    /**
+     * Create multiple entities for this test.
+     *
+     * This is a static method, as tests for other entities might also need it, if
+     * they test an entity which requires the current entity.
+     */
+    public static List<NotificationsDTO> createNotificationsDTO(int notificationsDTOCount, int reciversCount) {
+        List<NotificationsDTO> notificationsDTO = IntStream.range(0, notificationsDTOCount)
+                .mapToObj(i -> {
+                    Map<String, String> rs = new HashMap<>();
+                    for (int j = 1; j <= reciversCount; j++) {
+                        rs.put("USER_" + j, "TOKEN_" + j);
+                    }
+                    NotificationsDTO n = new NotificationsDTO();
+                    n.setReceivers(rs);
+                    n.setSubject(String.format("SUBJECT_%d", i));
+                    n.setContent(String.format("CONETNT_%d", i));
+                    return n;
+                })
+                .collect(Collectors.toList());
+        assertThat(notificationsDTO.size()).isEqualTo(notificationsDTOCount);
+        notificationsDTO.forEach(es -> assertThat(es.getReceivers().size()).isEqualTo(reciversCount));
+        return notificationsDTO;
     }
 
     /**
@@ -139,6 +178,26 @@ class NotificationResourceIT {
         assertThat(testNotification.getSubject()).isEqualTo(DEFAULT_SUBJECT);
         assertThat(testNotification.getContent()).isEqualTo(DEFAULT_CONTENT);
         assertThat(testNotification.getImage()).isEqualTo(DEFAULT_IMAGE);
+    }
+
+    @Test
+    @Transactional
+    void createBulkNotification() throws Exception {
+        int databaseSizeBeforeCreate = notificationRepository.findAll().size();
+        // Create multiple Notifications
+        int notificationsCount = 2;
+        int reciverCount = 5;
+        List<NotificationsDTO> notificationsDTOs = createNotificationsDTO(notificationsCount, reciverCount);
+        doNothing().when(notificationProviderService).sendNotification(List.of());
+        restNotificationMockMvc
+            .perform(
+                post(ENTITY_API_URL_MULTIPLE).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(notificationsDTOs))
+            )
+            .andExpect(status().isOk());
+
+        // Validate the Notification in the database
+        List<Notification> notificationList = notificationRepository.findAll();
+        assertThat(notificationList).hasSize(databaseSizeBeforeCreate + (notificationsCount * reciverCount));
     }
 
     @Test
