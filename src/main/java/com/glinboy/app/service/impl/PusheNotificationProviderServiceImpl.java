@@ -46,6 +46,11 @@ public class PusheNotificationProviderServiceImpl
 		jmsTemplate.convertAndSend("PUSHE_NOTIFICATIONBOX", notificationDTO);
 		
 	}
+
+	@Override
+	public void sendNotification(List<NotificationDTO> notificationDTOs) {
+		notificationDTOs.forEach(n -> jmsTemplate.convertAndSend("PUSHE_NOTIFICATIONBOX", n));
+	}
 	
 	private void deliverNotification(NotificationDTO notificationDTO) {
 		RestTemplate restTemplate = new RestTemplate();
