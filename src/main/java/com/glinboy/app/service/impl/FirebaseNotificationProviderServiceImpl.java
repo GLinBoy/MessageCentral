@@ -1,5 +1,6 @@
 package com.glinboy.app.service.impl;
 
+import java.util.List;
 import java.util.stream.Collectors;
 
 import javax.jms.JMSException;
@@ -43,6 +44,11 @@ public class FirebaseNotificationProviderServiceImpl
 	@Override
 	public void sendNotification(NotificationDTO notificationDTO) {
 		jmsTemplate.convertAndSend("FIREBASE_NOTIFICATIONBOX", notificationDTO);
+	}
+
+	@Override
+	public void sendNotification(List<NotificationDTO> notificationDTOs) {
+		notificationDTOs.forEach(n -> jmsTemplate.convertAndSend("FIREBASE_NOTIFICATIONBOX", n));
 	}
 
 	private void deliverNotification(NotificationDTO notificationDTO) {
