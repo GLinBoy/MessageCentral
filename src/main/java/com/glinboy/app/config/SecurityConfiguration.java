@@ -96,6 +96,8 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .hasAnyAuthority(AuthoritiesConstants.ADMIN, AuthoritiesConstants.EMAIL_USER)
             .antMatchers("/api/short-messages/**")
                 .hasAnyAuthority(AuthoritiesConstants.ADMIN, AuthoritiesConstants.SMS_USER)
+            .antMatchers("/api/notifications/**")
+                .hasAnyAuthority(AuthoritiesConstants.ADMIN, AuthoritiesConstants.NOTIFICATION_USER)
             .antMatchers("/api/**").authenticated()
             .antMatchers("/management/health").permitAll()
             .antMatchers("/management/health/**").permitAll()
