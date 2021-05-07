@@ -238,6 +238,17 @@ class EmailResourceIT {
 
 	@Test
 	@Transactional
+	void failedCreateBulkEmail() throws Exception {
+		// Create multiple Email
+		int emailsCount = 2;
+		int reciverCount = 5;
+		List<EmailsDTO> emailsDTO = createEmailsDTO(emailsCount, reciverCount);
+		restEmailMockMvc.perform(post(ENTITY_API_URL_MULTIPLE).contentType(MediaType.APPLICATION_JSON)
+				.content(TestUtil.convertObjectToJsonBytes(emailsDTO))).andExpect(status().isForbidden());
+	}
+
+	@Test
+	@Transactional
 	@WithMockUser(authorities = {AuthoritiesConstants.EMAIL_USER})
 	void createEmailWithExistingId() throws Exception {
 		// Create the Email with an existing ID
