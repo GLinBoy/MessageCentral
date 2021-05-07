@@ -203,6 +203,15 @@ class EmailResourceIT {
 
 	@Test
 	@Transactional
+	void failedCreateEmailWithoutRole() throws Exception {
+		// Create the Email
+		EmailDTO emailDTO = emailMapper.toDto(email);
+		restEmailMockMvc.perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON)
+				.content(TestUtil.convertObjectToJsonBytes(emailDTO))).andExpect(status().isForbidden());
+	}
+
+	@Test
+	@Transactional
 	@WithMockUser(authorities = {AuthoritiesConstants.EMAIL_USER})
 	void createBulkEmail() throws Exception {
 		int databaseSizeBeforeCreate = emailRepository.findAll().size();
