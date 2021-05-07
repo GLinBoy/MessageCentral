@@ -309,6 +309,19 @@ class EmailResourceIT {
 
 	@Test
 	@Transactional
+	void failedGetEmail() throws Exception {
+		// Initialize the database
+		emailRepository.saveAndFlush(email);
+
+		// Get all the emailList
+		restEmailMockMvc.perform(get(ENTITY_API_URL + "?sort=id,desc")).andExpect(status().isForbidden());
+		
+		// Get the email
+		restEmailMockMvc.perform(get(ENTITY_API_URL_ID, email.getId())).andExpect(status().isForbidden());
+	}
+
+	@Test
+	@Transactional
 	@WithMockUser(authorities = {AuthoritiesConstants.EMAIL_USER})
 	void getEmail() throws Exception {
 		// Initialize the database
