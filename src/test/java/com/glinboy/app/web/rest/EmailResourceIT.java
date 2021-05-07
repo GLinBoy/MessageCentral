@@ -779,4 +779,21 @@ class EmailResourceIT {
 		List<Email> emailList = emailRepository.findAll();
 		assertThat(emailList).hasSize(databaseSizeBeforeDelete - 1);
 	}
+
+	@Test
+	@Transactional
+	void failedDeleteEmail() throws Exception {
+		// Initialize the database
+		emailRepository.saveAndFlush(email);
+
+		int databaseSizeBeforeDelete = emailRepository.findAll().size();
+
+		// Delete the email
+		restEmailMockMvc.perform(delete(ENTITY_API_URL_ID, email.getId()).accept(MediaType.APPLICATION_JSON))
+				.andExpect(status().isForbidden());
+
+		// Validate the database contains one less item
+		List<Email> emailList = emailRepository.findAll();
+		assertThat(emailList).hasSize(databaseSizeBeforeDelete);
+	}
 }
