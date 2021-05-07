@@ -695,6 +695,24 @@ class EmailResourceIT {
 
 	@Test
 	@Transactional
+	void failedPartialUpdateEmailWithPatch() throws Exception {
+		// Initialize the database
+		emailRepository.saveAndFlush(email);
+
+		// Update the email using partial update
+		Email partialUpdatedEmail = new Email();
+		partialUpdatedEmail.setId(email.getId());
+
+		partialUpdatedEmail.receiver(UPDATED_RECEIVER).subject(UPDATED_SUBJECT);
+
+		restEmailMockMvc.perform(
+				patch(ENTITY_API_URL_ID, partialUpdatedEmail.getId()).contentType("application/merge-patch+json")
+						.content(TestUtil.convertObjectToJsonBytes(partialUpdatedEmail)))
+				.andExpect(status().isForbidden());
+	}
+
+	@Test
+	@Transactional
 	@WithMockUser(authorities = {AuthoritiesConstants.EMAIL_USER})
 	void fullUpdateEmailWithPatch() throws Exception {
 		// Initialize the database
