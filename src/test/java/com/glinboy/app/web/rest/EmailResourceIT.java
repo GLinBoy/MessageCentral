@@ -39,6 +39,7 @@ import com.glinboy.app.IntegrationTest;
 import com.glinboy.app.config.ApplicationProperties;
 import com.glinboy.app.domain.Email;
 import com.glinboy.app.repository.EmailRepository;
+import com.glinboy.app.security.AuthoritiesConstants;
 import com.glinboy.app.service.dto.EmailDTO;
 import com.glinboy.app.service.dto.EmailsDTO;
 import com.glinboy.app.service.mapper.EmailMapper;
@@ -169,6 +170,7 @@ class EmailResourceIT {
 
 	@Test
 	@Transactional
+	@WithMockUser(authorities = {AuthoritiesConstants.EMAIL_USER})
 	void createEmail() throws Exception {
 		int databaseSizeBeforeCreate = emailRepository.findAll().size();
 		// Create the Email
@@ -201,6 +203,7 @@ class EmailResourceIT {
 
 	@Test
 	@Transactional
+	@WithMockUser(authorities = {AuthoritiesConstants.EMAIL_USER})
 	void createBulkEmail() throws Exception {
 		int databaseSizeBeforeCreate = emailRepository.findAll().size();
 		// Create multiple Email
@@ -226,6 +229,7 @@ class EmailResourceIT {
 
 	@Test
 	@Transactional
+	@WithMockUser(authorities = {AuthoritiesConstants.EMAIL_USER})
 	void createEmailWithExistingId() throws Exception {
 		// Create the Email with an existing ID
 		email.setId(1L);
@@ -244,6 +248,7 @@ class EmailResourceIT {
 
 	@Test
 	@Transactional
+	@WithMockUser(authorities = {AuthoritiesConstants.EMAIL_USER})
 	void checkReceiverIsRequired() throws Exception {
 		int databaseSizeBeforeTest = emailRepository.findAll().size();
 		// set the field null
@@ -261,6 +266,7 @@ class EmailResourceIT {
 
 	@Test
 	@Transactional
+	@WithMockUser(authorities = {AuthoritiesConstants.EMAIL_USER})
 	void checkSubjectIsRequired() throws Exception {
 		int databaseSizeBeforeTest = emailRepository.findAll().size();
 		// set the field null
@@ -278,6 +284,7 @@ class EmailResourceIT {
 
 	@Test
 	@Transactional
+	@WithMockUser(authorities = {AuthoritiesConstants.EMAIL_USER})
 	void getAllEmails() throws Exception {
 		// Initialize the database
 		emailRepository.saveAndFlush(email);
@@ -293,6 +300,7 @@ class EmailResourceIT {
 
 	@Test
 	@Transactional
+	@WithMockUser(authorities = {AuthoritiesConstants.EMAIL_USER})
 	void getEmail() throws Exception {
 		// Initialize the database
 		emailRepository.saveAndFlush(email);
@@ -308,6 +316,7 @@ class EmailResourceIT {
 
 	@Test
 	@Transactional
+	@WithMockUser(authorities = {AuthoritiesConstants.EMAIL_USER})
 	void getEmailsByIdFiltering() throws Exception {
 		// Initialize the database
 		emailRepository.saveAndFlush(email);
@@ -326,6 +335,7 @@ class EmailResourceIT {
 
 	@Test
 	@Transactional
+	@WithMockUser(authorities = {AuthoritiesConstants.EMAIL_USER})
 	void getAllEmailsByReceiverIsEqualToSomething() throws Exception {
 		// Initialize the database
 		emailRepository.saveAndFlush(email);
@@ -339,6 +349,7 @@ class EmailResourceIT {
 
 	@Test
 	@Transactional
+	@WithMockUser(authorities = {AuthoritiesConstants.EMAIL_USER})
 	void getAllEmailsByReceiverIsNotEqualToSomething() throws Exception {
 		// Initialize the database
 		emailRepository.saveAndFlush(email);
@@ -352,6 +363,7 @@ class EmailResourceIT {
 
 	@Test
 	@Transactional
+	@WithMockUser(authorities = {AuthoritiesConstants.EMAIL_USER})
 	void getAllEmailsByReceiverIsInShouldWork() throws Exception {
 		// Initialize the database
 		emailRepository.saveAndFlush(email);
@@ -365,6 +377,7 @@ class EmailResourceIT {
 
 	@Test
 	@Transactional
+	@WithMockUser(authorities = {AuthoritiesConstants.EMAIL_USER})
 	void getAllEmailsByReceiverIsNullOrNotNull() throws Exception {
 		// Initialize the database
 		emailRepository.saveAndFlush(email);
@@ -378,6 +391,7 @@ class EmailResourceIT {
 
 	@Test
 	@Transactional
+	@WithMockUser(authorities = {AuthoritiesConstants.EMAIL_USER})
 	void getAllEmailsByReceiverContainsSomething() throws Exception {
 		// Initialize the database
 		emailRepository.saveAndFlush(email);
@@ -391,6 +405,7 @@ class EmailResourceIT {
 
 	@Test
 	@Transactional
+	@WithMockUser(authorities = {AuthoritiesConstants.EMAIL_USER})
 	void getAllEmailsByReceiverNotContainsSomething() throws Exception {
 		// Initialize the database
 		emailRepository.saveAndFlush(email);
@@ -404,6 +419,7 @@ class EmailResourceIT {
 
 	@Test
 	@Transactional
+	@WithMockUser(authorities = {AuthoritiesConstants.EMAIL_USER})
 	void getAllEmailsBySubjectIsEqualToSomething() throws Exception {
 		// Initialize the database
 		emailRepository.saveAndFlush(email);
@@ -417,6 +433,7 @@ class EmailResourceIT {
 
 	@Test
 	@Transactional
+	@WithMockUser(authorities = {AuthoritiesConstants.EMAIL_USER})
 	void getAllEmailsBySubjectIsNotEqualToSomething() throws Exception {
 		// Initialize the database
 		emailRepository.saveAndFlush(email);
@@ -430,6 +447,7 @@ class EmailResourceIT {
 
 	@Test
 	@Transactional
+	@WithMockUser(authorities = {AuthoritiesConstants.EMAIL_USER})
 	void getAllEmailsBySubjectIsInShouldWork() throws Exception {
 		// Initialize the database
 		emailRepository.saveAndFlush(email);
@@ -443,6 +461,7 @@ class EmailResourceIT {
 
 	@Test
 	@Transactional
+	@WithMockUser(authorities = {AuthoritiesConstants.EMAIL_USER})
 	void getAllEmailsBySubjectIsNullOrNotNull() throws Exception {
 		// Initialize the database
 		emailRepository.saveAndFlush(email);
@@ -456,6 +475,7 @@ class EmailResourceIT {
 
 	@Test
 	@Transactional
+	@WithMockUser(authorities = {AuthoritiesConstants.EMAIL_USER})
 	void getAllEmailsBySubjectContainsSomething() throws Exception {
 		// Initialize the database
 		emailRepository.saveAndFlush(email);
@@ -469,6 +489,7 @@ class EmailResourceIT {
 
 	@Test
 	@Transactional
+	@WithMockUser(authorities = {AuthoritiesConstants.EMAIL_USER})
 	void getAllEmailsBySubjectNotContainsSomething() throws Exception {
 		// Initialize the database
 		emailRepository.saveAndFlush(email);
@@ -511,6 +532,7 @@ class EmailResourceIT {
 
 	@Test
 	@Transactional
+	@WithMockUser(authorities = {AuthoritiesConstants.EMAIL_USER})
 	void getNonExistingEmail() throws Exception {
 		// Get the email
 		restEmailMockMvc.perform(get(ENTITY_API_URL_ID, Long.MAX_VALUE)).andExpect(status().isNotFound());
@@ -518,6 +540,7 @@ class EmailResourceIT {
 
 	@Test
 	@Transactional
+	@WithMockUser(authorities = {AuthoritiesConstants.EMAIL_USER})
 	void putNewEmail() throws Exception {
 		// Initialize the database
 		emailRepository.saveAndFlush(email);
@@ -546,6 +569,7 @@ class EmailResourceIT {
 
 	@Test
 	@Transactional
+	@WithMockUser(authorities = {AuthoritiesConstants.EMAIL_USER})
 	void putNonExistingEmail() throws Exception {
 		int databaseSizeBeforeUpdate = emailRepository.findAll().size();
 		email.setId(count.incrementAndGet());
@@ -564,6 +588,7 @@ class EmailResourceIT {
 
 	@Test
 	@Transactional
+	@WithMockUser(authorities = {AuthoritiesConstants.EMAIL_USER})
 	void putWithIdMismatchEmail() throws Exception {
 		int databaseSizeBeforeUpdate = emailRepository.findAll().size();
 		email.setId(count.incrementAndGet());
@@ -582,6 +607,7 @@ class EmailResourceIT {
 
 	@Test
 	@Transactional
+	@WithMockUser(authorities = {AuthoritiesConstants.EMAIL_USER})
 	void putWithMissingIdPathParamEmail() throws Exception {
 		int databaseSizeBeforeUpdate = emailRepository.findAll().size();
 		email.setId(count.incrementAndGet());
@@ -600,6 +626,7 @@ class EmailResourceIT {
 
 	@Test
 	@Transactional
+	@WithMockUser(authorities = {AuthoritiesConstants.EMAIL_USER})
 	void partialUpdateEmailWithPatch() throws Exception {
 		// Initialize the database
 		emailRepository.saveAndFlush(email);
@@ -628,6 +655,7 @@ class EmailResourceIT {
 
 	@Test
 	@Transactional
+	@WithMockUser(authorities = {AuthoritiesConstants.EMAIL_USER})
 	void fullUpdateEmailWithPatch() throws Exception {
 		// Initialize the database
 		emailRepository.saveAndFlush(email);
@@ -656,6 +684,7 @@ class EmailResourceIT {
 
 	@Test
 	@Transactional
+	@WithMockUser(authorities = {AuthoritiesConstants.EMAIL_USER})
 	void patchNonExistingEmail() throws Exception {
 		int databaseSizeBeforeUpdate = emailRepository.findAll().size();
 		email.setId(count.incrementAndGet());
@@ -674,6 +703,7 @@ class EmailResourceIT {
 
 	@Test
 	@Transactional
+	@WithMockUser(authorities = {AuthoritiesConstants.EMAIL_USER})
 	void patchWithIdMismatchEmail() throws Exception {
 		int databaseSizeBeforeUpdate = emailRepository.findAll().size();
 		email.setId(count.incrementAndGet());
@@ -693,6 +723,7 @@ class EmailResourceIT {
 
 	@Test
 	@Transactional
+	@WithMockUser(authorities = {AuthoritiesConstants.EMAIL_USER})
 	void patchWithMissingIdPathParamEmail() throws Exception {
 		int databaseSizeBeforeUpdate = emailRepository.findAll().size();
 		email.setId(count.incrementAndGet());
@@ -711,6 +742,7 @@ class EmailResourceIT {
 
 	@Test
 	@Transactional
+	@WithMockUser(authorities = {AuthoritiesConstants.EMAIL_USER})
 	void deleteEmail() throws Exception {
 		// Initialize the database
 		emailRepository.saveAndFlush(email);
