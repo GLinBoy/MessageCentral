@@ -591,6 +591,24 @@ class EmailResourceIT {
 
 	@Test
 	@Transactional
+	void failedPutNewEmail() throws Exception {
+		// Initialize the database
+		emailRepository.saveAndFlush(email);
+
+		// Update the email
+		Email updatedEmail = emailRepository.findById(email.getId()).get();
+		// Disconnect from session so that the updates on updatedEmail are not directly
+		// saved in db
+		em.detach(updatedEmail);
+		updatedEmail.receiver(UPDATED_RECEIVER).subject(UPDATED_SUBJECT).content(UPDATED_CONTENT);
+		EmailDTO emailDTO = emailMapper.toDto(updatedEmail);
+
+		restEmailMockMvc.perform(put(ENTITY_API_URL_ID, emailDTO.getId()).contentType(MediaType.APPLICATION_JSON)
+				.content(TestUtil.convertObjectToJsonBytes(emailDTO))).andExpect(status().isForbidden());
+	}
+
+	@Test
+	@Transactional
 	@WithMockUser(authorities = {AuthoritiesConstants.EMAIL_USER})
 	void putNonExistingEmail() throws Exception {
 		int databaseSizeBeforeUpdate = emailRepository.findAll().size();
