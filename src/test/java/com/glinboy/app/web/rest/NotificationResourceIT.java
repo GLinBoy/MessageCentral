@@ -218,6 +218,21 @@ class NotificationResourceIT {
 
     @Test
     @Transactional
+    void failedCreateBulkNotification() throws Exception {
+        // Create multiple Notifications
+        int notificationsCount = 2;
+        int reciverCount = 5;
+        List<NotificationsDTO> notificationsDTOs = createNotificationsDTO(notificationsCount, reciverCount);
+        doNothing().when(notificationProviderService).sendNotification(List.of());
+        restNotificationMockMvc
+            .perform(
+                post(ENTITY_API_URL_MULTIPLE).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(notificationsDTOs))
+            )
+            .andExpect(status().isForbidden());
+    }
+
+    @Test
+    @Transactional
     @WithMockUser(authorities = {AuthoritiesConstants.NOTIFICATION_USER})
     /**
      * Added for issue:
