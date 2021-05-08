@@ -301,6 +301,23 @@ class ShortMessageResourceIT {
 
     @Test
     @Transactional
+    void failedGetShortMessage() throws Exception {
+        // Initialize the database
+        shortMessageRepository.saveAndFlush(shortMessage);
+
+        // Get all the shortMessageList
+        restShortMessageMockMvc
+            .perform(get(ENTITY_API_URL + "?sort=id,desc"))
+            .andExpect(status().isForbidden());
+
+        // Get the shortMessage
+        restShortMessageMockMvc
+            .perform(get(ENTITY_API_URL_ID, shortMessage.getId()))
+            .andExpect(status().isForbidden());
+    }
+
+    @Test
+    @Transactional
     @WithMockUser(authorities = {AuthoritiesConstants.SMS_USER})
     void getShortMessagesByIdFiltering() throws Exception {
         // Initialize the database
