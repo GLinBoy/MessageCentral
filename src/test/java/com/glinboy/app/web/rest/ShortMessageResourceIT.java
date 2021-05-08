@@ -584,6 +584,28 @@ class ShortMessageResourceIT {
 
     @Test
     @Transactional
+    void failedPutNewShortMessage() throws Exception {
+        // Initialize the database
+        shortMessageRepository.saveAndFlush(shortMessage);
+
+        // Update the shortMessage
+        ShortMessage updatedShortMessage = shortMessageRepository.findById(shortMessage.getId()).get();
+        // Disconnect from session so that the updates on updatedShortMessage are not directly saved in db
+        em.detach(updatedShortMessage);
+        updatedShortMessage.phoneNumber(UPDATED_PHONE_NUMBER).content(UPDATED_CONTENT);
+        ShortMessageDTO shortMessageDTO = shortMessageMapper.toDto(updatedShortMessage);
+
+        restShortMessageMockMvc
+            .perform(
+                put(ENTITY_API_URL_ID, shortMessageDTO.getId())
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(TestUtil.convertObjectToJsonBytes(shortMessageDTO))
+            )
+            .andExpect(status().isForbidden());
+    }
+
+    @Test
+    @Transactional
     @WithMockUser(authorities = {AuthoritiesConstants.SMS_USER})
     void putNonExistingShortMessage() throws Exception {
         int databaseSizeBeforeUpdate = shortMessageRepository.findAll().size();
