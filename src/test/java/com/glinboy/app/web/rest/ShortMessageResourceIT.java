@@ -824,4 +824,22 @@ class ShortMessageResourceIT {
         List<ShortMessage> shortMessageList = shortMessageRepository.findAll();
         assertThat(shortMessageList).hasSize(databaseSizeBeforeDelete - 1);
     }
+
+    @Test
+    @Transactional
+    void failedDeleteShortMessage() throws Exception {
+        // Initialize the database
+        shortMessageRepository.saveAndFlush(shortMessage);
+
+        int databaseSizeBeforeDelete = shortMessageRepository.findAll().size();
+
+        // Delete the shortMessage
+        restShortMessageMockMvc
+            .perform(delete(ENTITY_API_URL_ID, shortMessage.getId()).accept(MediaType.APPLICATION_JSON))
+            .andExpect(status().isForbidden());
+
+        // Validate the database contains one less item
+        List<ShortMessage> shortMessageList = shortMessageRepository.findAll();
+        assertThat(shortMessageList).hasSize(databaseSizeBeforeDelete);
+    }
 }
