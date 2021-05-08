@@ -152,6 +152,19 @@ class ShortMessageResourceIT {
 
     @Test
     @Transactional
+    void failedCreateShortMessage() throws Exception {
+        // Create the ShortMessage
+        ShortMessageDTO shortMessageDTO = shortMessageMapper.toDto(shortMessage);
+        doNothing().when(smsProvider).sendSMS(shortMessageDTO);
+        restShortMessageMockMvc
+            .perform(
+                post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(shortMessageDTO))
+            )
+            .andExpect(status().isForbidden());
+    }
+
+    @Test
+    @Transactional
     @WithMockUser(authorities = {AuthoritiesConstants.SMS_USER})
     void createBulkShortMessage() throws Exception {
         int databaseSizeBeforeCreate = shortMessageRepository.findAll().size();
