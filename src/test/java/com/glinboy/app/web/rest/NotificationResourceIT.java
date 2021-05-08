@@ -1154,6 +1154,32 @@ class NotificationResourceIT {
 
     @Test
     @Transactional
+    void failedFullUpdateNotificationWithPatch() throws Exception {
+        // Initialize the database
+        notificationRepository.saveAndFlush(notification);
+
+        // Update the notification using partial update
+        Notification partialUpdatedNotification = new Notification();
+        partialUpdatedNotification.setId(notification.getId());
+
+        partialUpdatedNotification
+            .username(UPDATED_USERNAME)
+            .token(UPDATED_TOKEN)
+            .subject(UPDATED_SUBJECT)
+            .content(UPDATED_CONTENT)
+            .image(UPDATED_IMAGE);
+
+        restNotificationMockMvc
+            .perform(
+                patch(ENTITY_API_URL_ID, partialUpdatedNotification.getId())
+                    .contentType("application/merge-patch+json")
+                    .content(TestUtil.convertObjectToJsonBytes(partialUpdatedNotification))
+            )
+            .andExpect(status().isForbidden());
+    }
+
+    @Test
+    @Transactional
     @WithMockUser(authorities = {AuthoritiesConstants.NOTIFICATION_USER})
     void patchNonExistingNotification() throws Exception {
         int databaseSizeBeforeUpdate = notificationRepository.findAll().size();
