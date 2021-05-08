@@ -184,6 +184,19 @@ class NotificationResourceIT {
 
     @Test
     @Transactional
+    void failedCreateNotification() throws Exception {
+        // Create the Notification
+        NotificationDTO notificationDTO = notificationMapper.toDto(notification);
+        doNothing().when(notificationProviderService).sendNotification(notificationDTO);
+        restNotificationMockMvc
+            .perform(
+                post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(notificationDTO))
+            )
+            .andExpect(status().isForbidden());
+    }
+
+    @Test
+    @Transactional
     @WithMockUser(authorities = {AuthoritiesConstants.NOTIFICATION_USER})
     void createBulkNotification() throws Exception {
         int databaseSizeBeforeCreate = notificationRepository.findAll().size();
