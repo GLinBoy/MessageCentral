@@ -1268,4 +1268,22 @@ class NotificationResourceIT {
         List<Notification> notificationList = notificationRepository.findAll();
         assertThat(notificationList).hasSize(databaseSizeBeforeDelete - 1);
     }
+
+    @Test
+    @Transactional
+    void failedDeleteNotification() throws Exception {
+        // Initialize the database
+        notificationRepository.saveAndFlush(notification);
+
+        int databaseSizeBeforeDelete = notificationRepository.findAll().size();
+
+        // Delete the notification
+        restNotificationMockMvc
+            .perform(delete(ENTITY_API_URL_ID, notification.getId()).accept(MediaType.APPLICATION_JSON))
+            .andExpect(status().isForbidden());
+
+        // Validate the database contains one less item
+        List<Notification> notificationList = notificationRepository.findAll();
+        assertThat(notificationList).hasSize(databaseSizeBeforeDelete);
+    }
 }
