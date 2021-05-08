@@ -187,6 +187,22 @@ class ShortMessageResourceIT {
 
     @Test
     @Transactional
+    void failedCreateBulkShortMessage() throws Exception {
+        // Create Multiple ShortMessage
+        int smsCount = 2;
+        int numbersCount = 5;
+        List<ShortMessagesDTO> shortMessagesDTOs = createEmailsDTO(smsCount, numbersCount);
+        doNothing().when(smsProvider).sendSMS(List.of());
+        restShortMessageMockMvc
+            .perform(
+                post(ENTITY_API_URL_MULTIPLE).contentType(MediaType.APPLICATION_JSON)
+                .content(TestUtil.convertObjectToJsonBytes(shortMessagesDTOs))
+            )
+            .andExpect(status().isForbidden());
+    }
+
+    @Test
+    @Transactional
     @WithMockUser(authorities = {AuthoritiesConstants.SMS_USER})
     void createShortMessageWithExistingId() throws Exception {
         // Create the ShortMessage with an existing ID
