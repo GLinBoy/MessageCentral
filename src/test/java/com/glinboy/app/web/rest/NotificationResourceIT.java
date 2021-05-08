@@ -986,6 +986,33 @@ class NotificationResourceIT {
 
     @Test
     @Transactional
+    void failedPutNewNotification() throws Exception {
+        // Initialize the database
+        notificationRepository.saveAndFlush(notification);
+
+        // Update the notification
+        Notification updatedNotification = notificationRepository.findById(notification.getId()).get();
+        // Disconnect from session so that the updates on updatedNotification are not directly saved in db
+        em.detach(updatedNotification);
+        updatedNotification
+            .username(UPDATED_USERNAME)
+            .token(UPDATED_TOKEN)
+            .subject(UPDATED_SUBJECT)
+            .content(UPDATED_CONTENT)
+            .image(UPDATED_IMAGE);
+        NotificationDTO notificationDTO = notificationMapper.toDto(updatedNotification);
+
+        restNotificationMockMvc
+            .perform(
+                put(ENTITY_API_URL_ID, notificationDTO.getId())
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(TestUtil.convertObjectToJsonBytes(notificationDTO))
+            )
+            .andExpect(status().isForbidden());
+    }
+
+    @Test
+    @Transactional
     @WithMockUser(authorities = {AuthoritiesConstants.NOTIFICATION_USER})
     void putNonExistingNotification() throws Exception {
         int databaseSizeBeforeUpdate = notificationRepository.findAll().size();
