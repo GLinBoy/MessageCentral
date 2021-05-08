@@ -705,6 +705,25 @@ class ShortMessageResourceIT {
 
     @Test
     @Transactional
+    void failedPartialUpdateShortMessageWithPatch() throws Exception {
+        // Initialize the database
+        shortMessageRepository.saveAndFlush(shortMessage);
+
+        // Update the shortMessage using partial update
+        ShortMessage partialUpdatedShortMessage = new ShortMessage();
+        partialUpdatedShortMessage.setId(shortMessage.getId());
+
+        restShortMessageMockMvc
+            .perform(
+                patch(ENTITY_API_URL_ID, partialUpdatedShortMessage.getId())
+                    .contentType("application/merge-patch+json")
+                    .content(TestUtil.convertObjectToJsonBytes(partialUpdatedShortMessage))
+            )
+            .andExpect(status().isForbidden());
+    }
+
+    @Test
+    @Transactional
     @WithMockUser(authorities = {AuthoritiesConstants.SMS_USER})
     void fullUpdateShortMessageWithPatch() throws Exception {
         // Initialize the database
