@@ -420,6 +420,23 @@ class NotificationResourceIT {
 
     @Test
     @Transactional
+    void failedGetNotification() throws Exception {
+        // Initialize the database
+        notificationRepository.saveAndFlush(notification);
+
+        // Get all the notificationList
+        restNotificationMockMvc
+            .perform(get(ENTITY_API_URL + "?sort=id,desc"))
+            .andExpect(status().isForbidden());
+
+            // Get the notification
+            restNotificationMockMvc
+                .perform(get(ENTITY_API_URL_ID, notification.getId()))
+                .andExpect(status().isForbidden());
+    }
+
+    @Test
+    @Transactional
     @WithMockUser(authorities = {AuthoritiesConstants.NOTIFICATION_USER})
     void getNotificationsByIdFiltering() throws Exception {
         // Initialize the database
