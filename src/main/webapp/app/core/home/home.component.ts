@@ -1,8 +1,13 @@
 import Component from 'vue-class-component';
 import { Inject, Vue } from 'vue-property-decorator';
 import LoginService from '@/account/login.service';
+import LoginForm from '@/account/login-form/login-form.vue';
 
-@Component
+@Component({
+  components: {
+    'login-form': LoginForm,
+  },
+})
 export default class Home extends Vue {
   @Inject('loginService')
   private loginService: () => LoginService;

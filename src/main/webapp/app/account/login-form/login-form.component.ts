@@ -3,6 +3,7 @@ import Component from 'vue-class-component';
 import { Vue, Inject } from 'vue-property-decorator';
 import AccountService from '@/account/account.service';
 @Component({
+  name: 'LoginForm',
   watch: {
     $route() {
       this.$root.$emit('bv::hide::modal', 'login-page');
