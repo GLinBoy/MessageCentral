@@ -100,6 +100,7 @@
           </b-dropdown-item>
         </b-nav-item-dropdown>
         <b-nav-item-dropdown
+          v-if="authenticated"
           right
           href="javascript:void(0);"
           id="account-menu"
