@@ -29,7 +29,8 @@ export default new Router({
     {
       path: '/dashboard',
       name: 'Dashboard',
-      component: Dashboard
+      component: Dashboard,
+      meta: { authorities: [Authority.USER] },
     },
     {
       path: '/forbidden',
