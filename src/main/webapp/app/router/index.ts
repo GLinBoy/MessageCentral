@@ -6,6 +6,7 @@ Component.registerHooks([
   'beforeRouteUpdate', // for vue-router 2.2+
 ]);
 import Router from 'vue-router';
+import { Authority } from '@/shared/security/authority';
 
 const Home = () => import('@/core/home/home.vue');
 const Dashboard = () => import('@/core/dashboard/dashboard.vue');
