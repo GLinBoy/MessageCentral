@@ -203,12 +203,17 @@ http://stackoverflow.com/questions/23436430/bootstrap-3-input-group-100-width */
   width: 1% !important;
 }
 
-.table th,
-.table td {
+.table th:not(:first-child),
+.table td:not(:first-child) {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
   max-width: 0px;
+}
+
+.table th:first-child,
+.table td:first-child {
+  width: 5em;
 }
 
 /* ==========================================================================
