@@ -203,6 +203,14 @@ http://stackoverflow.com/questions/23436430/bootstrap-3-input-group-100-width */
   width: 1% !important;
 }
 
+.table th,
+.table td {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 0px;
+}
+
 /* ==========================================================================
 entity detail page css
 ========================================================================== */
