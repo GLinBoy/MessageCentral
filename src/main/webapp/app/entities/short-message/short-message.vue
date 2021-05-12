@@ -139,3 +139,5 @@
 </template>
 
 <script lang="ts" src="./short-message.component.ts"></script>
+
+<style lang="scss" scoped src="./short-message.style.scss"></style>
