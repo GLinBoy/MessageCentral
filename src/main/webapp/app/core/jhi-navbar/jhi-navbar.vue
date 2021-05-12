@@ -1,6 +1,6 @@
 <template>
   <b-navbar data-cy="navbar" toggleable="md" type="dark" class="bg-primary">
-    <b-navbar-brand class="logo" b-link to="/">
+    <b-navbar-brand class="logo" b-link to="/dashboard">
       <span class="logo-img"></span>
       <span v-text="$t('global.title')" class="navbar-title">MessageCentral</span> <span class="navbar-version">{{ version }}</span>
     </b-navbar-brand>
@@ -18,10 +18,10 @@
 
     <b-collapse is-nav id="header-tabs">
       <b-navbar-nav class="ml-auto">
-        <b-nav-item to="/" exact>
+        <b-nav-item to="/dashboard" exact>
           <span>
             <font-awesome-icon icon="home" />
-            <span v-text="$t('global.menu.home')">Home</span>
+            <span v-text="$t('global.menu.home')">Dashboard</span>
           </span>
         </b-nav-item>
         <b-nav-item-dropdown right id="entity-menu" v-if="authenticated" active-class="active" class="pointer" data-cy="entity">
