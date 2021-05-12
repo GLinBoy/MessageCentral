@@ -154,3 +154,5 @@
 </template>
 
 <script lang="ts" src="./notification.component.ts"></script>
+
+<style lang="scss" scoped src="./notification.style.scss"></style>
