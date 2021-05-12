@@ -3,9 +3,14 @@
     <h2 id="page-heading" data-cy="ShortMessageHeading">
       <span v-text="$t('messageCentralApp.shortMessage.home.title')" id="short-message-heading">Short Messages</span>
       <div class="d-flex justify-content-end">
-        <button class="btn btn-info mr-2" v-on:click="handleSyncList" :disabled="isFetching">
+        <button
+          class="btn btn-info mr-2"
+          v-on:click="handleSyncList"
+          :disabled="isFetching"
+          v-b-tooltip.hover
+          :title="$t('messageCentralApp.shortMessage.home.refreshListLabel')"
+        >
           <font-awesome-icon icon="sync" :spin="isFetching"></font-awesome-icon>
-          <span v-text="$t('messageCentralApp.shortMessage.home.refreshListLabel')">Refresh List</span>
         </button>
         <router-link :to="{ name: 'ShortMessageCreate' }" custom v-slot="{ navigate }">
           <button
@@ -13,9 +18,10 @@
             id="jh-create-entity"
             data-cy="entityCreateButton"
             class="btn btn-primary jh-create-entity create-short-message"
+            v-b-tooltip.hover
+            :title="$t('messageCentralApp.shortMessage.home.createLabel')"
           >
             <font-awesome-icon icon="plus"></font-awesome-icon>
-            <span v-text="$t('messageCentralApp.shortMessage.home.createLabel')"> Create a new Short Message </span>
           </button>
         </router-link>
       </div>
@@ -55,15 +61,25 @@
             <td class="text-right">
               <div class="btn-group">
                 <router-link :to="{ name: 'ShortMessageView', params: { shortMessageId: shortMessage.id } }" custom v-slot="{ navigate }">
-                  <button @click="navigate" class="btn btn-info btn-sm details" data-cy="entityDetailsButton">
+                  <button
+                    @click="navigate"
+                    class="btn btn-info btn-sm details"
+                    data-cy="entityDetailsButton"
+                    v-b-tooltip.hover
+                    :title="$t('entity.action.view')"
+                  >
                     <font-awesome-icon icon="eye"></font-awesome-icon>
-                    <span class="d-none d-md-inline" v-text="$t('entity.action.view')">View</span>
                   </button>
                 </router-link>
                 <router-link :to="{ name: 'ShortMessageEdit', params: { shortMessageId: shortMessage.id } }" custom v-slot="{ navigate }">
-                  <button @click="navigate" class="btn btn-primary btn-sm edit" data-cy="entityEditButton">
+                  <button
+                    @click="navigate"
+                    class="btn btn-primary btn-sm edit"
+                    data-cy="entityEditButton"
+                    v-b-tooltip.hover
+                    :title="$t('entity.action.edit')"
+                  >
                     <font-awesome-icon icon="pencil-alt"></font-awesome-icon>
-                    <span class="d-none d-md-inline" v-text="$t('entity.action.edit')">Edit</span>
                   </button>
                 </router-link>
                 <b-button
@@ -72,9 +88,10 @@
                   class="btn btn-sm"
                   data-cy="entityDeleteButton"
                   v-b-modal.removeEntity
+                  v-b-tooltip.hover
+                  :title="$t('entity.action.delete')"
                 >
                   <font-awesome-icon icon="times"></font-awesome-icon>
-                  <span class="d-none d-md-inline" v-text="$t('entity.action.delete')">Delete</span>
                 </b-button>
               </div>
             </td>
