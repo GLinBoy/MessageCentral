@@ -139,3 +139,5 @@
 </template>
 
 <script lang="ts" src="./email.component.ts"></script>
+
+<style lang="scss" scoped src="./email.style.scss"></style>
