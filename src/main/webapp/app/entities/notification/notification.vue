@@ -3,9 +3,14 @@
     <h2 id="page-heading" data-cy="NotificationHeading">
       <span v-text="$t('messageCentralApp.notification.home.title')" id="notification-heading">Notifications</span>
       <div class="d-flex justify-content-end">
-        <button class="btn btn-info mr-2" v-on:click="handleSyncList" :disabled="isFetching">
+        <button
+          class="btn btn-info mr-2"
+          v-on:click="handleSyncList"
+          :disabled="isFetching"
+          v-b-tooltip.hover
+          :title="$t('messageCentralApp.notification.home.refreshListLabel')"
+        >
           <font-awesome-icon icon="sync" :spin="isFetching"></font-awesome-icon>
-          <span v-text="$t('messageCentralApp.notification.home.refreshListLabel')">Refresh List</span>
         </button>
         <router-link :to="{ name: 'NotificationCreate' }" custom v-slot="{ navigate }">
           <button
@@ -13,9 +18,10 @@
             id="jh-create-entity"
             data-cy="entityCreateButton"
             class="btn btn-primary jh-create-entity create-notification"
+            v-b-tooltip.hover
+            :title="$t('messageCentralApp.notification.home.createLabel')"
           >
             <font-awesome-icon icon="plus"></font-awesome-icon>
-            <span v-text="$t('messageCentralApp.notification.home.createLabel')"> Create a new Notification </span>
           </button>
         </router-link>
       </div>
@@ -70,15 +76,25 @@
             <td class="text-right">
               <div class="btn-group">
                 <router-link :to="{ name: 'NotificationView', params: { notificationId: notification.id } }" custom v-slot="{ navigate }">
-                  <button @click="navigate" class="btn btn-info btn-sm details" data-cy="entityDetailsButton">
+                  <button
+                    @click="navigate"
+                    class="btn btn-info btn-sm details"
+                    data-cy="entityDetailsButton"
+                    v-b-tooltip.hover
+                    :title="$t('entity.action.view')"
+                  >
                     <font-awesome-icon icon="eye"></font-awesome-icon>
-                    <span class="d-none d-md-inline" v-text="$t('entity.action.view')">View</span>
                   </button>
                 </router-link>
                 <router-link :to="{ name: 'NotificationEdit', params: { notificationId: notification.id } }" custom v-slot="{ navigate }">
-                  <button @click="navigate" class="btn btn-primary btn-sm edit" data-cy="entityEditButton">
+                  <button
+                    @click="navigate"
+                    class="btn btn-primary btn-sm edit"
+                    data-cy="entityEditButton"
+                    v-b-tooltip.hover
+                    :title="$t('entity.action.edit')"
+                  >
                     <font-awesome-icon icon="pencil-alt"></font-awesome-icon>
-                    <span class="d-none d-md-inline" v-text="$t('entity.action.edit')">Edit</span>
                   </button>
                 </router-link>
                 <b-button
@@ -87,9 +103,10 @@
                   class="btn btn-sm"
                   data-cy="entityDeleteButton"
                   v-b-modal.removeEntity
+                  v-b-tooltip.hover
+                  :title="$t('entity.action.delete')"
                 >
                   <font-awesome-icon icon="times"></font-awesome-icon>
-                  <span class="d-none d-md-inline" v-text="$t('entity.action.delete')">Delete</span>
                 </b-button>
               </div>
             </td>
