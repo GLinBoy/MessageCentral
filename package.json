@@ -2,7 +2,7 @@
   "name": "message-central",
   "version": "0.0.0",
   "private": true,
-  "description": "Description for MessageCentral",
+  "description": "A service to handle messages (email, SMS, notification) for microservice environment",
   "license": "Apache-2.0 License",
   "scripts": {
     "prettier:check": "prettier --check \"{,src/**/,webpack/}*.{md,json,yml,html,js,ts,tsx,css,scss,vue,java}\"",
