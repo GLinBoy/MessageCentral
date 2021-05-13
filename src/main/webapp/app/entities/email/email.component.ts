@@ -19,7 +19,7 @@ export default class Email extends mixins(JhiDataUtils) {
   public page = 1;
   public previousPage = 1;
   public propOrder = 'id';
-  public reverse = false;
+  public reverse = true;
   public totalItems = 0;
 
   public emails: IEmail[] = [];
