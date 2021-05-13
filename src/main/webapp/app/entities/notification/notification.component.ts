@@ -17,7 +17,7 @@ export default class Notification extends Vue {
   public page = 1;
   public previousPage = 1;
   public propOrder = 'id';
-  public reverse = false;
+  public reverse = true;
   public totalItems = 0;
 
   public notifications: INotification[] = [];
