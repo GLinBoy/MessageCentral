@@ -97,8 +97,7 @@
             <label class="form-control-label" v-text="$t('messageCentralApp.notification.content')" for="notification-content"
               >Content</label
             >
-            <input
-              type="text"
+            <textarea
               class="form-control"
               name="content"
               id="notification-content"
@@ -106,7 +105,7 @@
               :class="{ valid: !$v.notification.content.$invalid, invalid: $v.notification.content.$invalid }"
               v-model="$v.notification.content.$model"
               required
-            />
+            ></textarea>
             <div v-if="$v.notification.content.$anyDirty && $v.notification.content.$invalid">
               <small class="form-text text-danger" v-if="!$v.notification.content.required" v-text="$t('entity.validation.required')">
                 This field is required.
