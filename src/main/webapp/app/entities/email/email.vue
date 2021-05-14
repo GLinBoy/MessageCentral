@@ -1,31 +1,37 @@
 <template>
   <div>
-    <h2 id="page-heading" data-cy="EmailHeading">
-      <span v-text="$t('messageCentralApp.email.home.title')" id="email-heading">Emails</span>
-      <div class="d-flex justify-content-end">
-        <button
-          class="btn btn-info mr-2"
-          v-on:click="handleSyncList"
-          :disabled="isFetching"
-          v-b-tooltip.hover
-          :title="$t('messageCentralApp.email.home.refreshListLabel')"
-        >
-          <font-awesome-icon icon="sync" :spin="isFetching"></font-awesome-icon>
-        </button>
-        <router-link :to="{ name: 'EmailCreate' }" custom v-slot="{ navigate }">
-          <button
-            @click="navigate"
-            id="jh-create-entity"
-            data-cy="entityCreateButton"
-            class="btn btn-primary jh-create-entity create-email"
-            v-b-tooltip.hover
-            :title="$t('messageCentralApp.email.home.createLabel')"
-          >
-            <font-awesome-icon icon="plus"></font-awesome-icon>
-          </button>
-        </router-link>
+    <div class="row">
+      <div class="col-sm-4">
+        <h2 id="page-heading" data-cy="EmailHeading">
+          <span v-text="$t('messageCentralApp.email.home.title')" id="email-heading">Emails</span>
+        </h2>
       </div>
-    </h2>
+      <div class="col-sm-8">
+        <div class="d-flex justify-content-end">
+          <button
+            class="btn btn-info mr-2"
+            v-on:click="handleSyncList"
+            :disabled="isFetching"
+            v-b-tooltip.hover
+            :title="$t('messageCentralApp.email.home.refreshListLabel')"
+          >
+            <font-awesome-icon icon="sync" :spin="isFetching"></font-awesome-icon>
+          </button>
+          <router-link :to="{ name: 'EmailCreate' }" custom v-slot="{ navigate }">
+            <button
+              @click="navigate"
+              id="jh-create-entity"
+              data-cy="entityCreateButton"
+              class="btn btn-primary jh-create-entity create-email"
+              v-b-tooltip.hover
+              :title="$t('messageCentralApp.email.home.createLabel')"
+            >
+              <font-awesome-icon icon="plus"></font-awesome-icon>
+            </button>
+          </router-link>
+        </div>
+      </div>
+    </div>
     <br />
     <div class="alert alert-warning" v-if="!isFetching && emails && emails.length === 0">
       <span v-text="$t('messageCentralApp.email.home.notFound')">No emails found</span>
