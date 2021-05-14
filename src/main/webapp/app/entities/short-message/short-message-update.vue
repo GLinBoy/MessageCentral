@@ -59,16 +59,14 @@
             <label class="form-control-label" v-text="$t('messageCentralApp.shortMessage.content')" for="short-message-content"
               >Content</label
             >
-            <input
-              type="text"
+            <textarea
               class="form-control"
               name="content"
               id="short-message-content"
               data-cy="content"
               :class="{ valid: !$v.shortMessage.content.$invalid, invalid: $v.shortMessage.content.$invalid }"
               v-model="$v.shortMessage.content.$model"
-              required
-            />
+            ></textarea>
             <div v-if="$v.shortMessage.content.$anyDirty && $v.shortMessage.content.$invalid">
               <small class="form-text text-danger" v-if="!$v.shortMessage.content.required" v-text="$t('entity.validation.required')">
                 This field is required.
