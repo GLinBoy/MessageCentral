@@ -42,12 +42,6 @@ export default [
     meta: { authorities: [Authority.ADMIN, Authority.EMAIL_USER] },
   },
   {
-    path: '/email/:emailId/edit',
-    name: 'EmailEdit',
-    component: EmailUpdate,
-    meta: { authorities: [Authority.ADMIN, Authority.EMAIL_USER] },
-  },
-  {
     path: '/email/:emailId/view',
     name: 'EmailView',
     component: EmailDetails,
