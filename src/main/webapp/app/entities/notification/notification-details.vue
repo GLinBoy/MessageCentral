@@ -40,16 +40,6 @@
         <button type="submit" v-on:click.prevent="previousState()" class="btn btn-info" data-cy="entityDetailsBackButton">
           <font-awesome-icon icon="arrow-left"></font-awesome-icon>&nbsp;<span v-text="$t('entity.action.back')"> Back</span>
         </button>
-        <router-link
-          v-if="notification.id"
-          :to="{ name: 'NotificationEdit', params: { notificationId: notification.id } }"
-          custom
-          v-slot="{ navigate }"
-        >
-          <button @click="navigate" class="btn btn-primary">
-            <font-awesome-icon icon="pencil-alt"></font-awesome-icon>&nbsp;<span v-text="$t('entity.action.edit')"> Edit</span>
-          </button>
-        </router-link>
       </div>
     </div>
   </div>
