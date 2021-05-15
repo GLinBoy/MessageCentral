@@ -92,17 +92,6 @@
                     <font-awesome-icon icon="eye"></font-awesome-icon>
                   </button>
                 </router-link>
-                <router-link :to="{ name: 'NotificationEdit', params: { notificationId: notification.id } }" custom v-slot="{ navigate }">
-                  <button
-                    @click="navigate"
-                    class="btn btn-primary btn-sm edit"
-                    data-cy="entityEditButton"
-                    v-b-tooltip.hover
-                    :title="$t('entity.action.edit')"
-                  >
-                    <font-awesome-icon icon="pencil-alt"></font-awesome-icon>
-                  </button>
-                </router-link>
                 <b-button
                   v-on:click="prepareRemove(notification)"
                   variant="danger"
