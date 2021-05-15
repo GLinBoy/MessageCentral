@@ -60,12 +60,6 @@ export default [
     meta: { authorities: [Authority.ADMIN, Authority.SMS_USER] },
   },
   {
-    path: '/short-message/:shortMessageId/edit',
-    name: 'ShortMessageEdit',
-    component: ShortMessageUpdate,
-    meta: { authorities: [Authority.ADMIN, Authority.SMS_USER] },
-  },
-  {
     path: '/short-message/:shortMessageId/view',
     name: 'ShortMessageView',
     component: ShortMessageDetails,
