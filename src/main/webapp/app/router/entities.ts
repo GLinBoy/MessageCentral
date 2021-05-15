@@ -78,12 +78,6 @@ export default [
     meta: { authorities: [Authority.ADMIN, Authority.NOTIFICATION_USER] },
   },
   {
-    path: '/notification/:notificationId/edit',
-    name: 'NotificationEdit',
-    component: NotificationUpdate,
-    meta: { authorities: [Authority.ADMIN, Authority.NOTIFICATION_USER] },
-  },
-  {
     path: '/notification/:notificationId/view',
     name: 'NotificationView',
     component: NotificationDetails,
