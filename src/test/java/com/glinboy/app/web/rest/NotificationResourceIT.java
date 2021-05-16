@@ -971,17 +971,17 @@ class NotificationResourceIT {
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(TestUtil.convertObjectToJsonBytes(notificationDTO))
             )
-            .andExpect(status().isOk());
+            .andExpect(status().isMethodNotAllowed());
 
         // Validate the Notification in the database
         List<Notification> notificationList = notificationRepository.findAll();
         assertThat(notificationList).hasSize(databaseSizeBeforeUpdate);
         Notification testNotification = notificationList.get(notificationList.size() - 1);
-        assertThat(testNotification.getUsername()).isEqualTo(UPDATED_USERNAME);
-        assertThat(testNotification.getToken()).isEqualTo(UPDATED_TOKEN);
-        assertThat(testNotification.getSubject()).isEqualTo(UPDATED_SUBJECT);
-        assertThat(testNotification.getContent()).isEqualTo(UPDATED_CONTENT);
-        assertThat(testNotification.getImage()).isEqualTo(UPDATED_IMAGE);
+        assertThat(testNotification.getUsername()).isEqualTo(DEFAULT_USERNAME);
+        assertThat(testNotification.getToken()).isEqualTo(DEFAULT_TOKEN);
+        assertThat(testNotification.getSubject()).isEqualTo(DEFAULT_SUBJECT);
+        assertThat(testNotification.getContent()).isEqualTo(DEFAULT_CONTENT);
+        assertThat(testNotification.getImage()).isEqualTo(DEFAULT_IMAGE);
     }
 
     @Test
@@ -1028,7 +1028,7 @@ class NotificationResourceIT {
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(TestUtil.convertObjectToJsonBytes(notificationDTO))
             )
-            .andExpect(status().isBadRequest());
+            .andExpect(status().isMethodNotAllowed());
 
         // Validate the Notification in the database
         List<Notification> notificationList = notificationRepository.findAll();
@@ -1052,7 +1052,7 @@ class NotificationResourceIT {
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(TestUtil.convertObjectToJsonBytes(notificationDTO))
             )
-            .andExpect(status().isBadRequest());
+            .andExpect(status().isMethodNotAllowed());
 
         // Validate the Notification in the database
         List<Notification> notificationList = notificationRepository.findAll();
@@ -1100,7 +1100,7 @@ class NotificationResourceIT {
                     .contentType("application/merge-patch+json")
                     .content(TestUtil.convertObjectToJsonBytes(partialUpdatedNotification))
             )
-            .andExpect(status().isOk());
+            .andExpect(status().isMethodNotAllowed());
 
         // Validate the Notification in the database
         List<Notification> notificationList = notificationRepository.findAll();
@@ -1139,17 +1139,17 @@ class NotificationResourceIT {
                     .contentType("application/merge-patch+json")
                     .content(TestUtil.convertObjectToJsonBytes(partialUpdatedNotification))
             )
-            .andExpect(status().isOk());
+            .andExpect(status().isMethodNotAllowed());
 
         // Validate the Notification in the database
         List<Notification> notificationList = notificationRepository.findAll();
         assertThat(notificationList).hasSize(databaseSizeBeforeUpdate);
         Notification testNotification = notificationList.get(notificationList.size() - 1);
-        assertThat(testNotification.getUsername()).isEqualTo(UPDATED_USERNAME);
-        assertThat(testNotification.getToken()).isEqualTo(UPDATED_TOKEN);
-        assertThat(testNotification.getSubject()).isEqualTo(UPDATED_SUBJECT);
-        assertThat(testNotification.getContent()).isEqualTo(UPDATED_CONTENT);
-        assertThat(testNotification.getImage()).isEqualTo(UPDATED_IMAGE);
+        assertThat(testNotification.getUsername()).isEqualTo(DEFAULT_USERNAME);
+        assertThat(testNotification.getToken()).isEqualTo(DEFAULT_TOKEN);
+        assertThat(testNotification.getSubject()).isEqualTo(DEFAULT_SUBJECT);
+        assertThat(testNotification.getContent()).isEqualTo(DEFAULT_CONTENT);
+        assertThat(testNotification.getImage()).isEqualTo(DEFAULT_IMAGE);
     }
 
     @Test
@@ -1195,7 +1195,7 @@ class NotificationResourceIT {
                     .contentType("application/merge-patch+json")
                     .content(TestUtil.convertObjectToJsonBytes(notificationDTO))
             )
-            .andExpect(status().isBadRequest());
+            .andExpect(status().isMethodNotAllowed());
 
         // Validate the Notification in the database
         List<Notification> notificationList = notificationRepository.findAll();
@@ -1219,7 +1219,7 @@ class NotificationResourceIT {
                     .contentType("application/merge-patch+json")
                     .content(TestUtil.convertObjectToJsonBytes(notificationDTO))
             )
-            .andExpect(status().isBadRequest());
+            .andExpect(status().isMethodNotAllowed());
 
         // Validate the Notification in the database
         List<Notification> notificationList = notificationRepository.findAll();
