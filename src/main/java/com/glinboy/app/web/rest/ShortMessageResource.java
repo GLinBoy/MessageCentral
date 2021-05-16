@@ -115,7 +115,7 @@ public class ShortMessageResource {
      * or with status {@code 500 (Internal Server Error)} if the shortMessageDTO couldn't be updated.
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
-    @PutMapping("/short-messages/{id}")
+//    @PutMapping("/short-messages/{id}")
     public ResponseEntity<ShortMessageDTO> updateShortMessage(
         @PathVariable(value = "id", required = false) final Long id,
         @Valid @RequestBody ShortMessageDTO shortMessageDTO
@@ -150,7 +150,7 @@ public class ShortMessageResource {
      * or with status {@code 500 (Internal Server Error)} if the shortMessageDTO couldn't be updated.
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
-    @PatchMapping(value = "/short-messages/{id}", consumes = "application/merge-patch+json")
+//    @PatchMapping(value = "/short-messages/{id}", consumes = "application/merge-patch+json")
     public ResponseEntity<ShortMessageDTO> partialUpdateShortMessage(
         @PathVariable(value = "id", required = false) final Long id,
         @NotNull @RequestBody ShortMessageDTO shortMessageDTO
