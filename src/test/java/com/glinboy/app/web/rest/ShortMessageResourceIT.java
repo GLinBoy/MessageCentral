@@ -572,14 +572,14 @@ class ShortMessageResourceIT {
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(TestUtil.convertObjectToJsonBytes(shortMessageDTO))
             )
-            .andExpect(status().isOk());
+            .andExpect(status().isMethodNotAllowed());
 
         // Validate the ShortMessage in the database
         List<ShortMessage> shortMessageList = shortMessageRepository.findAll();
         assertThat(shortMessageList).hasSize(databaseSizeBeforeUpdate);
         ShortMessage testShortMessage = shortMessageList.get(shortMessageList.size() - 1);
-        assertThat(testShortMessage.getPhoneNumber()).isEqualTo(UPDATED_PHONE_NUMBER);
-        assertThat(testShortMessage.getContent()).isEqualTo(UPDATED_CONTENT);
+        assertThat(testShortMessage.getPhoneNumber()).isEqualTo(DEFAULT_PHONE_NUMBER);
+        assertThat(testShortMessage.getContent()).isEqualTo(DEFAULT_CONTENT);
     }
 
     @Test
@@ -621,7 +621,7 @@ class ShortMessageResourceIT {
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(TestUtil.convertObjectToJsonBytes(shortMessageDTO))
             )
-            .andExpect(status().isBadRequest());
+            .andExpect(status().isMethodNotAllowed());
 
         // Validate the ShortMessage in the database
         List<ShortMessage> shortMessageList = shortMessageRepository.findAll();
@@ -645,7 +645,7 @@ class ShortMessageResourceIT {
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(TestUtil.convertObjectToJsonBytes(shortMessageDTO))
             )
-            .andExpect(status().isBadRequest());
+            .andExpect(status().isMethodNotAllowed());
 
         // Validate the ShortMessage in the database
         List<ShortMessage> shortMessageList = shortMessageRepository.findAll();
@@ -693,7 +693,7 @@ class ShortMessageResourceIT {
                     .contentType("application/merge-patch+json")
                     .content(TestUtil.convertObjectToJsonBytes(partialUpdatedShortMessage))
             )
-            .andExpect(status().isOk());
+            .andExpect(status().isMethodNotAllowed());
 
         // Validate the ShortMessage in the database
         List<ShortMessage> shortMessageList = shortMessageRepository.findAll();
@@ -743,14 +743,14 @@ class ShortMessageResourceIT {
                     .contentType("application/merge-patch+json")
                     .content(TestUtil.convertObjectToJsonBytes(partialUpdatedShortMessage))
             )
-            .andExpect(status().isOk());
+            .andExpect(status().isMethodNotAllowed());
 
         // Validate the ShortMessage in the database
         List<ShortMessage> shortMessageList = shortMessageRepository.findAll();
         assertThat(shortMessageList).hasSize(databaseSizeBeforeUpdate);
         ShortMessage testShortMessage = shortMessageList.get(shortMessageList.size() - 1);
-        assertThat(testShortMessage.getPhoneNumber()).isEqualTo(UPDATED_PHONE_NUMBER);
-        assertThat(testShortMessage.getContent()).isEqualTo(UPDATED_CONTENT);
+        assertThat(testShortMessage.getPhoneNumber()).isEqualTo(DEFAULT_PHONE_NUMBER);
+        assertThat(testShortMessage.getContent()).isEqualTo(DEFAULT_CONTENT);
     }
 
     @Test
@@ -770,7 +770,7 @@ class ShortMessageResourceIT {
                     .contentType("application/merge-patch+json")
                     .content(TestUtil.convertObjectToJsonBytes(shortMessageDTO))
             )
-            .andExpect(status().isBadRequest());
+            .andExpect(status().isMethodNotAllowed());
 
         // Validate the ShortMessage in the database
         List<ShortMessage> shortMessageList = shortMessageRepository.findAll();
@@ -794,7 +794,7 @@ class ShortMessageResourceIT {
                     .contentType("application/merge-patch+json")
                     .content(TestUtil.convertObjectToJsonBytes(shortMessageDTO))
             )
-            .andExpect(status().isBadRequest());
+            .andExpect(status().isMethodNotAllowed());
 
         // Validate the ShortMessage in the database
         List<ShortMessage> shortMessageList = shortMessageRepository.findAll();
