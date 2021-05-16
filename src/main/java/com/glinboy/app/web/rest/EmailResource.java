@@ -19,10 +19,8 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -111,7 +109,7 @@ public class EmailResource {
      * or with status {@code 500 (Internal Server Error)} if the emailDTO couldn't be updated.
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
-    @PutMapping("/emails/{id}")
+//    @PutMapping("/emails/{id}")
     public ResponseEntity<EmailDTO> updateEmail(
         @PathVariable(value = "id", required = false) final Long id,
         @Valid @RequestBody EmailDTO emailDTO
@@ -146,7 +144,7 @@ public class EmailResource {
      * or with status {@code 500 (Internal Server Error)} if the emailDTO couldn't be updated.
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
-    @PatchMapping(value = "/emails/{id}", consumes = "application/merge-patch+json")
+//    @PatchMapping(value = "/emails/{id}", consumes = "application/merge-patch+json")
     public ResponseEntity<EmailDTO> partialUpdateEmail(
         @PathVariable(value = "id", required = false) final Long id,
         @NotNull @RequestBody EmailDTO emailDTO
