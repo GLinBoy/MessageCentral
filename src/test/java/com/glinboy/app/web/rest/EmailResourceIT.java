@@ -589,15 +589,15 @@ class EmailResourceIT {
 		EmailDTO emailDTO = emailMapper.toDto(updatedEmail);
 
 		restEmailMockMvc.perform(put(ENTITY_API_URL_ID, emailDTO.getId()).contentType(MediaType.APPLICATION_JSON)
-				.content(TestUtil.convertObjectToJsonBytes(emailDTO))).andExpect(status().isOk());
+				.content(TestUtil.convertObjectToJsonBytes(emailDTO))).andExpect(status().isMethodNotAllowed());
 
 		// Validate the Email in the database
 		List<Email> emailList = emailRepository.findAll();
 		assertThat(emailList).hasSize(databaseSizeBeforeUpdate);
 		Email testEmail = emailList.get(emailList.size() - 1);
-		assertThat(testEmail.getReceiver()).isEqualTo(UPDATED_RECEIVER);
-		assertThat(testEmail.getSubject()).isEqualTo(UPDATED_SUBJECT);
-		assertThat(testEmail.getContent()).isEqualTo(UPDATED_CONTENT);
+		assertThat(testEmail.getReceiver()).isEqualTo(DEFAULT_RECEIVER);
+		assertThat(testEmail.getSubject()).isEqualTo(DEFAULT_SUBJECT);
+		assertThat(testEmail.getContent()).isEqualTo(DEFAULT_CONTENT);
 	}
 
 	@Test
@@ -630,7 +630,7 @@ class EmailResourceIT {
 
 		// If the entity doesn't have an ID, it will throw BadRequestAlertException
 		restEmailMockMvc.perform(put(ENTITY_API_URL_ID, emailDTO.getId()).contentType(MediaType.APPLICATION_JSON)
-				.content(TestUtil.convertObjectToJsonBytes(emailDTO))).andExpect(status().isBadRequest());
+				.content(TestUtil.convertObjectToJsonBytes(emailDTO))).andExpect(status().isMethodNotAllowed());
 
 		// Validate the Email in the database
 		List<Email> emailList = emailRepository.findAll();
@@ -649,7 +649,7 @@ class EmailResourceIT {
 
 		// If url ID doesn't match entity ID, it will throw BadRequestAlertException
 		restEmailMockMvc.perform(put(ENTITY_API_URL_ID, count.incrementAndGet()).contentType(MediaType.APPLICATION_JSON)
-				.content(TestUtil.convertObjectToJsonBytes(emailDTO))).andExpect(status().isBadRequest());
+				.content(TestUtil.convertObjectToJsonBytes(emailDTO))).andExpect(status().isMethodNotAllowed());
 
 		// Validate the Email in the database
 		List<Email> emailList = emailRepository.findAll();
@@ -693,14 +693,14 @@ class EmailResourceIT {
 		restEmailMockMvc.perform(
 				patch(ENTITY_API_URL_ID, partialUpdatedEmail.getId()).contentType("application/merge-patch+json")
 						.content(TestUtil.convertObjectToJsonBytes(partialUpdatedEmail)))
-				.andExpect(status().isOk());
+				.andExpect(status().isMethodNotAllowed());
 
 		// Validate the Email in the database
 		List<Email> emailList = emailRepository.findAll();
 		assertThat(emailList).hasSize(databaseSizeBeforeUpdate);
 		Email testEmail = emailList.get(emailList.size() - 1);
-		assertThat(testEmail.getReceiver()).isEqualTo(UPDATED_RECEIVER);
-		assertThat(testEmail.getSubject()).isEqualTo(UPDATED_SUBJECT);
+		assertThat(testEmail.getReceiver()).isEqualTo(DEFAULT_RECEIVER);
+		assertThat(testEmail.getSubject()).isEqualTo(DEFAULT_SUBJECT);
 		assertThat(testEmail.getContent()).isEqualTo(DEFAULT_CONTENT);
 	}
 
@@ -740,15 +740,15 @@ class EmailResourceIT {
 		restEmailMockMvc.perform(
 				patch(ENTITY_API_URL_ID, partialUpdatedEmail.getId()).contentType("application/merge-patch+json")
 						.content(TestUtil.convertObjectToJsonBytes(partialUpdatedEmail)))
-				.andExpect(status().isOk());
+				.andExpect(status().isMethodNotAllowed());
 
 		// Validate the Email in the database
 		List<Email> emailList = emailRepository.findAll();
 		assertThat(emailList).hasSize(databaseSizeBeforeUpdate);
 		Email testEmail = emailList.get(emailList.size() - 1);
-		assertThat(testEmail.getReceiver()).isEqualTo(UPDATED_RECEIVER);
-		assertThat(testEmail.getSubject()).isEqualTo(UPDATED_SUBJECT);
-		assertThat(testEmail.getContent()).isEqualTo(UPDATED_CONTENT);
+		assertThat(testEmail.getReceiver()).isEqualTo(DEFAULT_RECEIVER);
+		assertThat(testEmail.getSubject()).isEqualTo(DEFAULT_SUBJECT);
+		assertThat(testEmail.getContent()).isEqualTo(DEFAULT_CONTENT);
 	}
 
 	@Test
@@ -763,7 +763,7 @@ class EmailResourceIT {
 
 		// If the entity doesn't have an ID, it will throw BadRequestAlertException
 		restEmailMockMvc.perform(patch(ENTITY_API_URL_ID, emailDTO.getId()).contentType("application/merge-patch+json")
-				.content(TestUtil.convertObjectToJsonBytes(emailDTO))).andExpect(status().isBadRequest());
+				.content(TestUtil.convertObjectToJsonBytes(emailDTO))).andExpect(status().isMethodNotAllowed());
 
 		// Validate the Email in the database
 		List<Email> emailList = emailRepository.findAll();
@@ -783,7 +783,7 @@ class EmailResourceIT {
 		// If url ID doesn't match entity ID, it will throw BadRequestAlertException
 		restEmailMockMvc.perform(patch(ENTITY_API_URL_ID, count.incrementAndGet())
 				.contentType("application/merge-patch+json").content(TestUtil.convertObjectToJsonBytes(emailDTO)))
-				.andExpect(status().isBadRequest());
+				.andExpect(status().isMethodNotAllowed());
 
 		// Validate the Email in the database
 		List<Email> emailList = emailRepository.findAll();
