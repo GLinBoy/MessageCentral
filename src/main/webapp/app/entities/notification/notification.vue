@@ -92,17 +92,6 @@
                     <font-awesome-icon icon="eye"></font-awesome-icon>
                   </button>
                 </router-link>
-                <b-button
-                  v-on:click="prepareRemove(notification)"
-                  variant="danger"
-                  class="btn btn-sm"
-                  data-cy="entityDeleteButton"
-                  v-b-modal.removeEntity
-                  v-b-tooltip.hover
-                  :title="$t('entity.action.delete')"
-                >
-                  <font-awesome-icon icon="times"></font-awesome-icon>
-                </b-button>
               </div>
             </td>
           </tr>
