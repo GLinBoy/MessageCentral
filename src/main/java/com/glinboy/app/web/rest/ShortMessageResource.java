@@ -16,7 +16,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -219,7 +218,7 @@ public class ShortMessageResource {
      * @param id the id of the shortMessageDTO to delete.
      * @return the {@link ResponseEntity} with status {@code 204 (NO_CONTENT)}.
      */
-    @DeleteMapping("/short-messages/{id}")
+//    @DeleteMapping("/short-messages/{id}")
     public ResponseEntity<Void> deleteShortMessage(@PathVariable Long id) {
         log.debug("REST request to delete ShortMessage : {}", id);
         shortMessageService.delete(id);
