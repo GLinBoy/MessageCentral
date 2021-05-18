@@ -837,11 +837,11 @@ class ShortMessageResourceIT {
         // Delete the shortMessage
         restShortMessageMockMvc
             .perform(delete(ENTITY_API_URL_ID, shortMessage.getId()).accept(MediaType.APPLICATION_JSON))
-            .andExpect(status().isNoContent());
+            .andExpect(status().isMethodNotAllowed());
 
         // Validate the database contains one less item
         List<ShortMessage> shortMessageList = shortMessageRepository.findAll();
-        assertThat(shortMessageList).hasSize(databaseSizeBeforeDelete - 1);
+        assertThat(shortMessageList).hasSize(databaseSizeBeforeDelete);
     }
 
     @Test
