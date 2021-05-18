@@ -820,11 +820,11 @@ class EmailResourceIT {
 
 		// Delete the email
 		restEmailMockMvc.perform(delete(ENTITY_API_URL_ID, email.getId()).accept(MediaType.APPLICATION_JSON))
-				.andExpect(status().isNoContent());
+				.andExpect(status().isMethodNotAllowed());
 
 		// Validate the database contains one less item
 		List<Email> emailList = emailRepository.findAll();
-		assertThat(emailList).hasSize(databaseSizeBeforeDelete - 1);
+		assertThat(emailList).hasSize(databaseSizeBeforeDelete);
 	}
 
 	@Test
