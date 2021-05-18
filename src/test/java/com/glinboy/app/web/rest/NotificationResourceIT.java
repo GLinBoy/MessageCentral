@@ -1262,11 +1262,11 @@ class NotificationResourceIT {
         // Delete the notification
         restNotificationMockMvc
             .perform(delete(ENTITY_API_URL_ID, notification.getId()).accept(MediaType.APPLICATION_JSON))
-            .andExpect(status().isNoContent());
+            .andExpect(status().isMethodNotAllowed());
 
         // Validate the database contains one less item
         List<Notification> notificationList = notificationRepository.findAll();
-        assertThat(notificationList).hasSize(databaseSizeBeforeDelete - 1);
+        assertThat(notificationList).hasSize(databaseSizeBeforeDelete);
     }
 
     @Test
