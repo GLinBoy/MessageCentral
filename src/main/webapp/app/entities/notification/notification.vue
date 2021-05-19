@@ -67,7 +67,13 @@
           </tr>
         </thead>
         <tbody>
-          <tr v-for="notification in notifications" :key="notification.id" data-cy="entityTable">
+          <router-link
+            v-for="notification in notifications"
+            :key="notification.id"
+            :to="{ name: 'NotificationView', params: { notificationId: notification.id } }"
+            tag="tr"
+            data-cy="entityTable"
+          >
             <td>
               <router-link :to="{ name: 'NotificationView', params: { notificationId: notification.id } }">{{
                 notification.id
@@ -78,7 +84,7 @@
             <td>{{ notification.subject }}</td>
             <td>{{ notification.content }}</td>
             <td>{{ notification.image }}</td>
-          </tr>
+          </router-link>
         </tbody>
       </table>
     </div>
