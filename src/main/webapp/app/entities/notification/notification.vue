@@ -64,7 +64,6 @@
               <span v-text="$t('messageCentralApp.notification.image')">Image</span>
               <jhi-sort-indicator :current-order="propOrder" :reverse="reverse" :field-name="'image'"></jhi-sort-indicator>
             </th>
-            <th scope="row"></th>
           </tr>
         </thead>
         <tbody>
@@ -79,21 +78,6 @@
             <td>{{ notification.subject }}</td>
             <td>{{ notification.content }}</td>
             <td>{{ notification.image }}</td>
-            <td class="text-right">
-              <div class="btn-group">
-                <router-link :to="{ name: 'NotificationView', params: { notificationId: notification.id } }" custom v-slot="{ navigate }">
-                  <button
-                    @click="navigate"
-                    class="btn btn-info btn-sm details"
-                    data-cy="entityDetailsButton"
-                    v-b-tooltip.hover
-                    :title="$t('entity.action.view')"
-                  >
-                    <font-awesome-icon icon="eye"></font-awesome-icon>
-                  </button>
-                </router-link>
-              </div>
-            </td>
           </tr>
         </tbody>
       </table>
