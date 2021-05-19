@@ -55,7 +55,13 @@
           </tr>
         </thead>
         <tbody>
-          <tr v-for="shortMessage in shortMessages" :key="shortMessage.id" data-cy="entityTable">
+          <router-link
+            v-for="shortMessage in shortMessages"
+            :key="shortMessage.id"
+            :to="{ name: 'ShortMessageView', params: { shortMessageId: shortMessage.id } }"
+            tag="tr"
+            data-cy="entityTable"
+          >
             <td>
               <router-link :to="{ name: 'ShortMessageView', params: { shortMessageId: shortMessage.id } }">{{
                 shortMessage.id
@@ -63,7 +69,7 @@
             </td>
             <td>{{ shortMessage.phoneNumber }}</td>
             <td>{{ shortMessage.content }}</td>
-          </tr>
+          </router-link>
         </tbody>
       </table>
     </div>
