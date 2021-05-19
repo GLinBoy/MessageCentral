@@ -52,7 +52,6 @@
               <span v-text="$t('messageCentralApp.shortMessage.content')">Content</span>
               <jhi-sort-indicator :current-order="propOrder" :reverse="reverse" :field-name="'content'"></jhi-sort-indicator>
             </th>
-            <th scope="row"></th>
           </tr>
         </thead>
         <tbody>
@@ -64,21 +63,6 @@
             </td>
             <td>{{ shortMessage.phoneNumber }}</td>
             <td>{{ shortMessage.content }}</td>
-            <td class="text-right">
-              <div class="btn-group">
-                <router-link :to="{ name: 'ShortMessageView', params: { shortMessageId: shortMessage.id } }" custom v-slot="{ navigate }">
-                  <button
-                    @click="navigate"
-                    class="btn btn-info btn-sm details"
-                    data-cy="entityDetailsButton"
-                    v-b-tooltip.hover
-                    :title="$t('entity.action.view')"
-                  >
-                    <font-awesome-icon icon="eye"></font-awesome-icon>
-                  </button>
-                </router-link>
-              </div>
-            </td>
           </tr>
         </tbody>
       </table>
