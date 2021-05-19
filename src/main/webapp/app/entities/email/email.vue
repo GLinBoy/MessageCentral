@@ -56,7 +56,6 @@
               <span v-text="$t('messageCentralApp.email.content')">Content</span>
               <jhi-sort-indicator :current-order="propOrder" :reverse="reverse" :field-name="'content'"></jhi-sort-indicator>
             </th>
-            <th scope="row"></th>
           </tr>
         </thead>
         <tbody>
@@ -67,21 +66,6 @@
             <td>{{ email.receiver }}</td>
             <td>{{ email.subject }}</td>
             <td>{{ email.content }}</td>
-            <td class="text-right">
-              <div class="btn-group">
-                <router-link :to="{ name: 'EmailView', params: { emailId: email.id } }" custom v-slot="{ navigate }">
-                  <button
-                    @click="navigate"
-                    class="btn btn-info btn-sm details"
-                    data-cy="entityDetailsButton"
-                    v-b-tooltip.hover
-                    :title="$t('entity.action.view')"
-                  >
-                    <font-awesome-icon icon="eye"></font-awesome-icon>
-                  </button>
-                </router-link>
-              </div>
-            </td>
           </tr>
         </tbody>
       </table>
