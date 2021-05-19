@@ -59,14 +59,20 @@
           </tr>
         </thead>
         <tbody>
-          <tr v-for="email in emails" :key="email.id" data-cy="entityTable">
+          <router-link
+            v-for="email in emails"
+            :key="email.id"
+            :to="{ name: 'EmailView', params: { emailId: email.id } }"
+            tag="tr"
+            data-cy="entityTable"
+          >
             <td>
               <router-link :to="{ name: 'EmailView', params: { emailId: email.id } }">{{ email.id }}</router-link>
             </td>
             <td>{{ email.receiver }}</td>
             <td>{{ email.subject }}</td>
             <td>{{ email.content }}</td>
-          </tr>
+          </router-link>
         </tbody>
       </table>
     </div>
