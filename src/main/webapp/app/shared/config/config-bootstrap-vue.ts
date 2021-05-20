@@ -24,6 +24,9 @@ import {
   BFormDatepicker,
   BInputGroup,
   BInputGroupPrepend,
+  BInputGroupAppend,
+  BInputGroupText,
+  BInputGroupAddon,
   VBTooltip,
 } from 'bootstrap-vue';
 
@@ -54,5 +57,8 @@ export function initBootstrapVue(vue) {
   vue.component('b-form-datepicker', BFormDatepicker);
   vue.component('b-input-group', BInputGroup);
   vue.component('b-input-group-prepend', BInputGroupPrepend);
+  vue.component('b-input-group-append', BInputGroupAppend);
+  vue.component('b-input-group-text', BInputGroupText);
+  vue.component('b-input-group-addon', BInputGroupAddon);
   vue.directive('b-tooltip', VBTooltip);
 }
