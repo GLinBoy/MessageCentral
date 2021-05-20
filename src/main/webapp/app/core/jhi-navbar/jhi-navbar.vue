@@ -1,6 +1,6 @@
 <template>
   <b-navbar data-cy="navbar" toggleable="md" type="dark" class="bg-primary">
-    <b-navbar-brand class="logo" b-link to="/dashboard">
+    <b-navbar-brand class="logo" b-link :to="authenticated ? '/dashboard' : '/'">
       <span class="logo-img"></span>
       <span v-text="$t('global.title')" class="navbar-title">MessageCentral</span> <span class="navbar-version">{{ version }}</span>
     </b-navbar-brand>
@@ -18,7 +18,7 @@
 
     <b-collapse is-nav id="header-tabs">
       <b-navbar-nav class="ml-auto">
-        <b-nav-item to="/dashboard" exact>
+        <b-nav-item :to="authenticated ? '/dashboard' : '/'" exact>
           <span>
             <font-awesome-icon icon="home" />
             <span v-text="$t('global.menu.home')">Dashboard</span>
