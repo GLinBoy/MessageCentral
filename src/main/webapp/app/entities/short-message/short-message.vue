@@ -1,13 +1,22 @@
 <template>
   <div>
     <div class="row">
-      <div class="col-sm-4">
+      <div class="col-xs-12 col-md-4 col-lg-8">
         <h2 id="page-heading" data-cy="ShortMessageHeading">
           <span v-text="$t('messageCentralApp.shortMessage.home.title')" id="short-message-heading">Short Messages</span>
         </h2>
       </div>
-      <div class="col-sm-8">
+      <div class="col-xs-12 col-md-8 col-lg-4">
         <div class="d-flex justify-content-end">
+          <b-input-group class="mr-2">
+            <b-form-input type="text"></b-form-input>
+
+            <b-input-group-append>
+              <b-button variant="outline-primary">
+                <font-awesome-icon icon="search"></font-awesome-icon>
+              </b-button>
+            </b-input-group-append>
+          </b-input-group>
           <button
             class="btn btn-info mr-2"
             v-on:click="handleSyncList"
