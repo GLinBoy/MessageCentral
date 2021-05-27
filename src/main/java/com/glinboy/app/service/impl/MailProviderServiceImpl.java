@@ -1,15 +1,11 @@
 package com.glinboy.app.service.impl;
 
 import java.util.Arrays;
-import java.util.List;
 
 import javax.jms.JMSException;
 import javax.jms.Message;
-import javax.jms.MessageListener;
 import javax.jms.ObjectMessage;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.jms.annotation.JmsListener;
 import org.springframework.jms.core.JmsTemplate;
@@ -23,39 +19,30 @@ import com.glinboy.app.service.dto.EmailDTO;
 
 @Service
 @ConditionalOnProperty(value = "application.email.provider", havingValue = "mail-server", matchIfMissing = true)
-public class MailProviderServiceImpl implements MailProviderService<EmailDTO>, MessageListener {
+public class MailProviderServiceImpl extends GenericChannelServiceImpl<EmailDTO> implements MailProviderService<EmailDTO> {
+	
+	public static final String TOPIC_NAME = "MAILBOX";
 
-	private final Logger log = LoggerFactory.getLogger(MailProviderServiceImpl.class);
-	
-	private final ApplicationProperties properties;
-	
 	private final JavaMailSender emailSender;
-	
-	private final JmsTemplate jmsTemplate;
 
-	public MailProviderServiceImpl(JavaMailSender emailSender,
-			JmsTemplate jmsTemplate,
-			ApplicationProperties properties) {
+	public MailProviderServiceImpl(JmsTemplate jmsTemplate,
+			ApplicationProperties properties,
+			JavaMailSender emailSender) {
+		super(jmsTemplate, properties);
 		this.emailSender = emailSender;
-		this.jmsTemplate = jmsTemplate;
-		this.properties = properties;
 	}
 
 	@Override
-	public void sendEmail(EmailDTO emailDTO) {
-		jmsTemplate.convertAndSend("MAILBOX", emailDTO);
-	}
-
-	@Override
-	public void sendEmail(List<EmailDTO> emailsDTO) {
-		emailsDTO.forEach(e -> jmsTemplate.convertAndSend("MAILBOX", e));
+	String getTopicName() {
+		return TOPIC_NAME;
 	}
 	
-	private void deliverEmail(EmailDTO ... emailsDTO) {
-		SimpleMailMessage[] messages = new SimpleMailMessage[emailsDTO.length];
-		for(int i = 0; i < emailsDTO.length; i++) {
-			EmailDTO emailDTO = emailsDTO[i];
-			SimpleMailMessage message = new SimpleMailMessage();
+	@Override
+	public void deliverMessage(EmailDTO... emailsDTO) {
+		var messages = new SimpleMailMessage[emailsDTO.length];
+		for(var i = 0; i < emailsDTO.length; i++) {
+			var emailDTO = emailsDTO[i];
+			var message = new SimpleMailMessage();
 			message.setFrom(properties.getEmail().getFrom());
 			message.setTo(emailDTO.getReceiver());
 			message.setSubject(emailDTO.getSubject());
@@ -67,12 +54,12 @@ public class MailProviderServiceImpl implements MailProviderService<EmailDTO>, M
 	}
 
 	@Override
-	@JmsListener(destination = "MAILBOX")
+	@JmsListener(destination = MailProviderServiceImpl.TOPIC_NAME)
 	public void onMessage(Message message) {
 		try {
-			ObjectMessage objectMessage = (ObjectMessage)message;
-			EmailDTO emailDTO = (EmailDTO)objectMessage.getObject();
-			deliverEmail(emailDTO);
+			var objectMessage = (ObjectMessage)message;
+			var emailDTO = (EmailDTO)objectMessage.getObject();
+			this.deliverMessage(emailDTO);
 		} catch (JMSException e) {
 			log.error("Parsing message failed: {}", e.getMessage(), e);
 		}
