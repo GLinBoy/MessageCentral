@@ -1,6 +1,6 @@
 package com.glinboy.app.service;
 
-public interface ProviderService<T> {
+public interface ChannelService<T> {
 
 	void sendMessage(T... ts);
 
