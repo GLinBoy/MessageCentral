@@ -135,7 +135,7 @@ class ShortMessageResourceIT {
         int databaseSizeBeforeCreate = shortMessageRepository.findAll().size();
         // Create the ShortMessage
         ShortMessageDTO shortMessageDTO = shortMessageMapper.toDto(shortMessage);
-        doNothing().when(smsProvider).sendSMS(shortMessageDTO);
+        doNothing().when(smsProvider).sendMessage(shortMessageDTO);
         restShortMessageMockMvc
             .perform(
                 post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(shortMessageDTO))
@@ -155,7 +155,7 @@ class ShortMessageResourceIT {
     void failedCreateShortMessage() throws Exception {
         // Create the ShortMessage
         ShortMessageDTO shortMessageDTO = shortMessageMapper.toDto(shortMessage);
-        doNothing().when(smsProvider).sendSMS(shortMessageDTO);
+        doNothing().when(smsProvider).sendMessage(shortMessageDTO);
         restShortMessageMockMvc
             .perform(
                 post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(shortMessageDTO))
@@ -172,7 +172,7 @@ class ShortMessageResourceIT {
         int smsCount = 2;
         int numbersCount = 5;
         List<ShortMessagesDTO> shortMessagesDTOs = createEmailsDTO(smsCount, numbersCount);
-        doNothing().when(smsProvider).sendSMS(List.of());
+        doNothing().when(smsProvider).sendMessage(new ShortMessageDTO[0]);
         restShortMessageMockMvc
             .perform(
                 post(ENTITY_API_URL_MULTIPLE).contentType(MediaType.APPLICATION_JSON)
@@ -192,7 +192,7 @@ class ShortMessageResourceIT {
         int smsCount = 2;
         int numbersCount = 5;
         List<ShortMessagesDTO> shortMessagesDTOs = createEmailsDTO(smsCount, numbersCount);
-        doNothing().when(smsProvider).sendSMS(List.of());
+        doNothing().when(smsProvider).sendMessage(new ShortMessageDTO[0]);
         restShortMessageMockMvc
             .perform(
                 post(ENTITY_API_URL_MULTIPLE).contentType(MediaType.APPLICATION_JSON)

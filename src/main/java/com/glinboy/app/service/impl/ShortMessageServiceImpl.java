@@ -50,7 +50,7 @@ public class ShortMessageServiceImpl implements ShortMessageService {
         ShortMessage shortMessage = shortMessageMapper.toEntity(shortMessageDTO);
         shortMessage = shortMessageRepository.save(shortMessage);
         ShortMessageDTO smsDTO = shortMessageMapper.toDto(shortMessage);
-        smsProvider.sendSMS(smsDTO);
+        smsProvider.sendMessage(smsDTO);
         return smsDTO;
     }
 
@@ -70,7 +70,7 @@ public class ShortMessageServiceImpl implements ShortMessageService {
         log.info("List of {} Emails: {}", messages.size(), messages);
         messages = this.shortMessageRepository.saveAll(messages);
         List<ShortMessageDTO> dtoList = this.shortMessageMapper.toDto(messages);
-        this.smsProvider.sendSMS(dtoList);
+        this.smsProvider.sendMessage(dtoList.toArray(new ShortMessageDTO[dtoList.size()]));
         return dtoList;
     }
 
