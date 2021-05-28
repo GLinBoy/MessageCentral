@@ -164,7 +164,7 @@ class NotificationResourceIT {
         int databaseSizeBeforeCreate = notificationRepository.findAll().size();
         // Create the Notification
         NotificationDTO notificationDTO = notificationMapper.toDto(notification);
-        doNothing().when(notificationProviderService).sendNotification(notificationDTO);
+        doNothing().when(notificationProviderService).sendMessage(notificationDTO);
         restNotificationMockMvc
             .perform(
                 post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(notificationDTO))
@@ -187,7 +187,7 @@ class NotificationResourceIT {
     void failedCreateNotification() throws Exception {
         // Create the Notification
         NotificationDTO notificationDTO = notificationMapper.toDto(notification);
-        doNothing().when(notificationProviderService).sendNotification(notificationDTO);
+        doNothing().when(notificationProviderService).sendMessage(notificationDTO);
         restNotificationMockMvc
             .perform(
                 post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(notificationDTO))
@@ -204,7 +204,7 @@ class NotificationResourceIT {
         int notificationsCount = 2;
         int reciverCount = 5;
         List<NotificationsDTO> notificationsDTOs = createNotificationsDTO(notificationsCount, reciverCount);
-        doNothing().when(notificationProviderService).sendNotification(List.of());
+        doNothing().when(notificationProviderService).sendMessage(new NotificationDTO[0]);
         restNotificationMockMvc
             .perform(
                 post(ENTITY_API_URL_MULTIPLE).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(notificationsDTOs))
@@ -223,7 +223,7 @@ class NotificationResourceIT {
         int notificationsCount = 2;
         int reciverCount = 5;
         List<NotificationsDTO> notificationsDTOs = createNotificationsDTO(notificationsCount, reciverCount);
-        doNothing().when(notificationProviderService).sendNotification(List.of());
+        doNothing().when(notificationProviderService).sendMessage(new NotificationDTO[0]);
         restNotificationMockMvc
             .perform(
                 post(ENTITY_API_URL_MULTIPLE).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(notificationsDTOs))
@@ -248,7 +248,7 @@ class NotificationResourceIT {
         notification.setData(Set.of(notificationData));
         // Create the Notification
         NotificationDTO notificationDTO = notificationMapper.toDto(notification);
-        doNothing().when(notificationProviderService).sendNotification(notificationDTO);
+        doNothing().when(notificationProviderService).sendMessage(notificationDTO);
         restNotificationMockMvc
             .perform(
                 post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(notificationDTO))

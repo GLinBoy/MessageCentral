@@ -53,7 +53,7 @@ public class NotificationServiceImpl implements NotificationService {
         final Notification notification = notificationMapper.toEntity(notificationDTO);
         notification.getData().forEach(d -> d.setNotification(notification));
         NotificationDTO dto = notificationMapper.toDto(notificationRepository.save(notification));
-        notificationProviderService.sendNotification(dto);
+        notificationProviderService.sendMessage(dto);
         return dto;
     }
 
@@ -79,7 +79,7 @@ public class NotificationServiceImpl implements NotificationService {
             log.info("List of {} Emails: {}", notifications.size(), notifications);
             notifications = this.notificationRepository.saveAll(notifications);
             List<NotificationDTO> dtoList = this.notificationMapper.toDto(notifications);
-            this.notificationProviderService.sendNotification(dtoList);
+            this.notificationProviderService.sendMessage(dtoList.toArray(new NotificationDTO[dtoList.size()]));
             return dtoList;
     }
 
