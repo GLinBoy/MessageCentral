@@ -10,7 +10,7 @@ import org.springframework.jms.core.JmsTemplate;
 import org.springframework.stereotype.Service;
 
 import com.glinboy.app.config.ApplicationProperties;
-import com.glinboy.app.service.ShortMessageProviderService;
+import com.glinboy.app.service.ShortMessageChannelService;
 import com.glinboy.app.service.dto.ShortMessageDTO;
 import com.kavenegar.sdk.KavenegarApi;
 import com.kavenegar.sdk.excepctions.ApiException;
@@ -19,11 +19,11 @@ import com.kavenegar.sdk.models.SendResult;
 
 @Service
 @ConditionalOnProperty(value = "application.sms.provider", havingValue = "kavenegar")
-public class KavenegarSMSProviderServiceImpl extends GenericChannelServiceImpl<ShortMessageDTO> implements ShortMessageProviderService<ShortMessageDTO> {
+public class KavenegarSMSChannelServiceImpl extends GenericChannelServiceImpl<ShortMessageDTO> implements ShortMessageChannelService<ShortMessageDTO> {
 	
 	public static final String TOPIC_NAME = "KAVENEGAR_SMSBOX";
 
-	protected KavenegarSMSProviderServiceImpl(JmsTemplate jmsTemplate,
+	protected KavenegarSMSChannelServiceImpl(JmsTemplate jmsTemplate,
 			ApplicationProperties properties) {
 		super(jmsTemplate, properties);
 	}
@@ -51,7 +51,7 @@ public class KavenegarSMSProviderServiceImpl extends GenericChannelServiceImpl<S
 	}
 
 	@Override
-	@JmsListener(destination = KavenegarSMSProviderServiceImpl.TOPIC_NAME)
+	@JmsListener(destination = KavenegarSMSChannelServiceImpl.TOPIC_NAME)
 	public void onMessage(Message message) {
 		try {
 			var objectMessage = (ObjectMessage) message;
