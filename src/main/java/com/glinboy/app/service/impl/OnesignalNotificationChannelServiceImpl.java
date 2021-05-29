@@ -21,18 +21,18 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import com.glinboy.app.config.ApplicationProperties;
-import com.glinboy.app.service.NotificationProviderService;
+import com.glinboy.app.service.NotificationChannelService;
 import com.glinboy.app.service.dto.NotificationDTO;
 import com.glinboy.app.service.dto.NotificationDataDTO;
 
 @Service
 @ConditionalOnProperty(value = "application.notification.provider", havingValue = "onesignal", matchIfMissing = true)
-public class OnesignalNotificationProviderServiceImpl extends GenericChannelServiceImpl<NotificationDTO>
-	implements NotificationProviderService<NotificationDTO> {
+public class OnesignalNotificationChannelServiceImpl extends GenericChannelServiceImpl<NotificationDTO>
+	implements NotificationChannelService<NotificationDTO> {
 	
 	public static final String TOPIC_NAME = "ONESIGNAL_NOTIFICATIONBOX";
 
-	protected OnesignalNotificationProviderServiceImpl(JmsTemplate jmsTemplate,
+	protected OnesignalNotificationChannelServiceImpl(JmsTemplate jmsTemplate,
 			ApplicationProperties properties) {
 		super(jmsTemplate, properties);
 	}
@@ -73,7 +73,7 @@ public class OnesignalNotificationProviderServiceImpl extends GenericChannelServ
 	}
 
 	@Override
-	@JmsListener(destination = OnesignalNotificationProviderServiceImpl.TOPIC_NAME)
+	@JmsListener(destination = OnesignalNotificationChannelServiceImpl.TOPIC_NAME)
 	public void onMessage(Message message) {
 		try {
 			var objectMessage = (ObjectMessage) message;
