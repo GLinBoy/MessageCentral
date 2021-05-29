@@ -14,18 +14,18 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 
 import com.glinboy.app.config.ApplicationProperties;
-import com.glinboy.app.service.MailProviderService;
+import com.glinboy.app.service.MailChannelService;
 import com.glinboy.app.service.dto.EmailDTO;
 
 @Service
 @ConditionalOnProperty(value = "application.email.provider", havingValue = "mail-server", matchIfMissing = true)
-public class MailProviderServiceImpl extends GenericChannelServiceImpl<EmailDTO> implements MailProviderService<EmailDTO> {
+public class MailChannelServiceImpl extends GenericChannelServiceImpl<EmailDTO> implements MailChannelService<EmailDTO> {
 	
 	public static final String TOPIC_NAME = "MAILBOX";
 
 	private final JavaMailSender emailSender;
 
-	public MailProviderServiceImpl(JmsTemplate jmsTemplate,
+	public MailChannelServiceImpl(JmsTemplate jmsTemplate,
 			ApplicationProperties properties,
 			JavaMailSender emailSender) {
 		super(jmsTemplate, properties);
@@ -54,7 +54,7 @@ public class MailProviderServiceImpl extends GenericChannelServiceImpl<EmailDTO>
 	}
 
 	@Override
-	@JmsListener(destination = MailProviderServiceImpl.TOPIC_NAME)
+	@JmsListener(destination = MailChannelServiceImpl.TOPIC_NAME)
 	public void onMessage(Message message) {
 		try {
 			var objectMessage = (ObjectMessage)message;
