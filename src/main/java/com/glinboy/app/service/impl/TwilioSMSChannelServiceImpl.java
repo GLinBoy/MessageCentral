@@ -10,18 +10,18 @@ import org.springframework.jms.core.JmsTemplate;
 import org.springframework.stereotype.Service;
 
 import com.glinboy.app.config.ApplicationProperties;
-import com.glinboy.app.service.ShortMessageProviderService;
+import com.glinboy.app.service.ShortMessageChannelService;
 import com.glinboy.app.service.dto.ShortMessageDTO;
 import com.twilio.Twilio;
 import com.twilio.type.PhoneNumber;
 
 @Service
 @ConditionalOnProperty(value = "application.sms.provider", havingValue = "twilio", matchIfMissing = true)
-public class TwilioSMSProviderServiceImpl extends GenericChannelServiceImpl<ShortMessageDTO> implements ShortMessageProviderService<ShortMessageDTO> {
+public class TwilioSMSChannelServiceImpl extends GenericChannelServiceImpl<ShortMessageDTO> implements ShortMessageChannelService<ShortMessageDTO> {
 	
 	public static final String TOPIC_NAME = "TWILIO_SMSBOX";
 
-	protected TwilioSMSProviderServiceImpl(JmsTemplate jmsTemplate,
+	protected TwilioSMSChannelServiceImpl(JmsTemplate jmsTemplate,
 			ApplicationProperties properties) {
 		super(jmsTemplate, properties);
 	}
@@ -46,7 +46,7 @@ public class TwilioSMSProviderServiceImpl extends GenericChannelServiceImpl<Shor
 	}
 
 	@Override
-	@JmsListener(destination = TwilioSMSProviderServiceImpl.TOPIC_NAME)
+	@JmsListener(destination = TwilioSMSChannelServiceImpl.TOPIC_NAME)
 	public void onMessage(Message message) {
 		try {
 			var objectMessage = (ObjectMessage) message;
