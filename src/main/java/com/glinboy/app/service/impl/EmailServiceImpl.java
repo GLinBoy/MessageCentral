@@ -3,7 +3,7 @@ package com.glinboy.app.service.impl;
 import com.glinboy.app.domain.Email;
 import com.glinboy.app.repository.EmailRepository;
 import com.glinboy.app.service.EmailService;
-import com.glinboy.app.service.MailProviderService;
+import com.glinboy.app.service.MailChannelService;
 import com.glinboy.app.service.dto.EmailDTO;
 import com.glinboy.app.service.dto.EmailsDTO;
 import com.glinboy.app.service.mapper.EmailMapper;
@@ -34,11 +34,11 @@ public class EmailServiceImpl implements EmailService {
 
 	private final EmailMapper emailMapper;
 
-	private final MailProviderService<EmailDTO> mailProviderService;
+	private final MailChannelService<EmailDTO> mailProviderService;
 
 	public EmailServiceImpl(EmailRepository emailRepository,
 			EmailMapper emailMapper,
-			MailProviderService<EmailDTO> mailProviderService) {
+			MailChannelService<EmailDTO> mailProviderService) {
 		this.emailRepository = emailRepository;
 		this.emailMapper = emailMapper;
 		this.mailProviderService = mailProviderService;
