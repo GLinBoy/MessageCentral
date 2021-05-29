@@ -13,7 +13,7 @@ import org.springframework.jms.core.JmsTemplate;
 import org.springframework.stereotype.Service;
 
 import com.glinboy.app.config.ApplicationProperties;
-import com.glinboy.app.service.NotificationProviderService;
+import com.glinboy.app.service.NotificationChannelService;
 import com.glinboy.app.service.dto.NotificationDTO;
 import com.glinboy.app.service.dto.NotificationDataDTO;
 import com.google.firebase.messaging.FirebaseMessaging;
@@ -23,14 +23,14 @@ import com.google.firebase.messaging.Notification;
 
 @Service
 @ConditionalOnProperty(value = "application.notification.provider", havingValue = "firebase")
-public class FirebaseNotificationProviderServiceImpl extends GenericChannelServiceImpl<NotificationDTO>
-		implements NotificationProviderService<NotificationDTO> {
+public class FirebaseNotificationChannelServiceImpl extends GenericChannelServiceImpl<NotificationDTO>
+		implements NotificationChannelService<NotificationDTO> {
 
 	public static final String TOPIC_NAME = "FIREBASE_NOTIFICATIONBOX";
 
 	private final FirebaseMessaging firebaseMessaging;
 
-	protected FirebaseNotificationProviderServiceImpl(JmsTemplate jmsTemplate,
+	protected FirebaseNotificationChannelServiceImpl(JmsTemplate jmsTemplate,
 			ApplicationProperties properties,
 			FirebaseMessaging firebaseMessaging) {
 		super(jmsTemplate, properties);
@@ -70,7 +70,7 @@ public class FirebaseNotificationProviderServiceImpl extends GenericChannelServi
 	}
 
 	@Override
-	@JmsListener(destination = FirebaseNotificationProviderServiceImpl.TOPIC_NAME)
+	@JmsListener(destination = FirebaseNotificationChannelServiceImpl.TOPIC_NAME)
 	public void onMessage(Message message) {
 		try {
 			var objectMessage = (ObjectMessage) message;
