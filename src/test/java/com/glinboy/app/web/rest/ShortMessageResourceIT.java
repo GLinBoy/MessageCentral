@@ -35,7 +35,7 @@ import com.glinboy.app.IntegrationTest;
 import com.glinboy.app.domain.ShortMessage;
 import com.glinboy.app.repository.ShortMessageRepository;
 import com.glinboy.app.security.AuthoritiesConstants;
-import com.glinboy.app.service.ShortMessageProviderService;
+import com.glinboy.app.service.ShortMessageChannelService;
 import com.glinboy.app.service.dto.ShortMessageDTO;
 import com.glinboy.app.service.dto.ShortMessagesDTO;
 import com.glinboy.app.service.mapper.ShortMessageMapper;
@@ -74,7 +74,7 @@ class ShortMessageResourceIT {
     private MockMvc restShortMessageMockMvc;
 
     @Mock
-    private ShortMessageProviderService<ShortMessageDTO> smsProvider; 
+    private ShortMessageChannelService<ShortMessageDTO> smsProvider; 
 
     private ShortMessage shortMessage;
 

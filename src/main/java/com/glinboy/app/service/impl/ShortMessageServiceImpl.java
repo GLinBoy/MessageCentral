@@ -14,7 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.glinboy.app.domain.ShortMessage;
 import com.glinboy.app.repository.ShortMessageRepository;
-import com.glinboy.app.service.ShortMessageProviderService;
+import com.glinboy.app.service.ShortMessageChannelService;
 import com.glinboy.app.service.ShortMessageService;
 import com.glinboy.app.service.dto.ShortMessageDTO;
 import com.glinboy.app.service.dto.ShortMessagesDTO;
@@ -34,11 +34,11 @@ public class ShortMessageServiceImpl implements ShortMessageService {
 
     private final ShortMessageMapper shortMessageMapper;
 
-    private final ShortMessageProviderService<ShortMessageDTO> smsProvider;
+    private final ShortMessageChannelService<ShortMessageDTO> smsProvider;
 
     public ShortMessageServiceImpl(ShortMessageRepository shortMessageRepository,
             ShortMessageMapper shortMessageMapper,
-            ShortMessageProviderService<ShortMessageDTO> smsProvider) {
+            ShortMessageChannelService<ShortMessageDTO> smsProvider) {
         this.shortMessageRepository = shortMessageRepository;
         this.shortMessageMapper = shortMessageMapper;
         this.smsProvider = smsProvider;
