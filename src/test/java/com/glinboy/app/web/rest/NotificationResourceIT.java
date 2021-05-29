@@ -38,7 +38,7 @@ import com.glinboy.app.domain.Notification;
 import com.glinboy.app.domain.NotificationData;
 import com.glinboy.app.repository.NotificationRepository;
 import com.glinboy.app.security.AuthoritiesConstants;
-import com.glinboy.app.service.NotificationProviderService;
+import com.glinboy.app.service.NotificationChannelService;
 import com.glinboy.app.service.dto.NotificationDTO;
 import com.glinboy.app.service.dto.NotificationsDTO;
 import com.glinboy.app.service.mapper.NotificationMapper;
@@ -89,7 +89,7 @@ class NotificationResourceIT {
     private MockMvc restNotificationMockMvc;
 
     @Mock
-    private NotificationProviderService<NotificationDTO> notificationProviderService;
+    private NotificationChannelService<NotificationDTO> notificationProviderService;
 
     private Notification notification;
 

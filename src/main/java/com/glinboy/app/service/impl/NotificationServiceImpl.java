@@ -13,7 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.glinboy.app.domain.Notification;
 import com.glinboy.app.repository.NotificationRepository;
-import com.glinboy.app.service.NotificationProviderService;
+import com.glinboy.app.service.NotificationChannelService;
 import com.glinboy.app.service.NotificationService;
 import com.glinboy.app.service.dto.NotificationDTO;
 import com.glinboy.app.service.dto.NotificationsDTO;
@@ -35,11 +35,11 @@ public class NotificationServiceImpl implements NotificationService {
 
     private final NotificationDataMapper notificationDataMapper;
 
-    private final NotificationProviderService<NotificationDTO> notificationProviderService;
+    private final NotificationChannelService<NotificationDTO> notificationProviderService;
 
     public NotificationServiceImpl(NotificationRepository notificationRepository,
             NotificationMapper notificationMapper,
-            NotificationProviderService<NotificationDTO> notificationProviderService,
+            NotificationChannelService<NotificationDTO> notificationProviderService,
             NotificationDataMapper notificationDataMapper) {
         this.notificationRepository = notificationRepository;
         this.notificationMapper = notificationMapper;
