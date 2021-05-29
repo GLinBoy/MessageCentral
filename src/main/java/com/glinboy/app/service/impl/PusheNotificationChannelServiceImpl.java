@@ -19,17 +19,17 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import com.glinboy.app.config.ApplicationProperties;
-import com.glinboy.app.service.NotificationProviderService;
+import com.glinboy.app.service.NotificationChannelService;
 import com.glinboy.app.service.dto.NotificationDTO;
 
 @Service
 @ConditionalOnProperty(value = "application.notification.provider", havingValue = "pushe")
-public class PusheNotificationProviderServiceImpl extends GenericChannelServiceImpl<NotificationDTO>
-	implements NotificationProviderService<NotificationDTO> {
+public class PusheNotificationChannelServiceImpl extends GenericChannelServiceImpl<NotificationDTO>
+	implements NotificationChannelService<NotificationDTO> {
 	
 	public static final String TOPIC_NAME = "PUSHE_NOTIFICATIONBOX";
 
-	protected PusheNotificationProviderServiceImpl(JmsTemplate jmsTemplate,
+	protected PusheNotificationChannelServiceImpl(JmsTemplate jmsTemplate,
 			ApplicationProperties properties) {
 		super(jmsTemplate, properties);
 	}
