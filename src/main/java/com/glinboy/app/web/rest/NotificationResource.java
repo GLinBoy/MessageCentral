@@ -14,6 +14,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -24,6 +25,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import com.glinboy.app.domain.Notification;
 import com.glinboy.app.repository.NotificationRepository;
 import com.glinboy.app.service.NotificationQueryService;
 import com.glinboy.app.service.NotificationService;
@@ -31,6 +33,7 @@ import com.glinboy.app.service.criteria.NotificationCriteria;
 import com.glinboy.app.service.dto.NotificationDTO;
 import com.glinboy.app.service.dto.NotificationsDTO;
 import com.glinboy.app.web.rest.errors.BadRequestAlertException;
+import com.sipios.springsearch.anotation.SearchSpec;
 
 import tech.jhipster.web.util.HeaderUtil;
 import tech.jhipster.web.util.PaginationUtil;
@@ -180,9 +183,9 @@ public class NotificationResource {
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of notifications in body.
      */
     @GetMapping("/notifications")
-    public ResponseEntity<List<NotificationDTO>> getAllNotifications(NotificationCriteria criteria, Pageable pageable) {
-        log.debug("REST request to get Notifications by criteria: {}", criteria);
-        Page<NotificationDTO> page = notificationQueryService.findByCriteria(criteria, pageable);
+    public ResponseEntity<List<NotificationDTO>> getAllNotifications(@SearchSpec Specification<Notification> specs, Pageable pageable) {
+        log.debug("REST request to get Notifications by criteria: {}", specs);
+        Page<NotificationDTO> page = notificationQueryService.findBySearch(specs, pageable);
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
         return ResponseEntity.ok().headers(headers).body(page.getContent());
     }
