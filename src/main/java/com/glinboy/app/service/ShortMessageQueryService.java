@@ -95,4 +95,10 @@ public class ShortMessageQueryService extends QueryService<ShortMessage> {
         }
         return specification;
     }
+
+    @Transactional(readOnly = true)
+    public Page<ShortMessageDTO> findBySearch(Specification<ShortMessage> specs, Pageable page) {
+        log.debug("find by specification : {}, page: {}", specs, page);
+        return shortMessageRepository.findAll(specs, page).map(shortMessageMapper::toDto);
+	}
 }
