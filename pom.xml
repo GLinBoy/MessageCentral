@@ -90,6 +90,7 @@
 		<twilio-version>8.10.0</twilio-version>
 		<kavenegar.version>v2.0.1</kavenegar.version>
 		<firebase-admin.version>7.1.1</firebase-admin.version>
+		<spring-search.version>0.2.4</spring-search.version>
 	</properties>
 
 	<dependencyManagement>
@@ -360,6 +361,11 @@
 			<groupId>com.google.firebase</groupId>
 			<artifactId>firebase-admin</artifactId>
 			<version>${firebase-admin.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>com.sipios</groupId>
+			<artifactId>spring-search</artifactId>
+			<version>${spring-search.version}</version>
 		</dependency>
 	</dependencies>
 
