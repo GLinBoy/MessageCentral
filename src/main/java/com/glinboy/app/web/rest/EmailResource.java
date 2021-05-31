@@ -15,6 +15,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -25,6 +26,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import com.glinboy.app.domain.Email;
 import com.glinboy.app.repository.EmailRepository;
 import com.glinboy.app.service.EmailQueryService;
 import com.glinboy.app.service.EmailService;
@@ -32,6 +34,7 @@ import com.glinboy.app.service.criteria.EmailCriteria;
 import com.glinboy.app.service.dto.EmailDTO;
 import com.glinboy.app.service.dto.EmailsDTO;
 import com.glinboy.app.web.rest.errors.BadRequestAlertException;
+import com.sipios.springsearch.anotation.SearchSpec;
 
 import tech.jhipster.web.util.HeaderUtil;
 import tech.jhipster.web.util.PaginationUtil;
@@ -176,9 +179,9 @@ public class EmailResource {
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of emails in body.
      */
     @GetMapping("/emails")
-    public ResponseEntity<List<EmailDTO>> getAllEmails(EmailCriteria criteria, Pageable pageable) {
-        log.debug("REST request to get Emails by criteria: {}", criteria);
-        Page<EmailDTO> page = emailQueryService.findByCriteria(criteria, pageable);
+    public ResponseEntity<List<EmailDTO>> getAllEmails(@SearchSpec Specification<Email> specs, Pageable pageable) {
+        log.debug("REST request to search Emails by criteria: {}", specs);
+        Page<EmailDTO> page = emailQueryService.findBySearch(specs, pageable);
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
         return ResponseEntity.ok().headers(headers).body(page.getContent());
     }
