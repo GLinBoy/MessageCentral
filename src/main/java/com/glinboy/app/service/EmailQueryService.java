@@ -95,4 +95,10 @@ public class EmailQueryService extends QueryService<Email> {
         }
         return specification;
     }
+
+    @Transactional(readOnly = true)
+    public Page<EmailDTO> findBySearch(Specification<Email> specs, Pageable page) {
+        log.debug("find by specification : {}, page: {}", specs, page);
+        return emailRepository.findAll(specs, page).map(emailMapper::toDto);
+	}
 }
