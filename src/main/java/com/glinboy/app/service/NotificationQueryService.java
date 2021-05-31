@@ -113,4 +113,10 @@ public class NotificationQueryService extends QueryService<Notification> {
         }
         return specification;
     }
+
+    @Transactional(readOnly = true)
+    public Page<NotificationDTO> findBySearch(Specification<Notification> specs, Pageable page) {
+        log.debug("find by specification : {}, page: {}", specs, page);
+        return notificationRepository.findAll(specs, page).map(notificationMapper::toDto);
+	}
 }
