@@ -193,9 +193,9 @@ public class EmailResource {
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the count in body.
      */
     @GetMapping("/emails/count")
-    public ResponseEntity<Long> countEmails(EmailCriteria criteria) {
-        log.debug("REST request to count Emails by criteria: {}", criteria);
-        return ResponseEntity.ok().body(emailQueryService.countByCriteria(criteria));
+    public ResponseEntity<Long> countEmails(@SearchSpec Specification<Email> specs) {
+        log.debug("REST request to count Emails by criteria: {}", specs);
+        return ResponseEntity.ok().body(emailQueryService.countBySpecification(specs));
     }
 
     /**
