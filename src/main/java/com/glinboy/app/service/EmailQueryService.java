@@ -1,13 +1,7 @@
 package com.glinboy.app.service;
 
-import com.glinboy.app.domain.*; // for static metamodels
-import com.glinboy.app.domain.Email;
-import com.glinboy.app.repository.EmailRepository;
-import com.glinboy.app.service.criteria.EmailCriteria;
-import com.glinboy.app.service.dto.EmailDTO;
-import com.glinboy.app.service.mapper.EmailMapper;
 import java.util.List;
-import javax.persistence.criteria.JoinType;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -15,6 +9,15 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+// for static metamodels
+import com.glinboy.app.domain.Email;
+import com.glinboy.app.domain.Email_;
+import com.glinboy.app.repository.EmailRepository;
+import com.glinboy.app.service.criteria.EmailCriteria;
+import com.glinboy.app.service.dto.EmailDTO;
+import com.glinboy.app.service.mapper.EmailMapper;
+
 import tech.jhipster.service.QueryService;
 
 /**
@@ -77,12 +80,12 @@ public class EmailQueryService extends QueryService<Email> {
 
     /**
      * Return the number of matching entities in the database.
-     * @param criteria The object which holds all the filters, which the entities should match.
+     * @param specification The object which holds all the filters, which the entities should match.
      * @return the number of matching entities.
      */
     @Transactional(readOnly = true)
     public long countBySpecification(Specification<Email> specs) {
-        log.debug("count by criteria : {}", specs);
+        log.debug("count by specification: {}", specs);
         return emailRepository.count(specs);
     }
 

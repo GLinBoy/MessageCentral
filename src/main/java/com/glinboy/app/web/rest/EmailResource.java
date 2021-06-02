@@ -30,7 +30,6 @@ import com.glinboy.app.domain.Email;
 import com.glinboy.app.repository.EmailRepository;
 import com.glinboy.app.service.EmailQueryService;
 import com.glinboy.app.service.EmailService;
-import com.glinboy.app.service.criteria.EmailCriteria;
 import com.glinboy.app.service.dto.EmailDTO;
 import com.glinboy.app.service.dto.EmailsDTO;
 import com.glinboy.app.web.rest.errors.BadRequestAlertException;
@@ -194,7 +193,7 @@ public class EmailResource {
      */
     @GetMapping("/emails/count")
     public ResponseEntity<Long> countEmails(@SearchSpec Specification<Email> specs) {
-        log.debug("REST request to count Emails by criteria: {}", specs);
+        log.debug("REST request to count Emails by specification: {}", specs);
         return ResponseEntity.ok().body(emailQueryService.countBySpecification(specs));
     }
 
