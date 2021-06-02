@@ -1,13 +1,9 @@
 package com.glinboy.app.service;
 
-import com.glinboy.app.domain.*; // for static metamodels
-import com.glinboy.app.domain.Notification;
-import com.glinboy.app.repository.NotificationRepository;
-import com.glinboy.app.service.criteria.NotificationCriteria;
-import com.glinboy.app.service.dto.NotificationDTO;
-import com.glinboy.app.service.mapper.NotificationMapper;
 import java.util.List;
+
 import javax.persistence.criteria.JoinType;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -15,6 +11,16 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+// for static metamodels
+import com.glinboy.app.domain.Notification;
+import com.glinboy.app.domain.NotificationData_;
+import com.glinboy.app.domain.Notification_;
+import com.glinboy.app.repository.NotificationRepository;
+import com.glinboy.app.service.criteria.NotificationCriteria;
+import com.glinboy.app.service.dto.NotificationDTO;
+import com.glinboy.app.service.mapper.NotificationMapper;
+
 import tech.jhipster.service.QueryService;
 
 /**
@@ -73,6 +79,17 @@ public class NotificationQueryService extends QueryService<Notification> {
         log.debug("count by criteria : {}", criteria);
         final Specification<Notification> specification = createSpecification(criteria);
         return notificationRepository.count(specification);
+    }
+
+    /**
+     * Return the number of matching entities in the database.
+     * @param specification The object which holds all the filters, which the entities should match.
+     * @return the number of matching entities.
+     */
+    @Transactional(readOnly = true)
+    public long countBySpecification(Specification<Notification> specs) {
+        log.debug("count by specification : {}", specs);
+        return notificationRepository.count(specs);
     }
 
     /**
