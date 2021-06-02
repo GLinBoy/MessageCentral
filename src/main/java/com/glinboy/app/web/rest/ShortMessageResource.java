@@ -29,7 +29,6 @@ import com.glinboy.app.domain.ShortMessage;
 import com.glinboy.app.repository.ShortMessageRepository;
 import com.glinboy.app.service.ShortMessageQueryService;
 import com.glinboy.app.service.ShortMessageService;
-import com.glinboy.app.service.criteria.ShortMessageCriteria;
 import com.glinboy.app.service.dto.ShortMessageDTO;
 import com.glinboy.app.service.dto.ShortMessagesDTO;
 import com.glinboy.app.web.rest.errors.BadRequestAlertException;
@@ -197,9 +196,9 @@ public class ShortMessageResource {
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the count in body.
      */
     @GetMapping("/short-messages/count")
-    public ResponseEntity<Long> countShortMessages(ShortMessageCriteria criteria) {
-        log.debug("REST request to count ShortMessages by criteria: {}", criteria);
-        return ResponseEntity.ok().body(shortMessageQueryService.countByCriteria(criteria));
+    public ResponseEntity<Long> countShortMessages(@SearchSpec Specification<ShortMessage> specs) {
+        log.debug("REST request to count ShortMessages by specification: {}", specs);
+        return ResponseEntity.ok().body(shortMessageQueryService.countBySpecification(specs));
     }
 
     /**
