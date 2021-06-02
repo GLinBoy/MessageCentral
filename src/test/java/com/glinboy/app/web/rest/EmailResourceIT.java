@@ -388,10 +388,10 @@ class EmailResourceIT {
 		emailRepository.saveAndFlush(email);
 
 		// Get all the emailList where receiver not equals to DEFAULT_RECEIVER
-		defaultEmailShouldNotBeFound("receiver.notEquals=" + DEFAULT_RECEIVER);
-		// FIXME
+		defaultEmailShouldNotBeFound("search=receiver!" + DEFAULT_RECEIVER);
+
 		// Get all the emailList where receiver not equals to UPDATED_RECEIVER
-		defaultEmailShouldBeFound("receiver.notEquals=" + UPDATED_RECEIVER);
+		defaultEmailShouldBeFound("search=receiver!" + UPDATED_RECEIVER);
 	}
 
 	@Test
