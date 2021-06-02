@@ -355,7 +355,7 @@ class EmailResourceIT {
 		emailRepository.saveAndFlush(email);
 
 		Long id = email.getId();
-
+		// FIXME
 		defaultEmailShouldBeFound("id.equals=" + id);
 		defaultEmailShouldNotBeFound("id.notEquals=" + id);
 
@@ -375,7 +375,7 @@ class EmailResourceIT {
 
 		// Get all the emailList where receiver equals to DEFAULT_RECEIVER
 		defaultEmailShouldBeFound("receiver.equals=" + DEFAULT_RECEIVER);
-
+		// FIXME
 		// Get all the emailList where receiver equals to UPDATED_RECEIVER
 		defaultEmailShouldNotBeFound("receiver.equals=" + UPDATED_RECEIVER);
 	}
@@ -389,7 +389,7 @@ class EmailResourceIT {
 
 		// Get all the emailList where receiver not equals to DEFAULT_RECEIVER
 		defaultEmailShouldNotBeFound("receiver.notEquals=" + DEFAULT_RECEIVER);
-
+		// FIXME
 		// Get all the emailList where receiver not equals to UPDATED_RECEIVER
 		defaultEmailShouldBeFound("receiver.notEquals=" + UPDATED_RECEIVER);
 	}
@@ -403,7 +403,7 @@ class EmailResourceIT {
 
 		// Get all the emailList where receiver in DEFAULT_RECEIVER or UPDATED_RECEIVER
 		defaultEmailShouldBeFound("receiver.in=" + DEFAULT_RECEIVER + "," + UPDATED_RECEIVER);
-
+		// FIXME
 		// Get all the emailList where receiver equals to UPDATED_RECEIVER
 		defaultEmailShouldNotBeFound("receiver.in=" + UPDATED_RECEIVER);
 	}
@@ -417,7 +417,7 @@ class EmailResourceIT {
 
 		// Get all the emailList where receiver is not null
 		defaultEmailShouldBeFound("receiver.specified=true");
-
+		// FIXME
 		// Get all the emailList where receiver is null
 		defaultEmailShouldNotBeFound("receiver.specified=false");
 	}
@@ -431,7 +431,7 @@ class EmailResourceIT {
 
 		// Get all the emailList where receiver contains DEFAULT_RECEIVER
 		defaultEmailShouldBeFound("receiver.contains=" + DEFAULT_RECEIVER);
-
+		// FIXME
 		// Get all the emailList where receiver contains UPDATED_RECEIVER
 		defaultEmailShouldNotBeFound("receiver.contains=" + UPDATED_RECEIVER);
 	}
@@ -445,7 +445,7 @@ class EmailResourceIT {
 
 		// Get all the emailList where receiver does not contain DEFAULT_RECEIVER
 		defaultEmailShouldNotBeFound("receiver.doesNotContain=" + DEFAULT_RECEIVER);
-
+		// FIXME
 		// Get all the emailList where receiver does not contain UPDATED_RECEIVER
 		defaultEmailShouldBeFound("receiver.doesNotContain=" + UPDATED_RECEIVER);
 	}
@@ -459,7 +459,7 @@ class EmailResourceIT {
 
 		// Get all the emailList where subject equals to DEFAULT_SUBJECT
 		defaultEmailShouldBeFound("subject.equals=" + DEFAULT_SUBJECT);
-
+		// FIXME
 		// Get all the emailList where subject equals to UPDATED_SUBJECT
 		defaultEmailShouldNotBeFound("subject.equals=" + UPDATED_SUBJECT);
 	}
@@ -470,7 +470,7 @@ class EmailResourceIT {
 	void getAllEmailsBySubjectIsNotEqualToSomething() throws Exception {
 		// Initialize the database
 		emailRepository.saveAndFlush(email);
-
+		// FIXME
 		// Get all the emailList where subject not equals to DEFAULT_SUBJECT
 		defaultEmailShouldNotBeFound("subject.notEquals=" + DEFAULT_SUBJECT);
 
@@ -487,7 +487,7 @@ class EmailResourceIT {
 
 		// Get all the emailList where subject in DEFAULT_SUBJECT or UPDATED_SUBJECT
 		defaultEmailShouldBeFound("subject.in=" + DEFAULT_SUBJECT + "," + UPDATED_SUBJECT);
-
+		// FIXME
 		// Get all the emailList where subject equals to UPDATED_SUBJECT
 		defaultEmailShouldNotBeFound("subject.in=" + UPDATED_SUBJECT);
 	}
@@ -501,7 +501,7 @@ class EmailResourceIT {
 
 		// Get all the emailList where subject is not null
 		defaultEmailShouldBeFound("subject.specified=true");
-
+		// FIXME
 		// Get all the emailList where subject is null
 		defaultEmailShouldNotBeFound("subject.specified=false");
 	}
@@ -528,10 +528,10 @@ class EmailResourceIT {
 		emailRepository.saveAndFlush(email);
 
 		// Get all the emailList where subject does not contain DEFAULT_SUBJECT
-		defaultEmailShouldNotBeFound("subject.doesNotContain=" + DEFAULT_SUBJECT);
+		defaultEmailShouldNotBeFound("search=subject!*" + DEFAULT_SUBJECT + "*");
 
 		// Get all the emailList where subject does not contain UPDATED_SUBJECT
-		defaultEmailShouldBeFound("subject.doesNotContain=" + UPDATED_SUBJECT);
+		defaultEmailShouldBeFound("search=subject!*" + UPDATED_SUBJECT + "*");
 	}
 
 	/**
