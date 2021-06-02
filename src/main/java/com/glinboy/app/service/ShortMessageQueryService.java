@@ -1,13 +1,7 @@
 package com.glinboy.app.service;
 
-import com.glinboy.app.domain.*; // for static metamodels
-import com.glinboy.app.domain.ShortMessage;
-import com.glinboy.app.repository.ShortMessageRepository;
-import com.glinboy.app.service.criteria.ShortMessageCriteria;
-import com.glinboy.app.service.dto.ShortMessageDTO;
-import com.glinboy.app.service.mapper.ShortMessageMapper;
 import java.util.List;
-import javax.persistence.criteria.JoinType;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -15,6 +9,15 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+// for static metamodels
+import com.glinboy.app.domain.ShortMessage;
+import com.glinboy.app.domain.ShortMessage_;
+import com.glinboy.app.repository.ShortMessageRepository;
+import com.glinboy.app.service.criteria.ShortMessageCriteria;
+import com.glinboy.app.service.dto.ShortMessageDTO;
+import com.glinboy.app.service.mapper.ShortMessageMapper;
+
 import tech.jhipster.service.QueryService;
 
 /**
@@ -73,6 +76,17 @@ public class ShortMessageQueryService extends QueryService<ShortMessage> {
         log.debug("count by criteria : {}", criteria);
         final Specification<ShortMessage> specification = createSpecification(criteria);
         return shortMessageRepository.count(specification);
+    }
+
+    /**
+     * Return the number of matching entities in the database.
+     * @param specification The object which holds all the filters, which the entities should match.
+     * @return the number of matching entities.
+     */
+    @Transactional(readOnly = true)
+    public long countBySpecification(Specification<ShortMessage> specs) {
+        log.debug("count by specification: {}", specs);
+        return shortMessageRepository.count(specs);
     }
 
     /**
