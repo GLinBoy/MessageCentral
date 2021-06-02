@@ -29,7 +29,6 @@ import com.glinboy.app.domain.Notification;
 import com.glinboy.app.repository.NotificationRepository;
 import com.glinboy.app.service.NotificationQueryService;
 import com.glinboy.app.service.NotificationService;
-import com.glinboy.app.service.criteria.NotificationCriteria;
 import com.glinboy.app.service.dto.NotificationDTO;
 import com.glinboy.app.service.dto.NotificationsDTO;
 import com.glinboy.app.web.rest.errors.BadRequestAlertException;
@@ -197,9 +196,9 @@ public class NotificationResource {
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the count in body.
      */
     @GetMapping("/notifications/count")
-    public ResponseEntity<Long> countNotifications(NotificationCriteria criteria) {
-        log.debug("REST request to count Notifications by criteria: {}", criteria);
-        return ResponseEntity.ok().body(notificationQueryService.countByCriteria(criteria));
+    public ResponseEntity<Long> countNotifications(@SearchSpec Specification<Notification> specs) {
+        log.debug("REST request to count Notifications by specification: {}", specs);
+        return ResponseEntity.ok().body(notificationQueryService.countBySpecification(specs));
     }
 
     /**
