@@ -470,12 +470,12 @@ class EmailResourceIT {
 	void getAllEmailsBySubjectIsNotEqualToSomething() throws Exception {
 		// Initialize the database
 		emailRepository.saveAndFlush(email);
-		// FIXME
+
 		// Get all the emailList where subject not equals to DEFAULT_SUBJECT
-		defaultEmailShouldNotBeFound("subject.notEquals=" + DEFAULT_SUBJECT);
+		defaultEmailShouldNotBeFound("search=subject!" + DEFAULT_SUBJECT);
 
 		// Get all the emailList where subject not equals to UPDATED_SUBJECT
-		defaultEmailShouldBeFound("subject.notEquals=" + UPDATED_SUBJECT);
+		defaultEmailShouldBeFound("search=subject!" + UPDATED_SUBJECT);
 	}
 
 	@Test
