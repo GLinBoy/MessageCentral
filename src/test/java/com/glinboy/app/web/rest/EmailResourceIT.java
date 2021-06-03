@@ -22,12 +22,12 @@ import javax.mail.Message.RecipientType;
 import javax.mail.internet.MimeMessage;
 import javax.persistence.EntityManager;
 
-import org.junit.Ignore;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -409,7 +409,7 @@ class EmailResourceIT {
 		defaultEmailShouldNotBeFound("search=receiver:" + UPDATED_RECEIVER);
 	}
 
-	@Ignore(value = "spring-search:0.2.0 doesn't support *specified* at this moment")
+	@Disabled(value = "spring-search:0.2.0 doesn't support *specified* at this moment")
 	@Test
 	@Transactional
 	@WithMockUser(authorities = {AuthoritiesConstants.EMAIL_USER})
@@ -495,7 +495,7 @@ class EmailResourceIT {
 		defaultEmailShouldNotBeFound("search=subject:" + UPDATED_SUBJECT);
 	}
 
-	@Ignore(value = "spring-search:0.2.0 doesn't support *specified* at this moment")
+	@Disabled(value = "spring-search:0.2.0 doesn't support *specified* at this moment")
 	@Test
 	@Transactional
 	@WithMockUser(authorities = {AuthoritiesConstants.EMAIL_USER})
