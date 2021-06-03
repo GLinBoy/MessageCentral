@@ -484,14 +484,15 @@ class EmailResourceIT {
 	@Transactional
 	@WithMockUser(authorities = {AuthoritiesConstants.EMAIL_USER})
 	void getAllEmailsBySubjectIsInShouldWork() throws Exception {
+		// FIXME spring-search:0.2.0 doesn't support in at this moment
 		// Initialize the database
 		emailRepository.saveAndFlush(email);
 
 		// Get all the emailList where subject in DEFAULT_SUBJECT or UPDATED_SUBJECT
-		defaultEmailShouldBeFound("subject.in=" + DEFAULT_SUBJECT + "," + UPDATED_SUBJECT);
-		// FIXME
+		defaultEmailShouldBeFound(String.format("search=( subject:%s OR subject:%s )", DEFAULT_SUBJECT, UPDATED_SUBJECT));
+
 		// Get all the emailList where subject equals to UPDATED_SUBJECT
-		defaultEmailShouldNotBeFound("subject.in=" + UPDATED_SUBJECT);
+		defaultEmailShouldNotBeFound("search=subject:" + UPDATED_SUBJECT);
 	}
 
 	@Ignore(value = "spring-search:0.2.0 doesn't support *specified* at this moment")
