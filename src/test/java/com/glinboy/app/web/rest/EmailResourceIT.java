@@ -458,10 +458,10 @@ class EmailResourceIT {
 		emailRepository.saveAndFlush(email);
 
 		// Get all the emailList where subject equals to DEFAULT_SUBJECT
-		defaultEmailShouldBeFound("subject.equals=" + DEFAULT_SUBJECT);
-		// FIXME
+		defaultEmailShouldBeFound("search=subject:" + DEFAULT_SUBJECT);
+
 		// Get all the emailList where subject equals to UPDATED_SUBJECT
-		defaultEmailShouldNotBeFound("subject.equals=" + UPDATED_SUBJECT);
+		defaultEmailShouldNotBeFound("search=subject:" + UPDATED_SUBJECT);
 	}
 
 	@Test
