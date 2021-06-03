@@ -446,10 +446,10 @@ class EmailResourceIT {
 		emailRepository.saveAndFlush(email);
 
 		// Get all the emailList where receiver does not contain DEFAULT_RECEIVER
-		defaultEmailShouldNotBeFound("receiver.doesNotContain=" + DEFAULT_RECEIVER);
-		// FIXME
+		defaultEmailShouldNotBeFound("search=receiver!*" + DEFAULT_RECEIVER + "*");
+
 		// Get all the emailList where receiver does not contain UPDATED_RECEIVER
-		defaultEmailShouldBeFound("receiver.doesNotContain=" + UPDATED_RECEIVER);
+		defaultEmailShouldBeFound("search=receiver!*" + UPDATED_RECEIVER + "*");
 	}
 
 	@Test
