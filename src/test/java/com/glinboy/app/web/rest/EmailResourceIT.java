@@ -398,14 +398,14 @@ class EmailResourceIT {
 	@Transactional
 	@WithMockUser(authorities = {AuthoritiesConstants.EMAIL_USER})
 	void getAllEmailsByReceiverIsInShouldWork() throws Exception {
+		// FIXME spring-search:0.2.0 doesn't support in at this moment
 		// Initialize the database
 		emailRepository.saveAndFlush(email);
 
 		// Get all the emailList where receiver in DEFAULT_RECEIVER or UPDATED_RECEIVER
-		defaultEmailShouldBeFound("receiver.in=" + DEFAULT_RECEIVER + "," + UPDATED_RECEIVER);
-		// FIXME
+		defaultEmailShouldBeFound(String.format("search=( receiver:%s OR receiver:%s )", DEFAULT_RECEIVER, UPDATED_RECEIVER));
 		// Get all the emailList where receiver equals to UPDATED_RECEIVER
-		defaultEmailShouldNotBeFound("receiver.in=" + UPDATED_RECEIVER);
+		defaultEmailShouldNotBeFound("search=receiver:" + UPDATED_RECEIVER);
 	}
 
 	@Test
