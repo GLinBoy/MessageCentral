@@ -359,10 +359,10 @@ class ShortMessageResourceIT {
         shortMessageRepository.saveAndFlush(shortMessage);
 
         // Get all the shortMessageList where phoneNumber not equals to DEFAULT_PHONE_NUMBER
-        defaultShortMessageShouldNotBeFound("phoneNumber.notEquals=" + DEFAULT_PHONE_NUMBER);
+        defaultShortMessageShouldNotBeFound("search=phoneNumber!" + DEFAULT_PHONE_NUMBER);
 
         // Get all the shortMessageList where phoneNumber not equals to UPDATED_PHONE_NUMBER
-        defaultShortMessageShouldBeFound("phoneNumber.notEquals=" + UPDATED_PHONE_NUMBER);
+        defaultShortMessageShouldBeFound("search=phoneNumber!" + UPDATED_PHONE_NUMBER);
     }
 
     @Test
