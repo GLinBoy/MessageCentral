@@ -373,10 +373,10 @@ class ShortMessageResourceIT {
         shortMessageRepository.saveAndFlush(shortMessage);
 
         // Get all the shortMessageList where phoneNumber in DEFAULT_PHONE_NUMBER or UPDATED_PHONE_NUMBER
-        defaultShortMessageShouldBeFound("phoneNumber.in=" + DEFAULT_PHONE_NUMBER + "," + UPDATED_PHONE_NUMBER);
+        defaultShortMessageShouldBeFound(String.format("search=( phoneNumber:%s OR phoneNumber:%s )", DEFAULT_PHONE_NUMBER, UPDATED_PHONE_NUMBER));
 
         // Get all the shortMessageList where phoneNumber equals to UPDATED_PHONE_NUMBER
-        defaultShortMessageShouldNotBeFound("phoneNumber.in=" + UPDATED_PHONE_NUMBER);
+        defaultShortMessageShouldNotBeFound("search=phoneNumber:" + UPDATED_PHONE_NUMBER);
     }
 
     @Disabled(value = "spring-search:0.2.0 doesn't support *specified* at this moment")
