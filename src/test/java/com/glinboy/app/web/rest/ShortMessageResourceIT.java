@@ -402,10 +402,10 @@ class ShortMessageResourceIT {
         shortMessageRepository.saveAndFlush(shortMessage);
 
         // Get all the shortMessageList where phoneNumber contains DEFAULT_PHONE_NUMBER
-        defaultShortMessageShouldBeFound("phoneNumber.contains=" + DEFAULT_PHONE_NUMBER);
+        defaultShortMessageShouldBeFound("search=phoneNumber:*" + DEFAULT_PHONE_NUMBER + "*");
 
         // Get all the shortMessageList where phoneNumber contains UPDATED_PHONE_NUMBER
-        defaultShortMessageShouldNotBeFound("phoneNumber.contains=" + UPDATED_PHONE_NUMBER);
+        defaultShortMessageShouldNotBeFound("search=phoneNumber:*" + UPDATED_PHONE_NUMBER + "*");
     }
 
     @Test
