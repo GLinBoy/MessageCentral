@@ -427,10 +427,10 @@ class ShortMessageResourceIT {
         shortMessageRepository.saveAndFlush(shortMessage);
 
         // Get all the shortMessageList where content equals to DEFAULT_CONTENT
-        defaultShortMessageShouldBeFound("content.equals=" + DEFAULT_CONTENT);
+        defaultShortMessageShouldBeFound("search=content:" + DEFAULT_CONTENT);
 
         // Get all the shortMessageList where content equals to UPDATED_CONTENT
-        defaultShortMessageShouldNotBeFound("content.equals=" + UPDATED_CONTENT);
+        defaultShortMessageShouldNotBeFound("search=content:" + UPDATED_CONTENT);
     }
 
     @Test
