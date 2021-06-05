@@ -24,6 +24,7 @@ import java.util.stream.IntStream;
 import javax.persistence.EntityManager;
 
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -580,6 +581,7 @@ class NotificationResourceIT {
         defaultNotificationShouldNotBeFound("token.in=" + UPDATED_TOKEN);
     }
 
+    @Disabled(value = "spring-search:0.2.0 doesn't support *specified* at this moment")
     @Test
     @Transactional
     @WithMockUser(authorities = {AuthoritiesConstants.NOTIFICATION_USER})
