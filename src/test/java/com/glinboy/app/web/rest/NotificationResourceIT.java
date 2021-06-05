@@ -630,10 +630,10 @@ class NotificationResourceIT {
         notificationRepository.saveAndFlush(notification);
 
         // Get all the notificationList where subject equals to DEFAULT_SUBJECT
-        defaultNotificationShouldBeFound("subject.equals=" + DEFAULT_SUBJECT);
+        defaultNotificationShouldBeFound("search=subject:" + DEFAULT_SUBJECT);
 
         // Get all the notificationList where subject equals to UPDATED_SUBJECT
-        defaultNotificationShouldNotBeFound("subject.equals=" + UPDATED_SUBJECT);
+        defaultNotificationShouldNotBeFound("search=subject:" + UPDATED_SUBJECT);
     }
 
     @Test
