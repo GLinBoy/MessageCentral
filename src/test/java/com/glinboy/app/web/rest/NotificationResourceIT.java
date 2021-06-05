@@ -616,10 +616,10 @@ class NotificationResourceIT {
         notificationRepository.saveAndFlush(notification);
 
         // Get all the notificationList where token does not contain DEFAULT_TOKEN
-        defaultNotificationShouldNotBeFound("token.doesNotContain=" + DEFAULT_TOKEN);
+        defaultNotificationShouldNotBeFound("search=token!*" + DEFAULT_TOKEN + "*");
 
         // Get all the notificationList where token does not contain UPDATED_TOKEN
-        defaultNotificationShouldBeFound("token.doesNotContain=" + UPDATED_TOKEN);
+        defaultNotificationShouldBeFound("search=token!*" + UPDATED_TOKEN + "*");
     }
 
     @Test
