@@ -775,10 +775,10 @@ class NotificationResourceIT {
         notificationRepository.saveAndFlush(notification);
 
         // Get all the notificationList where content contains DEFAULT_CONTENT
-        defaultNotificationShouldBeFound("content.contains=" + DEFAULT_CONTENT);
+        defaultNotificationShouldBeFound("search=content:*" + DEFAULT_CONTENT + "*");
 
         // Get all the notificationList where content contains UPDATED_CONTENT
-        defaultNotificationShouldNotBeFound("content.contains=" + UPDATED_CONTENT);
+        defaultNotificationShouldNotBeFound("search=content:*" + UPDATED_CONTENT + "*");
     }
 
     @Test
