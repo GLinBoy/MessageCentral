@@ -817,10 +817,10 @@ class NotificationResourceIT {
         notificationRepository.saveAndFlush(notification);
 
         // Get all the notificationList where image not equals to DEFAULT_IMAGE
-        defaultNotificationShouldNotBeFound("image.notEquals=" + DEFAULT_IMAGE);
+        defaultNotificationShouldNotBeFound("search=image!" + DEFAULT_IMAGE);
 
         // Get all the notificationList where image not equals to UPDATED_IMAGE
-        defaultNotificationShouldBeFound("image.notEquals=" + UPDATED_IMAGE);
+        defaultNotificationShouldBeFound("search=image!" + UPDATED_IMAGE);
     }
 
     @Test
