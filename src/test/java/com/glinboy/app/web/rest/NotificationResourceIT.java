@@ -746,10 +746,10 @@ class NotificationResourceIT {
         notificationRepository.saveAndFlush(notification);
 
         // Get all the notificationList where content in DEFAULT_CONTENT or UPDATED_CONTENT
-        defaultNotificationShouldBeFound("content.in=" + DEFAULT_CONTENT + "," + UPDATED_CONTENT);
+        defaultNotificationShouldBeFound(String.format("search=( content:%s OR content:%s )", DEFAULT_CONTENT, UPDATED_CONTENT));
 
         // Get all the notificationList where content equals to UPDATED_CONTENT
-        defaultNotificationShouldNotBeFound("content.in=" + UPDATED_CONTENT);
+        defaultNotificationShouldNotBeFound("search=content:" + UPDATED_CONTENT);
     }
 
     @Disabled(value = "spring-search:0.2.0 doesn't support *specified* at this moment")
