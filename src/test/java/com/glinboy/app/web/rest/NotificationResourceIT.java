@@ -861,10 +861,10 @@ class NotificationResourceIT {
         notificationRepository.saveAndFlush(notification);
 
         // Get all the notificationList where image contains DEFAULT_IMAGE
-        defaultNotificationShouldBeFound("image.contains=" + DEFAULT_IMAGE);
+        defaultNotificationShouldBeFound("search=image:*" + DEFAULT_IMAGE + "*");
 
         // Get all the notificationList where image contains UPDATED_IMAGE
-        defaultNotificationShouldNotBeFound("image.contains=" + UPDATED_IMAGE);
+        defaultNotificationShouldNotBeFound("search=image:*" + UPDATED_IMAGE + "*");
     }
 
     @Test
