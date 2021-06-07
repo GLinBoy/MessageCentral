@@ -491,10 +491,10 @@ class NotificationResourceIT {
         notificationRepository.saveAndFlush(notification);
 
         // Get all the notificationList where username in DEFAULT_USERNAME or UPDATED_USERNAME
-        defaultNotificationShouldBeFound("username.in=" + DEFAULT_USERNAME + "," + UPDATED_USERNAME);
+        defaultNotificationShouldBeFound(String.format("search=( username:%s OR username:%s )", DEFAULT_USERNAME, UPDATED_USERNAME));
 
         // Get all the notificationList where username equals to UPDATED_USERNAME
-        defaultNotificationShouldNotBeFound("username.in=" + UPDATED_USERNAME);
+        defaultNotificationShouldNotBeFound("search=username:" + UPDATED_USERNAME);
     }
 
     @Disabled(value = "spring-search:0.2.0 doesn't support *specified* at this moment")
