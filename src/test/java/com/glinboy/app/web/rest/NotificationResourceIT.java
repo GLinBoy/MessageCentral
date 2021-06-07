@@ -832,10 +832,10 @@ class NotificationResourceIT {
         notificationRepository.saveAndFlush(notification);
 
         // Get all the notificationList where image in DEFAULT_IMAGE or UPDATED_IMAGE
-        defaultNotificationShouldBeFound("image.in=" + DEFAULT_IMAGE + "," + UPDATED_IMAGE);
+        defaultNotificationShouldBeFound(String.format("search=image:%s OR image:%s", DEFAULT_IMAGE, UPDATED_IMAGE));
 
         // Get all the notificationList where image equals to UPDATED_IMAGE
-        defaultNotificationShouldNotBeFound("image.in=" + UPDATED_IMAGE);
+        defaultNotificationShouldNotBeFound("search=image:" + UPDATED_IMAGE);
     }
 
     @Disabled(value = "spring-search:0.2.0 doesn't support *specified* at this moment")
