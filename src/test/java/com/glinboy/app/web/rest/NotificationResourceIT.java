@@ -562,10 +562,10 @@ class NotificationResourceIT {
         notificationRepository.saveAndFlush(notification);
 
         // Get all the notificationList where token not equals to DEFAULT_TOKEN
-        defaultNotificationShouldNotBeFound("token.notEquals=" + DEFAULT_TOKEN);
+        defaultNotificationShouldNotBeFound("search=token!" + DEFAULT_TOKEN);
 
         // Get all the notificationList where token not equals to UPDATED_TOKEN
-        defaultNotificationShouldBeFound("token.notEquals=" + UPDATED_TOKEN);
+        defaultNotificationShouldBeFound("search=token!" + UPDATED_TOKEN);
     }
 
     @Test
