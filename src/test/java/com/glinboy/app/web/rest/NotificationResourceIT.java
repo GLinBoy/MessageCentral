@@ -477,10 +477,10 @@ class NotificationResourceIT {
         notificationRepository.saveAndFlush(notification);
 
         // Get all the notificationList where username not equals to DEFAULT_USERNAME
-        defaultNotificationShouldNotBeFound("username.notEquals=" + DEFAULT_USERNAME);
+        defaultNotificationShouldNotBeFound("search=username!" + DEFAULT_USERNAME);
 
         // Get all the notificationList where username not equals to UPDATED_USERNAME
-        defaultNotificationShouldBeFound("username.notEquals=" + UPDATED_USERNAME);
+        defaultNotificationShouldBeFound("search=username!" + UPDATED_USERNAME);
     }
 
     @Test
