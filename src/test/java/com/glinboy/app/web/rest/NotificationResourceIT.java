@@ -576,10 +576,10 @@ class NotificationResourceIT {
         notificationRepository.saveAndFlush(notification);
 
         // Get all the notificationList where token in DEFAULT_TOKEN or UPDATED_TOKEN
-        defaultNotificationShouldBeFound("token.in=" + DEFAULT_TOKEN + "," + UPDATED_TOKEN);
+        defaultNotificationShouldBeFound(String.format("search=( token:%s OR token:%s )", DEFAULT_TOKEN, UPDATED_TOKEN));
 
         // Get all the notificationList where token equals to UPDATED_TOKEN
-        defaultNotificationShouldNotBeFound("token.in=" + UPDATED_TOKEN);
+        defaultNotificationShouldNotBeFound("search=token:" + UPDATED_TOKEN);
     }
 
     @Disabled(value = "spring-search:0.2.0 doesn't support *specified* at this moment")
