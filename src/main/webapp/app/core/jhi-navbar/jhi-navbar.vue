@@ -30,7 +30,7 @@
             <span class="no-bold" v-text="$t('global.menu.entities.main')">Entities</span>
           </span>
           <b-dropdown-item to="/email">
-            <font-awesome-icon icon="asterisk" />
+            <font-awesome-icon icon="at" />
             <span v-text="$t('global.menu.entities.email')">Email</span>
           </b-dropdown-item>
           <b-dropdown-item to="/short-message">
