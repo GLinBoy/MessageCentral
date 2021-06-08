@@ -34,7 +34,7 @@
             <span v-text="$t('global.menu.entities.email')">Email</span>
           </b-dropdown-item>
           <b-dropdown-item to="/short-message">
-            <font-awesome-icon icon="asterisk" />
+            <font-awesome-icon icon="sms" />
             <span v-text="$t('global.menu.entities.shortMessage')">Short Message</span>
           </b-dropdown-item>
           <b-dropdown-item to="/notification">
