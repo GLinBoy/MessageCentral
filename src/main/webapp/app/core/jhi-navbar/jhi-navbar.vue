@@ -27,7 +27,7 @@
         <b-nav-item-dropdown right id="entity-menu" v-if="authenticated" active-class="active" class="pointer" data-cy="entity">
           <span slot="button-content" class="navbar-dropdown-menu">
             <font-awesome-icon icon="th-list" />
-            <span class="no-bold" v-text="$t('global.menu.entities.main')">Entities</span>
+            <span class="no-bold" v-text="$t('global.menu.entities.main')">Messages</span>
           </span>
           <b-dropdown-item to="/email">
             <font-awesome-icon icon="at" />

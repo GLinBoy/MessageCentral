@@ -6,7 +6,7 @@
       "home": "خانه",
       "jhipster-needle-menu-add-element": "JHipster will add additional menu entries here (do not translate!)",
       "entities": {
-        "main": "ماهیت ها",
+        "main": "پیام ها",
         "email": "Email",
         "shortMessage": "Short Message",
         "notification": "Notification",
