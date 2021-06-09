@@ -6,7 +6,8 @@
         "refreshListLabel": "Refresh list",
         "createLabel": "Create a new Email",
         "createOrEditLabel": "Create or edit a Email",
-        "notFound": "No Emails found"
+        "notFound": "No Emails found",
+        "searchPlaceholder": "Search emails..."
       },
       "created": "A new Email is created with identifier {{ param }}",
       "updated": "A Email is updated with identifier {{ param }}",
