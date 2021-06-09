@@ -6,7 +6,8 @@
         "refreshListLabel": "Refresh list",
         "createLabel": "Create a new Notification",
         "createOrEditLabel": "Create or edit a Notification",
-        "notFound": "No Notifications found"
+        "notFound": "No Notifications found",
+        "searchPlaceholder": "Search Notifications..."
       },
       "created": "A new Notification is created with identifier {{ param }}",
       "updated": "A Notification is updated with identifier {{ param }}",
