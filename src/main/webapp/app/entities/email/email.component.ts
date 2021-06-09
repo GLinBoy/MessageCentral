@@ -21,6 +21,7 @@ export default class Email extends mixins(JhiDataUtils) {
   public propOrder = 'id';
   public reverse = true;
   public totalItems = 0;
+  public currentSearch: string = null;
 
   public emails: IEmail[] = [];
 
@@ -56,6 +57,10 @@ export default class Email extends mixins(JhiDataUtils) {
           this.isFetching = false;
         }
       );
+  }
+
+  public handleSearch(): void {
+    console.log(this.currentSearch);
   }
 
   public handleSyncList(): void {

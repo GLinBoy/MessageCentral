@@ -9,10 +9,10 @@
       <div class="col-xs-12 col-md-8 col-lg-4">
         <div class="d-flex justify-content-end">
           <b-input-group class="mr-2">
-            <b-form-input type="text" :placeholder="$t('messageCentralApp.email.home.searchPlaceholder')" />
+            <b-form-input type="text" v-model="currentSearch" :placeholder="$t('messageCentralApp.email.home.searchPlaceholder')" />
 
             <b-input-group-append>
-              <b-button variant="outline-primary">
+              <b-button variant="outline-primary" v-on:click="handleSearch">
                 <font-awesome-icon icon="search"></font-awesome-icon>
               </b-button>
             </b-input-group-append>
