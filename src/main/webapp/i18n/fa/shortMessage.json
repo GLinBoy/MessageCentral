@@ -6,7 +6,8 @@
         "refreshListLabel": "Refresh list",
         "createLabel": "Create a new Short Message",
         "createOrEditLabel": "Create or edit a Short Message",
-        "notFound": "No Short Messages found"
+        "notFound": "No Short Messages found",
+        "searchPlaceholder": "Search Short Messages..."
       },
       "created": "A new Short Message is created with identifier {{ param }}",
       "updated": "A Short Message is updated with identifier {{ param }}",
