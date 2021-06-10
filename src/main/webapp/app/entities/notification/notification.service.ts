@@ -1,6 +1,7 @@
 import axios from 'axios';
 
 import buildPaginationQueryOpts from '@/shared/sort/sorts';
+import buildSearchQueryOpts from '@/shared/search/searchs';
 
 import { INotification } from '@/shared/model/notification.model';
 
@@ -23,7 +24,7 @@ export default class NotificationService {
   public retrieve(paginationQuery?: any): Promise<any> {
     return new Promise<any>((resolve, reject) => {
       axios
-        .get(baseApiUrl + `?${buildPaginationQueryOpts(paginationQuery)}`)
+        .get(baseApiUrl + `?${buildPaginationQueryOpts(paginationQuery)}` + `${buildSearchQueryOpts(paginationQuery)}`)
         .then(res => {
           resolve(res);
         })
