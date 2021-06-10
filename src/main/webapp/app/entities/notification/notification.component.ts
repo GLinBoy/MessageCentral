@@ -19,6 +19,7 @@ export default class Notification extends Vue {
   public propOrder = 'id';
   public reverse = true;
   public totalItems = 0;
+  public currentSearch: string = null;
 
   public notifications: INotification[] = [];
 
@@ -30,6 +31,7 @@ export default class Notification extends Vue {
 
   public clear(): void {
     this.page = 1;
+    this.currentSearch = null;
     this.retrieveAllNotifications();
   }
 
@@ -40,6 +42,7 @@ export default class Notification extends Vue {
       page: this.page - 1,
       size: this.itemsPerPage,
       sort: this.sort(),
+      search: this.search(),
     };
     this.notificationService()
       .retrieve(paginationQuery)
@@ -54,6 +57,10 @@ export default class Notification extends Vue {
           this.isFetching = false;
         }
       );
+  }
+
+  public handleSearch(): void {
+    this.retrieveAllNotifications();
   }
 
   public handleSyncList(): void {
@@ -89,6 +96,14 @@ export default class Notification extends Vue {
     const result = [this.propOrder + ',' + (this.reverse ? 'desc' : 'asc')];
     if (this.propOrder !== 'id') {
       result.push('id');
+    }
+    return result;
+  }
+
+  public search(): string {
+    const result = undefined;
+    if (this.currentSearch) {
+      result = `( username:*${this.currentSearch}* OR token:*${this.currentSearch}* OR subject:*${this.currentSearch}* OR content:*${this.currentSearch}* )`;
     }
     return result;
   }
