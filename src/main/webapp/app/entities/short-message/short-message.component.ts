@@ -19,6 +19,7 @@ export default class ShortMessage extends Vue {
   public propOrder = 'id';
   public reverse = true;
   public totalItems = 0;
+  public currentSearch: string = null;
 
   public shortMessages: IShortMessage[] = [];
 
@@ -30,6 +31,7 @@ export default class ShortMessage extends Vue {
 
   public clear(): void {
     this.page = 1;
+    this.currentSearch = null;
     this.retrieveAllShortMessages();
   }
 
@@ -54,6 +56,10 @@ export default class ShortMessage extends Vue {
           this.isFetching = false;
         }
       );
+  }
+
+  public handleSearch(): void {
+    this.retrieveAllEmails();
   }
 
   public handleSyncList(): void {
@@ -89,6 +95,14 @@ export default class ShortMessage extends Vue {
     const result = [this.propOrder + ',' + (this.reverse ? 'desc' : 'asc')];
     if (this.propOrder !== 'id') {
       result.push('id');
+    }
+    return result;
+  }
+
+  public search(): string {
+    const result = undefined;
+    if (this.currentSearch) {
+      result = `( phoneNumber:*${this.currentSearch}* OR content:*${this.currentSearch}* )`;
     }
     return result;
   }
