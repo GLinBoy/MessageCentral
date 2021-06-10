@@ -43,6 +43,7 @@ export default class Email extends mixins(JhiDataUtils) {
       page: this.page - 1,
       size: this.itemsPerPage,
       sort: this.sort(),
+      search: this.search(),
     };
     this.emailService()
       .retrieve(paginationQuery)
@@ -60,7 +61,7 @@ export default class Email extends mixins(JhiDataUtils) {
   }
 
   public handleSearch(): void {
-    console.log(this.currentSearch);
+    this.retrieveAllEmails();
   }
 
   public handleSyncList(): void {
@@ -96,6 +97,14 @@ export default class Email extends mixins(JhiDataUtils) {
     const result = [this.propOrder + ',' + (this.reverse ? 'desc' : 'asc')];
     if (this.propOrder !== 'id') {
       result.push('id');
+    }
+    return result;
+  }
+
+  public search(): string {
+    const result = undefined;
+    if (this.currentSearch) {
+      result = `( receiver:*${this.currentSearch}* OR subject:*${this.currentSearch}* OR content:*${this.currentSearch}* )`;
     }
     return result;
   }
