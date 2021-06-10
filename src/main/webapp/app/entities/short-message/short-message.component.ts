@@ -42,6 +42,7 @@ export default class ShortMessage extends Vue {
       page: this.page - 1,
       size: this.itemsPerPage,
       sort: this.sort(),
+      search: this.search(),
     };
     this.shortMessageService()
       .retrieve(paginationQuery)
@@ -59,7 +60,7 @@ export default class ShortMessage extends Vue {
   }
 
   public handleSearch(): void {
-    this.retrieveAllEmails();
+    this.retrieveAllShortMessages();
   }
 
   public handleSyncList(): void {
