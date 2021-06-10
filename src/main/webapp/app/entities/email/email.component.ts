@@ -33,6 +33,7 @@ export default class Email extends mixins(JhiDataUtils) {
 
   public clear(): void {
     this.page = 1;
+    this.currentSearch = null;
     this.retrieveAllEmails();
   }
 
