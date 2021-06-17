@@ -3,9 +3,9 @@ import { Component, Vue, Inject } from 'vue-property-decorator';
 import { required, maxLength } from 'vuelidate/lib/validators';
 
 import NotificationDataService from '@/entities/notification-data/notification-data.service';
-import { INotificationData } from '@/shared/model/notification-data.model';
 
 import { INotification, Notification } from '@/shared/model/notification.model';
+import { INotificationData, NotificationData } from '@/shared/model/notification-data.model';
 import NotificationService from './notification.service';
 
 const validations: any = {
@@ -50,6 +50,7 @@ const validations: any = {
 export default class NotificationUpdate extends Vue {
   @Inject('notificationService') private notificationService: () => NotificationService;
   public notification: INotification = new Notification();
+  public data: INotificationData = new NotificationData();
 
   @Inject('notificationDataService') private notificationDataService: () => NotificationDataService;
 
@@ -132,10 +133,10 @@ export default class NotificationUpdate extends Vue {
   }
 
   public addData(): void {
-    console.log('data added.');
+    console.log(this.data);
   }
 
   public resetData(): void {
-    console.log('data reseted.');
+    this.data = new NotificationData();
   }
 }
