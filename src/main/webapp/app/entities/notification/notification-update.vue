@@ -167,6 +167,62 @@
           </div>
         </div>
         <div>
+          <div class="alert alert-warning" v-if="!notification.data || notification.data.length === 0">
+            <span v-text="$t('messageCentralApp.notificationData.home.notFound')">No notificationData found</span>
+          </div>
+          <div class="table-responsive" v-if="notification.data && notification.data.length > 0">
+            <table class="table table-striped" aria-describedby="notificationData">
+              <thead>
+                <tr>
+                  <th scope="row"><span v-text="$t('messageCentralApp.notificationData.key')">Key</span></th>
+                  <th scope="row"><span v-text="$t('messageCentralApp.notificationData.value')">Value</span></th>
+                  <th scope="row"></th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr v-for="notificationData in notification.data" :key="notificationData.id" data-cy="entityTable">
+                  <td>{{ notificationData.key }}</td>
+                  <td>{{ notificationData.value }}</td>
+                  <td class="text-right">
+                    <div class="btn-group">
+                      <router-link
+                        :to="{ name: 'NotificationDataView', params: { notificationDataId: notificationData.id } }"
+                        custom
+                        v-slot="{ navigate }"
+                      >
+                        <button @click="navigate" class="btn btn-info btn-sm details" data-cy="entityDetailsButton">
+                          <font-awesome-icon icon="eye"></font-awesome-icon>
+                          <span class="d-none d-md-inline" v-text="$t('entity.action.view')">View</span>
+                        </button>
+                      </router-link>
+                      <router-link
+                        :to="{ name: 'NotificationDataEdit', params: { notificationDataId: notificationData.id } }"
+                        custom
+                        v-slot="{ navigate }"
+                      >
+                        <button @click="navigate" class="btn btn-primary btn-sm edit" data-cy="entityEditButton">
+                          <font-awesome-icon icon="pencil-alt"></font-awesome-icon>
+                          <span class="d-none d-md-inline" v-text="$t('entity.action.edit')">Edit</span>
+                        </button>
+                      </router-link>
+                      <b-button
+                        v-on:click="prepareRemove(notificationData)"
+                        variant="danger"
+                        class="btn btn-sm"
+                        data-cy="entityDeleteButton"
+                        v-b-modal.removeEntity
+                      >
+                        <font-awesome-icon icon="times"></font-awesome-icon>
+                        <span class="d-none d-md-inline" v-text="$t('entity.action.delete')">Delete</span>
+                      </b-button>
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <div>
           <button type="button" id="cancel-save" class="btn btn-secondary" v-on:click="previousState()">
             <font-awesome-icon icon="ban"></font-awesome-icon>&nbsp;<span v-text="$t('entity.action.cancel')">Cancel</span>
           </button>
