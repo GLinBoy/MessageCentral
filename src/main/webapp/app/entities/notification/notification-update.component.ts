@@ -130,4 +130,12 @@ export default class NotificationUpdate extends Vue {
         this.notificationData = res.data;
       });
   }
+
+  public addData(): void {
+    console.log('data added.');
+  }
+
+  public resetData(): void {
+    console.log('data reseted.');
+  }
 }
