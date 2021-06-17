@@ -133,7 +133,12 @@ export default class NotificationUpdate extends Vue {
   }
 
   public addData(): void {
-    console.log(this.data);
+    if (this.notification.data) {
+      this.notification.data.push(this.data);
+    } else {
+      this.notification.data = [this.data];
+    }
+    this.resetData();
   }
 
   public resetData(): void {
