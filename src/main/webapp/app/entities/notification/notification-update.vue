@@ -141,6 +141,31 @@
             </div>
           </div>
         </div>
+        <div>Data:</div>
+        <div class="row justify-content-center">
+          <div class="col-sm-12 col-md-5">
+            <div class="form-group">
+              <label for="dataKey">Key</label>
+              <input type="text" class="form-control" id="dataKey" placeholder="Enter key" />
+            </div>
+          </div>
+          <div class="col-sm-12 col-md-5 align-self-end">
+            <div class="form-group">
+              <label for="dataValue">Value</label>
+              <input type="text" class="form-control" id="dataValue" placeholder="Enter value" />
+            </div>
+          </div>
+          <div class="col-sm-12 col-md-2 align-self-end">
+            <div class="form-group">
+              <button type="button" id="add-data" class="btn btn-primary" v-on:click="addData()">
+                <font-awesome-icon icon="plus"></font-awesome-icon>
+              </button>
+              <button type="button" id="reset-data" class="btn btn-secondary" v-on:click="resetData()">
+                <font-awesome-icon icon="sync"></font-awesome-icon>
+              </button>
+            </div>
+          </div>
+        </div>
         <div>
           <button type="button" id="cancel-save" class="btn btn-secondary" v-on:click="previousState()">
             <font-awesome-icon icon="ban"></font-awesome-icon>&nbsp;<span v-text="$t('entity.action.cancel')">Cancel</span>
