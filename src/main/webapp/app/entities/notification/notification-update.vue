@@ -146,13 +146,13 @@
           <div class="col-sm-12 col-md-5">
             <div class="form-group">
               <label for="dataKey">Key</label>
-              <input type="text" class="form-control" id="dataKey" placeholder="Enter key" />
+              <input type="text" class="form-control" id="dataKey" placeholder="Enter key" v-model="data.key" />
             </div>
           </div>
           <div class="col-sm-12 col-md-5 align-self-end">
             <div class="form-group">
               <label for="dataValue">Value</label>
-              <input type="text" class="form-control" id="dataValue" placeholder="Enter value" />
+              <input type="text" class="form-control" id="dataValue" placeholder="Enter value" v-model="data.value" />
             </div>
           </div>
           <div class="col-sm-12 col-md-2 align-self-end">
