@@ -157,10 +157,10 @@
           </div>
           <div class="col-sm-12 col-md-2 align-self-end">
             <div class="form-group">
-              <button type="button" id="add-data" class="btn btn-primary" v-on:click="addData()">
+              <button type="button" id="add-data" class="btn btn-primary" v-on:click="addData()" :disabled="!data.key">
                 <font-awesome-icon icon="plus"></font-awesome-icon>
               </button>
-              <button type="button" id="reset-data" class="btn btn-secondary" v-on:click="resetData()">
+              <button type="button" id="reset-data" class="btn btn-secondary" v-on:click="resetData()" :disabled="!data.key">
                 <font-awesome-icon icon="sync"></font-awesome-icon>
               </button>
             </div>
