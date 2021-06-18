@@ -134,6 +134,7 @@ export default class NotificationUpdate extends Vue {
 
   public addData(): void {
     if (this.notification.data) {
+      this.notification.data = this.notification.data.filter(obj => obj.key !== this.data.key);
       this.notification.data.push(this.data);
     } else {
       this.notification.data = [this.data];
