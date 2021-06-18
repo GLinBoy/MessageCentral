@@ -145,4 +145,12 @@ export default class NotificationUpdate extends Vue {
   public resetData(): void {
     this.data = new NotificationData();
   }
+
+  public prepareDataEdit(): void {
+    console.log('Prepare Data for Edit...');
+  }
+
+  public prepareDataRemove() {
+    console.log('Prepare Data for Delete...');
+  }
 }
