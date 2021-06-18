@@ -185,32 +185,8 @@
                   <td>{{ notificationData.value }}</td>
                   <td class="text-right">
                     <div class="btn-group">
-                      <router-link
-                        :to="{ name: 'NotificationDataView', params: { notificationDataId: notificationData.id } }"
-                        custom
-                        v-slot="{ navigate }"
-                      >
-                        <button @click="navigate" class="btn btn-info btn-sm details" data-cy="entityDetailsButton">
-                          <font-awesome-icon icon="eye"></font-awesome-icon>
-                          <span class="d-none d-md-inline" v-text="$t('entity.action.view')">View</span>
-                        </button>
-                      </router-link>
-                      <router-link
-                        :to="{ name: 'NotificationDataEdit', params: { notificationDataId: notificationData.id } }"
-                        custom
-                        v-slot="{ navigate }"
-                      >
-                        <button
-                          @click="navigate"
-                          class="btn btn-primary btn-sm edit"
-                          data-cy="entityEditButton"
-                          :title="$t('entity.action.edit')"
-                        >
-                          <font-awesome-icon icon="pencil-alt"></font-awesome-icon>
-                        </button>
-                      </router-link>
                       <b-button
-                        v-on:click="prepareEdit(notificationData)"
+                        v-on:click="prepareDataEdit(notificationData)"
                         variant="primary"
                         class="btn btn-sm"
                         data-cy="entityEditButton"
@@ -220,7 +196,7 @@
                         <font-awesome-icon icon="pencil-alt"></font-awesome-icon>
                       </b-button>
                       <b-button
-                        v-on:click="prepareRemove(notificationData)"
+                        v-on:click="prepareDataRemove(notificationData)"
                         variant="danger"
                         class="btn btn-sm"
                         data-cy="entityDeleteButton"
