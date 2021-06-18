@@ -211,9 +211,10 @@
                         class="btn btn-sm"
                         data-cy="entityDeleteButton"
                         v-b-modal.removeEntity
+                        v-b-tooltip.hover
+                        :title="$t('entity.action.delete')"
                       >
-                        <font-awesome-icon icon="times"></font-awesome-icon>
-                        <span class="d-none d-md-inline" v-text="$t('entity.action.delete')">Delete</span>
+                        <font-awesome-icon icon="trash"></font-awesome-icon>
                       </b-button>
                     </div>
                   </td>
