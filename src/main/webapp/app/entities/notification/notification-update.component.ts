@@ -146,11 +146,11 @@ export default class NotificationUpdate extends Vue {
     this.data = new NotificationData();
   }
 
-  public prepareDataEdit(): void {
-    console.log('Prepare Data for Edit...');
+  public prepareDataEdit(data): void {
+    this.data = data;
   }
 
-  public prepareDataRemove() {
-    console.log('Prepare Data for Delete...');
+  public prepareDataRemove(data) {
+    this.notification.data = this.notification.data.filter(obj => obj.key !== data.key);
   }
 }
