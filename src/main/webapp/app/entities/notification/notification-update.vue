@@ -200,11 +200,25 @@
                         custom
                         v-slot="{ navigate }"
                       >
-                        <button @click="navigate" class="btn btn-primary btn-sm edit" data-cy="entityEditButton">
+                        <button
+                          @click="navigate"
+                          class="btn btn-primary btn-sm edit"
+                          data-cy="entityEditButton"
+                          :title="$t('entity.action.edit')"
+                        >
                           <font-awesome-icon icon="pencil-alt"></font-awesome-icon>
-                          <span class="d-none d-md-inline" v-text="$t('entity.action.edit')">Edit</span>
                         </button>
                       </router-link>
+                      <b-button
+                        v-on:click="prepareEdit(notificationData)"
+                        variant="primary"
+                        class="btn btn-sm"
+                        data-cy="entityEditButton"
+                        v-b-tooltip.hover
+                        :title="$t('entity.action.edit')"
+                      >
+                        <font-awesome-icon icon="pencil-alt"></font-awesome-icon>
+                      </b-button>
                       <b-button
                         v-on:click="prepareRemove(notificationData)"
                         variant="danger"
