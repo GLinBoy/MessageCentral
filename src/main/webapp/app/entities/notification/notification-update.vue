@@ -180,7 +180,7 @@
                 </tr>
               </thead>
               <tbody>
-                <tr v-for="notificationData in notification.data" :key="notificationData.id" data-cy="entityTable">
+                <tr v-for="notificationData in notification.data" :key="notificationData.key" data-cy="entityTable">
                   <td>{{ notificationData.key }}</td>
                   <td>{{ notificationData.value }}</td>
                   <td class="text-right">
