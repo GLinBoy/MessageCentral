@@ -29,18 +29,6 @@ const validations: any = {
     image: {
       maxLength: maxLength(256),
     },
-    data: [
-      {
-        key: {
-          required,
-          maxLength: maxLength(128),
-        },
-        value: {
-          required,
-          maxLength: maxLength(256),
-        },
-      },
-    ],
   },
 };
 
