@@ -1096,8 +1096,6 @@ class NotificationResourceIT {
         // Initialize the database
         notificationRepository.saveAndFlush(notification);
 
-        int databaseSizeBeforeUpdate = notificationRepository.findAll().size();
-
         // Update the notification using partial update
         Notification partialUpdatedNotification = new Notification();
         partialUpdatedNotification.setId(notification.getId());
@@ -1111,16 +1109,6 @@ class NotificationResourceIT {
                     .content(TestUtil.convertObjectToJsonBytes(partialUpdatedNotification))
             )
             .andExpect(status().isMethodNotAllowed());
-
-        // Validate the Notification in the database
-        List<Notification> notificationList = notificationRepository.findAll();
-        assertThat(notificationList).hasSize(databaseSizeBeforeUpdate);
-        Notification testNotification = notificationList.get(notificationList.size() - 1);
-        assertThat(testNotification.getUsername()).isEqualTo(DEFAULT_USERNAME);
-        assertThat(testNotification.getToken()).isEqualTo(DEFAULT_TOKEN);
-        assertThat(testNotification.getSubject()).isEqualTo(UPDATED_SUBJECT);
-        assertThat(testNotification.getContent()).isEqualTo(UPDATED_CONTENT);
-        assertThat(testNotification.getImage()).isEqualTo(UPDATED_IMAGE);
     }
 
     @Test
