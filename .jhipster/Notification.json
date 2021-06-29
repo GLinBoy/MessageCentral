@@ -33,10 +33,10 @@
   ],
   "relationships": [
     {
-      "relationshipName": "data",
-      "otherEntityName": "notificationData",
       "relationshipType": "one-to-many",
-      "otherEntityRelationshipName": "notification"
+      "otherEntityName": "notificationData",
+      "otherEntityRelationshipName": "notification",
+      "relationshipName": "data"
     }
   ],
   "service": "serviceImpl",
@@ -45,5 +45,9 @@
   "readOnly": false,
   "pagination": "pagination",
   "name": "Notification",
-  "changelogDate": "20210424123846"
+  "changelogDate": "20210424123846",
+  "entityTableName": "notification",
+  "fluentMethods": true,
+  "embedded": false,
+  "applications": ["MessageCentral"]
 }

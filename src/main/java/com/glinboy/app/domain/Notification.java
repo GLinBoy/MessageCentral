@@ -48,7 +48,7 @@ public class Notification implements Serializable {
     @Column(name = "image", length = 256)
     private String image;
 
-    @OneToMany(mappedBy = "notification", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "notification")
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @JsonIgnoreProperties(value = { "notification" }, allowSetters = true)
     private Set<NotificationData> data = new HashSet<>();

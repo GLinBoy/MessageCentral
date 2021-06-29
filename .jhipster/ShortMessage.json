@@ -23,5 +23,9 @@
   "readOnly": false,
   "pagination": "pagination",
   "name": "ShortMessage",
-  "changelogDate": "20210421105843"
+  "changelogDate": "20210421105843",
+  "entityTableName": "short_message",
+  "fluentMethods": true,
+  "embedded": false,
+  "applications": ["MessageCentral"]
 }

@@ -15,16 +15,22 @@
   ],
   "relationships": [
     {
-      "relationshipName": "notification",
-      "otherEntityName": "notification",
       "relationshipType": "many-to-one",
-      "relationshipValidateRules": ["required"],
-      "otherEntityField": "id"
+      "otherEntityName": "notification",
+      "otherEntityRelationshipName": "data",
+      "relationshipValidateRules": "required",
+      "relationshipName": "notification"
     }
   ],
   "service": "no",
   "readOnly": false,
   "pagination": "no",
   "name": "NotificationData",
-  "changelogDate": "20210426100905"
+  "changelogDate": "20210426100905",
+  "entityTableName": "notification_data",
+  "dto": "no",
+  "jpaMetamodelFiltering": false,
+  "fluentMethods": true,
+  "embedded": false,
+  "applications": ["MessageCentral"]
 }

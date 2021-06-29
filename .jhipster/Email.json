@@ -29,5 +29,9 @@
   "readOnly": false,
   "pagination": "pagination",
   "name": "Email",
-  "changelogDate": "20210415085652"
+  "changelogDate": "20210415085652",
+  "entityTableName": "email",
+  "fluentMethods": true,
+  "embedded": false,
+  "applications": ["MessageCentral"]
 }
