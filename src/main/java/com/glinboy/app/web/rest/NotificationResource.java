@@ -97,7 +97,7 @@ public class NotificationResource {
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PostMapping("/notifications/multiple")
-    public ResponseEntity<NotificationDTO> createBulkNotification(@Valid @RequestBody List<NotificationsDTO> notificationsDTO)
+    public ResponseEntity<Void> createBulkNotification(@Valid @RequestBody List<NotificationsDTO> notificationsDTO)
         throws URISyntaxException {
         log.debug("REST request to save Notification : {}", notificationsDTO);
         notificationService.save(notificationsDTO);
