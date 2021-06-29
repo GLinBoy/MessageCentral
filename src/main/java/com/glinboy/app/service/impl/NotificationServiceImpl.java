@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.glinboy.app.domain.Notification;
+import com.glinboy.app.domain.NotificationData;
 import com.glinboy.app.repository.NotificationRepository;
 import com.glinboy.app.service.NotificationChannelService;
 import com.glinboy.app.service.NotificationService;
@@ -71,12 +72,15 @@ public class NotificationServiceImpl implements NotificationService {
                         n.setSubject(ns.getSubject());
                         n.setContent(ns.getContent());
                         n.setImage(ns.getImage());
-                        n.setData(ns.getData().stream().map(notificationDataMapper::toEntity)
-                                .collect(Collectors.toSet()));
+                        n.setData(ns.getData().stream().map(ndto -> {
+                            NotificationData nd = notificationDataMapper.toEntity(ndto);
+                            nd.setNotification(n);
+                            return nd;
+                            }).collect(Collectors.toSet()));
                         return n;
                         }))
                 .collect(Collectors.toList());
-            log.info("List of {} Emails: {}", notifications.size(), notifications);
+            log.info("List of {} Notification: {}", notifications.size(), notifications);
             notifications = this.notificationRepository.saveAll(notifications);
             List<NotificationDTO> dtoList = this.notificationMapper.toDto(notifications);
             this.notificationProviderService.sendMessage(dtoList.toArray(new NotificationDTO[dtoList.size()]));
