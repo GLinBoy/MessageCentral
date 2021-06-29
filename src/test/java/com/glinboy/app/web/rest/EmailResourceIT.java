@@ -33,8 +33,8 @@ import org.springframework.util.Base64Utils;
 @WithMockUser
 class EmailResourceIT {
 
-    private static final String DEFAULT_RECEIVER = "BXGN@gOwBI.dUnT.J3T.fx.J.KgZ9F.FShWX";
-    private static final String UPDATED_RECEIVER = "L.n.Xc5LJy.TllfPE@VbS.2aVh.706M.U.drAaCs";
+    private static final String DEFAULT_RECEIVER = "H.D9-kl.jiB@Z28.NERly.sjV.tA";
+    private static final String UPDATED_RECEIVER = "jEb.wQA@-D.xXdU";
 
     private static final String DEFAULT_SUBJECT = "AAAAAAAAAA";
     private static final String UPDATED_SUBJECT = "BBBBBBBBBB";
@@ -527,6 +527,8 @@ class EmailResourceIT {
         Email partialUpdatedEmail = new Email();
         partialUpdatedEmail.setId(email.getId());
 
+        partialUpdatedEmail.receiver(UPDATED_RECEIVER).subject(UPDATED_SUBJECT);
+
         restEmailMockMvc
             .perform(
                 patch(ENTITY_API_URL_ID, partialUpdatedEmail.getId())
@@ -539,8 +541,8 @@ class EmailResourceIT {
         List<Email> emailList = emailRepository.findAll();
         assertThat(emailList).hasSize(databaseSizeBeforeUpdate);
         Email testEmail = emailList.get(emailList.size() - 1);
-        assertThat(testEmail.getReceiver()).isEqualTo(DEFAULT_RECEIVER);
-        assertThat(testEmail.getSubject()).isEqualTo(DEFAULT_SUBJECT);
+        assertThat(testEmail.getReceiver()).isEqualTo(UPDATED_RECEIVER);
+        assertThat(testEmail.getSubject()).isEqualTo(UPDATED_SUBJECT);
         assertThat(testEmail.getContent()).isEqualTo(DEFAULT_CONTENT);
     }
 

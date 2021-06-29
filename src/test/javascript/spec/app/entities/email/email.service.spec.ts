@@ -29,7 +29,7 @@ describe('Service Tests', () => {
 
     beforeEach(() => {
       service = new EmailService();
-      elemDefault = new Email(0, 'AAAAAAA', 'AAAAAAA', 'AAAAAAA');
+      elemDefault = new Email(123, 'AAAAAAA', 'AAAAAAA', 'AAAAAAA');
     });
 
     describe('Service methods', () => {
@@ -55,7 +55,7 @@ describe('Service Tests', () => {
       it('should create a Email', async () => {
         const returnedFromService = Object.assign(
           {
-            id: 0,
+            id: 123,
           },
           elemDefault
         );
@@ -110,7 +110,6 @@ describe('Service Tests', () => {
       it('should partial update a Email', async () => {
         const patchObject = Object.assign(
           {
-            receiver: 'BBBBBB',
             content: 'BBBBBB',
           },
           new Email()

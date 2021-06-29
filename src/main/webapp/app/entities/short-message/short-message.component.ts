@@ -35,7 +35,6 @@ export default class ShortMessage extends Vue {
 
   public retrieveAllShortMessages(): void {
     this.isFetching = true;
-
     const paginationQuery = {
       page: this.page - 1,
       size: this.itemsPerPage,

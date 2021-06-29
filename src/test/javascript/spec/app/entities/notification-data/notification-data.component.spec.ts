@@ -58,7 +58,7 @@ describe('Component Tests', () => {
 
       // THEN
       expect(notificationDataServiceStub.retrieve.called).toBeTruthy();
-      expect(comp.notificationData[0]).toEqual(jasmine.objectContaining({ id: 123 }));
+      expect(comp.notificationData[0]).toEqual(expect.objectContaining({ id: 123 }));
     });
     it('Should call delete service on confirmDelete', async () => {
       // GIVEN

@@ -48,6 +48,7 @@ public class EmailServiceImpl implements EmailService {
             .map(
                 existingEmail -> {
                     emailMapper.partialUpdate(existingEmail, emailDTO);
+
                     return existingEmail;
                 }
             )

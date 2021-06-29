@@ -4,7 +4,7 @@
     "otherModules": [],
     "applicationType": "monolith",
     "baseName": "MessageCentral",
-    "jhipsterVersion": "7.0.1",
+    "jhipsterVersion": "7.1.0",
     "skipClient": false,
     "skipServer": false,
     "skipUserManagement": false,
@@ -43,6 +43,7 @@
     "clientPackageManager": "npm",
     "languages": ["en", "fa"],
     "lastLiquibaseTimestamp": 1619431745000,
-    "entities": ["Email", "ShortMessage", "Notification", "NotificationData"]
+    "entities": ["Email", "ShortMessage", "Notification", "NotificationData"],
+    "devServerPort": 9060
   }
 }

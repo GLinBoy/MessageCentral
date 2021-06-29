@@ -48,6 +48,7 @@ public class NotificationServiceImpl implements NotificationService {
             .map(
                 existingNotification -> {
                     notificationMapper.partialUpdate(existingNotification, notificationDTO);
+
                     return existingNotification;
                 }
             )

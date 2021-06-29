@@ -861,6 +861,8 @@ class NotificationResourceIT {
         Notification partialUpdatedNotification = new Notification();
         partialUpdatedNotification.setId(notification.getId());
 
+        partialUpdatedNotification.subject(UPDATED_SUBJECT).content(UPDATED_CONTENT).image(UPDATED_IMAGE);
+
         restNotificationMockMvc
             .perform(
                 patch(ENTITY_API_URL_ID, partialUpdatedNotification.getId())
@@ -875,9 +877,9 @@ class NotificationResourceIT {
         Notification testNotification = notificationList.get(notificationList.size() - 1);
         assertThat(testNotification.getUsername()).isEqualTo(DEFAULT_USERNAME);
         assertThat(testNotification.getToken()).isEqualTo(DEFAULT_TOKEN);
-        assertThat(testNotification.getSubject()).isEqualTo(DEFAULT_SUBJECT);
-        assertThat(testNotification.getContent()).isEqualTo(DEFAULT_CONTENT);
-        assertThat(testNotification.getImage()).isEqualTo(DEFAULT_IMAGE);
+        assertThat(testNotification.getSubject()).isEqualTo(UPDATED_SUBJECT);
+        assertThat(testNotification.getContent()).isEqualTo(UPDATED_CONTENT);
+        assertThat(testNotification.getImage()).isEqualTo(UPDATED_IMAGE);
     }
 
     @Test

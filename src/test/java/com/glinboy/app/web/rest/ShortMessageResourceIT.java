@@ -32,8 +32,8 @@ import org.springframework.transaction.annotation.Transactional;
 @WithMockUser
 class ShortMessageResourceIT {
 
-    private static final String DEFAULT_PHONE_NUMBER = "+478●2●5●1●5●3●4";
-    private static final String UPDATED_PHONE_NUMBER = "+98●5418●2●6●3●4";
+    private static final String DEFAULT_PHONE_NUMBER = "+41●576●08154●5";
+    private static final String UPDATED_PHONE_NUMBER = "+173113007●54●2●7";
 
     private static final String DEFAULT_CONTENT = "AAAAAAAAAA";
     private static final String UPDATED_CONTENT = "BBBBBBBBBB";
