@@ -27,7 +27,6 @@ export default class NotificationData extends Vue {
 
   public retrieveAllNotificationDatas(): void {
     this.isFetching = true;
-
     this.notificationDataService()
       .retrieve()
       .then(

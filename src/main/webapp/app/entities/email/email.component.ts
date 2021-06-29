@@ -39,7 +39,6 @@ export default class Email extends mixins(JhiDataUtils) {
 
   public retrieveAllEmails(): void {
     this.isFetching = true;
-
     const paginationQuery = {
       page: this.page - 1,
       size: this.itemsPerPage,

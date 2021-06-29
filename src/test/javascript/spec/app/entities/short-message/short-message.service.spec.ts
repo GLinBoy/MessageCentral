@@ -29,7 +29,7 @@ describe('Service Tests', () => {
 
     beforeEach(() => {
       service = new ShortMessageService();
-      elemDefault = new ShortMessage(0, 'AAAAAAA', 'AAAAAAA');
+      elemDefault = new ShortMessage(123, 'AAAAAAA', 'AAAAAAA');
     });
 
     describe('Service methods', () => {
@@ -55,7 +55,7 @@ describe('Service Tests', () => {
       it('should create a ShortMessage', async () => {
         const returnedFromService = Object.assign(
           {
-            id: 0,
+            id: 123,
           },
           elemDefault
         );

@@ -83,6 +83,7 @@ public class ShortMessageServiceImpl implements ShortMessageService {
             .map(
                 existingShortMessage -> {
                     shortMessageMapper.partialUpdate(existingShortMessage, shortMessageDTO);
+
                     return existingShortMessage;
                 }
             )

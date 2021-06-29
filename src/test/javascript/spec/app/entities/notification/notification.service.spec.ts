@@ -29,7 +29,7 @@ describe('Service Tests', () => {
 
     beforeEach(() => {
       service = new NotificationService();
-      elemDefault = new Notification(0, 'AAAAAAA', 'AAAAAAA', 'AAAAAAA', 'AAAAAAA', 'AAAAAAA');
+      elemDefault = new Notification(123, 'AAAAAAA', 'AAAAAAA', 'AAAAAAA', 'AAAAAAA', 'AAAAAAA');
     });
 
     describe('Service methods', () => {
@@ -55,7 +55,7 @@ describe('Service Tests', () => {
       it('should create a Notification', async () => {
         const returnedFromService = Object.assign(
           {
-            id: 0,
+            id: 123,
           },
           elemDefault
         );
@@ -110,7 +110,14 @@ describe('Service Tests', () => {
       });
 
       it('should partial update a Notification', async () => {
-        const patchObject = Object.assign({}, new Notification());
+        const patchObject = Object.assign(
+          {
+            username: 'BBBBBB',
+            content: 'BBBBBB',
+            image: 'BBBBBB',
+          },
+          new Notification()
+        );
         const returnedFromService = Object.assign(patchObject, elemDefault);
 
         const expected = Object.assign({}, returnedFromService);

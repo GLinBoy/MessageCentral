@@ -29,7 +29,7 @@ describe('Service Tests', () => {
 
     beforeEach(() => {
       service = new NotificationDataService();
-      elemDefault = new NotificationData(0, 'AAAAAAA', 'AAAAAAA');
+      elemDefault = new NotificationData(123, 'AAAAAAA', 'AAAAAAA');
     });
 
     describe('Service methods', () => {
@@ -55,7 +55,7 @@ describe('Service Tests', () => {
       it('should create a NotificationData', async () => {
         const returnedFromService = Object.assign(
           {
-            id: 0,
+            id: 123,
           },
           elemDefault
         );
@@ -109,7 +109,7 @@ describe('Service Tests', () => {
       it('should partial update a NotificationData', async () => {
         const patchObject = Object.assign(
           {
-            value: 'BBBBBB',
+            key: 'BBBBBB',
           },
           new NotificationData()
         );
