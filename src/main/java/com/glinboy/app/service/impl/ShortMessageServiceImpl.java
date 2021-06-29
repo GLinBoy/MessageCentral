@@ -67,7 +67,7 @@ public class ShortMessageServiceImpl implements ShortMessageService {
                     return s;
                     }))
                 .collect(Collectors.toList());
-        log.info("List of {} Emails: {}", messages.size(), messages);
+        log.info("List of {} SMSs: {}", messages.size(), messages);
         messages = this.shortMessageRepository.saveAll(messages);
         List<ShortMessageDTO> dtoList = this.shortMessageMapper.toDto(messages);
         this.smsProvider.sendMessage(dtoList.toArray(new ShortMessageDTO[dtoList.size()]));
