@@ -58,6 +58,12 @@ entity NotificationData {
   value String required maxlength(256)
 }
 
+enum MessageStatus {
+  IN_QUEUE,
+  SENT,
+  FAILED
+}
+
 relationship OneToMany {
   Notification{data} to NotificationData{notification required}
 }
