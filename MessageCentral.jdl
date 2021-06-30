@@ -38,6 +38,7 @@ entity Email {
   receiver String required minlength(8) maxlength(128) pattern(/^[a-zA-Z0-9_+&*-]+(?:\.[a-zA-Z0-9_+&*-]+)*@(?:[a-zA-Z0-9-]+\.)+[a-zA-Z]{2,7}$/)
   subject String required minlength(4) maxlength(128)
   content TextBlob required
+  status MessageStatus
 }
 
 entity ShortMessage {
