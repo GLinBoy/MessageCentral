@@ -32,7 +32,7 @@ public class NotificationData implements Serializable {
     @Column(name = "value", length = 256, nullable = false)
     private String value;
 
-    @ManyToOne(optional = false)
+    @ManyToOne(optional = false, cascade = CascadeType.ALL)
     @NotNull
     @JsonIgnoreProperties(value = { "data" }, allowSetters = true)
     private Notification notification;
