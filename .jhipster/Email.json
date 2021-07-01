@@ -20,6 +20,11 @@
       "fieldType": "byte[]",
       "fieldTypeBlobContent": "text",
       "fieldValidateRules": ["required"]
+    },
+    {
+      "fieldName": "status",
+      "fieldType": "MessageStatus",
+      "fieldValues": "IN_QUEUE,SENT,FAILED"
     }
   ],
   "relationships": [],

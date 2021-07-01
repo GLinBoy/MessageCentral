@@ -1,5 +1,6 @@
 package com.glinboy.app.service.criteria;
 
+import com.glinboy.app.domain.enumeration.MessageStatus;
 import java.io.Serializable;
 import java.util.Objects;
 import tech.jhipster.service.Criteria;
@@ -22,6 +23,23 @@ import tech.jhipster.service.filter.StringFilter;
  */
 public class EmailCriteria implements Serializable, Criteria {
 
+    /**
+     * Class for filtering MessageStatus
+     */
+    public static class MessageStatusFilter extends Filter<MessageStatus> {
+
+        public MessageStatusFilter() {}
+
+        public MessageStatusFilter(MessageStatusFilter filter) {
+            super(filter);
+        }
+
+        @Override
+        public MessageStatusFilter copy() {
+            return new MessageStatusFilter(this);
+        }
+    }
+
     private static final long serialVersionUID = 1L;
 
     private LongFilter id;
@@ -30,12 +48,15 @@ public class EmailCriteria implements Serializable, Criteria {
 
     private StringFilter subject;
 
+    private MessageStatusFilter status;
+
     public EmailCriteria() {}
 
     public EmailCriteria(EmailCriteria other) {
         this.id = other.id == null ? null : other.id.copy();
         this.receiver = other.receiver == null ? null : other.receiver.copy();
         this.subject = other.subject == null ? null : other.subject.copy();
+        this.status = other.status == null ? null : other.status.copy();
     }
 
     @Override
@@ -88,6 +109,21 @@ public class EmailCriteria implements Serializable, Criteria {
         this.subject = subject;
     }
 
+    public MessageStatusFilter getStatus() {
+        return status;
+    }
+
+    public MessageStatusFilter status() {
+        if (status == null) {
+            status = new MessageStatusFilter();
+        }
+        return status;
+    }
+
+    public void setStatus(MessageStatusFilter status) {
+        this.status = status;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -97,12 +133,17 @@ public class EmailCriteria implements Serializable, Criteria {
             return false;
         }
         final EmailCriteria that = (EmailCriteria) o;
-        return Objects.equals(id, that.id) && Objects.equals(receiver, that.receiver) && Objects.equals(subject, that.subject);
+        return (
+            Objects.equals(id, that.id) &&
+            Objects.equals(receiver, that.receiver) &&
+            Objects.equals(subject, that.subject) &&
+            Objects.equals(status, that.status)
+        );
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, receiver, subject);
+        return Objects.hash(id, receiver, subject, status);
     }
 
     // prettier-ignore
@@ -112,6 +153,7 @@ public class EmailCriteria implements Serializable, Criteria {
             (id != null ? "id=" + id + ", " : "") +
             (receiver != null ? "receiver=" + receiver + ", " : "") +
             (subject != null ? "subject=" + subject + ", " : "") +
+            (status != null ? "status=" + status + ", " : "") +
             "}";
     }
 }

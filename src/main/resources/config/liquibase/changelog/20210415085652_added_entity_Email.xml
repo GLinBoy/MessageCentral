@@ -23,6 +23,9 @@
             <column name="content" type="${clobType}">
                 <constraints nullable="false" />
             </column>
+            <column name="status" type="varchar(8)">
+                <constraints nullable="true" />
+            </column>
             <!-- jhipster-needle-liquibase-add-column - JHipster will add columns here -->
         </createTable>
     </changeSet>
@@ -46,6 +49,7 @@
             <column name="receiver" type="string"/>
             <column name="subject" type="string"/>
             <column name="content" type="clob"/>
+            <column name="status" type="string"/>
             <!-- jhipster-needle-liquibase-add-loadcolumn - JHipster (and/or extensions) can add load columns here -->
         </loadData>
     </changeSet>

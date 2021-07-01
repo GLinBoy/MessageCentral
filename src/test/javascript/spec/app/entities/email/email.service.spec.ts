@@ -4,6 +4,7 @@ import sinon from 'sinon';
 
 import EmailService from '@/entities/email/email.service';
 import { Email } from '@/shared/model/email.model';
+import { MessageStatus } from '@/shared/model/enumerations/message-status.model';
 
 const error = {
   response: {
@@ -29,7 +30,7 @@ describe('Service Tests', () => {
 
     beforeEach(() => {
       service = new EmailService();
-      elemDefault = new Email(123, 'AAAAAAA', 'AAAAAAA', 'AAAAAAA');
+      elemDefault = new Email(123, 'AAAAAAA', 'AAAAAAA', 'AAAAAAA', MessageStatus.IN_QUEUE);
     });
 
     describe('Service methods', () => {
@@ -84,6 +85,7 @@ describe('Service Tests', () => {
             receiver: 'BBBBBB',
             subject: 'BBBBBB',
             content: 'BBBBBB',
+            status: 'BBBBBB',
           },
           elemDefault
         );
@@ -111,6 +113,7 @@ describe('Service Tests', () => {
         const patchObject = Object.assign(
           {
             content: 'BBBBBB',
+            status: 'BBBBBB',
           },
           new Email()
         );
@@ -141,6 +144,7 @@ describe('Service Tests', () => {
             receiver: 'BBBBBB',
             subject: 'BBBBBB',
             content: 'BBBBBB',
+            status: 'BBBBBB',
           },
           elemDefault
         );

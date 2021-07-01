@@ -24,6 +24,12 @@
           <dd>
             <span>{{ email.content }}</span>
           </dd>
+          <dt>
+            <span v-text="$t('messageCentralApp.email.status')">Status</span>
+          </dt>
+          <dd>
+            <span v-text="$t('messageCentralApp.MessageStatus.' + email.status)">{{ email.status }}</span>
+          </dd>
         </dl>
         <button type="submit" v-on:click.prevent="previousState()" class="btn btn-info" data-cy="entityDetailsBackButton">
           <font-awesome-icon icon="arrow-left"></font-awesome-icon>&nbsp;<span v-text="$t('entity.action.back')"> Back</span>

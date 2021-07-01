@@ -21,7 +21,8 @@
       "id": "ID",
       "receiver": "Receiver",
       "subject": "Subject",
-      "content": "Content"
+      "content": "Content",
+      "status": "Status"
     }
   }
 }

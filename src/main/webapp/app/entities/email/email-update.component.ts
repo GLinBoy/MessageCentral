@@ -23,6 +23,7 @@ const validations: any = {
     content: {
       required,
     },
+    status: {},
   },
 };
 

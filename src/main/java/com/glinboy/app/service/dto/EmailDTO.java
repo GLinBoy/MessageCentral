@@ -1,5 +1,6 @@
 package com.glinboy.app.service.dto;
 
+import com.glinboy.app.domain.enumeration.MessageStatus;
 import java.io.Serializable;
 import java.util.Objects;
 import javax.persistence.Lob;
@@ -23,6 +24,8 @@ public class EmailDTO implements Serializable {
 
     @Lob
     private String content;
+
+    private MessageStatus status;
 
     public Long getId() {
         return id;
@@ -56,6 +59,14 @@ public class EmailDTO implements Serializable {
         this.content = content;
     }
 
+    public MessageStatus getStatus() {
+        return status;
+    }
+
+    public void setStatus(MessageStatus status) {
+        this.status = status;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -85,6 +96,7 @@ public class EmailDTO implements Serializable {
             ", receiver='" + getReceiver() + "'" +
             ", subject='" + getSubject() + "'" +
             ", content='" + getContent() + "'" +
+            ", status='" + getStatus() + "'" +
             "}";
     }
 }
