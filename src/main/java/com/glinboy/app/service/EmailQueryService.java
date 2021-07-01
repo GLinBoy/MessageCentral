@@ -106,6 +106,9 @@ public class EmailQueryService extends QueryService<Email> {
             if (criteria.getSubject() != null) {
                 specification = specification.and(buildStringSpecification(criteria.getSubject(), Email_.subject));
             }
+            if (criteria.getStatus() != null) {
+                specification = specification.and(buildSpecification(criteria.getStatus(), Email_.status));
+            }
         }
         return specification;
     }
