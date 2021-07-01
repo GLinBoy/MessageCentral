@@ -14,6 +14,11 @@
       "fieldValidateRules": ["required", "minlength", "maxlength"],
       "fieldValidateRulesMinlength": "6",
       "fieldValidateRulesMaxlength": "160"
+    },
+    {
+      "fieldName": "status",
+      "fieldType": "MessageStatus",
+      "fieldValues": "IN_QUEUE,SENT,FAILED"
     }
   ],
   "relationships": [],

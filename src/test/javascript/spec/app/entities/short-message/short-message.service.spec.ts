@@ -4,6 +4,7 @@ import sinon from 'sinon';
 
 import ShortMessageService from '@/entities/short-message/short-message.service';
 import { ShortMessage } from '@/shared/model/short-message.model';
+import { MessageStatus } from '@/shared/model/enumerations/message-status.model';
 
 const error = {
   response: {
@@ -29,7 +30,7 @@ describe('Service Tests', () => {
 
     beforeEach(() => {
       service = new ShortMessageService();
-      elemDefault = new ShortMessage(123, 'AAAAAAA', 'AAAAAAA');
+      elemDefault = new ShortMessage(123, 'AAAAAAA', 'AAAAAAA', MessageStatus.IN_QUEUE);
     });
 
     describe('Service methods', () => {
@@ -83,6 +84,7 @@ describe('Service Tests', () => {
           {
             phoneNumber: 'BBBBBB',
             content: 'BBBBBB',
+            status: 'BBBBBB',
           },
           elemDefault
         );
@@ -107,7 +109,12 @@ describe('Service Tests', () => {
       });
 
       it('should partial update a ShortMessage', async () => {
-        const patchObject = Object.assign({}, new ShortMessage());
+        const patchObject = Object.assign(
+          {
+            status: 'BBBBBB',
+          },
+          new ShortMessage()
+        );
         const returnedFromService = Object.assign(patchObject, elemDefault);
 
         const expected = Object.assign({}, returnedFromService);
@@ -134,6 +141,7 @@ describe('Service Tests', () => {
           {
             phoneNumber: 'BBBBBB',
             content: 'BBBBBB',
+            status: 'BBBBBB',
           },
           elemDefault
         );

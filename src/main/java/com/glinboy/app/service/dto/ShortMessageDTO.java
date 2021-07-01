@@ -1,5 +1,6 @@
 package com.glinboy.app.service.dto;
 
+import com.glinboy.app.domain.enumeration.MessageStatus;
 import java.io.Serializable;
 import java.util.Objects;
 import javax.validation.constraints.*;
@@ -19,6 +20,8 @@ public class ShortMessageDTO implements Serializable {
     @NotNull
     @Size(min = 6, max = 160)
     private String content;
+
+    private MessageStatus status;
 
     public Long getId() {
         return id;
@@ -42,6 +45,14 @@ public class ShortMessageDTO implements Serializable {
 
     public void setContent(String content) {
         this.content = content;
+    }
+
+    public MessageStatus getStatus() {
+        return status;
+    }
+
+    public void setStatus(MessageStatus status) {
+        this.status = status;
     }
 
     @Override
@@ -72,6 +83,7 @@ public class ShortMessageDTO implements Serializable {
             "id=" + getId() +
             ", phoneNumber='" + getPhoneNumber() + "'" +
             ", content='" + getContent() + "'" +
+            ", status='" + getStatus() + "'" +
             "}";
     }
 }

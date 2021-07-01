@@ -1,5 +1,6 @@
 package com.glinboy.app.domain;
 
+import com.glinboy.app.domain.enumeration.MessageStatus;
 import java.io.Serializable;
 import javax.persistence.*;
 import javax.validation.constraints.*;
@@ -31,6 +32,10 @@ public class ShortMessage implements Serializable {
     @Size(min = 6, max = 160)
     @Column(name = "content", length = 160, nullable = false)
     private String content;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "status")
+    private MessageStatus status;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here
     public Long getId() {
@@ -72,6 +77,19 @@ public class ShortMessage implements Serializable {
         this.content = content;
     }
 
+    public MessageStatus getStatus() {
+        return this.status;
+    }
+
+    public ShortMessage status(MessageStatus status) {
+        this.status = status;
+        return this;
+    }
+
+    public void setStatus(MessageStatus status) {
+        this.status = status;
+    }
+
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here
 
     @Override
@@ -98,6 +116,7 @@ public class ShortMessage implements Serializable {
             "id=" + getId() +
             ", phoneNumber='" + getPhoneNumber() + "'" +
             ", content='" + getContent() + "'" +
+            ", status='" + getStatus() + "'" +
             "}";
     }
 }

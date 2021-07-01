@@ -1,5 +1,6 @@
 package com.glinboy.app.service.criteria;
 
+import com.glinboy.app.domain.enumeration.MessageStatus;
 import java.io.Serializable;
 import java.util.Objects;
 import tech.jhipster.service.Criteria;
@@ -22,6 +23,23 @@ import tech.jhipster.service.filter.StringFilter;
  */
 public class ShortMessageCriteria implements Serializable, Criteria {
 
+    /**
+     * Class for filtering MessageStatus
+     */
+    public static class MessageStatusFilter extends Filter<MessageStatus> {
+
+        public MessageStatusFilter() {}
+
+        public MessageStatusFilter(MessageStatusFilter filter) {
+            super(filter);
+        }
+
+        @Override
+        public MessageStatusFilter copy() {
+            return new MessageStatusFilter(this);
+        }
+    }
+
     private static final long serialVersionUID = 1L;
 
     private LongFilter id;
@@ -30,12 +48,15 @@ public class ShortMessageCriteria implements Serializable, Criteria {
 
     private StringFilter content;
 
+    private MessageStatusFilter status;
+
     public ShortMessageCriteria() {}
 
     public ShortMessageCriteria(ShortMessageCriteria other) {
         this.id = other.id == null ? null : other.id.copy();
         this.phoneNumber = other.phoneNumber == null ? null : other.phoneNumber.copy();
         this.content = other.content == null ? null : other.content.copy();
+        this.status = other.status == null ? null : other.status.copy();
     }
 
     @Override
@@ -88,6 +109,21 @@ public class ShortMessageCriteria implements Serializable, Criteria {
         this.content = content;
     }
 
+    public MessageStatusFilter getStatus() {
+        return status;
+    }
+
+    public MessageStatusFilter status() {
+        if (status == null) {
+            status = new MessageStatusFilter();
+        }
+        return status;
+    }
+
+    public void setStatus(MessageStatusFilter status) {
+        this.status = status;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -97,12 +133,17 @@ public class ShortMessageCriteria implements Serializable, Criteria {
             return false;
         }
         final ShortMessageCriteria that = (ShortMessageCriteria) o;
-        return Objects.equals(id, that.id) && Objects.equals(phoneNumber, that.phoneNumber) && Objects.equals(content, that.content);
+        return (
+            Objects.equals(id, that.id) &&
+            Objects.equals(phoneNumber, that.phoneNumber) &&
+            Objects.equals(content, that.content) &&
+            Objects.equals(status, that.status)
+        );
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, phoneNumber, content);
+        return Objects.hash(id, phoneNumber, content, status);
     }
 
     // prettier-ignore
@@ -112,6 +153,7 @@ public class ShortMessageCriteria implements Serializable, Criteria {
             (id != null ? "id=" + id + ", " : "") +
             (phoneNumber != null ? "phoneNumber=" + phoneNumber + ", " : "") +
             (content != null ? "content=" + content + ", " : "") +
+            (status != null ? "status=" + status + ", " : "") +
             "}";
     }
 }

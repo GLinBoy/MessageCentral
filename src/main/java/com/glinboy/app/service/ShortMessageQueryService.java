@@ -106,6 +106,9 @@ public class ShortMessageQueryService extends QueryService<ShortMessage> {
             if (criteria.getContent() != null) {
                 specification = specification.and(buildStringSpecification(criteria.getContent(), ShortMessage_.content));
             }
+            if (criteria.getStatus() != null) {
+                specification = specification.and(buildSpecification(criteria.getStatus(), ShortMessage_.status));
+            }
         }
         return specification;
     }
