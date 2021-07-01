@@ -66,6 +66,10 @@
               <span v-text="$t('messageCentralApp.shortMessage.content')">Content</span>
               <jhi-sort-indicator :current-order="propOrder" :reverse="reverse" :field-name="'content'"></jhi-sort-indicator>
             </th>
+            <th scope="row" v-on:click="changeOrder('status')">
+              <span v-text="$t('messageCentralApp.shortMessage.status')">Status</span>
+              <jhi-sort-indicator :current-order="propOrder" :reverse="reverse" :field-name="'status'"></jhi-sort-indicator>
+            </th>
           </tr>
         </thead>
         <tbody>
@@ -83,6 +87,7 @@
             </td>
             <td>{{ shortMessage.phoneNumber }}</td>
             <td>{{ shortMessage.content }}</td>
+            <td v-text="$t('messageCentralApp.MessageStatus.' + shortMessage.status)">{{ shortMessage.status }}</td>
           </router-link>
         </tbody>
       </table>

@@ -87,6 +87,21 @@
               </small>
             </div>
           </div>
+          <div class="form-group">
+            <label class="form-control-label" v-text="$t('messageCentralApp.shortMessage.status')" for="short-message-status">Status</label>
+            <select
+              class="form-control"
+              name="status"
+              :class="{ valid: !$v.shortMessage.status.$invalid, invalid: $v.shortMessage.status.$invalid }"
+              v-model="$v.shortMessage.status.$model"
+              id="short-message-status"
+              data-cy="status"
+            >
+              <option value="IN_QUEUE" v-bind:label="$t('messageCentralApp.MessageStatus.IN_QUEUE')">IN_QUEUE</option>
+              <option value="SENT" v-bind:label="$t('messageCentralApp.MessageStatus.SENT')">SENT</option>
+              <option value="FAILED" v-bind:label="$t('messageCentralApp.MessageStatus.FAILED')">FAILED</option>
+            </select>
+          </div>
         </div>
         <div>
           <button type="button" id="cancel-save" data-cy="entityCreateCancelButton" class="btn btn-secondary" v-on:click="previousState()">

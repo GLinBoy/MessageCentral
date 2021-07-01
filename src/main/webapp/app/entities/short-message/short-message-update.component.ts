@@ -17,6 +17,7 @@ const validations: any = {
       minLength: minLength(6),
       maxLength: maxLength(160),
     },
+    status: {},
   },
 };
 

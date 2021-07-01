@@ -20,7 +20,8 @@
       },
       "id": "ID",
       "phoneNumber": "Phone Number",
-      "content": "Content"
+      "content": "Content",
+      "status": "Status"
     }
   }
 }
