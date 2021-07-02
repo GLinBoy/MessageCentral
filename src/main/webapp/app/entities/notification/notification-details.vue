@@ -36,6 +36,12 @@
           <dd>
             <span>{{ notification.image }}</span>
           </dd>
+          <dt>
+            <span v-text="$t('messageCentralApp.notification.status')">Status</span>
+          </dt>
+          <dd>
+            <span v-text="$t('messageCentralApp.MessageStatus.' + notification.status)">{{ notification.status }}</span>
+          </dd>
         </dl>
         <button type="submit" v-on:click.prevent="previousState()" class="btn btn-info" data-cy="entityDetailsBackButton">
           <font-awesome-icon icon="arrow-left"></font-awesome-icon>&nbsp;<span v-text="$t('entity.action.back')"> Back</span>

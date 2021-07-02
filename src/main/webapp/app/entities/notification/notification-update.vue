@@ -141,6 +141,21 @@
             </div>
           </div>
         </div>
+        <div class="form-group">
+          <label class="form-control-label" v-text="$t('messageCentralApp.notification.status')" for="notification-status">Status</label>
+          <select
+            class="form-control"
+            name="status"
+            :class="{ valid: !$v.notification.status.$invalid, invalid: $v.notification.status.$invalid }"
+            v-model="$v.notification.status.$model"
+            id="notification-status"
+            data-cy="status"
+          >
+            <option value="IN_QUEUE" v-bind:label="$t('messageCentralApp.MessageStatus.IN_QUEUE')">IN_QUEUE</option>
+            <option value="SENT" v-bind:label="$t('messageCentralApp.MessageStatus.SENT')">SENT</option>
+            <option value="FAILED" v-bind:label="$t('messageCentralApp.MessageStatus.FAILED')">FAILED</option>
+          </select>
+        </div>
         <div class="card">
           <div class="card-header">Notification Data:</div>
           <div class="card-body">

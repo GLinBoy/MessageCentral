@@ -29,6 +29,7 @@ const validations: any = {
     image: {
       maxLength: maxLength(256),
     },
+    status: {},
   },
 };
 

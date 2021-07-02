@@ -4,6 +4,7 @@ import sinon from 'sinon';
 
 import NotificationService from '@/entities/notification/notification.service';
 import { Notification } from '@/shared/model/notification.model';
+import { MessageStatus } from '@/shared/model/enumerations/message-status.model';
 
 const error = {
   response: {
@@ -29,7 +30,7 @@ describe('Service Tests', () => {
 
     beforeEach(() => {
       service = new NotificationService();
-      elemDefault = new Notification(123, 'AAAAAAA', 'AAAAAAA', 'AAAAAAA', 'AAAAAAA', 'AAAAAAA');
+      elemDefault = new Notification(123, 'AAAAAAA', 'AAAAAAA', 'AAAAAAA', 'AAAAAAA', 'AAAAAAA', MessageStatus.IN_QUEUE);
     });
 
     describe('Service methods', () => {
@@ -86,6 +87,7 @@ describe('Service Tests', () => {
             subject: 'BBBBBB',
             content: 'BBBBBB',
             image: 'BBBBBB',
+            status: 'BBBBBB',
           },
           elemDefault
         );
@@ -147,6 +149,7 @@ describe('Service Tests', () => {
             subject: 'BBBBBB',
             content: 'BBBBBB',
             image: 'BBBBBB',
+            status: 'BBBBBB',
           },
           elemDefault
         );

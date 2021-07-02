@@ -78,6 +78,10 @@
               <span v-text="$t('messageCentralApp.notification.image')">Image</span>
               <jhi-sort-indicator :current-order="propOrder" :reverse="reverse" :field-name="'image'"></jhi-sort-indicator>
             </th>
+            <th scope="row" v-on:click="changeOrder('status')">
+              <span v-text="$t('messageCentralApp.notification.status')">Status</span>
+              <jhi-sort-indicator :current-order="propOrder" :reverse="reverse" :field-name="'status'"></jhi-sort-indicator>
+            </th>
           </tr>
         </thead>
         <tbody>
@@ -98,6 +102,7 @@
             <td>{{ notification.subject }}</td>
             <td>{{ notification.content }}</td>
             <td>{{ notification.image }}</td>
+            <td v-text="$t('messageCentralApp.MessageStatus.' + notification.status)">{{ notification.status }}</td>
           </router-link>
         </tbody>
       </table>
