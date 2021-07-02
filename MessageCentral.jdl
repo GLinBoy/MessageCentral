@@ -53,6 +53,7 @@ entity Notification {
   subject String required maxlength(128)
   content String required maxlength(4000)
   image String maxlength(256)
+  status MessageStatus
 }
 
 entity NotificationData {
