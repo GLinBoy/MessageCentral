@@ -1,5 +1,6 @@
 package com.glinboy.app.service.dto;
 
+import com.glinboy.app.domain.enumeration.MessageStatus;
 import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Objects;
@@ -33,6 +34,8 @@ public class NotificationDTO implements Serializable {
 
     @Size(max = 256)
     private String image;
+
+    private MessageStatus status;
 
     private Set<NotificationDataDTO> data = new HashSet<>();
 
@@ -84,6 +87,14 @@ public class NotificationDTO implements Serializable {
         this.image = image;
     }
 
+    public MessageStatus getStatus() {
+        return status;
+    }
+
+    public void setStatus(MessageStatus status) {
+        this.status = status;
+    }
+
     public Set<NotificationDataDTO> getData() {
         return data;
     }
@@ -125,6 +136,7 @@ public class NotificationDTO implements Serializable {
             ", image='" + getImage() + "'" +
             ", data='" + getData().stream().map(NotificationDataDTO::toString)
                 .collect(Collectors.joining(", ")) + "'" +
+            ", status='" + getStatus() + "'" +
             "}";
     }
 }

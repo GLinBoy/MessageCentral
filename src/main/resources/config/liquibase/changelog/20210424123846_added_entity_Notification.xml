@@ -29,6 +29,9 @@
             <column name="image" type="varchar(256)">
                 <constraints nullable="true" />
             </column>
+            <column name="status" type="varchar(8)">
+                <constraints nullable="true" />
+            </column>
             <!-- jhipster-needle-liquibase-add-column - JHipster will add columns here -->
         </createTable>
     </changeSet>
@@ -54,6 +57,7 @@
             <column name="subject" type="string"/>
             <column name="content" type="string"/>
             <column name="image" type="string"/>
+            <column name="status" type="string"/>
             <!-- jhipster-needle-liquibase-add-loadcolumn - JHipster (and/or extensions) can add load columns here -->
         </loadData>
     </changeSet>

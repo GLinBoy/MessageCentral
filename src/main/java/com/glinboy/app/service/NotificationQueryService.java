@@ -118,6 +118,9 @@ public class NotificationQueryService extends QueryService<Notification> {
             if (criteria.getImage() != null) {
                 specification = specification.and(buildStringSpecification(criteria.getImage(), Notification_.image));
             }
+            if (criteria.getStatus() != null) {
+                specification = specification.and(buildSpecification(criteria.getStatus(), Notification_.status));
+            }
             if (criteria.getDataId() != null) {
                 specification =
                     specification.and(

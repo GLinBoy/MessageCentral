@@ -1,6 +1,7 @@
 package com.glinboy.app.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.glinboy.app.domain.enumeration.MessageStatus;
 import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
@@ -47,6 +48,10 @@ public class Notification implements Serializable {
     @Size(max = 256)
     @Column(name = "image", length = 256)
     private String image;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "status")
+    private MessageStatus status;
 
     @OneToMany(mappedBy = "notification", cascade = CascadeType.ALL)
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
@@ -132,6 +137,19 @@ public class Notification implements Serializable {
         this.image = image;
     }
 
+    public MessageStatus getStatus() {
+        return this.status;
+    }
+
+    public Notification status(MessageStatus status) {
+        this.status = status;
+        return this;
+    }
+
+    public void setStatus(MessageStatus status) {
+        this.status = status;
+    }
+
     public Set<NotificationData> getData() {
         return this.data;
     }
@@ -192,6 +210,7 @@ public class Notification implements Serializable {
             ", subject='" + getSubject() + "'" +
             ", content='" + getContent() + "'" +
             ", image='" + getImage() + "'" +
+            ", status='" + getStatus() + "'" +
             "}";
     }
 }

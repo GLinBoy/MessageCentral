@@ -1,5 +1,6 @@
 package com.glinboy.app.service.criteria;
 
+import com.glinboy.app.domain.enumeration.MessageStatus;
 import java.io.Serializable;
 import java.util.Objects;
 import tech.jhipster.service.Criteria;
@@ -22,6 +23,23 @@ import tech.jhipster.service.filter.StringFilter;
  */
 public class NotificationCriteria implements Serializable, Criteria {
 
+    /**
+     * Class for filtering MessageStatus
+     */
+    public static class MessageStatusFilter extends Filter<MessageStatus> {
+
+        public MessageStatusFilter() {}
+
+        public MessageStatusFilter(MessageStatusFilter filter) {
+            super(filter);
+        }
+
+        @Override
+        public MessageStatusFilter copy() {
+            return new MessageStatusFilter(this);
+        }
+    }
+
     private static final long serialVersionUID = 1L;
 
     private LongFilter id;
@@ -36,6 +54,8 @@ public class NotificationCriteria implements Serializable, Criteria {
 
     private StringFilter image;
 
+    private MessageStatusFilter status;
+
     private LongFilter dataId;
 
     public NotificationCriteria() {}
@@ -47,6 +67,7 @@ public class NotificationCriteria implements Serializable, Criteria {
         this.subject = other.subject == null ? null : other.subject.copy();
         this.content = other.content == null ? null : other.content.copy();
         this.image = other.image == null ? null : other.image.copy();
+        this.status = other.status == null ? null : other.status.copy();
         this.dataId = other.dataId == null ? null : other.dataId.copy();
     }
 
@@ -145,6 +166,21 @@ public class NotificationCriteria implements Serializable, Criteria {
         this.image = image;
     }
 
+    public MessageStatusFilter getStatus() {
+        return status;
+    }
+
+    public MessageStatusFilter status() {
+        if (status == null) {
+            status = new MessageStatusFilter();
+        }
+        return status;
+    }
+
+    public void setStatus(MessageStatusFilter status) {
+        this.status = status;
+    }
+
     public LongFilter getDataId() {
         return dataId;
     }
@@ -176,13 +212,14 @@ public class NotificationCriteria implements Serializable, Criteria {
             Objects.equals(subject, that.subject) &&
             Objects.equals(content, that.content) &&
             Objects.equals(image, that.image) &&
+            Objects.equals(status, that.status) &&
             Objects.equals(dataId, that.dataId)
         );
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, username, token, subject, content, image, dataId);
+        return Objects.hash(id, username, token, subject, content, image, status, dataId);
     }
 
     // prettier-ignore
@@ -195,6 +232,7 @@ public class NotificationCriteria implements Serializable, Criteria {
             (subject != null ? "subject=" + subject + ", " : "") +
             (content != null ? "content=" + content + ", " : "") +
             (image != null ? "image=" + image + ", " : "") +
+            (status != null ? "status=" + status + ", " : "") +
             (dataId != null ? "dataId=" + dataId + ", " : "") +
             "}";
     }
