@@ -1,6 +1,7 @@
 package com.glinboy.app.service.impl;
 
 import com.glinboy.app.domain.Email;
+import com.glinboy.app.domain.enumeration.MessageStatus;
 import com.glinboy.app.repository.EmailRepository;
 import com.glinboy.app.service.EmailService;
 import com.glinboy.app.service.MailChannelService;
@@ -28,80 +29,78 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 public class EmailServiceImpl implements EmailService {
 
-	private final Logger log = LoggerFactory.getLogger(EmailServiceImpl.class);
+    private final Logger log = LoggerFactory.getLogger(EmailServiceImpl.class);
 
-	private final EmailRepository emailRepository;
+    private final EmailRepository emailRepository;
 
-	private final EmailMapper emailMapper;
+    private final EmailMapper emailMapper;
 
-	private final MailChannelService<EmailDTO> mailProviderService;
+    private final MailChannelService<EmailDTO> mailProviderService;
 
-	public EmailServiceImpl(EmailRepository emailRepository,
-			EmailMapper emailMapper,
-			MailChannelService<EmailDTO> mailProviderService) {
-		this.emailRepository = emailRepository;
-		this.emailMapper = emailMapper;
-		this.mailProviderService = mailProviderService;
-	}
+    public EmailServiceImpl(EmailRepository emailRepository, EmailMapper emailMapper,
+            MailChannelService<EmailDTO> mailProviderService) {
+        this.emailRepository = emailRepository;
+        this.emailMapper = emailMapper;
+        this.mailProviderService = mailProviderService;
+    }
 
-	@Override
-	public EmailDTO save(EmailDTO emailDTO) {
-		log.debug("Request to save Email : {}", emailDTO);
-		var email = emailMapper.toEntity(emailDTO);
-		email = emailRepository.save(email);
-		EmailDTO e = emailMapper.toDto(email);
-		mailProviderService.sendMessage(e);
-		return e;
-	}
+    @Override
+    public EmailDTO save(EmailDTO emailDTO) {
+        log.debug("Request to save Email : {}", emailDTO);
+        var email = emailMapper.toEntity(emailDTO);
+        email.setStatus(MessageStatus.IN_QUEUE);
+        email = emailRepository.save(email);
+        EmailDTO e = emailMapper.toDto(email);
+        mailProviderService.sendMessage(e);
+        return e;
+    }
 
-	@Override
-	public List<EmailDTO> save(List<EmailsDTO> emailsDTO) {
-		log.debug("Request to save Emails : {}", emailsDTO);
-		var emails = emailsDTO.stream()
-			.flatMap( es -> Set.copyOf(es.getReceivers())
-				.stream().filter(r -> r.matches(Patterns.EMAIL_PATTERN))
-				.map(r -> {
-					var e = new Email();
-					e.setReceiver(r);
-					e.setSubject(es.getSubject());
-					e.setContent(es.getContent());
-					return e;
-				}))
-			.collect(Collectors.toList());
-		log.info("List of {} Emails: {}", emails.size(), emails);
-		emails = this.emailRepository.saveAll(emails);
-		var dtoList = this.emailMapper.toDto(emails);
-		this.mailProviderService.sendMessage(dtoList.toArray(new EmailDTO[dtoList.size()]));
-		return dtoList;
-	}
+    @Override
+    public List<EmailDTO> save(List<EmailsDTO> emailsDTO) {
+        log.debug("Request to save Emails : {}", emailsDTO);
+        var emails = emailsDTO.stream().flatMap(
+                es -> Set.copyOf(es.getReceivers()).stream().filter(r -> r.matches(Patterns.EMAIL_PATTERN)).map(r -> {
+                    var e = new Email();
+                    e.setReceiver(r);
+                    e.setSubject(es.getSubject());
+                    e.setContent(es.getContent());
+                    e.setStatus(MessageStatus.IN_QUEUE);
+                    return e;
+                })).collect(Collectors.toList());
+        log.info("List of {} Emails: {}", emails.size(), emails);
+        emails = this.emailRepository.saveAll(emails);
+        var dtoList = this.emailMapper.toDto(emails);
+        this.mailProviderService.sendMessage(dtoList.toArray(new EmailDTO[dtoList.size()]));
+        return dtoList;
+    }
 
-	@Override
-	public Optional<EmailDTO> partialUpdate(EmailDTO emailDTO) {
-		log.debug("Request to partially update Email : {}", emailDTO);
+    @Override
+    public Optional<EmailDTO> partialUpdate(EmailDTO emailDTO) {
+        log.debug("Request to partially update Email : {}", emailDTO);
 
-		return emailRepository.findById(emailDTO.getId()).map(existingEmail -> {
-			emailMapper.partialUpdate(existingEmail, emailDTO);
-			return existingEmail;
-		}).map(emailRepository::save).map(emailMapper::toDto);
-	}
+        return emailRepository.findById(emailDTO.getId()).map(existingEmail -> {
+            emailMapper.partialUpdate(existingEmail, emailDTO);
+            return existingEmail;
+        }).map(emailRepository::save).map(emailMapper::toDto);
+    }
 
-	@Override
-	@Transactional(readOnly = true)
-	public Page<EmailDTO> findAll(Pageable pageable) {
-		log.debug("Request to get all Emails");
-		return emailRepository.findAll(pageable).map(emailMapper::toDto);
-	}
+    @Override
+    @Transactional(readOnly = true)
+    public Page<EmailDTO> findAll(Pageable pageable) {
+        log.debug("Request to get all Emails");
+        return emailRepository.findAll(pageable).map(emailMapper::toDto);
+    }
 
-	@Override
-	@Transactional(readOnly = true)
-	public Optional<EmailDTO> findOne(Long id) {
-		log.debug("Request to get Email : {}", id);
-		return emailRepository.findById(id).map(emailMapper::toDto);
-	}
+    @Override
+    @Transactional(readOnly = true)
+    public Optional<EmailDTO> findOne(Long id) {
+        log.debug("Request to get Email : {}", id);
+        return emailRepository.findById(id).map(emailMapper::toDto);
+    }
 
-	@Override
-	public void delete(Long id) {
-		log.debug("Request to delete Email : {}", id);
-		emailRepository.deleteById(id);
-	}
+    @Override
+    public void delete(Long id) {
+        log.debug("Request to delete Email : {}", id);
+        emailRepository.deleteById(id);
+    }
 }
