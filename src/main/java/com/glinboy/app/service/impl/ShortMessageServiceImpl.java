@@ -49,7 +49,9 @@ public class ShortMessageServiceImpl implements ShortMessageService {
     public ShortMessageDTO save(ShortMessageDTO shortMessageDTO) {
         log.debug("Request to save ShortMessage : {}", shortMessageDTO);
         ShortMessage shortMessage = shortMessageMapper.toEntity(shortMessageDTO);
-        shortMessage.setStatus(MessageStatus.IN_QUEUE);
+        if(shortMessage.getId() == null) {
+            shortMessage.setStatus(MessageStatus.IN_QUEUE);
+        }
         shortMessage = shortMessageRepository.save(shortMessage);
         ShortMessageDTO smsDTO = shortMessageMapper.toDto(shortMessage);
         smsProvider.sendMessage(smsDTO);
