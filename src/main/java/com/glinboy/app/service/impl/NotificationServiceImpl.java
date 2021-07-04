@@ -13,6 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.glinboy.app.domain.Notification;
 import com.glinboy.app.domain.NotificationData;
+import com.glinboy.app.domain.enumeration.MessageStatus;
 import com.glinboy.app.repository.NotificationRepository;
 import com.glinboy.app.service.NotificationChannelService;
 import com.glinboy.app.service.NotificationService;
@@ -51,7 +52,8 @@ public class NotificationServiceImpl implements NotificationService {
     @Override
     public NotificationDTO save(NotificationDTO notificationDTO) {
         log.debug("Request to save Notification : {}", notificationDTO);
-        final Notification notification = notificationMapper.toEntity(notificationDTO);
+        Notification notification = notificationMapper.toEntity(notificationDTO);
+        notification.setStatus(MessageStatus.IN_QUEUE);
         notification.getData().forEach(d -> d.setNotification(notification));
         NotificationDTO dto = notificationMapper.toDto(notificationRepository.save(notification));
         notificationProviderService.sendMessage(dto);
