@@ -53,7 +53,9 @@ public class NotificationServiceImpl implements NotificationService {
     public NotificationDTO save(NotificationDTO notificationDTO) {
         log.debug("Request to save Notification : {}", notificationDTO);
         Notification notification = notificationMapper.toEntity(notificationDTO);
-        notification.setStatus(MessageStatus.IN_QUEUE);
+        if(notification.getId() == null) {
+            notification.setStatus(MessageStatus.IN_QUEUE);
+        }
         notification.getData().forEach(d -> d.setNotification(notification));
         NotificationDTO dto = notificationMapper.toDto(notificationRepository.save(notification));
         notificationProviderService.sendMessage(dto);
