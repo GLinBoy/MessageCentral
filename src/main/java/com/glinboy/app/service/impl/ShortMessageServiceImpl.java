@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.glinboy.app.domain.ShortMessage;
+import com.glinboy.app.domain.enumeration.MessageStatus;
 import com.glinboy.app.repository.ShortMessageRepository;
 import com.glinboy.app.service.ShortMessageChannelService;
 import com.glinboy.app.service.ShortMessageService;
@@ -48,6 +49,7 @@ public class ShortMessageServiceImpl implements ShortMessageService {
     public ShortMessageDTO save(ShortMessageDTO shortMessageDTO) {
         log.debug("Request to save ShortMessage : {}", shortMessageDTO);
         ShortMessage shortMessage = shortMessageMapper.toEntity(shortMessageDTO);
+        shortMessage.setStatus(MessageStatus.IN_QUEUE);
         shortMessage = shortMessageRepository.save(shortMessage);
         ShortMessageDTO smsDTO = shortMessageMapper.toDto(shortMessage);
         smsProvider.sendMessage(smsDTO);
