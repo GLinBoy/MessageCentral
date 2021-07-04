@@ -48,7 +48,9 @@ public class EmailServiceImpl implements EmailService {
     public EmailDTO save(EmailDTO emailDTO) {
         log.debug("Request to save Email : {}", emailDTO);
         var email = emailMapper.toEntity(emailDTO);
-        email.setStatus(MessageStatus.IN_QUEUE);
+        if(email.getId() == null) {
+            email.setStatus(MessageStatus.IN_QUEUE);
+        }
         email = emailRepository.save(email);
         EmailDTO e = emailMapper.toDto(email);
         mailProviderService.sendMessage(e);
