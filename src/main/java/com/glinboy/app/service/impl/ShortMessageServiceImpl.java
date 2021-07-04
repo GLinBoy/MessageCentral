@@ -66,6 +66,7 @@ public class ShortMessageServiceImpl implements ShortMessageService {
                     ShortMessage s = new ShortMessage();
                     s.phoneNumber(p);
                     s.setContent(ss.getContent());
+                    s.setStatus(MessageStatus.IN_QUEUE);
                     return s;
                     }))
                 .collect(Collectors.toList());
