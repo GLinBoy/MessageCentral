@@ -74,6 +74,7 @@ public class NotificationServiceImpl implements NotificationService {
                         n.setSubject(ns.getSubject());
                         n.setContent(ns.getContent());
                         n.setImage(ns.getImage());
+                        n.setStatus(MessageStatus.IN_QUEUE);
                         n.setData(ns.getData().stream().map(ndto -> {
                             NotificationData nd = notificationDataMapper.toEntity(ndto);
                             nd.setNotification(n);
