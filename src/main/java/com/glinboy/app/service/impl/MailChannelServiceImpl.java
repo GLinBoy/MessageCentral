@@ -15,7 +15,7 @@ import org.springframework.stereotype.Service;
 
 import com.glinboy.app.config.ApplicationProperties;
 import com.glinboy.app.domain.enumeration.MessageStatus;
-import com.glinboy.app.service.EmailService;
+import com.glinboy.app.repository.EmailRepository;
 import com.glinboy.app.service.MailChannelService;
 import com.glinboy.app.service.dto.EmailDTO;
 
@@ -28,15 +28,15 @@ public class MailChannelServiceImpl extends GenericChannelServiceImpl<EmailDTO>
 
     private final JavaMailSender emailSender;
 
-    private final EmailService emailService;
+    private final EmailRepository emailRepository;
 
     public MailChannelServiceImpl(JmsTemplate jmsTemplate,
             ApplicationProperties properties,
             JavaMailSender emailSender,
-            EmailService emailService) {
+            EmailRepository emailRepository) {
         super(jmsTemplate, properties);
         this.emailSender = emailSender;
-        this.emailService = emailService;
+        this.emailRepository = emailRepository;
     }
 
     @Override
@@ -57,10 +57,8 @@ public class MailChannelServiceImpl extends GenericChannelServiceImpl<EmailDTO>
             messages[i] = message;
         }
         emailSender.send(messages);
-        for(int i = 0; i < emailsDTO.length; i++) {
-            var emailDTO = emailsDTO[i];
-            emailDTO.setStatus(MessageStatus.SENT);
-            this.emailService.partialUpdate(emailDTO);
+        for (int i = 0; i < emailsDTO.length; i++) {
+            this.emailRepository.updateStatus(emailsDTO[i].getId(), MessageStatus.SENT);
         }
         log.info("Mail(s) sent! {}", Arrays.toString(emailsDTO));
     }
