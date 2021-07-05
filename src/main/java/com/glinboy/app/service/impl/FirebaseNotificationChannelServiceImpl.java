@@ -14,8 +14,8 @@ import org.springframework.stereotype.Service;
 
 import com.glinboy.app.config.ApplicationProperties;
 import com.glinboy.app.domain.enumeration.MessageStatus;
+import com.glinboy.app.repository.NotificationRepository;
 import com.glinboy.app.service.NotificationChannelService;
-import com.glinboy.app.service.NotificationService;
 import com.glinboy.app.service.dto.NotificationDTO;
 import com.glinboy.app.service.dto.NotificationDataDTO;
 import com.google.firebase.messaging.FirebaseMessaging;
@@ -32,15 +32,15 @@ public class FirebaseNotificationChannelServiceImpl extends GenericChannelServic
 
     private final FirebaseMessaging firebaseMessaging;
 
-    private final NotificationService notificationService;
+    private final NotificationRepository notificationRepository;
 
     protected FirebaseNotificationChannelServiceImpl(JmsTemplate jmsTemplate,
             ApplicationProperties properties,
             FirebaseMessaging firebaseMessaging,
-            NotificationService notificationService) {
+            NotificationRepository notificationRepository) {
         super(jmsTemplate, properties);
         this.firebaseMessaging = firebaseMessaging;
-        this.notificationService = notificationService;
+        this.notificationRepository = notificationRepository;
     }
 
     @Override
@@ -67,10 +67,9 @@ public class FirebaseNotificationChannelServiceImpl extends GenericChannelServic
                 }
 
                 String result = firebaseMessaging.send(message.build());
-                notificationDTO.setStatus(MessageStatus.SENT);
                 log.info("Notification sent! {}", notificationDTO);
                 log.info("Notification Result {}", result);
-                notificationService.save(notificationDTO);
+                notificationRepository.updateStatus(notificationDTO.getId(), MessageStatus.SENT);
             } catch (FirebaseMessagingException ex) {
                 log.error("Sending message failed: {}", ex.getMessage(), ex);
             }
