@@ -11,8 +11,8 @@ import org.springframework.stereotype.Service;
 
 import com.glinboy.app.config.ApplicationProperties;
 import com.glinboy.app.domain.enumeration.MessageStatus;
+import com.glinboy.app.repository.ShortMessageRepository;
 import com.glinboy.app.service.ShortMessageChannelService;
-import com.glinboy.app.service.ShortMessageService;
 import com.glinboy.app.service.dto.ShortMessageDTO;
 import com.kavenegar.sdk.KavenegarApi;
 import com.kavenegar.sdk.excepctions.ApiException;
@@ -26,13 +26,13 @@ public class KavenegarSMSChannelServiceImpl extends GenericChannelServiceImpl<Sh
 
     public static final String TOPIC_NAME = "KAVENEGAR_SMSBOX";
 
-    private final ShortMessageService shortMessageService;
+    private final ShortMessageRepository shortMessageRepository;
 
     protected KavenegarSMSChannelServiceImpl(JmsTemplate jmsTemplate,
             ApplicationProperties properties,
-            ShortMessageService shortMessageService) {
+            ShortMessageRepository shortMessageRepository) {
         super(jmsTemplate, properties);
-        this.shortMessageService = shortMessageService;
+        this.shortMessageRepository = shortMessageRepository;
     }
 
     @Override
@@ -50,8 +50,7 @@ public class KavenegarSMSChannelServiceImpl extends GenericChannelServiceImpl<Sh
                         shortMessageDTO.getContent());
                 log.info("SMS sent! {}", shortMessageDTO);
                 log.info("SMS Result {}", result);
-                shortMessageDTO.setStatus(MessageStatus.SENT);
-                this.shortMessageService.partialUpdate(shortMessageDTO);
+                this.shortMessageRepository.updateStatus(shortMessageDTO.getId(), MessageStatus.SENT);
             } catch (HttpException ex) { // در صورتی که خروجی وب سرویس 200 نباشد این خطارخ می دهد.
                 log.error("HttpException: {}", ex.getMessage(), ex);
             } catch (ApiException ex) { // در صورتی که خروجی وب سرویس 200 نباشد این خطارخ می دهد.
