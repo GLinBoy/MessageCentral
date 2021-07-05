@@ -11,8 +11,8 @@ import org.springframework.stereotype.Service;
 
 import com.glinboy.app.config.ApplicationProperties;
 import com.glinboy.app.domain.enumeration.MessageStatus;
+import com.glinboy.app.repository.ShortMessageRepository;
 import com.glinboy.app.service.ShortMessageChannelService;
-import com.glinboy.app.service.ShortMessageService;
 import com.glinboy.app.service.dto.ShortMessageDTO;
 import com.twilio.Twilio;
 import com.twilio.type.PhoneNumber;
@@ -24,13 +24,13 @@ public class TwilioSMSChannelServiceImpl extends GenericChannelServiceImpl<Short
 
     public static final String TOPIC_NAME = "TWILIO_SMSBOX";
 
-    public final ShortMessageService shortMessageService;
+    public final ShortMessageRepository shortMessageRepository;
 
     protected TwilioSMSChannelServiceImpl(JmsTemplate jmsTemplate,
             ApplicationProperties properties,
-            ShortMessageService shortMessageService) {
+            ShortMessageRepository shortMessageRepository) {
         super(jmsTemplate, properties);
-        this.shortMessageService = shortMessageService;
+        this.shortMessageRepository = shortMessageRepository;
     }
 
     @Override
@@ -51,8 +51,7 @@ public class TwilioSMSChannelServiceImpl extends GenericChannelServiceImpl<Short
                     .create();
             log.info("SMS sent! {}", shortMessageDTO);
             log.info("SMS Result {}", message);
-            shortMessageDTO.setStatus(MessageStatus.SENT);
-            this.shortMessageService.partialUpdate(shortMessageDTO);
+            this.shortMessageRepository.updateStatus(shortMessageDTO.getId(), MessageStatus.SENT);
         }
     }
 
