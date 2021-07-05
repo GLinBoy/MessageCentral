@@ -20,8 +20,8 @@ import org.springframework.web.client.RestTemplate;
 
 import com.glinboy.app.config.ApplicationProperties;
 import com.glinboy.app.domain.enumeration.MessageStatus;
+import com.glinboy.app.repository.NotificationRepository;
 import com.glinboy.app.service.NotificationChannelService;
-import com.glinboy.app.service.NotificationService;
 import com.glinboy.app.service.dto.NotificationDTO;
 
 @Service
@@ -31,13 +31,13 @@ public class PusheNotificationChannelServiceImpl extends GenericChannelServiceIm
 
     public static final String TOPIC_NAME = "PUSHE_NOTIFICATIONBOX";
 
-    public NotificationService notificationService;
+    public final NotificationRepository notificationRepository;
 
     protected PusheNotificationChannelServiceImpl(JmsTemplate jmsTemplate,
             ApplicationProperties properties,
-            NotificationService notificationService) {
+            NotificationRepository notificationRepository) {
         super(jmsTemplate, properties);
-        this.notificationService = notificationService;
+        this.notificationRepository = notificationRepository;
     }
 
     @Override
@@ -66,10 +66,9 @@ public class PusheNotificationChannelServiceImpl extends GenericChannelServiceIm
             HttpEntity<String> request = new HttpEntity<>(requestBody.toString(), headers);
             String result = restTemplate.postForObject(properties.getNotification().getPushe().getUrl(), request,
                     String.class);
-            notificationDTO.setStatus(MessageStatus.SENT);
             log.info("Notification sent! {}", notificationDTO);
             log.info("Notification Result {}", result);
-            this.notificationService.partialUpdate(notificationDTO);
+            this.notificationRepository.updateStatus(notificationDTO.getId(), MessageStatus.SENT);
         }
     }
 
