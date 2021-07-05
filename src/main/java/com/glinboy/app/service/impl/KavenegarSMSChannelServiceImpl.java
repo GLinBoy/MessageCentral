@@ -10,7 +10,9 @@ import org.springframework.jms.core.JmsTemplate;
 import org.springframework.stereotype.Service;
 
 import com.glinboy.app.config.ApplicationProperties;
+import com.glinboy.app.domain.enumeration.MessageStatus;
 import com.glinboy.app.service.ShortMessageChannelService;
+import com.glinboy.app.service.ShortMessageService;
 import com.glinboy.app.service.dto.ShortMessageDTO;
 import com.kavenegar.sdk.KavenegarApi;
 import com.kavenegar.sdk.excepctions.ApiException;
@@ -19,47 +21,55 @@ import com.kavenegar.sdk.models.SendResult;
 
 @Service
 @ConditionalOnProperty(value = "application.sms.provider", havingValue = "kavenegar")
-public class KavenegarSMSChannelServiceImpl extends GenericChannelServiceImpl<ShortMessageDTO> implements ShortMessageChannelService<ShortMessageDTO> {
-	
-	public static final String TOPIC_NAME = "KAVENEGAR_SMSBOX";
+public class KavenegarSMSChannelServiceImpl extends GenericChannelServiceImpl<ShortMessageDTO>
+        implements ShortMessageChannelService<ShortMessageDTO> {
 
-	protected KavenegarSMSChannelServiceImpl(JmsTemplate jmsTemplate,
-			ApplicationProperties properties) {
-		super(jmsTemplate, properties);
-	}
+    public static final String TOPIC_NAME = "KAVENEGAR_SMSBOX";
 
-	@Override
-	String getTopicName() {
-		return TOPIC_NAME;
-	}
+    private final ShortMessageService shortMessageService;
 
-	@Override
-	public void deliverMessage(ShortMessageDTO... shortMessageDTOs) {
-		var api = new KavenegarApi(properties.getCredential().getKavenegar().getToken());
-		for (var i = 0; i < shortMessageDTOs.length; i++) {
-			try {
-				SendResult result = api.send(properties.getSms().getFrom(),
-						shortMessageDTOs[i].getPhoneNumber(), shortMessageDTOs[i].getContent());
-				log.info("SMS sent! {}", shortMessageDTOs[i]);
-				log.info("SMS Result {}", result);
-			} catch (HttpException ex) { // در صورتی که خروجی وب سرویس 200 نباشد این خطارخ می دهد.
-				log.error("HttpException: {}", ex.getMessage(), ex);
-			} catch (ApiException ex) { // در صورتی که خروجی وب سرویس 200 نباشد این خطارخ می دهد.
-				log.error("ApiException: {}", ex.getMessage(), ex);
-			}
-		}
-	}
+    protected KavenegarSMSChannelServiceImpl(JmsTemplate jmsTemplate,
+            ApplicationProperties properties,
+            ShortMessageService shortMessageService) {
+        super(jmsTemplate, properties);
+        this.shortMessageService = shortMessageService;
+    }
 
-	@Override
-	@JmsListener(destination = KavenegarSMSChannelServiceImpl.TOPIC_NAME)
-	public void onMessage(Message message) {
-		try {
-			var objectMessage = (ObjectMessage) message;
-			var shortMessageDTO = (ShortMessageDTO) objectMessage.getObject();
-			this.deliverMessage(shortMessageDTO);
-		} catch (JMSException e) {
-			log.error("Parsing message failed: {}", e.getMessage(), e);
-		}
-	}
+    @Override
+    String getTopicName() {
+        return TOPIC_NAME;
+    }
+
+    @Override
+    public void deliverMessage(ShortMessageDTO... shortMessageDTOs) {
+        var api = new KavenegarApi(properties.getCredential().getKavenegar().getToken());
+        for (var i = 0; i < shortMessageDTOs.length; i++) {
+            ShortMessageDTO shortMessageDTO = shortMessageDTOs[i];
+            try {
+                SendResult result = api.send(properties.getSms().getFrom(), shortMessageDTO.getPhoneNumber(),
+                        shortMessageDTO.getContent());
+                log.info("SMS sent! {}", shortMessageDTO);
+                log.info("SMS Result {}", result);
+                shortMessageDTO.setStatus(MessageStatus.SENT);
+                this.shortMessageService.partialUpdate(shortMessageDTO);
+            } catch (HttpException ex) { // در صورتی که خروجی وب سرویس 200 نباشد این خطارخ می دهد.
+                log.error("HttpException: {}", ex.getMessage(), ex);
+            } catch (ApiException ex) { // در صورتی که خروجی وب سرویس 200 نباشد این خطارخ می دهد.
+                log.error("ApiException: {}", ex.getMessage(), ex);
+            }
+        }
+    }
+
+    @Override
+    @JmsListener(destination = KavenegarSMSChannelServiceImpl.TOPIC_NAME)
+    public void onMessage(Message message) {
+        try {
+            var objectMessage = (ObjectMessage) message;
+            var shortMessageDTO = (ShortMessageDTO) objectMessage.getObject();
+            this.deliverMessage(shortMessageDTO);
+        } catch (JMSException e) {
+            log.error("Parsing message failed: {}", e.getMessage(), e);
+        }
+    }
 
 }
