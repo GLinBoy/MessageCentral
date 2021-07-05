@@ -22,8 +22,8 @@ import org.springframework.web.client.RestTemplate;
 
 import com.glinboy.app.config.ApplicationProperties;
 import com.glinboy.app.domain.enumeration.MessageStatus;
+import com.glinboy.app.repository.NotificationRepository;
 import com.glinboy.app.service.NotificationChannelService;
-import com.glinboy.app.service.NotificationService;
 import com.glinboy.app.service.dto.NotificationDTO;
 import com.glinboy.app.service.dto.NotificationDataDTO;
 
@@ -34,13 +34,13 @@ public class OnesignalNotificationChannelServiceImpl extends GenericChannelServi
 
     public static final String TOPIC_NAME = "ONESIGNAL_NOTIFICATIONBOX";
 
-    public final NotificationService notificationService;
+    public final NotificationRepository notificationRepository;
 
     protected OnesignalNotificationChannelServiceImpl(JmsTemplate jmsTemplate,
             ApplicationProperties properties,
-            NotificationService notificationService) {
+            NotificationRepository notificationRepository) {
         super(jmsTemplate, properties);
-        this.notificationService = notificationService;
+        this.notificationRepository = notificationRepository;
     }
 
     @Override
@@ -74,8 +74,7 @@ public class OnesignalNotificationChannelServiceImpl extends GenericChannelServi
                     String.class);
             log.info("Notification sent! {}", notificationDTO);
             log.info("Notification Result {}", result);
-            notificationDTO.setStatus(MessageStatus.SENT);
-            this.notificationService.partialUpdate(notificationDTO);
+            this.notificationRepository.updateStatus(notificationDTO.getId(), MessageStatus.SENT);
         }
     }
 
