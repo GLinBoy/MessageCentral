@@ -1,6 +1,9 @@
 package com.glinboy.app.service.impl;
 
 import java.util.Arrays;
+import java.util.function.Consumer;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import javax.jms.JMSException;
 import javax.jms.Message;
@@ -12,12 +15,13 @@ import org.springframework.jms.core.JmsTemplate;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.glinboy.app.config.ApplicationProperties;
-import com.glinboy.app.domain.enumeration.MessageStatus;
 import com.glinboy.app.repository.EmailRepository;
 import com.glinboy.app.service.MailChannelService;
 import com.glinboy.app.service.dto.EmailDTO;
+import com.glinboy.app.service.mapper.EmailMapper;
 
 @Service
 @ConditionalOnProperty(value = "application.email.provider", havingValue = "mail-server", matchIfMissing = true)
@@ -29,19 +33,31 @@ public class MailChannelServiceImpl extends GenericChannelServiceImpl<EmailDTO>
     private final JavaMailSender emailSender;
 
     private final EmailRepository emailRepository;
+    
+    private final EmailMapper emailMapper;
 
     public MailChannelServiceImpl(JmsTemplate jmsTemplate,
             ApplicationProperties properties,
             JavaMailSender emailSender,
-            EmailRepository emailRepository) {
+            EmailRepository emailRepository,
+            EmailMapper emailMapper) {
         super(jmsTemplate, properties);
         this.emailSender = emailSender;
         this.emailRepository = emailRepository;
+        this.emailMapper = emailMapper;
     }
 
     @Override
     String getTopicName() {
         return TOPIC_NAME;
+    }
+    
+    @Override
+    public Consumer<EmailDTO[]> saveFunction() {
+        return emails -> emailRepository.saveAll(Stream
+                .of(emails)
+                .map(emailMapper::toEntity)
+                .collect(Collectors.toList()));
     }
 
     @Override
@@ -57,19 +73,18 @@ public class MailChannelServiceImpl extends GenericChannelServiceImpl<EmailDTO>
             messages[i] = message;
         }
         emailSender.send(messages);
-        for (int i = 0; i < emailsDTO.length; i++) {
-            this.emailRepository.updateStatus(emailsDTO[i].getId(), MessageStatus.SENT);
-        }
+        updateStatusToSent(emailsDTO);
         log.info("Mail(s) sent! {}", Arrays.toString(emailsDTO));
     }
 
     @Override
+    @Transactional
     @JmsListener(destination = MailChannelServiceImpl.TOPIC_NAME)
     public void onMessage(Message message) {
         try {
             var objectMessage = (ObjectMessage) message;
             var emailDTO = (EmailDTO) objectMessage.getObject();
-            this.deliverMessage(emailDTO);
+            deliverMessage(emailDTO);
         } catch (JMSException e) {
             log.error("Parsing message failed: {}", e.getMessage(), e);
         }
