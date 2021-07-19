@@ -1,5 +1,9 @@
 package com.glinboy.app.service.impl;
 
+import java.util.function.Consumer;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
 import javax.jms.JMSException;
 import javax.jms.Message;
 import javax.jms.ObjectMessage;
@@ -14,6 +18,7 @@ import com.glinboy.app.domain.enumeration.MessageStatus;
 import com.glinboy.app.repository.ShortMessageRepository;
 import com.glinboy.app.service.ShortMessageChannelService;
 import com.glinboy.app.service.dto.ShortMessageDTO;
+import com.glinboy.app.service.mapper.ShortMessageMapper;
 import com.kavenegar.sdk.KavenegarApi;
 import com.kavenegar.sdk.excepctions.ApiException;
 import com.kavenegar.sdk.excepctions.HttpException;
@@ -27,17 +32,29 @@ public class KavenegarSMSChannelServiceImpl extends GenericChannelServiceImpl<Sh
     public static final String TOPIC_NAME = "KAVENEGAR_SMSBOX";
 
     private final ShortMessageRepository shortMessageRepository;
+    
+    private final ShortMessageMapper shortMessageMapper;
 
     protected KavenegarSMSChannelServiceImpl(JmsTemplate jmsTemplate,
             ApplicationProperties properties,
-            ShortMessageRepository shortMessageRepository) {
+            ShortMessageRepository shortMessageRepository,
+            ShortMessageMapper shortMessageMapper) {
         super(jmsTemplate, properties);
         this.shortMessageRepository = shortMessageRepository;
+        this.shortMessageMapper = shortMessageMapper;
     }
 
     @Override
     String getTopicName() {
         return TOPIC_NAME;
+    }
+    
+    @Override
+    public Consumer<ShortMessageDTO[]> saveFunction() {
+        return emails -> shortMessageRepository.saveAll(Stream
+                .of(emails)
+                .map(shortMessageMapper::toEntity)
+                .collect(Collectors.toList()));
     }
 
     @Override
