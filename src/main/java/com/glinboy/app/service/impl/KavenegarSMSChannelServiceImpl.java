@@ -14,7 +14,6 @@ import org.springframework.jms.core.JmsTemplate;
 import org.springframework.stereotype.Service;
 
 import com.glinboy.app.config.ApplicationProperties;
-import com.glinboy.app.domain.enumeration.MessageStatus;
 import com.glinboy.app.repository.ShortMessageRepository;
 import com.glinboy.app.service.ShortMessageChannelService;
 import com.glinboy.app.service.dto.ShortMessageDTO;
@@ -67,7 +66,7 @@ public class KavenegarSMSChannelServiceImpl extends GenericChannelServiceImpl<Sh
                         shortMessageDTO.getContent());
                 log.info("SMS sent! {}", shortMessageDTO);
                 log.info("SMS Result {}", result);
-                this.shortMessageRepository.updateStatus(shortMessageDTO.getId(), MessageStatus.SENT);
+                updateStatusToSent(shortMessageDTOs);
             } catch (HttpException ex) { // در صورتی که خروجی وب سرویس 200 نباشد این خطارخ می دهد.
                 log.error("HttpException: {}", ex.getMessage(), ex);
             } catch (ApiException ex) { // در صورتی که خروجی وب سرویس 200 نباشد این خطارخ می دهد.
