@@ -1,5 +1,9 @@
 package com.glinboy.app.service.impl;
 
+import java.util.function.Consumer;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
 import javax.jms.JMSException;
 import javax.jms.Message;
 import javax.jms.ObjectMessage;
@@ -14,6 +18,7 @@ import com.glinboy.app.domain.enumeration.MessageStatus;
 import com.glinboy.app.repository.ShortMessageRepository;
 import com.glinboy.app.service.ShortMessageChannelService;
 import com.glinboy.app.service.dto.ShortMessageDTO;
+import com.glinboy.app.service.mapper.ShortMessageMapper;
 import com.twilio.Twilio;
 import com.twilio.type.PhoneNumber;
 
@@ -25,17 +30,29 @@ public class TwilioSMSChannelServiceImpl extends GenericChannelServiceImpl<Short
     public static final String TOPIC_NAME = "TWILIO_SMSBOX";
 
     public final ShortMessageRepository shortMessageRepository;
+    
+    public final ShortMessageMapper shortMessageMapper;
 
     protected TwilioSMSChannelServiceImpl(JmsTemplate jmsTemplate,
             ApplicationProperties properties,
-            ShortMessageRepository shortMessageRepository) {
+            ShortMessageRepository shortMessageRepository,
+            ShortMessageMapper shortMessageMapper) {
         super(jmsTemplate, properties);
         this.shortMessageRepository = shortMessageRepository;
+        this.shortMessageMapper = shortMessageMapper;
     }
 
     @Override
     String getTopicName() {
         return TOPIC_NAME;
+    }
+    
+    @Override
+    public Consumer<ShortMessageDTO[]> saveFunction() {
+        return emails -> shortMessageRepository.saveAll(Stream
+                .of(emails)
+                .map(shortMessageMapper::toEntity)
+                .collect(Collectors.toList()));
     }
 
     @Override
