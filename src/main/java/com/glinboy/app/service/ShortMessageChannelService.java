@@ -15,4 +15,10 @@ public interface ShortMessageChannelService<T extends ShortMessageDTO> extends C
         Stream.of(ts).forEach(t -> t.setStatus(MessageStatus.SENT));
         saveFunction().accept(ts);
     }
+
+    @Override
+    default void updateStatusToFailed(T... ts) {
+        Stream.of(ts).forEach(t -> t.setStatus(MessageStatus.FAILED));
+        saveFunction().accept(ts);
+    }
 }
