@@ -14,7 +14,6 @@ import org.springframework.jms.core.JmsTemplate;
 import org.springframework.stereotype.Service;
 
 import com.glinboy.app.config.ApplicationProperties;
-import com.glinboy.app.domain.enumeration.MessageStatus;
 import com.glinboy.app.repository.ShortMessageRepository;
 import com.glinboy.app.service.ShortMessageChannelService;
 import com.glinboy.app.service.dto.ShortMessageDTO;
@@ -68,7 +67,7 @@ public class TwilioSMSChannelServiceImpl extends GenericChannelServiceImpl<Short
                     .create();
             log.info("SMS sent! {}", shortMessageDTO);
             log.info("SMS Result {}", message);
-            this.shortMessageRepository.updateStatus(shortMessageDTO.getId(), MessageStatus.SENT);
+            this.updateStatusToSent(shortMessageDTOs);
         }
     }
 
