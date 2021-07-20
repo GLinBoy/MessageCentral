@@ -2,6 +2,9 @@ package com.glinboy.app.service.impl;
 
 import java.nio.charset.StandardCharsets;
 import java.util.List;
+import java.util.function.Consumer;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import javax.jms.JMSException;
 import javax.jms.Message;
@@ -23,6 +26,7 @@ import com.glinboy.app.domain.enumeration.MessageStatus;
 import com.glinboy.app.repository.NotificationRepository;
 import com.glinboy.app.service.NotificationChannelService;
 import com.glinboy.app.service.dto.NotificationDTO;
+import com.glinboy.app.service.mapper.NotificationMapper;
 
 @Service
 @ConditionalOnProperty(value = "application.notification.provider", havingValue = "pushe")
@@ -32,17 +36,29 @@ public class PusheNotificationChannelServiceImpl extends GenericChannelServiceIm
     public static final String TOPIC_NAME = "PUSHE_NOTIFICATIONBOX";
 
     public final NotificationRepository notificationRepository;
+    
+    private final NotificationMapper notificationMapper;
 
     protected PusheNotificationChannelServiceImpl(JmsTemplate jmsTemplate,
             ApplicationProperties properties,
-            NotificationRepository notificationRepository) {
+            NotificationRepository notificationRepository,
+            NotificationMapper notificationMapper) {
         super(jmsTemplate, properties);
         this.notificationRepository = notificationRepository;
+        this.notificationMapper = notificationMapper;
     }
 
     @Override
     String getTopicName() {
         return TOPIC_NAME;
+    }
+
+    @Override
+    public Consumer<NotificationDTO[]> saveFunction() {
+        return emails -> notificationRepository.saveAll(Stream
+                .of(emails)
+                .map(notificationMapper::toEntity)
+                .collect(Collectors.toList()));
     }
 
     @Override
