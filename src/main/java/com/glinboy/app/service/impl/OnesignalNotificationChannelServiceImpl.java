@@ -23,7 +23,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import com.glinboy.app.config.ApplicationProperties;
-import com.glinboy.app.domain.enumeration.MessageStatus;
 import com.glinboy.app.repository.NotificationRepository;
 import com.glinboy.app.service.NotificationChannelService;
 import com.glinboy.app.service.dto.NotificationDTO;
@@ -89,7 +88,7 @@ public class OnesignalNotificationChannelServiceImpl extends GenericChannelServi
                     String.class);
             log.info("Notification sent! {}", notificationDTO);
             log.info("Notification Result {}", result);
-            this.notificationRepository.updateStatus(notificationDTO.getId(), MessageStatus.SENT);
+            updateStatusToSent(notificationDTO);
         }
     }
 
