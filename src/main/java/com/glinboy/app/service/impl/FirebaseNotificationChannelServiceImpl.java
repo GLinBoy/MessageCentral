@@ -1,6 +1,8 @@
 package com.glinboy.app.service.impl;
 
+import java.util.function.Consumer;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import javax.jms.JMSException;
 import javax.jms.Message;
@@ -18,6 +20,7 @@ import com.glinboy.app.repository.NotificationRepository;
 import com.glinboy.app.service.NotificationChannelService;
 import com.glinboy.app.service.dto.NotificationDTO;
 import com.glinboy.app.service.dto.NotificationDataDTO;
+import com.glinboy.app.service.mapper.NotificationMapper;
 import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.firebase.messaging.FirebaseMessagingException;
 import com.google.firebase.messaging.Message.Builder;
@@ -33,19 +36,31 @@ public class FirebaseNotificationChannelServiceImpl extends GenericChannelServic
     private final FirebaseMessaging firebaseMessaging;
 
     private final NotificationRepository notificationRepository;
+    
+    private final NotificationMapper notificationMapper;
 
     protected FirebaseNotificationChannelServiceImpl(JmsTemplate jmsTemplate,
             ApplicationProperties properties,
             FirebaseMessaging firebaseMessaging,
-            NotificationRepository notificationRepository) {
+            NotificationRepository notificationRepository,
+            NotificationMapper notificationMapper) {
         super(jmsTemplate, properties);
         this.firebaseMessaging = firebaseMessaging;
         this.notificationRepository = notificationRepository;
+        this.notificationMapper = notificationMapper;
     }
 
     @Override
     String getTopicName() {
         return TOPIC_NAME;
+    }
+
+    @Override
+    public Consumer<NotificationDTO[]> saveFunction() {
+        return emails -> notificationRepository.saveAll(Stream
+                .of(emails)
+                .map(notificationMapper::toEntity)
+                .collect(Collectors.toList()));
     }
 
     @Override
