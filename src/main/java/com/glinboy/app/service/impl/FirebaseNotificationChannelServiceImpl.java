@@ -84,7 +84,7 @@ public class FirebaseNotificationChannelServiceImpl extends GenericChannelServic
                 String result = firebaseMessaging.send(message.build());
                 log.info("Notification sent! {}", notificationDTO);
                 log.info("Notification Result {}", result);
-                notificationRepository.updateStatus(notificationDTO.getId(), MessageStatus.SENT);
+                updateStatusToSent(notificationDTO);
             } catch (FirebaseMessagingException ex) {
                 log.error("Sending message failed: {}", ex.getMessage(), ex);
             }
