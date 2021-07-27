@@ -42,7 +42,7 @@ public class TwilioSMSChannelServiceImpl extends GenericChannelServiceImpl<Short
     }
 
     @Override
-    String getTopicName() {
+    public String getTopicName() {
         return TOPIC_NAME;
     }
     
