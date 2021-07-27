@@ -48,7 +48,7 @@ public class PusheNotificationChannelServiceImpl extends GenericChannelServiceIm
     }
 
     @Override
-    String getTopicName() {
+    public String getTopicName() {
         return TOPIC_NAME;
     }
 
