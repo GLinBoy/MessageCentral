@@ -24,9 +24,9 @@ public abstract class GenericChannelServiceImpl<T> implements ChannelService<T>,
 		this.properties = properties;
 	}
 	
-	abstract String getTopicName();
+	public abstract String getTopicName();
 	
-	abstract void deliverMessage(T... ts);
+	public abstract void deliverMessage(T... ts);
 
 	@Override
 	public void sendMessage(T... ts) {
