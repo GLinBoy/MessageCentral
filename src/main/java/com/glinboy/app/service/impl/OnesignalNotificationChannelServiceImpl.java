@@ -50,7 +50,7 @@ public class OnesignalNotificationChannelServiceImpl extends GenericChannelServi
     }
 
     @Override
-    String getTopicName() {
+    public String getTopicName() {
         return TOPIC_NAME;
     }
 
