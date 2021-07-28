@@ -10,13 +10,11 @@ public interface MailChannelService<T extends EmailDTO> extends ChannelService<T
 
     Consumer<T[]> saveFunction();
 
-    @Override
     default void updateStatusToSent(T... ts) {
         Stream.of(ts).forEach(t -> t.setStatus(MessageStatus.SENT));
         saveFunction().accept(ts);
     }
 
-    @Override
     default void updateStatusToFailed(T... ts) {
         Stream.of(ts).forEach(t -> t.setStatus(MessageStatus.FAILED));
         saveFunction().accept(ts);
