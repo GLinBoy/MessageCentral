@@ -44,7 +44,7 @@ public class KavenegarSMSChannelServiceImpl extends GenericChannelServiceImpl<Sh
     }
 
     @Override
-    String getTopicName() {
+    public String getTopicName() {
         return TOPIC_NAME;
     }
     

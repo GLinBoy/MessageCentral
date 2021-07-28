@@ -15,7 +15,6 @@ import org.springframework.jms.core.JmsTemplate;
 import org.springframework.stereotype.Service;
 
 import com.glinboy.app.config.ApplicationProperties;
-import com.glinboy.app.domain.enumeration.MessageStatus;
 import com.glinboy.app.repository.NotificationRepository;
 import com.glinboy.app.service.NotificationChannelService;
 import com.glinboy.app.service.dto.NotificationDTO;
@@ -36,7 +35,7 @@ public class FirebaseNotificationChannelServiceImpl extends GenericChannelServic
     private final FirebaseMessaging firebaseMessaging;
 
     private final NotificationRepository notificationRepository;
-    
+
     private final NotificationMapper notificationMapper;
 
     protected FirebaseNotificationChannelServiceImpl(JmsTemplate jmsTemplate,
@@ -51,7 +50,7 @@ public class FirebaseNotificationChannelServiceImpl extends GenericChannelServic
     }
 
     @Override
-    String getTopicName() {
+    public String getTopicName() {
         return TOPIC_NAME;
     }
 

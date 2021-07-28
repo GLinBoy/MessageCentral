@@ -10,6 +10,7 @@ import javax.jms.Message;
 import javax.jms.ObjectMessage;
 
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.context.ApplicationContext;
 import org.springframework.jms.annotation.JmsListener;
 import org.springframework.jms.core.JmsTemplate;
 import org.springframework.mail.SimpleMailMessage;
@@ -33,22 +34,26 @@ public class MailChannelServiceImpl extends GenericChannelServiceImpl<EmailDTO>
     private final JavaMailSender emailSender;
 
     private final EmailRepository emailRepository;
-    
+
     private final EmailMapper emailMapper;
+
+    private final ApplicationContext applicationContext;
 
     public MailChannelServiceImpl(JmsTemplate jmsTemplate,
             ApplicationProperties properties,
             JavaMailSender emailSender,
             EmailRepository emailRepository,
-            EmailMapper emailMapper) {
+            EmailMapper emailMapper,
+            ApplicationContext applicationContext) {
         super(jmsTemplate, properties);
         this.emailSender = emailSender;
         this.emailRepository = emailRepository;
         this.emailMapper = emailMapper;
+        this.applicationContext = applicationContext;
     }
 
     @Override
-    String getTopicName() {
+    public String getTopicName() {
         return TOPIC_NAME;
     }
     
@@ -84,7 +89,7 @@ public class MailChannelServiceImpl extends GenericChannelServiceImpl<EmailDTO>
         try {
             var objectMessage = (ObjectMessage) message;
             var emailDTO = (EmailDTO) objectMessage.getObject();
-            deliverMessage(emailDTO);
+            ((MailChannelServiceImpl) applicationContext.getBean(MailChannelServiceImpl.class)).deliverMessage(emailDTO);
         } catch (JMSException e) {
             log.error("Parsing message failed: {}", e.getMessage(), e);
         }
