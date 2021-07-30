@@ -35,10 +35,10 @@ public class EmailServiceImpl implements EmailService {
 
     private final EmailMapper emailMapper;
 
-    private final MailChannelService<EmailDTO> mailProviderService;
+    private final MailChannelService mailProviderService;
 
     public EmailServiceImpl(EmailRepository emailRepository, EmailMapper emailMapper,
-            MailChannelService<EmailDTO> mailProviderService) {
+            MailChannelService mailProviderService) {
         this.emailRepository = emailRepository;
         this.emailMapper = emailMapper;
         this.mailProviderService = mailProviderService;
