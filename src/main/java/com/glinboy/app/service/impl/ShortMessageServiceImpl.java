@@ -35,11 +35,11 @@ public class ShortMessageServiceImpl implements ShortMessageService {
 
     private final ShortMessageMapper shortMessageMapper;
 
-    private final ShortMessageChannelService<ShortMessageDTO> smsProvider;
+    private final ShortMessageChannelService smsProvider;
 
     public ShortMessageServiceImpl(ShortMessageRepository shortMessageRepository,
             ShortMessageMapper shortMessageMapper,
-            ShortMessageChannelService<ShortMessageDTO> smsProvider) {
+            ShortMessageChannelService smsProvider) {
         this.shortMessageRepository = shortMessageRepository;
         this.shortMessageMapper = shortMessageMapper;
         this.smsProvider = smsProvider;
