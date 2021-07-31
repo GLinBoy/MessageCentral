@@ -9,12 +9,11 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 
 import com.glinboy.app.config.ApplicationProperties;
-import com.glinboy.app.service.MailChannelService;
 import com.glinboy.app.service.dto.EmailDTO;
 
 @Service
 @ConditionalOnProperty(value = "application.email.provider", havingValue = "mail-server", matchIfMissing = true)
-public class SmtpMailChannelServiceImpl extends MailChannelService {
+public class SmtpMailChannelServiceImpl extends AbstractMailChannelServiceImpl {
 
     private final JavaMailSender emailSender;
 
