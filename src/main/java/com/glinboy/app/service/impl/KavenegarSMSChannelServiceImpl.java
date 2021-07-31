@@ -5,7 +5,6 @@ import org.springframework.jms.core.JmsTemplate;
 import org.springframework.stereotype.Service;
 
 import com.glinboy.app.config.ApplicationProperties;
-import com.glinboy.app.service.ShortMessageChannelService;
 import com.glinboy.app.service.dto.ShortMessageDTO;
 import com.kavenegar.sdk.KavenegarApi;
 import com.kavenegar.sdk.excepctions.ApiException;
@@ -14,7 +13,7 @@ import com.kavenegar.sdk.models.SendResult;
 
 @Service
 @ConditionalOnProperty(value = "application.sms.provider", havingValue = "kavenegar")
-public class KavenegarSMSChannelServiceImpl extends ShortMessageChannelService {
+public class KavenegarSMSChannelServiceImpl extends AbstractShortMessageChannelServiceImpl {
 
     protected KavenegarSMSChannelServiceImpl(JmsTemplate jmsTemplate,
             ApplicationProperties properties) {
