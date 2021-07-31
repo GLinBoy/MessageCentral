@@ -5,14 +5,13 @@ import org.springframework.jms.core.JmsTemplate;
 import org.springframework.stereotype.Service;
 
 import com.glinboy.app.config.ApplicationProperties;
-import com.glinboy.app.service.ShortMessageChannelService;
 import com.glinboy.app.service.dto.ShortMessageDTO;
 import com.twilio.Twilio;
 import com.twilio.type.PhoneNumber;
 
 @Service
 @ConditionalOnProperty(value = "application.sms.provider", havingValue = "twilio", matchIfMissing = true)
-public class TwilioSMSChannelServiceImpl extends ShortMessageChannelService {
+public class TwilioSMSChannelServiceImpl extends AbstractShortMessageChannelServiceImpl {
 
     protected TwilioSMSChannelServiceImpl(JmsTemplate jmsTemplate,
             ApplicationProperties properties) {
