@@ -15,6 +15,10 @@ import com.glinboy.app.service.dto.ShortMessagesDTO;
  * Service Interface for managing {@link com.glinboy.app.domain.ShortMessage}.
  */
 public interface ShortMessageService {
+
+    String TOPIC_NAME_SENT = "SMS_SERVICE_BOX::SENT";
+    String TOPIC_NAME_FAILED = "SMS_SERVICE_BOX::FAILED";
+
     /**
      * Save a shortMessage.
      *
