@@ -1,7 +1,6 @@
 package com.glinboy.app.service.impl;
 
-import javax.jms.Message;
-import javax.jms.ObjectMessage;
+import java.util.stream.Stream;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -9,6 +8,7 @@ import org.springframework.jms.annotation.JmsListener;
 import org.springframework.jms.core.JmsTemplate;
 
 import com.glinboy.app.config.ApplicationProperties;
+import com.glinboy.app.service.EmailService;
 import com.glinboy.app.service.MailChannelService;
 import com.glinboy.app.service.dto.EmailDTO;
 
@@ -35,15 +35,16 @@ public abstract class AbstractMailChannelServiceImpl implements MailChannelServi
         }
     }
 
-    @Override
     @JmsListener(destination = AbstractMailChannelServiceImpl.TOPIC_NAME)
-    public void onMessage(Message message) {
+    public void onMessage(EmailDTO... emailDTO) {
         try {
-            var objectMessage = (ObjectMessage) message;
-            EmailDTO emailDTO = (EmailDTO) objectMessage.getObject();
             this.deliverMessage(emailDTO);
         } catch (Exception e) {
-            log.error("Parsing message failed: {}", e.getMessage(), e);
+            log.error("An error occurred while sending the message: {}", e.getMessage(), e);
+            jmsTemplate.convertAndSend(EmailService.TOPIC_NAME_FAILED,
+                    Stream.of(emailDTO).map(EmailDTO::getId).toArray());
         }
+        jmsTemplate.convertAndSend(EmailService.TOPIC_NAME_SENT,
+                Stream.of(emailDTO).map(EmailDTO::getId).toArray());
     }
 }
