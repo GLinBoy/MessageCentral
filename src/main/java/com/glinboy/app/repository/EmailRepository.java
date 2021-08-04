@@ -14,7 +14,7 @@ import org.springframework.stereotype.Repository;
 public interface EmailRepository extends JpaRepository<Email, Long>, JpaSpecificationExecutor<Email> {
 
     @Modifying
-    @Query("update Email e set e.status = :status where e.id = :id")
-    void updateStatus(@Param(value = "id") long id, @Param(value = "status") MessageStatus status);
+    @Query("update Email e set e.status = :status where e.id in :ids")
+    void updateStatus(@Param(value = "status") MessageStatus status, @Param(value = "ids") Long... ids);
 
 }
