@@ -1,15 +1,5 @@
 package com.glinboy.app.service.impl;
 
-import com.glinboy.app.domain.Email;
-import com.glinboy.app.domain.enumeration.MessageStatus;
-import com.glinboy.app.repository.EmailRepository;
-import com.glinboy.app.service.EmailService;
-import com.glinboy.app.service.MailChannelService;
-import com.glinboy.app.service.dto.EmailDTO;
-import com.glinboy.app.service.dto.EmailsDTO;
-import com.glinboy.app.service.mapper.EmailMapper;
-import com.glinboy.app.util.Patterns;
-
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -19,8 +9,19 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.jms.annotation.JmsListener;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import com.glinboy.app.domain.Email;
+import com.glinboy.app.domain.enumeration.MessageStatus;
+import com.glinboy.app.repository.EmailRepository;
+import com.glinboy.app.service.EmailService;
+import com.glinboy.app.service.MailChannelService;
+import com.glinboy.app.service.dto.EmailDTO;
+import com.glinboy.app.service.dto.EmailsDTO;
+import com.glinboy.app.service.mapper.EmailMapper;
+import com.glinboy.app.util.Patterns;
 
 /**
  * Service Implementation for managing {@link Email}.
@@ -104,5 +105,11 @@ public class EmailServiceImpl implements EmailService {
     public void delete(Long id) {
         log.debug("Request to delete Email : {}", id);
         emailRepository.deleteById(id);
+    }
+
+    @Transactional
+    @JmsListener(destination = EmailServiceImpl.TOPIC_NAME_SENT)
+    public void onMessageSent(Long... ids) {
+        this.emailRepository.updateStatus(MessageStatus.SENT, ids);
     }
 }
