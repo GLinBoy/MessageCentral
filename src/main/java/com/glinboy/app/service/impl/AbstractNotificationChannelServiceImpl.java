@@ -1,8 +1,5 @@
 package com.glinboy.app.service.impl;
 
-import javax.jms.Message;
-import javax.jms.ObjectMessage;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.jms.annotation.JmsListener;
@@ -39,11 +36,9 @@ public abstract class AbstractNotificationChannelServiceImpl implements Notifica
 
     @Override
     @JmsListener(destination = AbstractNotificationChannelServiceImpl.TOPIC_NAME)
-    public void onMessage(Message message) {
+    public void onMessage(NotificationDTO... notificationDTOs) {
         try {
-            var objectMessage = (ObjectMessage) message;
-            var notificationDTO = (NotificationDTO) objectMessage.getObject();
-            deliverMessage(notificationDTO);
+            deliverMessage(notificationDTOs);
         } catch (Exception e) {
             log.error("Parsing message failed: {}", e.getMessage(), e);
         }
