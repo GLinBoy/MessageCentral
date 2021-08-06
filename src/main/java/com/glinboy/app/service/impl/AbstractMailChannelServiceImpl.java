@@ -35,6 +35,7 @@ public abstract class AbstractMailChannelServiceImpl implements MailChannelServi
         }
     }
 
+    @Override
     @JmsListener(destination = AbstractMailChannelServiceImpl.TOPIC_NAME)
     public void onMessage(EmailDTO... emailDTO) {
         try {
