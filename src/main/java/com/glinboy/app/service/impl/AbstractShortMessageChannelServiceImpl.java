@@ -1,8 +1,5 @@
 package com.glinboy.app.service.impl;
 
-import javax.jms.Message;
-import javax.jms.ObjectMessage;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.jms.annotation.JmsListener;
@@ -39,11 +36,9 @@ public abstract class AbstractShortMessageChannelServiceImpl implements ShortMes
 
     @Override
     @JmsListener(destination = AbstractShortMessageChannelServiceImpl.TOPIC_NAME)
-    public void onMessage(Message message) {
+    public void onMessage(ShortMessageDTO... shortMessageDTOs) {
         try {
-            var objectMessage = (ObjectMessage) message;
-            var shortMessageDTO = (ShortMessageDTO) objectMessage.getObject();
-            deliverMessage(shortMessageDTO);
+            deliverMessage(shortMessageDTOs);
         } catch (Exception e) {
             log.error("Parsing message failed: {}", e.getMessage(), e);
         }
