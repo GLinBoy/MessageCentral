@@ -1,5 +1,7 @@
 package com.glinboy.app.service.impl;
 
+import java.util.stream.Stream;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.jms.annotation.JmsListener;
@@ -7,6 +9,7 @@ import org.springframework.jms.core.JmsTemplate;
 
 import com.glinboy.app.config.ApplicationProperties;
 import com.glinboy.app.service.NotificationChannelService;
+import com.glinboy.app.service.NotificationService;
 import com.glinboy.app.service.dto.NotificationDTO;
 
 public abstract class AbstractNotificationChannelServiceImpl implements NotificationChannelService<NotificationDTO> {
@@ -42,5 +45,7 @@ public abstract class AbstractNotificationChannelServiceImpl implements Notifica
         } catch (Exception e) {
             log.error("Parsing message failed: {}", e.getMessage(), e);
         }
+        jmsTemplate.convertAndSend(NotificationService.TOPIC_NAME_SENT,
+                Stream.of(notificationDTOs).map(NotificationDTO::getId).toArray());
     }
 }
