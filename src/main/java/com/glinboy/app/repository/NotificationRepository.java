@@ -17,7 +17,7 @@ import com.glinboy.app.domain.enumeration.MessageStatus;
 public interface NotificationRepository extends JpaRepository<Notification, Long>, JpaSpecificationExecutor<Notification> {
 
     @Modifying
-    @Query("update Notification n set n.status = :status where n.id = :id")
-    void updateStatus(@Param(value = "id") long id, @Param(value = "status") MessageStatus status);
+    @Query("update Notification n set n.status = :status where n.id in :ids")
+    void updateStatus(@Param(value = "status") MessageStatus status, @Param(value = "ids") Long... ids);
 
 }
