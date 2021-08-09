@@ -8,6 +8,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.jms.annotation.JmsListener;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -127,5 +128,11 @@ public class NotificationServiceImpl implements NotificationService {
     public void delete(Long id) {
         log.debug("Request to delete Notification : {}", id);
         notificationRepository.deleteById(id);
+    }
+
+    @Transactional
+    @JmsListener(destination = NotificationService.TOPIC_NAME_SENT)
+    public void onMessageSent(Long... ids) {
+        this.notificationRepository.updateStatus(MessageStatus.SENT, ids);
     }
 }
