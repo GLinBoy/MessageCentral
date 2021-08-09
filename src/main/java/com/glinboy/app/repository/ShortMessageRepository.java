@@ -14,7 +14,7 @@ import org.springframework.stereotype.Repository;
 public interface ShortMessageRepository extends JpaRepository<ShortMessage, Long>, JpaSpecificationExecutor<ShortMessage> {
 
     @Modifying
-    @Query("update ShortMessage s set s.status = :status where s.id = :id")
-    void updateStatus(@Param(value = "id") long id, @Param(value = "status") MessageStatus status);
+    @Query("update ShortMessage s set s.status = :status where s.id in :ids")
+    void updateStatus(@Param(value = "status") MessageStatus status, @Param(value = "ids") Long... ids);
 
 }
