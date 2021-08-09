@@ -135,4 +135,10 @@ public class NotificationServiceImpl implements NotificationService {
     public void onMessageSent(Long... ids) {
         this.notificationRepository.updateStatus(MessageStatus.SENT, ids);
     }
+
+    @Transactional
+    @JmsListener(destination = NotificationService.TOPIC_NAME_FAILED)
+    public void onMessageFailed(Long... ids) {
+        this.notificationRepository.updateStatus(MessageStatus.FAILED, ids);
+    }
 }
