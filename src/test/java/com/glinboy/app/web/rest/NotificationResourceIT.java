@@ -37,6 +37,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.glinboy.app.IntegrationTest;
 import com.glinboy.app.domain.Notification;
 import com.glinboy.app.domain.NotificationData;
+import com.glinboy.app.domain.enumeration.MessageStatus;
 import com.glinboy.app.repository.NotificationRepository;
 import com.glinboy.app.security.AuthoritiesConstants;
 import com.glinboy.app.service.NotificationChannelService;
@@ -181,6 +182,7 @@ class NotificationResourceIT {
         assertThat(testNotification.getSubject()).isEqualTo(DEFAULT_SUBJECT);
         assertThat(testNotification.getContent()).isEqualTo(DEFAULT_CONTENT);
         assertThat(testNotification.getImage()).isEqualTo(DEFAULT_IMAGE);
+        assertThat(testNotification.getStatus()).isEqualTo(MessageStatus.IN_QUEUE);
     }
 
     @Test
