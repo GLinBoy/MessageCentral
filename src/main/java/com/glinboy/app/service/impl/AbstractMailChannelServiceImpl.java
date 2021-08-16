@@ -40,12 +40,12 @@ public abstract class AbstractMailChannelServiceImpl implements MailChannelServi
     public void onMessage(EmailDTO... emailDTO) {
         try {
             this.deliverMessage(emailDTO);
+            jmsTemplate.convertAndSend(EmailService.TOPIC_NAME_SENT,
+                    Stream.of(emailDTO).map(EmailDTO::getId).toArray());
         } catch (Exception e) {
             log.error("An error occurred while sending the message: {}", e.getMessage(), e);
             jmsTemplate.convertAndSend(EmailService.TOPIC_NAME_FAILED,
                     Stream.of(emailDTO).map(EmailDTO::getId).toArray());
         }
-        jmsTemplate.convertAndSend(EmailService.TOPIC_NAME_SENT,
-                Stream.of(emailDTO).map(EmailDTO::getId).toArray());
     }
 }
