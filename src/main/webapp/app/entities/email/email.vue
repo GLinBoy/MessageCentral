@@ -90,7 +90,11 @@
             <td>{{ email.receiver }}</td>
             <td>{{ email.subject }}</td>
             <td>{{ email.content }}</td>
-            <td v-text="$t('messageCentralApp.MessageStatus.' + email.status)">{{ email.status }}</td>
+            <td>
+              <b-badge :variant="getVariant(email.status)">
+                {{ email.status.replace('_', ' ') }}
+              </b-badge>
+            </td>
           </router-link>
         </tbody>
       </table>
