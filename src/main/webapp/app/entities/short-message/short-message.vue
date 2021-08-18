@@ -87,7 +87,11 @@
             </td>
             <td>{{ shortMessage.phoneNumber }}</td>
             <td>{{ shortMessage.content }}</td>
-            <td v-text="$t('messageCentralApp.MessageStatus.' + shortMessage.status)">{{ shortMessage.status }}</td>
+            <td>
+              <b-badge :variant="getVariant(shortMessage.status)">
+                {{ shortMessage.status.replace('_', ' ') }}
+              </b-badge>
+            </td>
           </router-link>
         </tbody>
       </table>
