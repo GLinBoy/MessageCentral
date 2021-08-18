@@ -28,7 +28,9 @@
             <span v-text="$t('messageCentralApp.email.status')">Status</span>
           </dt>
           <dd>
-            <span v-text="$t('messageCentralApp.MessageStatus.' + email.status)">{{ email.status }}</span>
+            <b-badge :variant="getVariant(email.status)">
+              {{ email && email.status ? email.status.replace('_', ' ') : '' }}
+            </b-badge>
           </dd>
         </dl>
         <button type="submit" v-on:click.prevent="previousState()" class="btn btn-info" data-cy="entityDetailsBackButton">
