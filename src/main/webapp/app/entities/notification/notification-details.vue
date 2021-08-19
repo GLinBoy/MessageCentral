@@ -40,7 +40,9 @@
             <span v-text="$t('messageCentralApp.notification.status')">Status</span>
           </dt>
           <dd>
-            <span v-text="$t('messageCentralApp.MessageStatus.' + notification.status)">{{ notification.status }}</span>
+            <b-badge :variant="getVariant(notification.status)">
+              {{ notification && notification.status ? notification.status.replace('_', ' ') : '' }}
+            </b-badge>
           </dd>
         </dl>
         <button type="submit" v-on:click.prevent="previousState()" class="btn btn-info" data-cy="entityDetailsBackButton">
