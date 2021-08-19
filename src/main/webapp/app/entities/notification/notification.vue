@@ -102,7 +102,11 @@
             <td>{{ notification.subject }}</td>
             <td>{{ notification.content }}</td>
             <td>{{ notification.image }}</td>
-            <td v-text="$t('messageCentralApp.MessageStatus.' + notification.status)">{{ notification.status }}</td>
+            <td>
+              <b-badge :variant="getVariant(notification.status)">
+                {{ notification.status.replace('_', ' ') }}
+              </b-badge>
+            </td>
           </router-link>
         </tbody>
       </table>
