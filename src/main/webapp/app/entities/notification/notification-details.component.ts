@@ -1,6 +1,7 @@
 import { Component, Vue, Inject } from 'vue-property-decorator';
 
 import { INotification } from '@/shared/model/notification.model';
+import { MessageStatus } from '@/shared/model/enumerations/message-status.model';
 import NotificationService from './notification.service';
 
 @Component
@@ -26,5 +27,17 @@ export default class NotificationDetails extends Vue {
 
   public previousState() {
     this.$router.go(-1);
+  }
+
+  public getVariant(status) {
+    if (MessageStatus.IN_QUEUE === status) {
+      return 'info';
+    } else if (MessageStatus.SENT === status) {
+      return 'success';
+    } else if (MessageStatus.FAILED === status) {
+      return 'danger';
+    } else {
+      return 'secondary';
+    }
   }
 }
