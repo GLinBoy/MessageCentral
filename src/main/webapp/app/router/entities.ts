@@ -9,6 +9,8 @@ const EmailUpdate = () => import('@/entities/email/email-update.vue');
 // prettier-ignore
 const EmailDetails = () => import('@/entities/email/email-details.vue');
 // prettier-ignore
+const EmailMultiple = () => import('@/entities/email/email-multiple.vue');
+// prettier-ignore
 const ShortMessage = () => import('@/entities/short-message/short-message.vue');
 // prettier-ignore
 const ShortMessageUpdate = () => import('@/entities/short-message/short-message-update.vue');
@@ -38,7 +40,7 @@ export default [
   {
     path: '/email/new',
     name: 'EmailCreate',
-    component: EmailUpdate,
+    component: EmailMultiple,
     meta: { authorities: [Authority.ADMIN, Authority.EMAIL_USER] },
   },
   {
