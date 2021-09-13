@@ -16,3 +16,14 @@ export class Email implements IEmail {
     public status?: MessageStatus | null
   ) {}
 }
+
+export interface IEmails {
+  receivers?: string[];
+  subject?: string;
+  content?: string;
+  status?: MessageStatus | null;
+}
+
+export class Emails implements IEmails {
+  constructor(public receivers?: string[], public subject?: string, public content?: string, public status?: MessageStatus | null) {}
+}
