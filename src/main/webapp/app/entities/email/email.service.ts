@@ -3,7 +3,7 @@ import axios from 'axios';
 import buildPaginationQueryOpts from '@/shared/sort/sorts';
 import buildSearchQueryOpts from '@/shared/search/searchs';
 
-import { IEmail } from '@/shared/model/email.model';
+import { IEmail, IEmails } from '@/shared/model/email.model';
 
 const baseApiUrl = 'api/emails';
 
@@ -79,6 +79,22 @@ export default class EmailService {
         .patch(`${baseApiUrl}/${entity.id}`, entity)
         .then(res => {
           resolve(res.data);
+        })
+        .catch(err => {
+          reject(err);
+        });
+    });
+  }
+
+  /**
+   * Create multiple Emails at once
+   */
+  public createMultiple(entity: IEmails[]): Promise {
+    return new Promise((resolve, reject) => {
+      axios
+        .post(`${baseApiUrl}/multiple`, entity)
+        .then(res => {
+          resolve();
         })
         .catch(err => {
           reject(err);
