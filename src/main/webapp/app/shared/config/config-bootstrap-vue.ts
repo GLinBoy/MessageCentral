@@ -29,6 +29,7 @@ import {
   BInputGroupAddon,
   VBTooltip,
   BFormTags,
+  BFormText,
 } from 'bootstrap-vue';
 
 export function initBootstrapVue(vue) {
@@ -62,5 +63,6 @@ export function initBootstrapVue(vue) {
   vue.component('b-input-group-text', BInputGroupText);
   vue.component('b-input-group-addon', BInputGroupAddon);
   vue.component('b-form-tags', BFormTags);
+  vue.component('b-form-text', BFormText);
   vue.directive('b-tooltip', VBTooltip);
 }
