@@ -32,32 +32,6 @@
             <b-form-text id="emails-seprate-by-help" class="mt-2 form-text text-muted font-weight-lighter">
               💡 Seprate by <kbd>Space</kbd> or <kbd>,</kbd> or <kbd>;</kbd>
             </b-form-text>
-            <!-- <div v-if="$v.emails.receivers.$anyDirty && $v.emails.receivers.$invalid">
-              <small class="form-text text-danger" v-if="!$v.emails.receivers.required" v-text="$t('entity.validation.required')">
-                This field is required.
-              </small>
-              <small
-                class="form-text text-danger"
-                v-if="!$v.emails.receivers.minLength"
-                v-text="$t('entity.validation.minlength', { min: 8 })"
-              >
-                This field is required to be at least 8 characters.
-              </small>
-              <small
-                class="form-text text-danger"
-                v-if="!$v.emails.receivers.maxLength"
-                v-text="$t('entity.validation.maxlength', { max: 128 })"
-              >
-                This field cannot be longer than 128 characters.
-              </small>
-              <small
-                class="form-text text-danger"
-                v-if="!$v.emails.receivers.pattern"
-                v-text="$t('entity.validation.pattern', { pattern: 'Receiver' })"
-              >
-                This field should follow pattern for "Receiver".
-              </small>
-            </div> -->
           </div>
           <div class="form-group">
             <label class="form-control-label" v-text="$t('messageCentralApp.email.subject')" for="email-subject">Subject</label>
