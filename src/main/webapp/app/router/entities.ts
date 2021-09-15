@@ -17,6 +17,8 @@ const ShortMessageUpdate = () => import('@/entities/short-message/short-message-
 // prettier-ignore
 const ShortMessageDetails = () => import('@/entities/short-message/short-message-details.vue');
 // prettier-ignore
+const ShortMessageMultiple = () => import('@/entities/short-message/short-message-multiple.vue');
+// prettier-ignore
 const Notification = () => import('@/entities/notification/notification.vue');
 // prettier-ignore
 const NotificationUpdate = () => import('@/entities/notification/notification-update.vue');
@@ -58,7 +60,7 @@ export default [
   {
     path: '/short-message/new',
     name: 'ShortMessageCreate',
-    component: ShortMessageUpdate,
+    component: ShortMessageMultiple,
     meta: { authorities: [Authority.ADMIN, Authority.SMS_USER] },
   },
   {
