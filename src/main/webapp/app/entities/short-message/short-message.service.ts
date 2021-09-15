@@ -13,7 +13,7 @@ export default class ShortMessageService {
       axios
         .get(`${baseApiUrl}/${id}`)
         .then(res => {
-          resolve(res.data);
+          resolve();
         })
         .catch(err => {
           reject(err);
@@ -77,6 +77,19 @@ export default class ShortMessageService {
     return new Promise<IShortMessage>((resolve, reject) => {
       axios
         .patch(`${baseApiUrl}/${entity.id}`, entity)
+        .then(res => {
+          resolve(res.data);
+        })
+        .catch(err => {
+          reject(err);
+        });
+    });
+  }
+
+  public createMultiple(entity: IShortMessage[]): Promise<IShortMessage> {
+    return new Promise<IShortMessage>((resolve, reject) => {
+      axios
+        .post(`${baseApiUrl}/multiple`, entity)
         .then(res => {
           resolve(res.data);
         })
