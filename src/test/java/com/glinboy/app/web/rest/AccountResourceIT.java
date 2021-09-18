@@ -8,23 +8,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import java.time.Instant;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Optional;
-import java.util.Set;
-
-import org.apache.commons.lang3.RandomStringUtils;
-import org.junit.jupiter.api.Disabled;
-import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.http.MediaType;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.test.context.support.WithMockUser;
-import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.transaction.annotation.Transactional;
-
 import com.glinboy.app.IntegrationTest;
 import com.glinboy.app.config.Constants;
 import com.glinboy.app.domain.User;
@@ -36,6 +19,21 @@ import com.glinboy.app.service.dto.AdminUserDTO;
 import com.glinboy.app.service.dto.PasswordChangeDTO;
 import com.glinboy.app.web.rest.vm.KeyAndPasswordVM;
 import com.glinboy.app.web.rest.vm.ManagedUserVM;
+import java.time.Instant;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Optional;
+import java.util.Set;
+import org.apache.commons.lang3.RandomStringUtils;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.http.MediaType;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * Integration tests for the {@link AccountResource} REST controller.
@@ -76,12 +74,10 @@ class AccountResourceIT {
         restAccountMockMvc
             .perform(
                 get("/api/authenticate")
-                    .with(
-                        request -> {
-                            request.setRemoteUser(TEST_USER_LOGIN);
-                            return request;
-                        }
-                    )
+                    .with(request -> {
+                        request.setRemoteUser(TEST_USER_LOGIN);
+                        return request;
+                    })
                     .accept(MediaType.APPLICATION_JSON)
             )
             .andExpect(status().isOk())

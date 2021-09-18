@@ -50,6 +50,8 @@ public class ShortMessageCriteria implements Serializable, Criteria {
 
     private MessageStatusFilter status;
 
+    private Boolean distinct;
+
     public ShortMessageCriteria() {}
 
     public ShortMessageCriteria(ShortMessageCriteria other) {
@@ -57,6 +59,7 @@ public class ShortMessageCriteria implements Serializable, Criteria {
         this.phoneNumber = other.phoneNumber == null ? null : other.phoneNumber.copy();
         this.content = other.content == null ? null : other.content.copy();
         this.status = other.status == null ? null : other.status.copy();
+        this.distinct = other.distinct;
     }
 
     @Override
@@ -124,6 +127,14 @@ public class ShortMessageCriteria implements Serializable, Criteria {
         this.status = status;
     }
 
+    public Boolean getDistinct() {
+        return distinct;
+    }
+
+    public void setDistinct(Boolean distinct) {
+        this.distinct = distinct;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -137,13 +148,14 @@ public class ShortMessageCriteria implements Serializable, Criteria {
             Objects.equals(id, that.id) &&
             Objects.equals(phoneNumber, that.phoneNumber) &&
             Objects.equals(content, that.content) &&
-            Objects.equals(status, that.status)
+            Objects.equals(status, that.status) &&
+            Objects.equals(distinct, that.distinct)
         );
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, phoneNumber, content, status);
+        return Objects.hash(id, phoneNumber, content, status, distinct);
     }
 
     // prettier-ignore
@@ -154,6 +166,7 @@ public class ShortMessageCriteria implements Serializable, Criteria {
             (phoneNumber != null ? "phoneNumber=" + phoneNumber + ", " : "") +
             (content != null ? "content=" + content + ", " : "") +
             (status != null ? "status=" + status + ", " : "") +
+            (distinct != null ? "distinct=" + distinct + ", " : "") +
             "}";
     }
 }

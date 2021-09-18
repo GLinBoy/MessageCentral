@@ -1,15 +1,5 @@
 package com.glinboy.app.service;
 
-import java.util.List;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.jpa.domain.Specification;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
 // for static metamodels
 import com.glinboy.app.domain.Email;
 import com.glinboy.app.domain.Email_;
@@ -17,7 +7,14 @@ import com.glinboy.app.repository.EmailRepository;
 import com.glinboy.app.service.criteria.EmailCriteria;
 import com.glinboy.app.service.dto.EmailDTO;
 import com.glinboy.app.service.mapper.EmailMapper;
-
+import java.util.List;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import tech.jhipster.service.QueryService;
 
 /**
@@ -97,6 +94,10 @@ public class EmailQueryService extends QueryService<Email> {
     protected Specification<Email> createSpecification(EmailCriteria criteria) {
         Specification<Email> specification = Specification.where(null);
         if (criteria != null) {
+            // This has to be called first, because the distinct method returns null
+            if (criteria.getDistinct() != null) {
+                specification = specification.and(distinct(criteria.getDistinct()));
+            }
             if (criteria.getId() != null) {
                 specification = specification.and(buildRangeSpecification(criteria.getId(), Email_.id));
             }
@@ -117,5 +118,5 @@ public class EmailQueryService extends QueryService<Email> {
     public Page<EmailDTO> findBySearch(Specification<Email> specs, Pageable page) {
         log.debug("find by specification : {}, page: {}", specs, page);
         return emailRepository.findAll(specs, page).map(emailMapper::toDto);
-	}
+    }
 }

@@ -1,15 +1,5 @@
 package com.glinboy.app.service;
 
-import java.util.List;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.jpa.domain.Specification;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
 // for static metamodels
 import com.glinboy.app.domain.ShortMessage;
 import com.glinboy.app.domain.ShortMessage_;
@@ -17,7 +7,14 @@ import com.glinboy.app.repository.ShortMessageRepository;
 import com.glinboy.app.service.criteria.ShortMessageCriteria;
 import com.glinboy.app.service.dto.ShortMessageDTO;
 import com.glinboy.app.service.mapper.ShortMessageMapper;
-
+import java.util.List;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import tech.jhipster.service.QueryService;
 
 /**
@@ -97,6 +94,10 @@ public class ShortMessageQueryService extends QueryService<ShortMessage> {
     protected Specification<ShortMessage> createSpecification(ShortMessageCriteria criteria) {
         Specification<ShortMessage> specification = Specification.where(null);
         if (criteria != null) {
+            // This has to be called first, because the distinct method returns null
+            if (criteria.getDistinct() != null) {
+                specification = specification.and(distinct(criteria.getDistinct()));
+            }
             if (criteria.getId() != null) {
                 specification = specification.and(buildRangeSpecification(criteria.getId(), ShortMessage_.id));
             }
@@ -117,5 +118,5 @@ public class ShortMessageQueryService extends QueryService<ShortMessage> {
     public Page<ShortMessageDTO> findBySearch(Specification<ShortMessage> specs, Pageable page) {
         log.debug("find by specification : {}, page: {}", specs, page);
         return shortMessageRepository.findAll(specs, page).map(shortMessageMapper::toDto);
-	}
+    }
 }

@@ -1,17 +1,5 @@
 package com.glinboy.app.service.impl;
 
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.jms.annotation.JmsListener;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
 import com.glinboy.app.domain.Notification;
 import com.glinboy.app.domain.NotificationData;
 import com.glinboy.app.domain.enumeration.MessageStatus;
@@ -22,6 +10,16 @@ import com.glinboy.app.service.dto.NotificationDTO;
 import com.glinboy.app.service.dto.NotificationsDTO;
 import com.glinboy.app.service.mapper.NotificationDataMapper;
 import com.glinboy.app.service.mapper.NotificationMapper;
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.jms.annotation.JmsListener;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * Service Implementation for managing {@link Notification}.
@@ -40,10 +38,12 @@ public class NotificationServiceImpl implements NotificationService {
 
     private final NotificationChannelService<NotificationDTO> notificationProviderService;
 
-    public NotificationServiceImpl(NotificationRepository notificationRepository,
-            NotificationMapper notificationMapper,
-            NotificationChannelService<NotificationDTO> notificationProviderService,
-            NotificationDataMapper notificationDataMapper) {
+    public NotificationServiceImpl(
+        NotificationRepository notificationRepository,
+        NotificationMapper notificationMapper,
+        NotificationChannelService<NotificationDTO> notificationProviderService,
+        NotificationDataMapper notificationDataMapper
+    ) {
         this.notificationRepository = notificationRepository;
         this.notificationMapper = notificationMapper;
         this.notificationProviderService = notificationProviderService;
@@ -54,7 +54,7 @@ public class NotificationServiceImpl implements NotificationService {
     public NotificationDTO save(NotificationDTO notificationDTO) {
         log.debug("Request to save Notification : {}", notificationDTO);
         Notification notification = notificationMapper.toEntity(notificationDTO);
-        if(notification.getId() == null) {
+        if (notification.getId() == null) {
             notification.setStatus(MessageStatus.IN_QUEUE);
         }
         notification.getData().forEach(d -> d.setNotification(notification));
@@ -66,10 +66,14 @@ public class NotificationServiceImpl implements NotificationService {
     @Override
     public List<NotificationDTO> save(List<NotificationsDTO> notificationsDTO) {
         log.debug("Request to save Notification : {}", notificationsDTO);
-        List<Notification> notifications = notificationsDTO.stream()
-                .flatMap( ns -> ns.getReceivers().keySet()
-                    .stream().filter(rk -> rk.length() <= 64 &&
-                            ns.getReceivers().get(rk).length() <= 164)
+        List<Notification> notifications = notificationsDTO
+            .stream()
+            .flatMap(ns ->
+                ns
+                    .getReceivers()
+                    .keySet()
+                    .stream()
+                    .filter(rk -> rk.length() <= 64 && ns.getReceivers().get(rk).length() <= 164)
                     .map(r -> {
                         Notification n = new Notification();
                         n.setUsername(r);
@@ -78,19 +82,26 @@ public class NotificationServiceImpl implements NotificationService {
                         n.setContent(ns.getContent());
                         n.setImage(ns.getImage());
                         n.setStatus(MessageStatus.IN_QUEUE);
-                        n.setData(ns.getData().stream().map(ndto -> {
-                            NotificationData nd = notificationDataMapper.toEntity(ndto);
-                            nd.setNotification(n);
-                            return nd;
-                            }).collect(Collectors.toSet()));
+                        n.setData(
+                            ns
+                                .getData()
+                                .stream()
+                                .map(ndto -> {
+                                    NotificationData nd = notificationDataMapper.toEntity(ndto);
+                                    nd.setNotification(n);
+                                    return nd;
+                                })
+                                .collect(Collectors.toSet())
+                        );
                         return n;
-                        }))
-                .collect(Collectors.toList());
-            log.info("List of {} Notification: {}", notifications.size(), notifications);
-            notifications = this.notificationRepository.saveAll(notifications);
-            List<NotificationDTO> dtoList = this.notificationMapper.toDto(notifications);
-            this.notificationProviderService.sendMessage(dtoList.toArray(new NotificationDTO[dtoList.size()]));
-            return dtoList;
+                    })
+            )
+            .collect(Collectors.toList());
+        log.info("List of {} Notification: {}", notifications.size(), notifications);
+        notifications = this.notificationRepository.saveAll(notifications);
+        List<NotificationDTO> dtoList = this.notificationMapper.toDto(notifications);
+        this.notificationProviderService.sendMessage(dtoList.toArray(new NotificationDTO[dtoList.size()]));
+        return dtoList;
     }
 
     @Override
@@ -99,13 +110,11 @@ public class NotificationServiceImpl implements NotificationService {
 
         return notificationRepository
             .findById(notificationDTO.getId())
-            .map(
-                existingNotification -> {
-                    notificationMapper.partialUpdate(existingNotification, notificationDTO);
+            .map(existingNotification -> {
+                notificationMapper.partialUpdate(existingNotification, notificationDTO);
 
-                    return existingNotification;
-                }
-            )
+                return existingNotification;
+            })
             .map(notificationRepository::save)
             .map(notificationMapper::toDto);
     }
