@@ -7,7 +7,6 @@ import com.glinboy.app.service.MailService;
 import com.glinboy.app.service.UserService;
 import com.glinboy.app.service.dto.AdminUserDTO;
 import com.glinboy.app.service.dto.PasswordChangeDTO;
-import com.glinboy.app.service.dto.UserDTO;
 import com.glinboy.app.web.rest.errors.*;
 import com.glinboy.app.web.rest.vm.KeyAndPasswordVM;
 import com.glinboy.app.web.rest.vm.ManagedUserVM;

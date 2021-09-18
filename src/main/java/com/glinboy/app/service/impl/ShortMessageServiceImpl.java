@@ -45,13 +45,11 @@ public class ShortMessageServiceImpl implements ShortMessageService {
 
         return shortMessageRepository
             .findById(shortMessageDTO.getId())
-            .map(
-                existingShortMessage -> {
-                    shortMessageMapper.partialUpdate(existingShortMessage, shortMessageDTO);
+            .map(existingShortMessage -> {
+                shortMessageMapper.partialUpdate(existingShortMessage, shortMessageDTO);
 
-                    return existingShortMessage;
-                }
-            )
+                return existingShortMessage;
+            })
             .map(shortMessageRepository::save)
             .map(shortMessageMapper::toDto);
     }

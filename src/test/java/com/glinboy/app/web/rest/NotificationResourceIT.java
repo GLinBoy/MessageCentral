@@ -741,7 +741,14 @@ class NotificationResourceIT {
     void getAllNotificationsByDataIsEqualToSomething() throws Exception {
         // Initialize the database
         notificationRepository.saveAndFlush(notification);
-        NotificationData data = NotificationDataResourceIT.createEntity(em);
+        NotificationData data;
+        if (TestUtil.findAll(em, NotificationData.class).isEmpty()) {
+            data = NotificationDataResourceIT.createEntity(em);
+            em.persist(data);
+            em.flush();
+        } else {
+            data = TestUtil.findAll(em, NotificationData.class).get(0);
+        }
         em.persist(data);
         em.flush();
         notification.addData(data);

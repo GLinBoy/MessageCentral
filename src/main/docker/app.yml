@@ -17,7 +17,7 @@ services:
     ports:
       - 127.0.0.1:8080:8080
   messagecentral-postgresql:
-    image: postgres:13.3
+    image: postgres:13.4
     # volumes:
     #   - ~/volumes/jhipster/MessageCentral/postgresql/:/var/lib/postgresql/data/
     environment:
@@ -29,7 +29,7 @@ services:
     ports:
       - 127.0.0.1:5432:5432
   jhipster-registry:
-    image: jhipster/jhipster-registry:v6.8.0
+    image: jhipster/jhipster-registry:v7.0.0
     volumes:
       - ./central-server-config:/central-config
     # When run with the "dev" Spring profile, the JHipster Registry will

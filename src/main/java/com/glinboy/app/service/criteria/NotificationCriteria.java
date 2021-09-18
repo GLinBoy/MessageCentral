@@ -58,6 +58,8 @@ public class NotificationCriteria implements Serializable, Criteria {
 
     private LongFilter dataId;
 
+    private Boolean distinct;
+
     public NotificationCriteria() {}
 
     public NotificationCriteria(NotificationCriteria other) {
@@ -69,6 +71,7 @@ public class NotificationCriteria implements Serializable, Criteria {
         this.image = other.image == null ? null : other.image.copy();
         this.status = other.status == null ? null : other.status.copy();
         this.dataId = other.dataId == null ? null : other.dataId.copy();
+        this.distinct = other.distinct;
     }
 
     @Override
@@ -196,6 +199,14 @@ public class NotificationCriteria implements Serializable, Criteria {
         this.dataId = dataId;
     }
 
+    public Boolean getDistinct() {
+        return distinct;
+    }
+
+    public void setDistinct(Boolean distinct) {
+        this.distinct = distinct;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -213,13 +224,14 @@ public class NotificationCriteria implements Serializable, Criteria {
             Objects.equals(content, that.content) &&
             Objects.equals(image, that.image) &&
             Objects.equals(status, that.status) &&
-            Objects.equals(dataId, that.dataId)
+            Objects.equals(dataId, that.dataId) &&
+            Objects.equals(distinct, that.distinct)
         );
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, username, token, subject, content, image, status, dataId);
+        return Objects.hash(id, username, token, subject, content, image, status, dataId, distinct);
     }
 
     // prettier-ignore
@@ -234,6 +246,7 @@ public class NotificationCriteria implements Serializable, Criteria {
             (image != null ? "image=" + image + ", " : "") +
             (status != null ? "status=" + status + ", " : "") +
             (dataId != null ? "dataId=" + dataId + ", " : "") +
+            (distinct != null ? "distinct=" + distinct + ", " : "") +
             "}";
     }
 }
