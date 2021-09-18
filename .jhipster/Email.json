@@ -1,0 +1,42 @@
+{
+  "fields": [
+    {
+      "fieldName": "receiver",
+      "fieldType": "String",
+      "fieldValidateRules": ["required", "minlength", "maxlength", "pattern"],
+      "fieldValidateRulesMinlength": "8",
+      "fieldValidateRulesMaxlength": "128",
+      "fieldValidateRulesPattern": "^[a-zA-Z0-9_+&*-]+(?:\\.[a-zA-Z0-9_+&*-]+)*@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,7}$"
+    },
+    {
+      "fieldName": "subject",
+      "fieldType": "String",
+      "fieldValidateRules": ["required", "minlength", "maxlength"],
+      "fieldValidateRulesMinlength": "4",
+      "fieldValidateRulesMaxlength": "128"
+    },
+    {
+      "fieldName": "content",
+      "fieldType": "byte[]",
+      "fieldTypeBlobContent": "text",
+      "fieldValidateRules": ["required"]
+    },
+    {
+      "fieldName": "status",
+      "fieldType": "MessageStatus",
+      "fieldValues": "IN_QUEUE,SENT,FAILED"
+    }
+  ],
+  "relationships": [],
+  "service": "serviceImpl",
+  "dto": "mapstruct",
+  "jpaMetamodelFiltering": true,
+  "readOnly": false,
+  "pagination": "pagination",
+  "name": "Email",
+  "changelogDate": "20210415085652",
+  "entityTableName": "email",
+  "fluentMethods": true,
+  "embedded": false,
+  "applications": ["MessageCentral"]
+}
