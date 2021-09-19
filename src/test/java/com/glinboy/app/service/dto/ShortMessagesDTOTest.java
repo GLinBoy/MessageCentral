@@ -2,11 +2,10 @@ package com.glinboy.app.service.dto;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import java.util.Set;
-
 import com.glinboy.app.web.rest.TestUtil;
 import com.google.common.collect.Sets;
-
+import java.util.HashSet;
+import java.util.Set;
 import org.junit.jupiter.api.Test;
 
 class ShortMessagesDTOTest {
@@ -25,7 +24,7 @@ class ShortMessagesDTOTest {
         numbers.add("+989129977335");
         shortMessagesDTO2.setPhoneNumber(numbers2);
         assertThat(shortMessagesDTO1).isNotEqualTo(shortMessagesDTO2);
-        shortMessagesDTO1.setPhoneNumber(Sets.newHashSet());
+        shortMessagesDTO1.setPhoneNumber(new HashSet<>());
         assertThat(shortMessagesDTO1).isNotEqualTo(shortMessagesDTO2);
     }
 }
