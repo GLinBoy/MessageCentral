@@ -96,7 +96,7 @@
         <twilio-version>8.19.1</twilio-version>
         <kavenegar.version>v2.0.3</kavenegar.version>
         <firebase-admin.version>8.0.1</firebase-admin.version>
-        <spring-search.version>0.2.4</spring-search.version>
+        <rsql-parser.version>2.1.0</rsql-parser.version>
     </properties>
 
     <dependencyManagement>
@@ -370,9 +370,9 @@
             <version>${firebase-admin.version}</version>
         </dependency>
         <dependency>
-            <groupId>com.sipios</groupId>
-            <artifactId>spring-search</artifactId>
-            <version>${spring-search.version}</version>
+            <groupId>cz.jirutka.rsql</groupId>
+            <artifactId>rsql-parser</artifactId>
+            <version>${rsql-parser.version}</version>
         </dependency>
     </dependencies>
 
