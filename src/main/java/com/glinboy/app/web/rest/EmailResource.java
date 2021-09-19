@@ -8,7 +8,6 @@ import com.glinboy.app.service.EmailService;
 import com.glinboy.app.service.dto.EmailDTO;
 import com.glinboy.app.service.dto.EmailsDTO;
 import com.glinboy.app.web.rest.errors.BadRequestAlertException;
-import com.sipios.springsearch.anotation.SearchSpec;
 import cz.jirutka.rsql.parser.RSQLParser;
 import cz.jirutka.rsql.parser.ast.Node;
 import java.net.URI;
@@ -19,6 +18,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -27,7 +27,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
-import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -199,8 +198,12 @@ public class EmailResource {
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the count in body.
      */
     @GetMapping("/emails/count")
-    public ResponseEntity<Long> countEmails(@SearchSpec Specification<Email> specs) {
-        log.debug("REST request to count Emails by specification: {}", specs);
+    public ResponseEntity<Long> countEmails(@RequestParam(value = "query", required = false, defaultValue = "") String query) {
+        Specification<Email> specs = Specification.where(null);
+        if (!StringUtils.isBlank(query)) {
+            Node rootNode = new RSQLParser().parse(query);
+            specs = rootNode.accept(new CustomRsqlVisitor<Email>());
+        }
         return ResponseEntity.ok().body(emailQueryService.countBySpecification(specs));
     }
 
