@@ -1,15 +1,24 @@
 package com.glinboy.app.web.rest;
 
+import com.glinboy.app.domain.Email;
+import com.glinboy.app.repository.EmailRepository;
+import com.glinboy.app.rsql.CustomRsqlVisitor;
+import com.glinboy.app.service.EmailQueryService;
+import com.glinboy.app.service.EmailService;
+import com.glinboy.app.service.dto.EmailDTO;
+import com.glinboy.app.service.dto.EmailsDTO;
+import com.glinboy.app.web.rest.errors.BadRequestAlertException;
+import com.sipios.springsearch.anotation.SearchSpec;
+import cz.jirutka.rsql.parser.RSQLParser;
+import cz.jirutka.rsql.parser.ast.Node;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
-
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -18,23 +27,15 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
-
-import com.glinboy.app.domain.Email;
-import com.glinboy.app.repository.EmailRepository;
-import com.glinboy.app.service.EmailQueryService;
-import com.glinboy.app.service.EmailService;
-import com.glinboy.app.service.dto.EmailDTO;
-import com.glinboy.app.service.dto.EmailsDTO;
-import com.glinboy.app.web.rest.errors.BadRequestAlertException;
-import com.sipios.springsearch.anotation.SearchSpec;
-
 import tech.jhipster.web.util.HeaderUtil;
 import tech.jhipster.web.util.PaginationUtil;
 import tech.jhipster.web.util.ResponseUtil;
@@ -94,8 +95,7 @@ public class EmailResource {
      */
     @PostMapping("/emails/multiple")
     public ResponseEntity<Void> createEmails(@Valid @RequestBody List<EmailsDTO> emailsDTO) throws URISyntaxException {
-        log.debug("REST request to save Emails : {}",
-                emailsDTO.stream().map(EmailsDTO::toString).collect(Collectors.joining(",\n")));
+        log.debug("REST request to save Emails : {}", emailsDTO.stream().map(EmailsDTO::toString).collect(Collectors.joining(",\n")));
         emailService.save(emailsDTO);
         return ResponseEntity.ok().build();
     }
@@ -110,7 +110,7 @@ public class EmailResource {
      * or with status {@code 500 (Internal Server Error)} if the emailDTO couldn't be updated.
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
-//    @PutMapping("/emails/{id}")
+    //    @PutMapping("/emails/{id}")
     public ResponseEntity<EmailDTO> updateEmail(
         @PathVariable(value = "id", required = false) final Long id,
         @Valid @RequestBody EmailDTO emailDTO
@@ -145,7 +145,7 @@ public class EmailResource {
      * or with status {@code 500 (Internal Server Error)} if the emailDTO couldn't be updated.
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
-//    @PatchMapping(value = "/emails/{id}", consumes = "application/merge-patch+json")
+    //    @PatchMapping(value = "/emails/{id}", consumes = "application/merge-patch+json")
     public ResponseEntity<EmailDTO> partialUpdateEmail(
         @PathVariable(value = "id", required = false) final Long id,
         @NotNull @RequestBody EmailDTO emailDTO
@@ -178,8 +178,15 @@ public class EmailResource {
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of emails in body.
      */
     @GetMapping("/emails")
-    public ResponseEntity<List<EmailDTO>> getAllEmails(@SearchSpec Specification<Email> specs, Pageable pageable) {
-        log.debug("REST request to search Emails by criteria: {}", specs);
+    public ResponseEntity<List<EmailDTO>> getAllEmails(
+        Pageable pageable,
+        @RequestParam(value = "query", required = false, defaultValue = "") String query
+    ) {
+        Specification<Email> specs = Specification.where(null);
+        if (!StringUtils.isBlank(query)) {
+            Node rootNode = new RSQLParser().parse(query);
+            specs = rootNode.accept(new CustomRsqlVisitor<Email>());
+        }
         Page<EmailDTO> page = emailQueryService.findBySearch(specs, pageable);
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
         return ResponseEntity.ok().headers(headers).body(page.getContent());
@@ -216,7 +223,7 @@ public class EmailResource {
      * @param id the id of the emailDTO to delete.
      * @return the {@link ResponseEntity} with status {@code 204 (NO_CONTENT)}.
      */
-//    @DeleteMapping("/emails/{id}")
+    //    @DeleteMapping("/emails/{id}")
     public ResponseEntity<Void> deleteEmail(@PathVariable Long id) {
         log.debug("REST request to delete Email : {}", id);
         emailService.delete(id);
