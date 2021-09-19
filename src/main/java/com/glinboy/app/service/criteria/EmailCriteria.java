@@ -50,6 +50,8 @@ public class EmailCriteria implements Serializable, Criteria {
 
     private MessageStatusFilter status;
 
+    private Boolean distinct;
+
     public EmailCriteria() {}
 
     public EmailCriteria(EmailCriteria other) {
@@ -57,6 +59,7 @@ public class EmailCriteria implements Serializable, Criteria {
         this.receiver = other.receiver == null ? null : other.receiver.copy();
         this.subject = other.subject == null ? null : other.subject.copy();
         this.status = other.status == null ? null : other.status.copy();
+        this.distinct = other.distinct;
     }
 
     @Override
@@ -124,6 +127,14 @@ public class EmailCriteria implements Serializable, Criteria {
         this.status = status;
     }
 
+    public Boolean getDistinct() {
+        return distinct;
+    }
+
+    public void setDistinct(Boolean distinct) {
+        this.distinct = distinct;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -137,13 +148,14 @@ public class EmailCriteria implements Serializable, Criteria {
             Objects.equals(id, that.id) &&
             Objects.equals(receiver, that.receiver) &&
             Objects.equals(subject, that.subject) &&
-            Objects.equals(status, that.status)
+            Objects.equals(status, that.status) &&
+            Objects.equals(distinct, that.distinct)
         );
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, receiver, subject, status);
+        return Objects.hash(id, receiver, subject, status, distinct);
     }
 
     // prettier-ignore
@@ -154,6 +166,7 @@ public class EmailCriteria implements Serializable, Criteria {
             (receiver != null ? "receiver=" + receiver + ", " : "") +
             (subject != null ? "subject=" + subject + ", " : "") +
             (status != null ? "status=" + status + ", " : "") +
+            (distinct != null ? "distinct=" + distinct + ", " : "") +
             "}";
     }
 }

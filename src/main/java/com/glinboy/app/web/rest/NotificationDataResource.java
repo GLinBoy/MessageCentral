@@ -106,7 +106,7 @@ public class NotificationDataResource {
      * or with status {@code 500 (Internal Server Error)} if the notificationData couldn't be updated.
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
-    @PatchMapping(value = "/notification-data/{id}", consumes = "application/merge-patch+json")
+    @PatchMapping(value = "/notification-data/{id}", consumes = { "application/json", "application/merge-patch+json" })
     public ResponseEntity<NotificationData> partialUpdateNotificationData(
         @PathVariable(value = "id", required = false) final Long id,
         @NotNull @RequestBody NotificationData notificationData
@@ -125,18 +125,16 @@ public class NotificationDataResource {
 
         Optional<NotificationData> result = notificationDataRepository
             .findById(notificationData.getId())
-            .map(
-                existingNotificationData -> {
-                    if (notificationData.getKey() != null) {
-                        existingNotificationData.setKey(notificationData.getKey());
-                    }
-                    if (notificationData.getValue() != null) {
-                        existingNotificationData.setValue(notificationData.getValue());
-                    }
-
-                    return existingNotificationData;
+            .map(existingNotificationData -> {
+                if (notificationData.getKey() != null) {
+                    existingNotificationData.setKey(notificationData.getKey());
                 }
-            )
+                if (notificationData.getValue() != null) {
+                    existingNotificationData.setValue(notificationData.getValue());
+                }
+
+                return existingNotificationData;
+            })
             .map(notificationDataRepository::save);
 
         return ResponseUtil.wrapOrNotFound(

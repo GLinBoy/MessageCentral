@@ -1,17 +1,5 @@
 package com.glinboy.app.service;
 
-import java.util.List;
-
-import javax.persistence.criteria.JoinType;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.jpa.domain.Specification;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
 // for static metamodels
 import com.glinboy.app.domain.Notification;
 import com.glinboy.app.domain.NotificationData_;
@@ -20,7 +8,15 @@ import com.glinboy.app.repository.NotificationRepository;
 import com.glinboy.app.service.criteria.NotificationCriteria;
 import com.glinboy.app.service.dto.NotificationDTO;
 import com.glinboy.app.service.mapper.NotificationMapper;
-
+import java.util.List;
+import javax.persistence.criteria.JoinType;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import tech.jhipster.service.QueryService;
 
 /**
@@ -100,6 +96,10 @@ public class NotificationQueryService extends QueryService<Notification> {
     protected Specification<Notification> createSpecification(NotificationCriteria criteria) {
         Specification<Notification> specification = Specification.where(null);
         if (criteria != null) {
+            // This has to be called first, because the distinct method returns null
+            if (criteria.getDistinct() != null) {
+                specification = specification.and(distinct(criteria.getDistinct()));
+            }
             if (criteria.getId() != null) {
                 specification = specification.and(buildRangeSpecification(criteria.getId(), Notification_.id));
             }
@@ -138,5 +138,5 @@ public class NotificationQueryService extends QueryService<Notification> {
     public Page<NotificationDTO> findBySearch(Specification<Notification> specs, Pageable page) {
         log.debug("find by specification : {}, page: {}", specs, page);
         return notificationRepository.findAll(specs, page).map(notificationMapper::toDto);
-	}
+    }
 }

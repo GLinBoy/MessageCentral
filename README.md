@@ -1,6 +1,6 @@
 # MessageCentral
 
-This application was generated using JHipster 7.1.0, you can find documentation and help at [https://www.jhipster.tech/documentation-archive/v7.1.0](https://www.jhipster.tech/documentation-archive/v7.1.0).
+This application was generated using JHipster 7.2.0, you can find documentation and help at [https://www.jhipster.tech/documentation-archive/v7.2.0](https://www.jhipster.tech/documentation-archive/v7.2.0).
 
 ## Development
 
@@ -68,6 +68,14 @@ Then you would import the JS and CSS files specified in library's installation i
 Note: There are still a few other things remaining to do for Leaflet that we won't detail here.
 
 For further instructions on how to develop with JHipster, have a look at [Using JHipster in development][].
+
+### JHipster Control Center
+
+JHipster Control Center can help you manage and control your application(s). You can start a local control center server (accessible on http://localhost:7419) with:
+
+```
+docker-compose -f src/main/docker/jhipster-control-center.yml up
+```
 
 ### Doing API-First development using openapi-generator
 
@@ -192,21 +200,21 @@ For more information refer to [Using Docker and Docker-Compose][], this page als
 To configure CI for your project, run the ci-cd sub-generator (`jhipster ci-cd`), this will let you generate configuration files for a number of Continuous Integration systems. Consult the [Setting up Continuous Integration][] page for more information.
 
 [jhipster homepage and latest documentation]: https://www.jhipster.tech
-[jhipster 7.1.0 archive]: https://www.jhipster.tech/documentation-archive/v7.1.0
-[using jhipster in development]: https://www.jhipster.tech/documentation-archive/v7.1.0/development/
-[service discovery and configuration with the jhipster-registry]: https://www.jhipster.tech/documentation-archive/v7.1.0/microservices-architecture/#jhipster-registry
-[using docker and docker-compose]: https://www.jhipster.tech/documentation-archive/v7.1.0/docker-compose
-[using jhipster in production]: https://www.jhipster.tech/documentation-archive/v7.1.0/production/
-[running tests page]: https://www.jhipster.tech/documentation-archive/v7.1.0/running-tests/
-[code quality page]: https://www.jhipster.tech/documentation-archive/v7.1.0/code-quality/
-[setting up continuous integration]: https://www.jhipster.tech/documentation-archive/v7.1.0/setting-up-ci/
+[jhipster 7.2.0 archive]: https://www.jhipster.tech/documentation-archive/v7.2.0
+[using jhipster in development]: https://www.jhipster.tech/documentation-archive/v7.2.0/development/
+[service discovery and configuration with the jhipster-registry]: https://www.jhipster.tech/documentation-archive/v7.2.0/microservices-architecture/#jhipster-registry
+[using docker and docker-compose]: https://www.jhipster.tech/documentation-archive/v7.2.0/docker-compose
+[using jhipster in production]: https://www.jhipster.tech/documentation-archive/v7.2.0/production/
+[running tests page]: https://www.jhipster.tech/documentation-archive/v7.2.0/running-tests/
+[code quality page]: https://www.jhipster.tech/documentation-archive/v7.2.0/code-quality/
+[setting up continuous integration]: https://www.jhipster.tech/documentation-archive/v7.2.0/setting-up-ci/
 [node.js]: https://nodejs.org/
+[npm]: https://www.npmjs.com/
 [webpack]: https://webpack.github.io/
 [browsersync]: https://www.browsersync.io/
 [jest]: https://facebook.github.io/jest/
-[jasmine]: https://jasmine.github.io/2.0/introduction.html
 [leaflet]: https://leafletjs.com/
 [definitelytyped]: https://definitelytyped.org/
 [openapi-generator]: https://openapi-generator.tech
 [swagger-editor]: https://editor.swagger.io
-[doing api-first development]: https://www.jhipster.tech/documentation-archive/v7.1.0/doing-api-first-development/
+[doing api-first development]: https://www.jhipster.tech/documentation-archive/v7.2.0/doing-api-first-development/
