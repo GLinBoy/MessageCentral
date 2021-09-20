@@ -1,14 +1,24 @@
 package com.glinboy.app.web.rest;
 
+import com.glinboy.app.domain.ShortMessage;
+import com.glinboy.app.repository.ShortMessageRepository;
+import com.glinboy.app.rsql.CustomRsqlVisitor;
+import com.glinboy.app.service.ShortMessageQueryService;
+import com.glinboy.app.service.ShortMessageService;
+import com.glinboy.app.service.dto.ShortMessageDTO;
+import com.glinboy.app.service.dto.ShortMessagesDTO;
+import com.glinboy.app.web.rest.errors.BadRequestAlertException;
+import com.sipios.springsearch.anotation.SearchSpec;
+import cz.jirutka.rsql.parser.RSQLParser;
+import cz.jirutka.rsql.parser.ast.Node;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
-
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
-
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -22,18 +32,9 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
-
-import com.glinboy.app.domain.ShortMessage;
-import com.glinboy.app.repository.ShortMessageRepository;
-import com.glinboy.app.service.ShortMessageQueryService;
-import com.glinboy.app.service.ShortMessageService;
-import com.glinboy.app.service.dto.ShortMessageDTO;
-import com.glinboy.app.service.dto.ShortMessagesDTO;
-import com.glinboy.app.web.rest.errors.BadRequestAlertException;
-import com.sipios.springsearch.anotation.SearchSpec;
-
 import tech.jhipster.web.util.HeaderUtil;
 import tech.jhipster.web.util.PaginationUtil;
 import tech.jhipster.web.util.ResponseUtil;
@@ -114,7 +115,7 @@ public class ShortMessageResource {
      * or with status {@code 500 (Internal Server Error)} if the shortMessageDTO couldn't be updated.
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
-//    @PutMapping("/short-messages/{id}")
+    //    @PutMapping("/short-messages/{id}")
     public ResponseEntity<ShortMessageDTO> updateShortMessage(
         @PathVariable(value = "id", required = false) final Long id,
         @Valid @RequestBody ShortMessageDTO shortMessageDTO
@@ -149,7 +150,7 @@ public class ShortMessageResource {
      * or with status {@code 500 (Internal Server Error)} if the shortMessageDTO couldn't be updated.
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
-//    @PatchMapping(value = "/short-messages/{id}", consumes = "application/merge-patch+json")
+    //    @PatchMapping(value = "/short-messages/{id}", consumes = "application/merge-patch+json")
     public ResponseEntity<ShortMessageDTO> partialUpdateShortMessage(
         @PathVariable(value = "id", required = false) final Long id,
         @NotNull @RequestBody ShortMessageDTO shortMessageDTO
@@ -182,8 +183,15 @@ public class ShortMessageResource {
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of shortMessages in body.
      */
     @GetMapping("/short-messages")
-    public ResponseEntity<List<ShortMessageDTO>> getAllShortMessages(@SearchSpec Specification<ShortMessage> specs, Pageable pageable) {
-        log.debug("REST request to search ShortMessages by criteria: {}", specs);
+    public ResponseEntity<List<ShortMessageDTO>> getAllShortMessages(
+        Pageable pageable,
+        @RequestParam(value = "query", required = false, defaultValue = "") String query
+    ) {
+        Specification<ShortMessage> specs = Specification.where(null);
+        if (!StringUtils.isBlank(query)) {
+            Node rootNode = new RSQLParser().parse(query);
+            specs = rootNode.accept(new CustomRsqlVisitor<ShortMessage>());
+        }
         Page<ShortMessageDTO> page = shortMessageQueryService.findBySearch(specs, pageable);
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
         return ResponseEntity.ok().headers(headers).body(page.getContent());
@@ -220,7 +228,7 @@ public class ShortMessageResource {
      * @param id the id of the shortMessageDTO to delete.
      * @return the {@link ResponseEntity} with status {@code 204 (NO_CONTENT)}.
      */
-//    @DeleteMapping("/short-messages/{id}")
+    //    @DeleteMapping("/short-messages/{id}")
     public ResponseEntity<Void> deleteShortMessage(@PathVariable Long id) {
         log.debug("REST request to delete ShortMessage : {}", id);
         shortMessageService.delete(id);
