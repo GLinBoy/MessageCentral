@@ -11,31 +11,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import java.util.List;
-import java.util.Random;
-import java.util.Set;
-import java.util.concurrent.atomic.AtomicLong;
-import java.util.stream.Collectors;
-import java.util.stream.IntStream;
-
-import javax.mail.Message.RecipientType;
-import javax.mail.internet.MimeMessage;
-import javax.persistence.EntityManager;
-
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
-import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.http.MediaType;
-import org.springframework.security.test.context.support.WithMockUser;
-import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.transaction.annotation.Transactional;
-
 import com.glinboy.app.IntegrationTest;
 import com.glinboy.app.config.ApplicationProperties;
 import com.glinboy.app.domain.Email;
@@ -48,6 +23,27 @@ import com.glinboy.app.service.mapper.EmailMapper;
 import com.icegreen.greenmail.store.FolderException;
 import com.icegreen.greenmail.util.GreenMail;
 import com.icegreen.greenmail.util.ServerSetup;
+import java.util.List;
+import java.util.Random;
+import java.util.Set;
+import java.util.concurrent.atomic.AtomicLong;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
+import javax.mail.Message.RecipientType;
+import javax.mail.internet.MimeMessage;
+import javax.persistence.EntityManager;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * Integration tests for the {@link EmailResource} REST controller.
@@ -132,15 +128,20 @@ class EmailResourceIT {
      * they test an entity which requires the current entity.
      */
     public static List<EmailsDTO> createEmailsDTO(int emailsDTOCount, int reciversCount) {
-        List<EmailsDTO> emailsDTO = IntStream.range(0, emailsDTOCount).mapToObj(i -> {
-            Set<String> rs = IntStream.range(0, reciversCount)
-                    .mapToObj(j -> String.format("test_%d_%d@localhost.com", i, j)).collect(Collectors.toSet());
-            EmailsDTO e = new EmailsDTO();
-            e.setReceivers(rs);
-            e.setSubject(String.format("SUBJECT_%d", i));
-            e.setContent(String.format("CONETNT_%d", i));
-            return e;
-        }).collect(Collectors.toList());
+        List<EmailsDTO> emailsDTO = IntStream
+            .range(0, emailsDTOCount)
+            .mapToObj(i -> {
+                Set<String> rs = IntStream
+                    .range(0, reciversCount)
+                    .mapToObj(j -> String.format("test_%d_%d@localhost.com", i, j))
+                    .collect(Collectors.toSet());
+                EmailsDTO e = new EmailsDTO();
+                e.setReceivers(rs);
+                e.setSubject(String.format("SUBJECT_%d", i));
+                e.setContent(String.format("CONETNT_%d", i));
+                return e;
+            })
+            .collect(Collectors.toList());
         assertThat(emailsDTO.size()).isEqualTo(emailsDTOCount);
         emailsDTO.forEach(es -> assertThat(es.getReceivers().size()).isEqualTo(reciversCount));
         return emailsDTO;
@@ -174,8 +175,9 @@ class EmailResourceIT {
         int databaseSizeBeforeCreate = emailRepository.findAll().size();
         // Create the Email
         EmailDTO emailDTO = emailMapper.toDto(email);
-        restEmailMockMvc.perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON)
-                .content(TestUtil.convertObjectToJsonBytes(emailDTO))).andExpect(status().isCreated());
+        restEmailMockMvc
+            .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(emailDTO)))
+            .andExpect(status().isCreated());
 
         // Validate the Email in the database
         List<Email> emailList = emailRepository.findAll();
@@ -206,8 +208,9 @@ class EmailResourceIT {
     void failedCreateEmailWithoutRole() throws Exception {
         // Create the Email
         EmailDTO emailDTO = emailMapper.toDto(email);
-        restEmailMockMvc.perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON)
-                .content(TestUtil.convertObjectToJsonBytes(emailDTO))).andExpect(status().isForbidden());
+        restEmailMockMvc
+            .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(emailDTO)))
+            .andExpect(status().isForbidden());
     }
 
     @Test
@@ -219,8 +222,11 @@ class EmailResourceIT {
         int emailsCount = 2;
         int reciverCount = 5;
         List<EmailsDTO> emailsDTO = createEmailsDTO(emailsCount, reciverCount);
-        restEmailMockMvc.perform(post(ENTITY_API_URL_MULTIPLE).contentType(MediaType.APPLICATION_JSON)
-                .content(TestUtil.convertObjectToJsonBytes(emailsDTO))).andExpect(status().isOk());
+        restEmailMockMvc
+            .perform(
+                post(ENTITY_API_URL_MULTIPLE).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(emailsDTO))
+            )
+            .andExpect(status().isOk());
 
         // Validate the Email in the database
         List<Email> emailList = emailRepository.findAll();
@@ -243,8 +249,11 @@ class EmailResourceIT {
         int emailsCount = 2;
         int reciverCount = 5;
         List<EmailsDTO> emailsDTO = createEmailsDTO(emailsCount, reciverCount);
-        restEmailMockMvc.perform(post(ENTITY_API_URL_MULTIPLE).contentType(MediaType.APPLICATION_JSON)
-                .content(TestUtil.convertObjectToJsonBytes(emailsDTO))).andExpect(status().isForbidden());
+        restEmailMockMvc
+            .perform(
+                post(ENTITY_API_URL_MULTIPLE).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(emailsDTO))
+            )
+            .andExpect(status().isForbidden());
     }
 
     @Test
@@ -258,8 +267,9 @@ class EmailResourceIT {
         int databaseSizeBeforeCreate = emailRepository.findAll().size();
 
         // An entity with an existing ID cannot be created, so this API call must fail
-        restEmailMockMvc.perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON)
-                .content(TestUtil.convertObjectToJsonBytes(emailDTO))).andExpect(status().isBadRequest());
+        restEmailMockMvc
+            .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(emailDTO)))
+            .andExpect(status().isBadRequest());
 
         // Validate the Email in the database
         List<Email> emailList = emailRepository.findAll();
@@ -277,8 +287,9 @@ class EmailResourceIT {
         // Create the Email, which fails.
         EmailDTO emailDTO = emailMapper.toDto(email);
 
-        restEmailMockMvc.perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON)
-                .content(TestUtil.convertObjectToJsonBytes(emailDTO))).andExpect(status().isBadRequest());
+        restEmailMockMvc
+            .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(emailDTO)))
+            .andExpect(status().isBadRequest());
 
         List<Email> emailList = emailRepository.findAll();
         assertThat(emailList).hasSize(databaseSizeBeforeTest);
@@ -295,8 +306,9 @@ class EmailResourceIT {
         // Create the Email, which fails.
         EmailDTO emailDTO = emailMapper.toDto(email);
 
-        restEmailMockMvc.perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON)
-                .content(TestUtil.convertObjectToJsonBytes(emailDTO))).andExpect(status().isBadRequest());
+        restEmailMockMvc
+            .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(emailDTO)))
+            .andExpect(status().isBadRequest());
 
         List<Email> emailList = emailRepository.findAll();
         assertThat(emailList).hasSize(databaseSizeBeforeTest);
@@ -310,12 +322,14 @@ class EmailResourceIT {
         emailRepository.saveAndFlush(email);
 
         // Get all the emailList
-        restEmailMockMvc.perform(get(ENTITY_API_URL + "?sort=id,desc")).andExpect(status().isOk())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
-                .andExpect(jsonPath("$.[*].id").value(hasItem(email.getId().intValue())))
-                .andExpect(jsonPath("$.[*].receiver").value(hasItem(DEFAULT_RECEIVER)))
-                .andExpect(jsonPath("$.[*].subject").value(hasItem(DEFAULT_SUBJECT)))
-                .andExpect(jsonPath("$.[*].content").value(hasItem(DEFAULT_CONTENT.toString())));
+        restEmailMockMvc
+            .perform(get(ENTITY_API_URL + "?sort=id,desc"))
+            .andExpect(status().isOk())
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
+            .andExpect(jsonPath("$.[*].id").value(hasItem(email.getId().intValue())))
+            .andExpect(jsonPath("$.[*].receiver").value(hasItem(DEFAULT_RECEIVER)))
+            .andExpect(jsonPath("$.[*].subject").value(hasItem(DEFAULT_SUBJECT)))
+            .andExpect(jsonPath("$.[*].content").value(hasItem(DEFAULT_CONTENT.toString())));
     }
 
     @Test
@@ -339,15 +353,16 @@ class EmailResourceIT {
         emailRepository.saveAndFlush(email);
 
         // Get the email
-        restEmailMockMvc.perform(get(ENTITY_API_URL_ID, email.getId())).andExpect(status().isOk())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
-                .andExpect(jsonPath("$.id").value(email.getId().intValue()))
-                .andExpect(jsonPath("$.receiver").value(DEFAULT_RECEIVER))
-                .andExpect(jsonPath("$.subject").value(DEFAULT_SUBJECT))
-                .andExpect(jsonPath("$.content").value(DEFAULT_CONTENT.toString()));
+        restEmailMockMvc
+            .perform(get(ENTITY_API_URL_ID, email.getId()))
+            .andExpect(status().isOk())
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
+            .andExpect(jsonPath("$.id").value(email.getId().intValue()))
+            .andExpect(jsonPath("$.receiver").value(DEFAULT_RECEIVER))
+            .andExpect(jsonPath("$.subject").value(DEFAULT_SUBJECT))
+            .andExpect(jsonPath("$.content").value(DEFAULT_CONTENT.toString()));
     }
 
-    @Disabled(value = "spring-search:0.2.0 doesn't work by *greater than* and *less than* operators at this moment")
     @Test
     @Transactional
     @WithMockUser(authorities = { AuthoritiesConstants.EMAIL_USER })
@@ -404,13 +419,11 @@ class EmailResourceIT {
         emailRepository.saveAndFlush(email);
 
         // Get all the emailList where receiver in DEFAULT_RECEIVER or UPDATED_RECEIVER
-        defaultEmailShouldBeFound(
-                String.format("search=( receiver:%s OR receiver:%s )", DEFAULT_RECEIVER, UPDATED_RECEIVER));
+        defaultEmailShouldBeFound(String.format("search=( receiver:%s OR receiver:%s )", DEFAULT_RECEIVER, UPDATED_RECEIVER));
         // Get all the emailList where receiver equals to UPDATED_RECEIVER
         defaultEmailShouldNotBeFound("search=receiver:" + UPDATED_RECEIVER);
     }
 
-    @Disabled(value = "spring-search:0.2.0 doesn't support *specified* at this moment")
     @Test
     @Transactional
     @WithMockUser(authorities = { AuthoritiesConstants.EMAIL_USER })
@@ -490,14 +503,12 @@ class EmailResourceIT {
         emailRepository.saveAndFlush(email);
 
         // Get all the emailList where subject in DEFAULT_SUBJECT or UPDATED_SUBJECT
-        defaultEmailShouldBeFound(
-                String.format("search=( subject:%s OR subject:%s )", DEFAULT_SUBJECT, UPDATED_SUBJECT));
+        defaultEmailShouldBeFound(String.format("search=( subject:%s OR subject:%s )", DEFAULT_SUBJECT, UPDATED_SUBJECT));
 
         // Get all the emailList where subject equals to UPDATED_SUBJECT
         defaultEmailShouldNotBeFound("search=subject:" + UPDATED_SUBJECT);
     }
 
-    @Disabled(value = "spring-search:0.2.0 doesn't support *specified* at this moment")
     @Test
     @Transactional
     @WithMockUser(authorities = { AuthoritiesConstants.EMAIL_USER })
@@ -544,29 +555,40 @@ class EmailResourceIT {
      * Executes the search, and checks that the default entity is returned.
      */
     private void defaultEmailShouldBeFound(String filter) throws Exception {
-        restEmailMockMvc.perform(get(ENTITY_API_URL + "?sort=id,desc&" + filter)).andExpect(status().isOk())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
-                .andExpect(jsonPath("$.[*].id").value(hasItem(email.getId().intValue())))
-                .andExpect(jsonPath("$.[*].receiver").value(hasItem(DEFAULT_RECEIVER)))
-                .andExpect(jsonPath("$.[*].subject").value(hasItem(DEFAULT_SUBJECT)))
-                .andExpect(jsonPath("$.[*].content").value(hasItem(DEFAULT_CONTENT.toString())));
+        restEmailMockMvc
+            .perform(get(ENTITY_API_URL + "?sort=id,desc&" + filter))
+            .andExpect(status().isOk())
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
+            .andExpect(jsonPath("$.[*].id").value(hasItem(email.getId().intValue())))
+            .andExpect(jsonPath("$.[*].receiver").value(hasItem(DEFAULT_RECEIVER)))
+            .andExpect(jsonPath("$.[*].subject").value(hasItem(DEFAULT_SUBJECT)))
+            .andExpect(jsonPath("$.[*].content").value(hasItem(DEFAULT_CONTENT.toString())));
 
         // Check, that the count call also returns 1
-        restEmailMockMvc.perform(get(ENTITY_API_URL + "/count?sort=id,desc&" + filter)).andExpect(status().isOk())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE)).andExpect(content().string("1"));
+        restEmailMockMvc
+            .perform(get(ENTITY_API_URL + "/count?sort=id,desc&" + filter))
+            .andExpect(status().isOk())
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
+            .andExpect(content().string("1"));
     }
 
     /**
      * Executes the search, and checks that the default entity is not returned.
      */
     private void defaultEmailShouldNotBeFound(String filter) throws Exception {
-        restEmailMockMvc.perform(get(ENTITY_API_URL + "?sort=id,desc&" + filter)).andExpect(status().isOk())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE)).andExpect(jsonPath("$").isArray())
-                .andExpect(jsonPath("$").isEmpty());
+        restEmailMockMvc
+            .perform(get(ENTITY_API_URL + "?sort=id,desc&" + filter))
+            .andExpect(status().isOk())
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
+            .andExpect(jsonPath("$").isArray())
+            .andExpect(jsonPath("$").isEmpty());
 
         // Check, that the count call also returns 0
-        restEmailMockMvc.perform(get(ENTITY_API_URL + "/count?sort=id,desc&" + filter)).andExpect(status().isOk())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE)).andExpect(content().string("0"));
+        restEmailMockMvc
+            .perform(get(ENTITY_API_URL + "/count?sort=id,desc&" + filter))
+            .andExpect(status().isOk())
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
+            .andExpect(content().string("0"));
     }
 
     @Test
@@ -594,8 +616,13 @@ class EmailResourceIT {
         updatedEmail.receiver(UPDATED_RECEIVER).subject(UPDATED_SUBJECT).content(UPDATED_CONTENT);
         EmailDTO emailDTO = emailMapper.toDto(updatedEmail);
 
-        restEmailMockMvc.perform(put(ENTITY_API_URL_ID, emailDTO.getId()).contentType(MediaType.APPLICATION_JSON)
-                .content(TestUtil.convertObjectToJsonBytes(emailDTO))).andExpect(status().isMethodNotAllowed());
+        restEmailMockMvc
+            .perform(
+                put(ENTITY_API_URL_ID, emailDTO.getId())
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(TestUtil.convertObjectToJsonBytes(emailDTO))
+            )
+            .andExpect(status().isMethodNotAllowed());
 
         // Validate the Email in the database
         List<Email> emailList = emailRepository.findAll();
@@ -620,8 +647,13 @@ class EmailResourceIT {
         updatedEmail.receiver(UPDATED_RECEIVER).subject(UPDATED_SUBJECT).content(UPDATED_CONTENT);
         EmailDTO emailDTO = emailMapper.toDto(updatedEmail);
 
-        restEmailMockMvc.perform(put(ENTITY_API_URL_ID, emailDTO.getId()).contentType(MediaType.APPLICATION_JSON)
-                .content(TestUtil.convertObjectToJsonBytes(emailDTO))).andExpect(status().isForbidden());
+        restEmailMockMvc
+            .perform(
+                put(ENTITY_API_URL_ID, emailDTO.getId())
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(TestUtil.convertObjectToJsonBytes(emailDTO))
+            )
+            .andExpect(status().isForbidden());
     }
 
     @Test
@@ -635,8 +667,13 @@ class EmailResourceIT {
         EmailDTO emailDTO = emailMapper.toDto(email);
 
         // If the entity doesn't have an ID, it will throw BadRequestAlertException
-        restEmailMockMvc.perform(put(ENTITY_API_URL_ID, emailDTO.getId()).contentType(MediaType.APPLICATION_JSON)
-                .content(TestUtil.convertObjectToJsonBytes(emailDTO))).andExpect(status().isMethodNotAllowed());
+        restEmailMockMvc
+            .perform(
+                put(ENTITY_API_URL_ID, emailDTO.getId())
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(TestUtil.convertObjectToJsonBytes(emailDTO))
+            )
+            .andExpect(status().isMethodNotAllowed());
 
         // Validate the Email in the database
         List<Email> emailList = emailRepository.findAll();
@@ -654,8 +691,13 @@ class EmailResourceIT {
         EmailDTO emailDTO = emailMapper.toDto(email);
 
         // If url ID doesn't match entity ID, it will throw BadRequestAlertException
-        restEmailMockMvc.perform(put(ENTITY_API_URL_ID, count.incrementAndGet()).contentType(MediaType.APPLICATION_JSON)
-                .content(TestUtil.convertObjectToJsonBytes(emailDTO))).andExpect(status().isMethodNotAllowed());
+        restEmailMockMvc
+            .perform(
+                put(ENTITY_API_URL_ID, count.incrementAndGet())
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(TestUtil.convertObjectToJsonBytes(emailDTO))
+            )
+            .andExpect(status().isMethodNotAllowed());
 
         // Validate the Email in the database
         List<Email> emailList = emailRepository.findAll();
@@ -673,8 +715,9 @@ class EmailResourceIT {
         EmailDTO emailDTO = emailMapper.toDto(email);
 
         // If url ID doesn't match entity ID, it will throw BadRequestAlertException
-        restEmailMockMvc.perform(put(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON)
-                .content(TestUtil.convertObjectToJsonBytes(emailDTO))).andExpect(status().isMethodNotAllowed());
+        restEmailMockMvc
+            .perform(put(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(emailDTO)))
+            .andExpect(status().isMethodNotAllowed());
 
         // Validate the Email in the database
         List<Email> emailList = emailRepository.findAll();
@@ -697,10 +740,12 @@ class EmailResourceIT {
         partialUpdatedEmail.receiver(UPDATED_RECEIVER).subject(UPDATED_SUBJECT);
 
         restEmailMockMvc
-                .perform(patch(ENTITY_API_URL_ID, partialUpdatedEmail.getId())
-                        .contentType("application/merge-patch+json")
-                        .content(TestUtil.convertObjectToJsonBytes(partialUpdatedEmail)))
-                .andExpect(status().isMethodNotAllowed());
+            .perform(
+                patch(ENTITY_API_URL_ID, partialUpdatedEmail.getId())
+                    .contentType("application/merge-patch+json")
+                    .content(TestUtil.convertObjectToJsonBytes(partialUpdatedEmail))
+            )
+            .andExpect(status().isMethodNotAllowed());
 
         // Validate the Email in the database
         List<Email> emailList = emailRepository.findAll();
@@ -724,10 +769,12 @@ class EmailResourceIT {
         partialUpdatedEmail.receiver(UPDATED_RECEIVER).subject(UPDATED_SUBJECT);
 
         restEmailMockMvc
-                .perform(patch(ENTITY_API_URL_ID, partialUpdatedEmail.getId())
-                        .contentType("application/merge-patch+json")
-                        .content(TestUtil.convertObjectToJsonBytes(partialUpdatedEmail)))
-                .andExpect(status().isForbidden());
+            .perform(
+                patch(ENTITY_API_URL_ID, partialUpdatedEmail.getId())
+                    .contentType("application/merge-patch+json")
+                    .content(TestUtil.convertObjectToJsonBytes(partialUpdatedEmail))
+            )
+            .andExpect(status().isForbidden());
     }
 
     @Test
@@ -746,10 +793,12 @@ class EmailResourceIT {
         partialUpdatedEmail.receiver(UPDATED_RECEIVER).subject(UPDATED_SUBJECT).content(UPDATED_CONTENT);
 
         restEmailMockMvc
-                .perform(patch(ENTITY_API_URL_ID, partialUpdatedEmail.getId())
-                        .contentType("application/merge-patch+json")
-                        .content(TestUtil.convertObjectToJsonBytes(partialUpdatedEmail)))
-                .andExpect(status().isMethodNotAllowed());
+            .perform(
+                patch(ENTITY_API_URL_ID, partialUpdatedEmail.getId())
+                    .contentType("application/merge-patch+json")
+                    .content(TestUtil.convertObjectToJsonBytes(partialUpdatedEmail))
+            )
+            .andExpect(status().isMethodNotAllowed());
 
         // Validate the Email in the database
         List<Email> emailList = emailRepository.findAll();
@@ -771,8 +820,13 @@ class EmailResourceIT {
         EmailDTO emailDTO = emailMapper.toDto(email);
 
         // If the entity doesn't have an ID, it will throw BadRequestAlertException
-        restEmailMockMvc.perform(patch(ENTITY_API_URL_ID, emailDTO.getId()).contentType("application/merge-patch+json")
-                .content(TestUtil.convertObjectToJsonBytes(emailDTO))).andExpect(status().isMethodNotAllowed());
+        restEmailMockMvc
+            .perform(
+                patch(ENTITY_API_URL_ID, emailDTO.getId())
+                    .contentType("application/merge-patch+json")
+                    .content(TestUtil.convertObjectToJsonBytes(emailDTO))
+            )
+            .andExpect(status().isMethodNotAllowed());
 
         // Validate the Email in the database
         List<Email> emailList = emailRepository.findAll();
@@ -790,9 +844,13 @@ class EmailResourceIT {
         EmailDTO emailDTO = emailMapper.toDto(email);
 
         // If url ID doesn't match entity ID, it will throw BadRequestAlertException
-        restEmailMockMvc.perform(patch(ENTITY_API_URL_ID, count.incrementAndGet())
-                .contentType("application/merge-patch+json").content(TestUtil.convertObjectToJsonBytes(emailDTO)))
-                .andExpect(status().isMethodNotAllowed());
+        restEmailMockMvc
+            .perform(
+                patch(ENTITY_API_URL_ID, count.incrementAndGet())
+                    .contentType("application/merge-patch+json")
+                    .content(TestUtil.convertObjectToJsonBytes(emailDTO))
+            )
+            .andExpect(status().isMethodNotAllowed());
 
         // Validate the Email in the database
         List<Email> emailList = emailRepository.findAll();
@@ -810,8 +868,9 @@ class EmailResourceIT {
         EmailDTO emailDTO = emailMapper.toDto(email);
 
         // If url ID doesn't match entity ID, it will throw BadRequestAlertException
-        restEmailMockMvc.perform(patch(ENTITY_API_URL).contentType("application/merge-patch+json")
-                .content(TestUtil.convertObjectToJsonBytes(emailDTO))).andExpect(status().isMethodNotAllowed());
+        restEmailMockMvc
+            .perform(patch(ENTITY_API_URL).contentType("application/merge-patch+json").content(TestUtil.convertObjectToJsonBytes(emailDTO)))
+            .andExpect(status().isMethodNotAllowed());
 
         // Validate the Email in the database
         List<Email> emailList = emailRepository.findAll();
@@ -828,8 +887,9 @@ class EmailResourceIT {
         int databaseSizeBeforeDelete = emailRepository.findAll().size();
 
         // Delete the email
-        restEmailMockMvc.perform(delete(ENTITY_API_URL_ID, email.getId()).accept(MediaType.APPLICATION_JSON))
-                .andExpect(status().isMethodNotAllowed());
+        restEmailMockMvc
+            .perform(delete(ENTITY_API_URL_ID, email.getId()).accept(MediaType.APPLICATION_JSON))
+            .andExpect(status().isMethodNotAllowed());
 
         // Validate the database contains one less item
         List<Email> emailList = emailRepository.findAll();
@@ -845,8 +905,9 @@ class EmailResourceIT {
         int databaseSizeBeforeDelete = emailRepository.findAll().size();
 
         // Delete the email
-        restEmailMockMvc.perform(delete(ENTITY_API_URL_ID, email.getId()).accept(MediaType.APPLICATION_JSON))
-                .andExpect(status().isForbidden());
+        restEmailMockMvc
+            .perform(delete(ENTITY_API_URL_ID, email.getId()).accept(MediaType.APPLICATION_JSON))
+            .andExpect(status().isForbidden());
 
         // Validate the database contains one less item
         List<Email> emailList = emailRepository.findAll();
