@@ -32,7 +32,6 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import javax.persistence.EntityManager;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -436,7 +435,6 @@ class NotificationResourceIT {
         restNotificationMockMvc.perform(get(ENTITY_API_URL_ID, notification.getId())).andExpect(status().isForbidden());
     }
 
-    @Disabled(value = "spring-search:0.2.0 doesn't work by *greater than* and *less than* operators at this moment")
     @Test
     @Transactional
     @WithMockUser(authorities = { AuthoritiesConstants.NOTIFICATION_USER })
@@ -498,7 +496,6 @@ class NotificationResourceIT {
         defaultNotificationShouldNotBeFound("search=username:" + UPDATED_USERNAME);
     }
 
-    @Disabled(value = "spring-search:0.2.0 doesn't support *specified* at this moment")
     @Test
     @Transactional
     @WithMockUser(authorities = { AuthoritiesConstants.NOTIFICATION_USER })
@@ -583,7 +580,6 @@ class NotificationResourceIT {
         defaultNotificationShouldNotBeFound("search=token:" + UPDATED_TOKEN);
     }
 
-    @Disabled(value = "spring-search:0.2.0 doesn't support *specified* at this moment")
     @Test
     @Transactional
     @WithMockUser(authorities = { AuthoritiesConstants.NOTIFICATION_USER })
@@ -668,7 +664,6 @@ class NotificationResourceIT {
         defaultNotificationShouldNotBeFound("search=subject:" + UPDATED_SUBJECT);
     }
 
-    @Disabled(value = "spring-search:0.2.0 doesn't support *specified* at this moment")
     @Test
     @Transactional
     @WithMockUser(authorities = { AuthoritiesConstants.NOTIFICATION_USER })
@@ -753,7 +748,6 @@ class NotificationResourceIT {
         defaultNotificationShouldNotBeFound("search=content:" + UPDATED_CONTENT);
     }
 
-    @Disabled(value = "spring-search:0.2.0 doesn't support *specified* at this moment")
     @Test
     @Transactional
     @WithMockUser(authorities = { AuthoritiesConstants.NOTIFICATION_USER })
@@ -838,7 +832,6 @@ class NotificationResourceIT {
         defaultNotificationShouldNotBeFound("search=image:" + UPDATED_IMAGE);
     }
 
-    @Disabled(value = "spring-search:0.2.0 doesn't support *specified* at this moment")
     @Test
     @Transactional
     @WithMockUser(authorities = { AuthoritiesConstants.NOTIFICATION_USER })
@@ -881,7 +874,6 @@ class NotificationResourceIT {
         defaultNotificationShouldBeFound("search=image!*" + UPDATED_IMAGE + "*");
     }
 
-    @Disabled(value = "spring-search:0.2.0 doesn't work by deep fields at this moment")
     @Test
     @Transactional
     @WithMockUser(authorities = { AuthoritiesConstants.NOTIFICATION_USER })
