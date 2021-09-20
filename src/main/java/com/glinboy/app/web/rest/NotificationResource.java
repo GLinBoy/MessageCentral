@@ -1,14 +1,24 @@
 package com.glinboy.app.web.rest;
 
+import com.glinboy.app.domain.Notification;
+import com.glinboy.app.repository.NotificationRepository;
+import com.glinboy.app.rsql.CustomRsqlVisitor;
+import com.glinboy.app.service.NotificationQueryService;
+import com.glinboy.app.service.NotificationService;
+import com.glinboy.app.service.dto.NotificationDTO;
+import com.glinboy.app.service.dto.NotificationsDTO;
+import com.glinboy.app.web.rest.errors.BadRequestAlertException;
+import com.sipios.springsearch.anotation.SearchSpec;
+import cz.jirutka.rsql.parser.RSQLParser;
+import cz.jirutka.rsql.parser.ast.Node;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
-
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
-
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -22,18 +32,9 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
-
-import com.glinboy.app.domain.Notification;
-import com.glinboy.app.repository.NotificationRepository;
-import com.glinboy.app.service.NotificationQueryService;
-import com.glinboy.app.service.NotificationService;
-import com.glinboy.app.service.dto.NotificationDTO;
-import com.glinboy.app.service.dto.NotificationsDTO;
-import com.glinboy.app.web.rest.errors.BadRequestAlertException;
-import com.sipios.springsearch.anotation.SearchSpec;
-
 import tech.jhipster.web.util.HeaderUtil;
 import tech.jhipster.web.util.PaginationUtil;
 import tech.jhipster.web.util.ResponseUtil;
@@ -114,7 +115,7 @@ public class NotificationResource {
      * or with status {@code 500 (Internal Server Error)} if the notificationDTO couldn't be updated.
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
-//    @PutMapping("/notifications/{id}")
+    //    @PutMapping("/notifications/{id}")
     public ResponseEntity<NotificationDTO> updateNotification(
         @PathVariable(value = "id", required = false) final Long id,
         @Valid @RequestBody NotificationDTO notificationDTO
@@ -149,7 +150,7 @@ public class NotificationResource {
      * or with status {@code 500 (Internal Server Error)} if the notificationDTO couldn't be updated.
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
-//    @PatchMapping(value = "/notifications/{id}", consumes = "application/merge-patch+json")
+    //    @PatchMapping(value = "/notifications/{id}", consumes = "application/merge-patch+json")
     public ResponseEntity<NotificationDTO> partialUpdateNotification(
         @PathVariable(value = "id", required = false) final Long id,
         @NotNull @RequestBody NotificationDTO notificationDTO
@@ -182,8 +183,15 @@ public class NotificationResource {
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of notifications in body.
      */
     @GetMapping("/notifications")
-    public ResponseEntity<List<NotificationDTO>> getAllNotifications(@SearchSpec Specification<Notification> specs, Pageable pageable) {
-        log.debug("REST request to get Notifications by criteria: {}", specs);
+    public ResponseEntity<List<NotificationDTO>> getAllNotifications(
+        Pageable pageable,
+        @RequestParam(value = "query", required = false, defaultValue = "") String query
+    ) {
+        Specification<Notification> specs = Specification.where(null);
+        if (!StringUtils.isBlank(query)) {
+            Node rootNode = new RSQLParser().parse(query);
+            specs = rootNode.accept(new CustomRsqlVisitor<Notification>());
+        }
         Page<NotificationDTO> page = notificationQueryService.findBySearch(specs, pageable);
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
         return ResponseEntity.ok().headers(headers).body(page.getContent());
@@ -220,7 +228,7 @@ public class NotificationResource {
      * @param id the id of the notificationDTO to delete.
      * @return the {@link ResponseEntity} with status {@code 204 (NO_CONTENT)}.
      */
-//    @DeleteMapping("/notifications/{id}")
+    //    @DeleteMapping("/notifications/{id}")
     public ResponseEntity<Void> deleteNotification(@PathVariable Long id) {
         log.debug("REST request to delete Notification : {}", id);
         notificationService.delete(id);
