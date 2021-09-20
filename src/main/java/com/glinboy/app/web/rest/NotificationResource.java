@@ -8,7 +8,6 @@ import com.glinboy.app.service.NotificationService;
 import com.glinboy.app.service.dto.NotificationDTO;
 import com.glinboy.app.service.dto.NotificationsDTO;
 import com.glinboy.app.web.rest.errors.BadRequestAlertException;
-import com.sipios.springsearch.anotation.SearchSpec;
 import cz.jirutka.rsql.parser.RSQLParser;
 import cz.jirutka.rsql.parser.ast.Node;
 import java.net.URI;
@@ -204,8 +203,12 @@ public class NotificationResource {
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the count in body.
      */
     @GetMapping("/notifications/count")
-    public ResponseEntity<Long> countNotifications(@SearchSpec Specification<Notification> specs) {
-        log.debug("REST request to count Notifications by specification: {}", specs);
+    public ResponseEntity<Long> countNotifications(@RequestParam(value = "query", required = false, defaultValue = "") String query) {
+        Specification<Notification> specs = Specification.where(null);
+        if (!StringUtils.isBlank(query)) {
+            Node rootNode = new RSQLParser().parse(query);
+            specs = rootNode.accept(new CustomRsqlVisitor<Notification>());
+        }
         return ResponseEntity.ok().body(notificationQueryService.countBySpecification(specs));
     }
 
