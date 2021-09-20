@@ -8,7 +8,6 @@ import com.glinboy.app.service.ShortMessageService;
 import com.glinboy.app.service.dto.ShortMessageDTO;
 import com.glinboy.app.service.dto.ShortMessagesDTO;
 import com.glinboy.app.web.rest.errors.BadRequestAlertException;
-import com.sipios.springsearch.anotation.SearchSpec;
 import cz.jirutka.rsql.parser.RSQLParser;
 import cz.jirutka.rsql.parser.ast.Node;
 import java.net.URI;
@@ -204,8 +203,12 @@ public class ShortMessageResource {
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the count in body.
      */
     @GetMapping("/short-messages/count")
-    public ResponseEntity<Long> countShortMessages(@SearchSpec Specification<ShortMessage> specs) {
-        log.debug("REST request to count ShortMessages by specification: {}", specs);
+    public ResponseEntity<Long> countShortMessages(@RequestParam(value = "query", required = false, defaultValue = "") String query) {
+        Specification<ShortMessage> specs = Specification.where(null);
+        if (!StringUtils.isBlank(query)) {
+            Node rootNode = new RSQLParser().parse(query);
+            specs = rootNode.accept(new CustomRsqlVisitor<ShortMessage>());
+        }
         return ResponseEntity.ok().body(shortMessageQueryService.countBySpecification(specs));
     }
 
