@@ -12,26 +12,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import java.util.List;
-import java.util.Random;
-import java.util.Set;
-import java.util.concurrent.atomic.AtomicLong;
-import java.util.stream.Collectors;
-import java.util.stream.IntStream;
-
-import javax.persistence.EntityManager;
-
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
-import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.http.MediaType;
-import org.springframework.security.test.context.support.WithMockUser;
-import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.transaction.annotation.Transactional;
-
 import com.glinboy.app.IntegrationTest;
 import com.glinboy.app.domain.ShortMessage;
 import com.glinboy.app.domain.enumeration.MessageStatus;
@@ -41,6 +21,22 @@ import com.glinboy.app.service.ShortMessageChannelService;
 import com.glinboy.app.service.dto.ShortMessageDTO;
 import com.glinboy.app.service.dto.ShortMessagesDTO;
 import com.glinboy.app.service.mapper.ShortMessageMapper;
+import java.util.List;
+import java.util.Random;
+import java.util.Set;
+import java.util.concurrent.atomic.AtomicLong;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
+import javax.persistence.EntityManager;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.mockito.Mock;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * Integration tests for the {@link ShortMessageResource} REST controller.
@@ -98,14 +94,19 @@ class ShortMessageResourceIT {
      * they test an entity which requires the current entity.
      */
     public static List<ShortMessagesDTO> createEmailsDTO(int smsDTOCount, int numbersCount) {
-        List<ShortMessagesDTO> shortMessagesDTO = IntStream.range(0, smsDTOCount).mapToObj(i -> {
-            Set<String> rs = IntStream.range(0, numbersCount).mapToObj(j -> String.format("+98912989287%d", j))
+        List<ShortMessagesDTO> shortMessagesDTO = IntStream
+            .range(0, smsDTOCount)
+            .mapToObj(i -> {
+                Set<String> rs = IntStream
+                    .range(0, numbersCount)
+                    .mapToObj(j -> String.format("+98912989287%d", j))
                     .collect(Collectors.toSet());
-            ShortMessagesDTO s = new ShortMessagesDTO();
-            s.setPhoneNumber(rs);
-            s.setContent(String.format("CONETNT_%d", i));
-            return s;
-        }).collect(Collectors.toList());
+                ShortMessagesDTO s = new ShortMessagesDTO();
+                s.setPhoneNumber(rs);
+                s.setContent(String.format("CONETNT_%d", i));
+                return s;
+            })
+            .collect(Collectors.toList());
         assertThat(shortMessagesDTO.size()).isEqualTo(smsDTOCount);
         shortMessagesDTO.forEach(es -> assertThat(es.getPhoneNumbers().size()).isEqualTo(numbersCount));
         return shortMessagesDTO;
@@ -135,8 +136,11 @@ class ShortMessageResourceIT {
         // Create the ShortMessage
         ShortMessageDTO shortMessageDTO = shortMessageMapper.toDto(shortMessage);
         doNothing().when(smsProvider).sendMessage(shortMessageDTO);
-        restShortMessageMockMvc.perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON)
-                .content(TestUtil.convertObjectToJsonBytes(shortMessageDTO))).andExpect(status().isCreated());
+        restShortMessageMockMvc
+            .perform(
+                post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(shortMessageDTO))
+            )
+            .andExpect(status().isCreated());
 
         // Validate the ShortMessage in the database
         List<ShortMessage> shortMessageList = shortMessageRepository.findAll();
@@ -153,8 +157,11 @@ class ShortMessageResourceIT {
         // Create the ShortMessage
         ShortMessageDTO shortMessageDTO = shortMessageMapper.toDto(shortMessage);
         doNothing().when(smsProvider).sendMessage(shortMessageDTO);
-        restShortMessageMockMvc.perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON)
-                .content(TestUtil.convertObjectToJsonBytes(shortMessageDTO))).andExpect(status().isForbidden());
+        restShortMessageMockMvc
+            .perform(
+                post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(shortMessageDTO))
+            )
+            .andExpect(status().isForbidden());
     }
 
     @Test
@@ -167,8 +174,13 @@ class ShortMessageResourceIT {
         int numbersCount = 5;
         List<ShortMessagesDTO> shortMessagesDTOs = createEmailsDTO(smsCount, numbersCount);
         doNothing().when(smsProvider).sendMessage(new ShortMessageDTO[0]);
-        restShortMessageMockMvc.perform(post(ENTITY_API_URL_MULTIPLE).contentType(MediaType.APPLICATION_JSON)
-                .content(TestUtil.convertObjectToJsonBytes(shortMessagesDTOs))).andExpect(status().isOk());
+        restShortMessageMockMvc
+            .perform(
+                post(ENTITY_API_URL_MULTIPLE)
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(TestUtil.convertObjectToJsonBytes(shortMessagesDTOs))
+            )
+            .andExpect(status().isOk());
 
         // Validate the ShortMessage in the database
         List<ShortMessage> shortMessageList = shortMessageRepository.findAll();
@@ -184,9 +196,12 @@ class ShortMessageResourceIT {
         List<ShortMessagesDTO> shortMessagesDTOs = createEmailsDTO(smsCount, numbersCount);
         doNothing().when(smsProvider).sendMessage(new ShortMessageDTO[0]);
         restShortMessageMockMvc
-                .perform(post(ENTITY_API_URL_MULTIPLE).contentType(MediaType.APPLICATION_JSON)
-                        .content(TestUtil.convertObjectToJsonBytes(shortMessagesDTOs)))
-                .andExpect(status().isForbidden());
+            .perform(
+                post(ENTITY_API_URL_MULTIPLE)
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(TestUtil.convertObjectToJsonBytes(shortMessagesDTOs))
+            )
+            .andExpect(status().isForbidden());
     }
 
     @Test
@@ -201,9 +216,10 @@ class ShortMessageResourceIT {
 
         // An entity with an existing ID cannot be created, so this API call must fail
         restShortMessageMockMvc
-                .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON)
-                        .content(TestUtil.convertObjectToJsonBytes(shortMessageDTO)))
-                .andExpect(status().isBadRequest());
+            .perform(
+                post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(shortMessageDTO))
+            )
+            .andExpect(status().isBadRequest());
 
         // Validate the ShortMessage in the database
         List<ShortMessage> shortMessageList = shortMessageRepository.findAll();
@@ -222,9 +238,10 @@ class ShortMessageResourceIT {
         ShortMessageDTO shortMessageDTO = shortMessageMapper.toDto(shortMessage);
 
         restShortMessageMockMvc
-                .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON)
-                        .content(TestUtil.convertObjectToJsonBytes(shortMessageDTO)))
-                .andExpect(status().isBadRequest());
+            .perform(
+                post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(shortMessageDTO))
+            )
+            .andExpect(status().isBadRequest());
 
         List<ShortMessage> shortMessageList = shortMessageRepository.findAll();
         assertThat(shortMessageList).hasSize(databaseSizeBeforeTest);
@@ -242,9 +259,10 @@ class ShortMessageResourceIT {
         ShortMessageDTO shortMessageDTO = shortMessageMapper.toDto(shortMessage);
 
         restShortMessageMockMvc
-                .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON)
-                        .content(TestUtil.convertObjectToJsonBytes(shortMessageDTO)))
-                .andExpect(status().isBadRequest());
+            .perform(
+                post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(shortMessageDTO))
+            )
+            .andExpect(status().isBadRequest());
 
         List<ShortMessage> shortMessageList = shortMessageRepository.findAll();
         assertThat(shortMessageList).hasSize(databaseSizeBeforeTest);
@@ -258,11 +276,13 @@ class ShortMessageResourceIT {
         shortMessageRepository.saveAndFlush(shortMessage);
 
         // Get all the shortMessageList
-        restShortMessageMockMvc.perform(get(ENTITY_API_URL + "?sort=id,desc")).andExpect(status().isOk())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
-                .andExpect(jsonPath("$.[*].id").value(hasItem(shortMessage.getId().intValue())))
-                .andExpect(jsonPath("$.[*].phoneNumber").value(hasItem(DEFAULT_PHONE_NUMBER)))
-                .andExpect(jsonPath("$.[*].content").value(hasItem(DEFAULT_CONTENT)));
+        restShortMessageMockMvc
+            .perform(get(ENTITY_API_URL + "?sort=id,desc"))
+            .andExpect(status().isOk())
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
+            .andExpect(jsonPath("$.[*].id").value(hasItem(shortMessage.getId().intValue())))
+            .andExpect(jsonPath("$.[*].phoneNumber").value(hasItem(DEFAULT_PHONE_NUMBER)))
+            .andExpect(jsonPath("$.[*].content").value(hasItem(DEFAULT_CONTENT)));
     }
 
     @Test
@@ -273,11 +293,13 @@ class ShortMessageResourceIT {
         shortMessageRepository.saveAndFlush(shortMessage);
 
         // Get the shortMessage
-        restShortMessageMockMvc.perform(get(ENTITY_API_URL_ID, shortMessage.getId())).andExpect(status().isOk())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
-                .andExpect(jsonPath("$.id").value(shortMessage.getId().intValue()))
-                .andExpect(jsonPath("$.phoneNumber").value(DEFAULT_PHONE_NUMBER))
-                .andExpect(jsonPath("$.content").value(DEFAULT_CONTENT));
+        restShortMessageMockMvc
+            .perform(get(ENTITY_API_URL_ID, shortMessage.getId()))
+            .andExpect(status().isOk())
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
+            .andExpect(jsonPath("$.id").value(shortMessage.getId().intValue()))
+            .andExpect(jsonPath("$.phoneNumber").value(DEFAULT_PHONE_NUMBER))
+            .andExpect(jsonPath("$.content").value(DEFAULT_CONTENT));
     }
 
     @Test
@@ -293,7 +315,6 @@ class ShortMessageResourceIT {
         restShortMessageMockMvc.perform(get(ENTITY_API_URL_ID, shortMessage.getId())).andExpect(status().isForbidden());
     }
 
-    @Disabled(value = "spring-search:0.2.0 doesn't work by *greater than* and *less than* operators at this moment")
     @Test
     @Transactional
     @WithMockUser(authorities = { AuthoritiesConstants.SMS_USER })
@@ -352,14 +373,14 @@ class ShortMessageResourceIT {
 
         // Get all the shortMessageList where phoneNumber in DEFAULT_PHONE_NUMBER or
         // UPDATED_PHONE_NUMBER
-        defaultShortMessageShouldBeFound(String.format("search=( phoneNumber:%s OR phoneNumber:%s )",
-                DEFAULT_PHONE_NUMBER, UPDATED_PHONE_NUMBER));
+        defaultShortMessageShouldBeFound(
+            String.format("search=( phoneNumber:%s OR phoneNumber:%s )", DEFAULT_PHONE_NUMBER, UPDATED_PHONE_NUMBER)
+        );
 
         // Get all the shortMessageList where phoneNumber equals to UPDATED_PHONE_NUMBER
         defaultShortMessageShouldNotBeFound("search=phoneNumber:" + UPDATED_PHONE_NUMBER);
     }
 
-    @Disabled(value = "spring-search:0.2.0 doesn't support *specified* at this moment")
     @Test
     @Transactional
     @WithMockUser(authorities = { AuthoritiesConstants.SMS_USER })
@@ -441,14 +462,12 @@ class ShortMessageResourceIT {
 
         // Get all the shortMessageList where content in DEFAULT_CONTENT or
         // UPDATED_CONTENT
-        defaultShortMessageShouldBeFound(
-                String.format("search=( content:%s OR content:%s )", DEFAULT_CONTENT, UPDATED_CONTENT));
+        defaultShortMessageShouldBeFound(String.format("search=( content:%s OR content:%s )", DEFAULT_CONTENT, UPDATED_CONTENT));
 
         // Get all the shortMessageList where content equals to UPDATED_CONTENT
         defaultShortMessageShouldNotBeFound("search=content:" + UPDATED_CONTENT);
     }
 
-    @Disabled(value = "spring-search:0.2.0 doesn't support *specified* at this moment")
     @Test
     @Transactional
     @WithMockUser(authorities = { AuthoritiesConstants.SMS_USER })
@@ -495,30 +514,39 @@ class ShortMessageResourceIT {
      * Executes the search, and checks that the default entity is returned.
      */
     private void defaultShortMessageShouldBeFound(String filter) throws Exception {
-        restShortMessageMockMvc.perform(get(ENTITY_API_URL + "?sort=id,desc&" + filter)).andExpect(status().isOk())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
-                .andExpect(jsonPath("$.[*].id").value(hasItem(shortMessage.getId().intValue())))
-                .andExpect(jsonPath("$.[*].phoneNumber").value(hasItem(DEFAULT_PHONE_NUMBER)))
-                .andExpect(jsonPath("$.[*].content").value(hasItem(DEFAULT_CONTENT)));
+        restShortMessageMockMvc
+            .perform(get(ENTITY_API_URL + "?sort=id,desc&" + filter))
+            .andExpect(status().isOk())
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
+            .andExpect(jsonPath("$.[*].id").value(hasItem(shortMessage.getId().intValue())))
+            .andExpect(jsonPath("$.[*].phoneNumber").value(hasItem(DEFAULT_PHONE_NUMBER)))
+            .andExpect(jsonPath("$.[*].content").value(hasItem(DEFAULT_CONTENT)));
 
         // Check, that the count call also returns 1
-        restShortMessageMockMvc.perform(get(ENTITY_API_URL + "/count?sort=id,desc&" + filter))
-                .andExpect(status().isOk()).andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
-                .andExpect(content().string("1"));
+        restShortMessageMockMvc
+            .perform(get(ENTITY_API_URL + "/count?sort=id,desc&" + filter))
+            .andExpect(status().isOk())
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
+            .andExpect(content().string("1"));
     }
 
     /**
      * Executes the search, and checks that the default entity is not returned.
      */
     private void defaultShortMessageShouldNotBeFound(String filter) throws Exception {
-        restShortMessageMockMvc.perform(get(ENTITY_API_URL + "?sort=id,desc&" + filter)).andExpect(status().isOk())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE)).andExpect(jsonPath("$").isArray())
-                .andExpect(jsonPath("$").isEmpty());
+        restShortMessageMockMvc
+            .perform(get(ENTITY_API_URL + "?sort=id,desc&" + filter))
+            .andExpect(status().isOk())
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
+            .andExpect(jsonPath("$").isArray())
+            .andExpect(jsonPath("$").isEmpty());
 
         // Check, that the count call also returns 0
-        restShortMessageMockMvc.perform(get(ENTITY_API_URL + "/count?sort=id,desc&" + filter))
-                .andExpect(status().isOk()).andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
-                .andExpect(content().string("0"));
+        restShortMessageMockMvc
+            .perform(get(ENTITY_API_URL + "/count?sort=id,desc&" + filter))
+            .andExpect(status().isOk())
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
+            .andExpect(content().string("0"));
     }
 
     @Test
@@ -547,9 +575,12 @@ class ShortMessageResourceIT {
         ShortMessageDTO shortMessageDTO = shortMessageMapper.toDto(updatedShortMessage);
 
         restShortMessageMockMvc
-                .perform(put(ENTITY_API_URL_ID, shortMessageDTO.getId()).contentType(MediaType.APPLICATION_JSON)
-                        .content(TestUtil.convertObjectToJsonBytes(shortMessageDTO)))
-                .andExpect(status().isMethodNotAllowed());
+            .perform(
+                put(ENTITY_API_URL_ID, shortMessageDTO.getId())
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(TestUtil.convertObjectToJsonBytes(shortMessageDTO))
+            )
+            .andExpect(status().isMethodNotAllowed());
 
         // Validate the ShortMessage in the database
         List<ShortMessage> shortMessageList = shortMessageRepository.findAll();
@@ -573,9 +604,13 @@ class ShortMessageResourceIT {
         updatedShortMessage.phoneNumber(UPDATED_PHONE_NUMBER).content(UPDATED_CONTENT);
         ShortMessageDTO shortMessageDTO = shortMessageMapper.toDto(updatedShortMessage);
 
-        restShortMessageMockMvc.perform(put(ENTITY_API_URL_ID, shortMessageDTO.getId())
-                .contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(shortMessageDTO)))
-                .andExpect(status().isForbidden());
+        restShortMessageMockMvc
+            .perform(
+                put(ENTITY_API_URL_ID, shortMessageDTO.getId())
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(TestUtil.convertObjectToJsonBytes(shortMessageDTO))
+            )
+            .andExpect(status().isForbidden());
     }
 
     @Test
@@ -590,9 +625,12 @@ class ShortMessageResourceIT {
 
         // If the entity doesn't have an ID, it will throw BadRequestAlertException
         restShortMessageMockMvc
-                .perform(put(ENTITY_API_URL_ID, shortMessageDTO.getId()).contentType(MediaType.APPLICATION_JSON)
-                        .content(TestUtil.convertObjectToJsonBytes(shortMessageDTO)))
-                .andExpect(status().isMethodNotAllowed());
+            .perform(
+                put(ENTITY_API_URL_ID, shortMessageDTO.getId())
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(TestUtil.convertObjectToJsonBytes(shortMessageDTO))
+            )
+            .andExpect(status().isMethodNotAllowed());
 
         // Validate the ShortMessage in the database
         List<ShortMessage> shortMessageList = shortMessageRepository.findAll();
@@ -611,9 +649,12 @@ class ShortMessageResourceIT {
 
         // If url ID doesn't match entity ID, it will throw BadRequestAlertException
         restShortMessageMockMvc
-                .perform(put(ENTITY_API_URL_ID, count.incrementAndGet()).contentType(MediaType.APPLICATION_JSON)
-                        .content(TestUtil.convertObjectToJsonBytes(shortMessageDTO)))
-                .andExpect(status().isMethodNotAllowed());
+            .perform(
+                put(ENTITY_API_URL_ID, count.incrementAndGet())
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(TestUtil.convertObjectToJsonBytes(shortMessageDTO))
+            )
+            .andExpect(status().isMethodNotAllowed());
 
         // Validate the ShortMessage in the database
         List<ShortMessage> shortMessageList = shortMessageRepository.findAll();
@@ -632,9 +673,10 @@ class ShortMessageResourceIT {
 
         // If url ID doesn't match entity ID, it will throw BadRequestAlertException
         restShortMessageMockMvc
-                .perform(put(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON)
-                        .content(TestUtil.convertObjectToJsonBytes(shortMessageDTO)))
-                .andExpect(status().isMethodNotAllowed());
+            .perform(
+                put(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(shortMessageDTO))
+            )
+            .andExpect(status().isMethodNotAllowed());
 
         // Validate the ShortMessage in the database
         List<ShortMessage> shortMessageList = shortMessageRepository.findAll();
@@ -655,10 +697,12 @@ class ShortMessageResourceIT {
         partialUpdatedShortMessage.setId(shortMessage.getId());
 
         restShortMessageMockMvc
-                .perform(patch(ENTITY_API_URL_ID, partialUpdatedShortMessage.getId())
-                        .contentType("application/merge-patch+json")
-                        .content(TestUtil.convertObjectToJsonBytes(partialUpdatedShortMessage)))
-                .andExpect(status().isMethodNotAllowed());
+            .perform(
+                patch(ENTITY_API_URL_ID, partialUpdatedShortMessage.getId())
+                    .contentType("application/merge-patch+json")
+                    .content(TestUtil.convertObjectToJsonBytes(partialUpdatedShortMessage))
+            )
+            .andExpect(status().isMethodNotAllowed());
 
         // Validate the ShortMessage in the database
         List<ShortMessage> shortMessageList = shortMessageRepository.findAll();
@@ -679,10 +723,12 @@ class ShortMessageResourceIT {
         partialUpdatedShortMessage.setId(shortMessage.getId());
 
         restShortMessageMockMvc
-                .perform(patch(ENTITY_API_URL_ID, partialUpdatedShortMessage.getId())
-                        .contentType("application/merge-patch+json")
-                        .content(TestUtil.convertObjectToJsonBytes(partialUpdatedShortMessage)))
-                .andExpect(status().isForbidden());
+            .perform(
+                patch(ENTITY_API_URL_ID, partialUpdatedShortMessage.getId())
+                    .contentType("application/merge-patch+json")
+                    .content(TestUtil.convertObjectToJsonBytes(partialUpdatedShortMessage))
+            )
+            .andExpect(status().isForbidden());
     }
 
     @Test
@@ -701,10 +747,12 @@ class ShortMessageResourceIT {
         partialUpdatedShortMessage.phoneNumber(UPDATED_PHONE_NUMBER).content(UPDATED_CONTENT);
 
         restShortMessageMockMvc
-                .perform(patch(ENTITY_API_URL_ID, partialUpdatedShortMessage.getId())
-                        .contentType("application/merge-patch+json")
-                        .content(TestUtil.convertObjectToJsonBytes(partialUpdatedShortMessage)))
-                .andExpect(status().isMethodNotAllowed());
+            .perform(
+                patch(ENTITY_API_URL_ID, partialUpdatedShortMessage.getId())
+                    .contentType("application/merge-patch+json")
+                    .content(TestUtil.convertObjectToJsonBytes(partialUpdatedShortMessage))
+            )
+            .andExpect(status().isMethodNotAllowed());
 
         // Validate the ShortMessage in the database
         List<ShortMessage> shortMessageList = shortMessageRepository.findAll();
@@ -726,9 +774,12 @@ class ShortMessageResourceIT {
 
         // If the entity doesn't have an ID, it will throw BadRequestAlertException
         restShortMessageMockMvc
-                .perform(patch(ENTITY_API_URL_ID, shortMessageDTO.getId()).contentType("application/merge-patch+json")
-                        .content(TestUtil.convertObjectToJsonBytes(shortMessageDTO)))
-                .andExpect(status().isMethodNotAllowed());
+            .perform(
+                patch(ENTITY_API_URL_ID, shortMessageDTO.getId())
+                    .contentType("application/merge-patch+json")
+                    .content(TestUtil.convertObjectToJsonBytes(shortMessageDTO))
+            )
+            .andExpect(status().isMethodNotAllowed());
 
         // Validate the ShortMessage in the database
         List<ShortMessage> shortMessageList = shortMessageRepository.findAll();
@@ -747,9 +798,12 @@ class ShortMessageResourceIT {
 
         // If url ID doesn't match entity ID, it will throw BadRequestAlertException
         restShortMessageMockMvc
-                .perform(patch(ENTITY_API_URL_ID, count.incrementAndGet()).contentType("application/merge-patch+json")
-                        .content(TestUtil.convertObjectToJsonBytes(shortMessageDTO)))
-                .andExpect(status().isMethodNotAllowed());
+            .perform(
+                patch(ENTITY_API_URL_ID, count.incrementAndGet())
+                    .contentType("application/merge-patch+json")
+                    .content(TestUtil.convertObjectToJsonBytes(shortMessageDTO))
+            )
+            .andExpect(status().isMethodNotAllowed());
 
         // Validate the ShortMessage in the database
         List<ShortMessage> shortMessageList = shortMessageRepository.findAll();
@@ -768,9 +822,12 @@ class ShortMessageResourceIT {
 
         // If url ID doesn't match entity ID, it will throw BadRequestAlertException
         restShortMessageMockMvc
-                .perform(patch(ENTITY_API_URL).contentType("application/merge-patch+json")
-                        .content(TestUtil.convertObjectToJsonBytes(shortMessageDTO)))
-                .andExpect(status().isMethodNotAllowed());
+            .perform(
+                patch(ENTITY_API_URL)
+                    .contentType("application/merge-patch+json")
+                    .content(TestUtil.convertObjectToJsonBytes(shortMessageDTO))
+            )
+            .andExpect(status().isMethodNotAllowed());
 
         // Validate the ShortMessage in the database
         List<ShortMessage> shortMessageList = shortMessageRepository.findAll();
@@ -788,8 +845,8 @@ class ShortMessageResourceIT {
 
         // Delete the shortMessage
         restShortMessageMockMvc
-                .perform(delete(ENTITY_API_URL_ID, shortMessage.getId()).accept(MediaType.APPLICATION_JSON))
-                .andExpect(status().isMethodNotAllowed());
+            .perform(delete(ENTITY_API_URL_ID, shortMessage.getId()).accept(MediaType.APPLICATION_JSON))
+            .andExpect(status().isMethodNotAllowed());
 
         // Validate the database contains one less item
         List<ShortMessage> shortMessageList = shortMessageRepository.findAll();
@@ -806,8 +863,8 @@ class ShortMessageResourceIT {
 
         // Delete the shortMessage
         restShortMessageMockMvc
-                .perform(delete(ENTITY_API_URL_ID, shortMessage.getId()).accept(MediaType.APPLICATION_JSON))
-                .andExpect(status().isForbidden());
+            .perform(delete(ENTITY_API_URL_ID, shortMessage.getId()).accept(MediaType.APPLICATION_JSON))
+            .andExpect(status().isForbidden());
 
         // Validate the database contains one less item
         List<ShortMessage> shortMessageList = shortMessageRepository.findAll();
