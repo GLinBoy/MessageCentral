@@ -503,10 +503,10 @@ class EmailResourceIT {
         emailRepository.saveAndFlush(email);
 
         // Get all the emailList where subject in DEFAULT_SUBJECT or UPDATED_SUBJECT
-        defaultEmailShouldBeFound(String.format("search=( subject:%s OR subject:%s )", DEFAULT_SUBJECT, UPDATED_SUBJECT));
+        defaultEmailShouldBeFound(String.format("query=subject=in=(%s, %s)", DEFAULT_SUBJECT, UPDATED_SUBJECT));
 
         // Get all the emailList where subject equals to UPDATED_SUBJECT
-        defaultEmailShouldNotBeFound("search=subject:" + UPDATED_SUBJECT);
+        defaultEmailShouldNotBeFound("query=subject==" + UPDATED_SUBJECT);
     }
 
     @Test
