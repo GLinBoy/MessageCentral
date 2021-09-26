@@ -419,9 +419,9 @@ class EmailResourceIT {
         emailRepository.saveAndFlush(email);
 
         // Get all the emailList where receiver in DEFAULT_RECEIVER or UPDATED_RECEIVER
-        defaultEmailShouldBeFound(String.format("search=( receiver:%s OR receiver:%s )", DEFAULT_RECEIVER, UPDATED_RECEIVER));
+        defaultEmailShouldBeFound(String.format("query=receiver=in=(%s, %s)", DEFAULT_RECEIVER, UPDATED_RECEIVER));
         // Get all the emailList where receiver equals to UPDATED_RECEIVER
-        defaultEmailShouldNotBeFound("search=receiver:" + UPDATED_RECEIVER);
+        defaultEmailShouldNotBeFound("query=receiver==" + UPDATED_RECEIVER);
     }
 
     @Test
