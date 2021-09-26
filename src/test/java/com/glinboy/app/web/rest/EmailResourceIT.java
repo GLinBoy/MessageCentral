@@ -372,14 +372,14 @@ class EmailResourceIT {
 
         Long id = email.getId();
 
-        defaultEmailShouldBeFound("search=id:" + id);
-        defaultEmailShouldNotBeFound("search=id!" + id);
+        defaultEmailShouldBeFound("query=id==" + id);
+        defaultEmailShouldNotBeFound("query=id!=" + id);
 
-        defaultEmailShouldBeFound(String.format("search=( id:%d OR id>%d )", id, id));
-        defaultEmailShouldNotBeFound("search=id>" + id);
+        defaultEmailShouldBeFound(String.format("query=id>=%d", id));
+        defaultEmailShouldNotBeFound("query=id>" + id);
 
-        defaultEmailShouldBeFound(String.format("search=( id:%d OR id<%d )", id, id));
-        defaultEmailShouldNotBeFound("search=id<" + id);
+        defaultEmailShouldBeFound(String.format("query=id<=%d", id));
+        defaultEmailShouldNotBeFound("query=id<" + id);
     }
 
     @Test
