@@ -390,10 +390,10 @@ class EmailResourceIT {
         emailRepository.saveAndFlush(email);
 
         // Get all the emailList where receiver equals to DEFAULT_RECEIVER
-        defaultEmailShouldBeFound("search=receiver:" + DEFAULT_RECEIVER);
+        defaultEmailShouldBeFound("query=receiver==" + DEFAULT_RECEIVER);
 
         // Get all the emailList where receiver equals to UPDATED_RECEIVER
-        defaultEmailShouldNotBeFound("search=receiver:" + UPDATED_RECEIVER);
+        defaultEmailShouldNotBeFound("query=receiver==" + UPDATED_RECEIVER);
     }
 
     @Test
