@@ -517,10 +517,10 @@ class EmailResourceIT {
         emailRepository.saveAndFlush(email);
 
         // Get all the emailList where subject is not null
-        defaultEmailShouldBeFound("subject.specified=true");
+        defaultEmailShouldBeFound("query=subject!=null");
 
         // Get all the emailList where subject is null
-        defaultEmailShouldNotBeFound("subject.specified=false");
+        defaultEmailShouldNotBeFound("query=subject==null");
     }
 
     @Test
