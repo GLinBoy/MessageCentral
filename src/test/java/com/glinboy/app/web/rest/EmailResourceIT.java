@@ -432,10 +432,10 @@ class EmailResourceIT {
         emailRepository.saveAndFlush(email);
 
         // Get all the emailList where receiver is not null
-        defaultEmailShouldBeFound("receiver.specified=true");
+        defaultEmailShouldBeFound("query=receiver!=null");
 
         // Get all the emailList where receiver is null
-        defaultEmailShouldNotBeFound("receiver.specified=false");
+        defaultEmailShouldNotBeFound("query=receiver==null");
     }
 
     @Test
