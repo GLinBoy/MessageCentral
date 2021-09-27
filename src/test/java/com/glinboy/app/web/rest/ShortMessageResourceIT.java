@@ -389,10 +389,10 @@ class ShortMessageResourceIT {
         shortMessageRepository.saveAndFlush(shortMessage);
 
         // Get all the shortMessageList where phoneNumber is not null
-        defaultShortMessageShouldBeFound("phoneNumber.specified=true");
+        defaultShortMessageShouldBeFound("query=phoneNumber!=null");
 
         // Get all the shortMessageList where phoneNumber is null
-        defaultShortMessageShouldNotBeFound("phoneNumber.specified=false");
+        defaultShortMessageShouldNotBeFound("query=phoneNumber==null");
     }
 
     @Test
