@@ -324,14 +324,14 @@ class ShortMessageResourceIT {
 
         Long id = shortMessage.getId();
 
-        defaultShortMessageShouldBeFound("search=id:" + id);
-        defaultShortMessageShouldNotBeFound("search=id!" + id);
+        defaultShortMessageShouldBeFound("query=id==" + id);
+        defaultShortMessageShouldNotBeFound("query=id!=" + id);
 
-        defaultShortMessageShouldBeFound(String.format("search=( id:%d OR id>%d )", id, id));
-        defaultShortMessageShouldNotBeFound("search=id>" + id);
+        defaultShortMessageShouldBeFound(String.format("query=id>=%d", id));
+        defaultShortMessageShouldNotBeFound("query=id>" + id);
 
-        defaultShortMessageShouldBeFound(String.format("search=( id:%d OR id<%d )", id, id));
-        defaultShortMessageShouldNotBeFound("search=id<" + id);
+        defaultShortMessageShouldBeFound(String.format("query=id<=%d", id));
+        defaultShortMessageShouldNotBeFound("query=id<" + id);
     }
 
     @Test
