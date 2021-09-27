@@ -357,11 +357,11 @@ class ShortMessageResourceIT {
 
         // Get all the shortMessageList where phoneNumber not equals to
         // DEFAULT_PHONE_NUMBER
-        defaultShortMessageShouldNotBeFound("search=phoneNumber!" + DEFAULT_PHONE_NUMBER);
+        defaultShortMessageShouldNotBeFound("query=phoneNumber!=" + DEFAULT_PHONE_NUMBER);
 
         // Get all the shortMessageList where phoneNumber not equals to
         // UPDATED_PHONE_NUMBER
-        defaultShortMessageShouldBeFound("search=phoneNumber!" + UPDATED_PHONE_NUMBER);
+        defaultShortMessageShouldBeFound("query=phoneNumber!=" + UPDATED_PHONE_NUMBER);
     }
 
     @Test
