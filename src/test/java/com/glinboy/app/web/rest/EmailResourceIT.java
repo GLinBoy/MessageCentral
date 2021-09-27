@@ -545,10 +545,10 @@ class EmailResourceIT {
         emailRepository.saveAndFlush(email);
 
         // Get all the emailList where subject does not contain DEFAULT_SUBJECT
-        defaultEmailShouldNotBeFound("search=subject!*" + DEFAULT_SUBJECT + "*");
+        defaultEmailShouldNotBeFound("query=subject!=*" + DEFAULT_SUBJECT + "*");
 
         // Get all the emailList where subject does not contain UPDATED_SUBJECT
-        defaultEmailShouldBeFound("search=subject!*" + UPDATED_SUBJECT + "*");
+        defaultEmailShouldBeFound("query=subject!=*" + UPDATED_SUBJECT + "*");
     }
 
     /**
