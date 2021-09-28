@@ -476,10 +476,10 @@ class ShortMessageResourceIT {
         shortMessageRepository.saveAndFlush(shortMessage);
 
         // Get all the shortMessageList where content is not null
-        defaultShortMessageShouldBeFound("content.specified=true");
+        defaultShortMessageShouldBeFound("query=content!=null");
 
         // Get all the shortMessageList where content is null
-        defaultShortMessageShouldNotBeFound("content.specified=false");
+        defaultShortMessageShouldNotBeFound("query=content==null");
     }
 
     @Test
