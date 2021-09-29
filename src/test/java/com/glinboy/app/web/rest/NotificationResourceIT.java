@@ -574,10 +574,10 @@ class NotificationResourceIT {
         notificationRepository.saveAndFlush(notification);
 
         // Get all the notificationList where token in DEFAULT_TOKEN or UPDATED_TOKEN
-        defaultNotificationShouldBeFound(String.format("search=( token:%s OR token:%s )", DEFAULT_TOKEN, UPDATED_TOKEN));
+        defaultNotificationShouldBeFound(String.format("query=token=in=(%s, %s)", DEFAULT_TOKEN, UPDATED_TOKEN));
 
         // Get all the notificationList where token equals to UPDATED_TOKEN
-        defaultNotificationShouldNotBeFound("search=token:" + UPDATED_TOKEN);
+        defaultNotificationShouldNotBeFound("query=token==" + UPDATED_TOKEN);
     }
 
     @Test
