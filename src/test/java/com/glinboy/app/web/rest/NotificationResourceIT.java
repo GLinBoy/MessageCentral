@@ -602,10 +602,10 @@ class NotificationResourceIT {
         notificationRepository.saveAndFlush(notification);
 
         // Get all the notificationList where token contains DEFAULT_TOKEN
-        defaultNotificationShouldBeFound("search=token:*" + DEFAULT_TOKEN + "*");
+        defaultNotificationShouldBeFound("query=token==*" + DEFAULT_TOKEN + "*");
 
         // Get all the notificationList where token contains UPDATED_TOKEN
-        defaultNotificationShouldNotBeFound("search=token:*" + UPDATED_TOKEN + "*");
+        defaultNotificationShouldNotBeFound("query=token==*" + UPDATED_TOKEN + "*");
     }
 
     @Test
