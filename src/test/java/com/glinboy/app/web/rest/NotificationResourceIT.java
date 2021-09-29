@@ -444,14 +444,14 @@ class NotificationResourceIT {
 
         Long id = notification.getId();
 
-        defaultNotificationShouldBeFound("search=id:" + id);
-        defaultNotificationShouldNotBeFound("search=id!" + id);
+        defaultNotificationShouldBeFound("query=id==" + id);
+        defaultNotificationShouldNotBeFound("query=id!=" + id);
 
-        defaultNotificationShouldBeFound(String.format("search=( id>%d OR id:%d )", id, id));
-        defaultNotificationShouldNotBeFound("search=id>" + id);
+        defaultNotificationShouldBeFound(String.format("query=>=%d", id));
+        defaultNotificationShouldNotBeFound("query=id>" + id);
 
-        defaultNotificationShouldBeFound(String.format("search=( id<%d OR id:%d )", id, id));
-        defaultNotificationShouldNotBeFound("search=id<" + id);
+        defaultNotificationShouldBeFound(String.format("query=id<=%d", id));
+        defaultNotificationShouldNotBeFound("query=id<=" + id);
     }
 
     @Test
