@@ -588,10 +588,10 @@ class NotificationResourceIT {
         notificationRepository.saveAndFlush(notification);
 
         // Get all the notificationList where token is not null
-        defaultNotificationShouldBeFound("token.specified=true");
+        defaultNotificationShouldBeFound("query=token!=null");
 
         // Get all the notificationList where token is null
-        defaultNotificationShouldNotBeFound("token.specified=false");
+        defaultNotificationShouldNotBeFound("query=token==null");
     }
 
     @Test
