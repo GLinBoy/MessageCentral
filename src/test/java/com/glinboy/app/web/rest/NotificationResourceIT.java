@@ -490,10 +490,10 @@ class NotificationResourceIT {
         notificationRepository.saveAndFlush(notification);
 
         // Get all the notificationList where username in DEFAULT_USERNAME or UPDATED_USERNAME
-        defaultNotificationShouldBeFound(String.format("search=( username:%s OR username:%s )", DEFAULT_USERNAME, UPDATED_USERNAME));
+        defaultNotificationShouldBeFound(String.format("query=username=in=(%s, %s)", DEFAULT_USERNAME, UPDATED_USERNAME));
 
         // Get all the notificationList where username equals to UPDATED_USERNAME
-        defaultNotificationShouldNotBeFound("search=username:" + UPDATED_USERNAME);
+        defaultNotificationShouldNotBeFound("query=username==" + UPDATED_USERNAME);
     }
 
     @Test
