@@ -504,10 +504,10 @@ class NotificationResourceIT {
         notificationRepository.saveAndFlush(notification);
 
         // Get all the notificationList where username is not null
-        defaultNotificationShouldBeFound("username.specified=true");
+        defaultNotificationShouldBeFound("query=username!=null");
 
         // Get all the notificationList where username is null
-        defaultNotificationShouldNotBeFound("username.specified=false");
+        defaultNotificationShouldNotBeFound("query=username==null");
     }
 
     @Test
