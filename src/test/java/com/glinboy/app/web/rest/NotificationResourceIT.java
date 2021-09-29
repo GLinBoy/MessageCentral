@@ -532,10 +532,10 @@ class NotificationResourceIT {
         notificationRepository.saveAndFlush(notification);
 
         // Get all the notificationList where username does not contain DEFAULT_USERNAME
-        defaultNotificationShouldNotBeFound("search=username!*" + DEFAULT_USERNAME + "*");
+        defaultNotificationShouldNotBeFound("query=username!=*" + DEFAULT_USERNAME + "*");
 
         // Get all the notificationList where username does not contain UPDATED_USERNAME
-        defaultNotificationShouldBeFound("search=username!*" + UPDATED_USERNAME + "*");
+        defaultNotificationShouldBeFound("query=username!=*" + UPDATED_USERNAME + "*");
     }
 
     @Test
