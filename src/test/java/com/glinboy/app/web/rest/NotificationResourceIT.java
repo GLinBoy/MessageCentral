@@ -658,10 +658,10 @@ class NotificationResourceIT {
         notificationRepository.saveAndFlush(notification);
 
         // Get all the notificationList where subject in DEFAULT_SUBJECT or UPDATED_SUBJECT
-        defaultNotificationShouldBeFound(String.format("search=( subject:%s OR subject:%s )", DEFAULT_SUBJECT, UPDATED_SUBJECT));
+        defaultNotificationShouldBeFound(String.format("query=subject=in=(%s, %s)", DEFAULT_SUBJECT, UPDATED_SUBJECT));
 
         // Get all the notificationList where subject equals to UPDATED_SUBJECT
-        defaultNotificationShouldNotBeFound("search=subject:" + UPDATED_SUBJECT);
+        defaultNotificationShouldNotBeFound("query=subject==" + UPDATED_SUBJECT);
     }
 
     @Test
