@@ -742,10 +742,10 @@ class NotificationResourceIT {
         notificationRepository.saveAndFlush(notification);
 
         // Get all the notificationList where content in DEFAULT_CONTENT or UPDATED_CONTENT
-        defaultNotificationShouldBeFound(String.format("search=( content:%s OR content:%s )", DEFAULT_CONTENT, UPDATED_CONTENT));
+        defaultNotificationShouldBeFound(String.format("query=content=in=(%s, %s)", DEFAULT_CONTENT, UPDATED_CONTENT));
 
         // Get all the notificationList where content equals to UPDATED_CONTENT
-        defaultNotificationShouldNotBeFound("search=content:" + UPDATED_CONTENT);
+        defaultNotificationShouldNotBeFound("query=content==" + UPDATED_CONTENT);
     }
 
     @Test
@@ -756,10 +756,10 @@ class NotificationResourceIT {
         notificationRepository.saveAndFlush(notification);
 
         // Get all the notificationList where content is not null
-        defaultNotificationShouldBeFound("content.specified=true");
+        defaultNotificationShouldBeFound("query=content!=null");
 
         // Get all the notificationList where content is null
-        defaultNotificationShouldNotBeFound("content.specified=false");
+        defaultNotificationShouldNotBeFound("query=content==null");
     }
 
     @Test
