@@ -714,10 +714,10 @@ class NotificationResourceIT {
         notificationRepository.saveAndFlush(notification);
 
         // Get all the notificationList where content equals to DEFAULT_CONTENT
-        defaultNotificationShouldBeFound("search=content:" + DEFAULT_CONTENT);
+        defaultNotificationShouldBeFound("query=content==" + DEFAULT_CONTENT);
 
         // Get all the notificationList where content equals to UPDATED_CONTENT
-        defaultNotificationShouldNotBeFound("search=content:" + UPDATED_CONTENT);
+        defaultNotificationShouldNotBeFound("query=content==" + UPDATED_CONTENT);
     }
 
     @Test
