@@ -672,10 +672,10 @@ class NotificationResourceIT {
         notificationRepository.saveAndFlush(notification);
 
         // Get all the notificationList where subject is not null
-        defaultNotificationShouldBeFound("subject.specified=true");
+        defaultNotificationShouldBeFound("query=subject!=null");
 
         // Get all the notificationList where subject is null
-        defaultNotificationShouldNotBeFound("subject.specified=false");
+        defaultNotificationShouldNotBeFound("query=subject==null");
     }
 
     @Test
