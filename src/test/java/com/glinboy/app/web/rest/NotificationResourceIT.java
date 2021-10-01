@@ -826,10 +826,10 @@ class NotificationResourceIT {
         notificationRepository.saveAndFlush(notification);
 
         // Get all the notificationList where image in DEFAULT_IMAGE or UPDATED_IMAGE
-        defaultNotificationShouldBeFound(String.format("search=image:%s OR image:%s", DEFAULT_IMAGE, UPDATED_IMAGE));
+        defaultNotificationShouldBeFound(String.format("query=image=in=(%s, %s)", DEFAULT_IMAGE, UPDATED_IMAGE));
 
         // Get all the notificationList where image equals to UPDATED_IMAGE
-        defaultNotificationShouldNotBeFound("search=image:" + UPDATED_IMAGE);
+        defaultNotificationShouldNotBeFound("query=image==" + UPDATED_IMAGE);
     }
 
     @Test
