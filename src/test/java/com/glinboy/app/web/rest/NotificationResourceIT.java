@@ -32,6 +32,7 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import javax.persistence.EntityManager;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -447,11 +448,11 @@ class NotificationResourceIT {
         defaultNotificationShouldBeFound("query=id==" + id);
         defaultNotificationShouldNotBeFound("query=id!=" + id);
 
-        defaultNotificationShouldBeFound(String.format("query=>=%d", id));
+        defaultNotificationShouldBeFound(String.format("query=id>=%d", id));
         defaultNotificationShouldNotBeFound("query=id>" + id);
 
         defaultNotificationShouldBeFound(String.format("query=id<=%d", id));
-        defaultNotificationShouldNotBeFound("query=id<=" + id);
+        defaultNotificationShouldNotBeFound("query=id<" + id);
     }
 
     @Test
