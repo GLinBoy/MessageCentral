@@ -840,10 +840,10 @@ class NotificationResourceIT {
         notificationRepository.saveAndFlush(notification);
 
         // Get all the notificationList where image is not null
-        defaultNotificationShouldBeFound("image.specified=true");
+        defaultNotificationShouldBeFound("query=image!=null");
 
         // Get all the notificationList where image is null
-        defaultNotificationShouldNotBeFound("image.specified=false");
+        defaultNotificationShouldNotBeFound("query=image==null");
     }
 
     @Test
