@@ -895,10 +895,10 @@ class NotificationResourceIT {
         Long dataId = data.getId();
 
         // Get all the notificationList where data equals to dataId
-        defaultNotificationShouldBeFound("search=data.id:" + dataId);
+        defaultNotificationShouldBeFound("query=data.id==" + dataId);
 
         // Get all the notificationList where data equals to (dataId + 1)
-        defaultNotificationShouldNotBeFound("search=data.id:" + (dataId + 1));
+        defaultNotificationShouldNotBeFound("query=data.id==" + (dataId + 1));
     }
 
     /**
