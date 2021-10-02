@@ -1,7 +1,7 @@
 export default function buildSearchQueryOpts(searchQuery) {
-  let search = '';
+  let query = '';
   if (searchQuery && searchQuery.search) {
-    search = `&search=${searchQuery.search}`;
+    query = `&query=${searchQuery.search}`;
   }
-  return search;
+  return query;
 }
