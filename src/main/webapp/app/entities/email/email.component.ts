@@ -105,7 +105,7 @@ export default class Email extends mixins(JhiDataUtils) {
   public search(): string {
     const result = undefined;
     if (this.currentSearch) {
-      result = `( receiver:*${this.currentSearch}* OR subject:*${this.currentSearch}* OR content:*${this.currentSearch}* )`;
+      result = `receiver==*${this.currentSearch}* or subject==*${this.currentSearch}* or content==*${this.currentSearch}*`;
     }
     return result;
   }
