@@ -103,7 +103,7 @@ export default class Notification extends Vue {
   public search(): string {
     const result = undefined;
     if (this.currentSearch) {
-      result = `( username:*${this.currentSearch}* OR token:*${this.currentSearch}* OR subject:*${this.currentSearch}* OR content:*${this.currentSearch}* )`;
+      result = `username==*${this.currentSearch}* or token==*${this.currentSearch}* or subject==*${this.currentSearch}* or content==*${this.currentSearch}*`;
     }
     return result;
   }
