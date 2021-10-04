@@ -25,6 +25,8 @@ const NotificationUpdate = () => import('@/entities/notification/notification-up
 // prettier-ignore
 const NotificationDetails = () => import('@/entities/notification/notification-details.vue');
 // prettier-ignore
+const NotificationMultiple = () => import('@/entities/notification/notification-multiple.vue');
+// prettier-ignore
 const NotificationData = () => import('@/entities/notification-data/notification-data.vue');
 // prettier-ignore
 const NotificationDataUpdate = () => import('@/entities/notification-data/notification-data-update.vue');
@@ -78,7 +80,7 @@ export default [
   {
     path: '/notification/new',
     name: 'NotificationCreate',
-    component: NotificationUpdate,
+    component: NotificationMultiple,
     meta: { authorities: [Authority.ADMIN, Authority.NOTIFICATION_USER] },
   },
   {
