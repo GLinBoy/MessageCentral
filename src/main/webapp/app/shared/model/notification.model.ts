@@ -21,3 +21,15 @@ export class Notification implements INotification {
     public data?: INotificationData[] | null
   ) {}
 }
+
+export interface IReceivers {
+  username?: string;
+  token?: string;
+}
+
+export class Receivers implements IReceivers {
+  constructor(
+    public username?: string,
+    public token?: string,
+  ) {}
+}
