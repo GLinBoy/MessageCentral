@@ -33,3 +33,21 @@ export class Receivers implements IReceivers {
     public token?: string,
   ) {}
 }
+
+export interface INotifications {
+  receivers?: IReceivers[] | null;
+  subject?: string;
+  content?: string;
+  image?: string | null;
+  data?: INotificationData[] | null;
+}
+
+export class Notifications implements INotifications {
+  constructor(
+    public receivers?: IReceivers[] | null,
+    public subject?: string,
+    public content?: string,
+    public image?: string | null,
+    public data?: INotificationData[] | null
+  ) {}
+}
