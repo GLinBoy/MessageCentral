@@ -3,7 +3,7 @@ import axios from 'axios';
 import buildPaginationQueryOpts from '@/shared/sort/sorts';
 import buildSearchQueryOpts from '@/shared/search/searchs';
 
-import { INotification } from '@/shared/model/notification.model';
+import { INotification, INotifications } from '@/shared/model/notification.model';
 
 const baseApiUrl = 'api/notifications';
 
@@ -79,6 +79,22 @@ export default class NotificationService {
         .patch(`${baseApiUrl}/${entity.id}`, entity)
         .then(res => {
           resolve(res.data);
+        })
+        .catch(err => {
+          reject(err);
+        });
+    });
+  }
+
+  /**
+   * Create multiple Notifications at once
+   */
+  public createMultiple(entity: INotifications[]): Promise {
+    return new Promise((resolve, reject) => {
+      axios
+        .post(`${baseApiUrl}/multiple`, entity)
+        .then(res => {
+          resolve();
         })
         .catch(err => {
           reject(err);
