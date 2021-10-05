@@ -71,13 +71,11 @@ public class NotificationServiceImpl implements NotificationService {
             .flatMap(ns ->
                 ns
                     .getReceivers()
-                    .keySet()
                     .stream()
-                    .filter(rk -> rk.length() <= 64 && ns.getReceivers().get(rk).length() <= 164)
                     .map(r -> {
                         Notification n = new Notification();
-                        n.setUsername(r);
-                        n.setToken(ns.getReceivers().get(r));
+                        n.setUsername(r.getUsername());
+                        n.setToken(r.getToken());
                         n.setSubject(ns.getSubject());
                         n.setContent(ns.getContent());
                         n.setImage(ns.getImage());
