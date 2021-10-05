@@ -21,7 +21,10 @@ import com.glinboy.app.security.AuthoritiesConstants;
 import com.glinboy.app.service.NotificationChannelService;
 import com.glinboy.app.service.dto.NotificationDTO;
 import com.glinboy.app.service.dto.NotificationsDTO;
+import com.glinboy.app.service.dto.ReceiverDTO;
 import com.glinboy.app.service.mapper.NotificationMapper;
+
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -120,9 +123,11 @@ class NotificationResourceIT {
         List<NotificationsDTO> notificationsDTO = IntStream
             .range(0, notificationsDTOCount)
             .mapToObj(i -> {
-                Map<String, String> rs = new HashMap<>();
+                List<ReceiverDTO> rs = new ArrayList<>();
                 for (int j = 1; j <= reciversCount; j++) {
-                    rs.put("USER_" + j, "TOKEN_" + j);
+                    rs.add(new ReceiverDTO()
+                            .username("USER_" + j)
+                            .token("TOKEN_" + j));
                 }
                 NotificationsDTO n = new NotificationsDTO();
                 n.setReceivers(rs);
