@@ -22,7 +22,7 @@ const validations: any = {
 @Component({
   validations,
 })
-export default class ShortMessageUpdate extends Vue {
+export default class ShortMessageMultiple extends Vue {
   @Inject('shortMessageService') private shortMessageService: () => ShortMessageService;
   public shortMessages: IShortMessages = new ShortMessages();
   public isSaving = false;
