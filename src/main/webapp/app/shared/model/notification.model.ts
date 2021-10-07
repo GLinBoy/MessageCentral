@@ -22,12 +22,12 @@ export class Notification implements INotification {
   ) {}
 }
 
-export interface IReceivers {
+export interface IReceiver {
   username?: string;
   token?: string;
 }
 
-export class Receivers implements IReceivers {
+export class Receiver implements IReceiver {
   constructor(
     public username?: string,
     public token?: string,
@@ -35,7 +35,7 @@ export class Receivers implements IReceivers {
 }
 
 export interface INotifications {
-  receivers?: IReceivers[] | null;
+  receivers?: IReceiver[] | null;
   subject?: string;
   content?: string;
   image?: string | null;
@@ -44,7 +44,7 @@ export interface INotifications {
 
 export class Notifications implements INotifications {
   constructor(
-    public receivers?: IReceivers[] | null,
+    public receivers?: IReceiver[] | null,
     public subject?: string,
     public content?: string,
     public image?: string | null,
