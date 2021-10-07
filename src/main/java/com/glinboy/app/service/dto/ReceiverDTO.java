@@ -15,6 +15,16 @@ public class ReceiverDTO implements Serializable {
     @NotNull
     @Size(max = 164)
     private String token;
+    
+    public ReceiverDTO username(String username) {
+        this.username = username;
+        return this;
+    }
+    
+    public ReceiverDTO token(String token) {
+        this.token = token;
+        return this;
+    }
 
     public String getUsername() {
         return username;
