@@ -28,7 +28,7 @@ const validations: any = {
 @Component({
   validations,
 })
-export default class EmailUpdate extends mixins(JhiDataUtils) {
+export default class EmailMultiple extends mixins(JhiDataUtils) {
   @Inject('emailService') private emailService: () => EmailService;
   public emails: IEmails = new Emails();
   public isSaving = false;
