@@ -1,0 +1,36 @@
+{
+  "fields": [
+    {
+      "fieldName": "phoneNumber",
+      "fieldType": "String",
+      "fieldValidateRules": ["required", "minlength", "maxlength", "pattern"],
+      "fieldValidateRulesMinlength": "7",
+      "fieldValidateRulesMaxlength": "15",
+      "fieldValidateRulesPattern": "^\\+(?:[0-9]●?){6,14}[0-9]$"
+    },
+    {
+      "fieldName": "content",
+      "fieldType": "String",
+      "fieldValidateRules": ["required", "minlength", "maxlength"],
+      "fieldValidateRulesMinlength": "6",
+      "fieldValidateRulesMaxlength": "160"
+    },
+    {
+      "fieldName": "status",
+      "fieldType": "MessageStatus",
+      "fieldValues": "IN_QUEUE,SENT,FAILED"
+    }
+  ],
+  "relationships": [],
+  "service": "serviceImpl",
+  "dto": "mapstruct",
+  "jpaMetamodelFiltering": true,
+  "readOnly": false,
+  "pagination": "pagination",
+  "name": "ShortMessage",
+  "changelogDate": "20210421105843",
+  "entityTableName": "short_message",
+  "fluentMethods": true,
+  "embedded": false,
+  "applications": ["MessageCentral"]
+}
