@@ -5,10 +5,13 @@ import JhiDataUtils from '@/shared/data/data-utils.service';
 
 import { IEmail } from '@/shared/model/email.model';
 import EmailService from './email.service';
+import AlertService from '@/shared/alert/alert.service';
 
 @Component
 export default class EmailDetails extends mixins(JhiDataUtils) {
   @Inject('emailService') private emailService: () => EmailService;
+  @Inject('alertService') private alertService: () => AlertService;
+
   public email: IEmail = {};
 
   beforeRouteEnter(to, from, next) {
@@ -24,6 +27,9 @@ export default class EmailDetails extends mixins(JhiDataUtils) {
       .find(emailId)
       .then(res => {
         this.email = res;
+      })
+      .catch(error => {
+        this.alertService().showHttpError(this, error.response);
       });
   }
 

@@ -118,7 +118,7 @@ public class EmailResource {
      * or with status {@code 500 (Internal Server Error)} if the emailDTO couldn't be updated.
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
-    @PatchMapping(value = "/emails/{id}", consumes = "application/merge-patch+json")
+    @PatchMapping(value = "/emails/{id}", consumes = { "application/json", "application/merge-patch+json" })
     public ResponseEntity<EmailDTO> partialUpdateEmail(
         @PathVariable(value = "id", required = false) final Long id,
         @NotNull @RequestBody EmailDTO emailDTO

@@ -21,6 +21,7 @@ public class Email implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "sequenceGenerator")
     @SequenceGenerator(name = "sequenceGenerator")
+    @Column(name = "id")
     private Long id;
 
     @NotNull
@@ -44,17 +45,18 @@ public class Email implements Serializable {
     private MessageStatus status;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here
+
     public Long getId() {
-        return id;
+        return this.id;
+    }
+
+    public Email id(Long id) {
+        this.setId(id);
+        return this;
     }
 
     public void setId(Long id) {
         this.id = id;
-    }
-
-    public Email id(Long id) {
-        this.id = id;
-        return this;
     }
 
     public String getReceiver() {
@@ -62,7 +64,7 @@ public class Email implements Serializable {
     }
 
     public Email receiver(String receiver) {
-        this.receiver = receiver;
+        this.setReceiver(receiver);
         return this;
     }
 
@@ -75,7 +77,7 @@ public class Email implements Serializable {
     }
 
     public Email subject(String subject) {
-        this.subject = subject;
+        this.setSubject(subject);
         return this;
     }
 
@@ -88,7 +90,7 @@ public class Email implements Serializable {
     }
 
     public Email content(String content) {
-        this.content = content;
+        this.setContent(content);
         return this;
     }
 
@@ -101,7 +103,7 @@ public class Email implements Serializable {
     }
 
     public Email status(MessageStatus status) {
-        this.status = status;
+        this.setStatus(status);
         return this;
     }
 

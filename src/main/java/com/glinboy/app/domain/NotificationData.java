@@ -20,6 +20,7 @@ public class NotificationData implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "sequenceGenerator")
     @SequenceGenerator(name = "sequenceGenerator")
+    @Column(name = "id")
     private Long id;
 
     @NotNull
@@ -38,17 +39,18 @@ public class NotificationData implements Serializable {
     private Notification notification;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here
+
     public Long getId() {
-        return id;
+        return this.id;
+    }
+
+    public NotificationData id(Long id) {
+        this.setId(id);
+        return this;
     }
 
     public void setId(Long id) {
         this.id = id;
-    }
-
-    public NotificationData id(Long id) {
-        this.id = id;
-        return this;
     }
 
     public String getKey() {
@@ -56,7 +58,7 @@ public class NotificationData implements Serializable {
     }
 
     public NotificationData key(String key) {
-        this.key = key;
+        this.setKey(key);
         return this;
     }
 
@@ -69,7 +71,7 @@ public class NotificationData implements Serializable {
     }
 
     public NotificationData value(String value) {
-        this.value = value;
+        this.setValue(value);
         return this;
     }
 
@@ -81,13 +83,13 @@ public class NotificationData implements Serializable {
         return this.notification;
     }
 
+    public void setNotification(Notification notification) {
+        this.notification = notification;
+    }
+
     public NotificationData notification(Notification notification) {
         this.setNotification(notification);
         return this;
-    }
-
-    public void setNotification(Notification notification) {
-        this.notification = notification;
     }
 
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here

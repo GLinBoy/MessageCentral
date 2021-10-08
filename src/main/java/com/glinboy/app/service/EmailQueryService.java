@@ -83,6 +83,10 @@ public class EmailQueryService extends QueryService<Email> {
     protected Specification<Email> createSpecification(EmailCriteria criteria) {
         Specification<Email> specification = Specification.where(null);
         if (criteria != null) {
+            // This has to be called first, because the distinct method returns null
+            if (criteria.getDistinct() != null) {
+                specification = specification.and(distinct(criteria.getDistinct()));
+            }
             if (criteria.getId() != null) {
                 specification = specification.and(buildRangeSpecification(criteria.getId(), Email_.id));
             }

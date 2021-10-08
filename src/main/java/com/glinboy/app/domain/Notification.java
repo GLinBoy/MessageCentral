@@ -23,6 +23,7 @@ public class Notification implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "sequenceGenerator")
     @SequenceGenerator(name = "sequenceGenerator")
+    @Column(name = "id")
     private Long id;
 
     @NotNull
@@ -59,17 +60,18 @@ public class Notification implements Serializable {
     private Set<NotificationData> data = new HashSet<>();
 
     // jhipster-needle-entity-add-field - JHipster will add fields here
+
     public Long getId() {
-        return id;
+        return this.id;
+    }
+
+    public Notification id(Long id) {
+        this.setId(id);
+        return this;
     }
 
     public void setId(Long id) {
         this.id = id;
-    }
-
-    public Notification id(Long id) {
-        this.id = id;
-        return this;
     }
 
     public String getUsername() {
@@ -77,7 +79,7 @@ public class Notification implements Serializable {
     }
 
     public Notification username(String username) {
-        this.username = username;
+        this.setUsername(username);
         return this;
     }
 
@@ -90,7 +92,7 @@ public class Notification implements Serializable {
     }
 
     public Notification token(String token) {
-        this.token = token;
+        this.setToken(token);
         return this;
     }
 
@@ -103,7 +105,7 @@ public class Notification implements Serializable {
     }
 
     public Notification subject(String subject) {
-        this.subject = subject;
+        this.setSubject(subject);
         return this;
     }
 
@@ -116,7 +118,7 @@ public class Notification implements Serializable {
     }
 
     public Notification content(String content) {
-        this.content = content;
+        this.setContent(content);
         return this;
     }
 
@@ -129,7 +131,7 @@ public class Notification implements Serializable {
     }
 
     public Notification image(String image) {
-        this.image = image;
+        this.setImage(image);
         return this;
     }
 
@@ -142,7 +144,7 @@ public class Notification implements Serializable {
     }
 
     public Notification status(MessageStatus status) {
-        this.status = status;
+        this.setStatus(status);
         return this;
     }
 
@@ -152,6 +154,16 @@ public class Notification implements Serializable {
 
     public Set<NotificationData> getData() {
         return this.data;
+    }
+
+    public void setData(Set<NotificationData> notificationData) {
+        if (this.data != null) {
+            this.data.forEach(i -> i.setNotification(null));
+        }
+        if (notificationData != null) {
+            notificationData.forEach(i -> i.setNotification(this));
+        }
+        this.data = notificationData;
     }
 
     public Notification data(Set<NotificationData> notificationData) {
@@ -169,16 +181,6 @@ public class Notification implements Serializable {
         this.data.remove(notificationData);
         notificationData.setNotification(null);
         return this;
-    }
-
-    public void setData(Set<NotificationData> notificationData) {
-        if (this.data != null) {
-            this.data.forEach(i -> i.setNotification(null));
-        }
-        if (notificationData != null) {
-            notificationData.forEach(i -> i.setNotification(this));
-        }
-        this.data = notificationData;
     }
 
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here

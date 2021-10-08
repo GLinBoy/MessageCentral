@@ -45,13 +45,11 @@ public class NotificationServiceImpl implements NotificationService {
 
         return notificationRepository
             .findById(notificationDTO.getId())
-            .map(
-                existingNotification -> {
-                    notificationMapper.partialUpdate(existingNotification, notificationDTO);
+            .map(existingNotification -> {
+                notificationMapper.partialUpdate(existingNotification, notificationDTO);
 
-                    return existingNotification;
-                }
-            )
+                return existingNotification;
+            })
             .map(notificationRepository::save)
             .map(notificationMapper::toDto);
     }

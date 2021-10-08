@@ -6,6 +6,7 @@ import * as config from '@/shared/config/config';
 import EmailComponent from '@/entities/email/email.vue';
 import EmailClass from '@/entities/email/email.component';
 import EmailService from '@/entities/email/email.service';
+import AlertService from '@/shared/alert/alert.service';
 
 const localVue = createLocalVue();
 
@@ -44,6 +45,7 @@ describe('Component Tests', () => {
         stubs: { jhiItemCount: true, bPagination: true, bModal: bModalStub as any },
         provide: {
           emailService: () => emailServiceStub,
+          alertService: () => new AlertService(),
         },
       });
       comp = wrapper.vm;

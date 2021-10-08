@@ -6,6 +6,7 @@ import * as config from '@/shared/config/config';
 import ShortMessageComponent from '@/entities/short-message/short-message.vue';
 import ShortMessageClass from '@/entities/short-message/short-message.component';
 import ShortMessageService from '@/entities/short-message/short-message.service';
+import AlertService from '@/shared/alert/alert.service';
 
 const localVue = createLocalVue();
 
@@ -44,6 +45,7 @@ describe('Component Tests', () => {
         stubs: { jhiItemCount: true, bPagination: true, bModal: bModalStub as any },
         provide: {
           shortMessageService: () => shortMessageServiceStub,
+          alertService: () => new AlertService(),
         },
       });
       comp = wrapper.vm;

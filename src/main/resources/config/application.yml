@@ -61,7 +61,7 @@ management:
       liveness:
         include: livenessState
       readiness:
-        include: readinessState,datasource
+        include: readinessState,db
     mail:
       enabled: false # When using the MailService, configure an SMTP server and set this to true
   metrics:
@@ -183,8 +183,8 @@ jhipster:
   api-docs:
     default-include-pattern: ${server.servlet.context-path:}/api/.*
     management-include-pattern: ${server.servlet.context-path:}/management/.*
-    title: MessageCentral API
-    description: MessageCentral API documentation
+    title: Message Central API
+    description: Message Central API documentation
     version: 0.0.1
     terms-of-service-url:
     contact-name:

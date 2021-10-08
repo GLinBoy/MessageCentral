@@ -7,12 +7,15 @@ import { IEmail } from '@/shared/model/email.model';
 import JhiDataUtils from '@/shared/data/data-utils.service';
 
 import EmailService from './email.service';
+import AlertService from '@/shared/alert/alert.service';
 
 @Component({
   mixins: [Vue2Filters.mixin],
 })
 export default class Email extends mixins(JhiDataUtils) {
   @Inject('emailService') private emailService: () => EmailService;
+  @Inject('alertService') private alertService: () => AlertService;
+
   private removeId: number = null;
   public itemsPerPage = 20;
   public queryCount: number = null;
@@ -53,6 +56,7 @@ export default class Email extends mixins(JhiDataUtils) {
         },
         err => {
           this.isFetching = false;
+          this.alertService().showHttpError(this, err.response);
         }
       );
   }
@@ -83,6 +87,9 @@ export default class Email extends mixins(JhiDataUtils) {
         this.removeId = null;
         this.retrieveAllEmails();
         this.closeDialog();
+      })
+      .catch(error => {
+        this.alertService().showHttpError(this, error.response);
       });
   }
 

@@ -45,13 +45,11 @@ public class EmailServiceImpl implements EmailService {
 
         return emailRepository
             .findById(emailDTO.getId())
-            .map(
-                existingEmail -> {
-                    emailMapper.partialUpdate(existingEmail, emailDTO);
+            .map(existingEmail -> {
+                emailMapper.partialUpdate(existingEmail, emailDTO);
 
-                    return existingEmail;
-                }
-            )
+                return existingEmail;
+            })
             .map(emailRepository::save)
             .map(emailMapper::toDto);
     }

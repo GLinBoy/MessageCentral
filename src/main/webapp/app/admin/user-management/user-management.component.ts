@@ -1,12 +1,15 @@
 import { Component, Inject, Vue } from 'vue-property-decorator';
 import Vue2Filters from 'vue2-filters';
 import UserManagementService from './user-management.service';
+import AlertService from '@/shared/alert/alert.service';
 
 @Component({
   mixins: [Vue2Filters.mixin],
 })
 export default class JhiUserManagementComponent extends Vue {
   @Inject('userService') private userManagementService: () => UserManagementService;
+  @Inject('alertService') private alertService: () => AlertService;
+
   public error = '';
   public success = '';
   public users: any[] = [];
@@ -106,6 +109,9 @@ export default class JhiUserManagementComponent extends Vue {
         this.removeId = null;
         this.loadAll();
         this.closeDialog();
+      })
+      .catch(error => {
+        this.alertService().showHttpError(this, error.response);
       });
   }
 
@@ -123,6 +129,6 @@ export default class JhiUserManagementComponent extends Vue {
   }
 
   public get username(): string {
-    return this.$store.getters.account ? this.$store.getters.account.login : '';
+    return this.$store.getters.account?.login ?? '';
   }
 }
