@@ -6,6 +6,7 @@ import * as config from '@/shared/config/config';
 import NotificationDataComponent from '@/entities/notification-data/notification-data.vue';
 import NotificationDataClass from '@/entities/notification-data/notification-data.component';
 import NotificationDataService from '@/entities/notification-data/notification-data.service';
+import AlertService from '@/shared/alert/alert.service';
 
 const localVue = createLocalVue();
 
@@ -43,6 +44,7 @@ describe('Component Tests', () => {
         stubs: { bModal: bModalStub as any },
         provide: {
           notificationDataService: () => notificationDataServiceStub,
+          alertService: () => new AlertService(),
         },
       });
       comp = wrapper.vm;

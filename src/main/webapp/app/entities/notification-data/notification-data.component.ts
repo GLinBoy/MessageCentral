@@ -5,12 +5,15 @@ import Vue2Filters from 'vue2-filters';
 import { INotificationData } from '@/shared/model/notification-data.model';
 
 import NotificationDataService from './notification-data.service';
+import AlertService from '@/shared/alert/alert.service';
 
 @Component({
   mixins: [Vue2Filters.mixin],
 })
 export default class NotificationData extends Vue {
   @Inject('notificationDataService') private notificationDataService: () => NotificationDataService;
+  @Inject('alertService') private alertService: () => AlertService;
+
   private removeId: number = null;
 
   public notificationData: INotificationData[] = [];
@@ -36,6 +39,7 @@ export default class NotificationData extends Vue {
         },
         err => {
           this.isFetching = false;
+          this.alertService().showHttpError(this, err.response);
         }
       );
   }
@@ -66,6 +70,9 @@ export default class NotificationData extends Vue {
         this.removeId = null;
         this.retrieveAllNotificationDatas();
         this.closeDialog();
+      })
+      .catch(error => {
+        this.alertService().showHttpError(this, error.response);
       });
   }
 

@@ -3,10 +3,13 @@ import { Component, Vue, Inject } from 'vue-property-decorator';
 import { INotification } from '@/shared/model/notification.model';
 import { MessageStatus } from '@/shared/model/enumerations/message-status.model';
 import NotificationService from './notification.service';
+import AlertService from '@/shared/alert/alert.service';
 
 @Component
 export default class NotificationDetails extends Vue {
   @Inject('notificationService') private notificationService: () => NotificationService;
+  @Inject('alertService') private alertService: () => AlertService;
+
   public notification: INotification = {};
 
   beforeRouteEnter(to, from, next) {
@@ -22,6 +25,9 @@ export default class NotificationDetails extends Vue {
       .find(notificationId)
       .then(res => {
         this.notification = res;
+      })
+      .catch(error => {
+        this.alertService().showHttpError(this, error.response);
       });
   }
 

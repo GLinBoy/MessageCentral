@@ -4,7 +4,7 @@
     "otherModules": [],
     "applicationType": "monolith",
     "baseName": "MessageCentral",
-    "jhipsterVersion": "7.1.0",
+    "jhipsterVersion": "7.3.0",
     "skipClient": false,
     "skipServer": false,
     "skipUserManagement": false,
@@ -45,6 +45,7 @@
     "lastLiquibaseTimestamp": 1619431745000,
     "entities": ["Email", "ShortMessage", "Notification", "NotificationData"],
     "applicationIndex": 0,
-    "devServerPort": 9060
+    "devServerPort": 9060,
+    "enableGradleEnterprise": false
   }
 }

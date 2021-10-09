@@ -5,6 +5,8 @@ import JhiDataUtils from '@/shared/data/data-utils.service';
 
 import { required, minLength, maxLength } from 'vuelidate/lib/validators';
 
+import AlertService from '@/shared/alert/alert.service';
+
 import { IEmail, Email } from '@/shared/model/email.model';
 import EmailService from './email.service';
 
@@ -32,6 +34,8 @@ const validations: any = {
 })
 export default class EmailUpdate extends mixins(JhiDataUtils) {
   @Inject('emailService') private emailService: () => EmailService;
+  @Inject('alertService') private alertService: () => AlertService;
+
   public email: IEmail = new Email();
   public isSaving = false;
   public currentLanguage = '';
@@ -70,6 +74,10 @@ export default class EmailUpdate extends mixins(JhiDataUtils) {
             solid: true,
             autoHideDelay: 5000,
           });
+        })
+        .catch(error => {
+          this.isSaving = false;
+          this.alertService().showHttpError(this, error.response);
         });
     } else {
       this.emailService()
@@ -85,6 +93,10 @@ export default class EmailUpdate extends mixins(JhiDataUtils) {
             solid: true,
             autoHideDelay: 5000,
           });
+        })
+        .catch(error => {
+          this.isSaving = false;
+          this.alertService().showHttpError(this, error.response);
         });
     }
   }
@@ -94,6 +106,9 @@ export default class EmailUpdate extends mixins(JhiDataUtils) {
       .find(emailId)
       .then(res => {
         this.email = res;
+      })
+      .catch(error => {
+        this.alertService().showHttpError(this, error.response);
       });
   }
 

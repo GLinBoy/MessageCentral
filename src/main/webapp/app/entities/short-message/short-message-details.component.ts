@@ -3,10 +3,13 @@ import { Component, Vue, Inject } from 'vue-property-decorator';
 import { IShortMessage } from '@/shared/model/short-message.model';
 import { MessageStatus } from '@/shared/model/enumerations/message-status.model';
 import ShortMessageService from './short-message.service';
+import AlertService from '@/shared/alert/alert.service';
 
 @Component
 export default class ShortMessageDetails extends Vue {
   @Inject('shortMessageService') private shortMessageService: () => ShortMessageService;
+  @Inject('alertService') private alertService: () => AlertService;
+
   public shortMessage: IShortMessage = {};
 
   beforeRouteEnter(to, from, next) {
@@ -22,6 +25,9 @@ export default class ShortMessageDetails extends Vue {
       .find(shortMessageId)
       .then(res => {
         this.shortMessage = res;
+      })
+      .catch(error => {
+        this.alertService().showHttpError(this, error.response);
       });
   }
 

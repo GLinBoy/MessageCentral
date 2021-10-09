@@ -2,6 +2,8 @@ import { Component, Vue, Inject } from 'vue-property-decorator';
 
 import { required, minLength, maxLength } from 'vuelidate/lib/validators';
 
+import AlertService from '@/shared/alert/alert.service';
+
 import { IShortMessages, ShortMessages } from '@/shared/model/short-message.model';
 import ShortMessageService from './short-message.service';
 
@@ -24,6 +26,8 @@ const validations: any = {
 })
 export default class ShortMessageMultiple extends Vue {
   @Inject('shortMessageService') private shortMessageService: () => ShortMessageService;
+  @Inject('alertService') private alertService: () => AlertService;
+
   public shortMessages: IShortMessages = new ShortMessages();
   public isSaving = false;
   public currentLanguage = '';
@@ -61,6 +65,10 @@ export default class ShortMessageMultiple extends Vue {
           solid: true,
           autoHideDelay: 5000,
         });
+      })
+      .catch(error => {
+        this.isSaving = false;
+        this.alertService().showHttpError(this, error.response);
       });
   }
 

@@ -9,6 +9,7 @@ import NotificationClass from '@/entities/notification/notification-update.compo
 import NotificationService from '@/entities/notification/notification.service';
 
 import NotificationDataService from '@/entities/notification-data/notification-data.service';
+import AlertService from '@/shared/alert/alert.service';
 
 const localVue = createLocalVue();
 
@@ -39,6 +40,7 @@ describe('Component Tests', () => {
         router,
         provide: {
           notificationService: () => notificationServiceStub,
+          alertService: () => new AlertService(),
 
           notificationDataService: () => new NotificationDataService(),
         },

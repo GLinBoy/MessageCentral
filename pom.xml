@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0"
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
                              https://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
@@ -10,6 +10,7 @@
     <version>0.0.1-SNAPSHOT</version>
     <packaging>jar</packaging>
     <name>Message Central</name>
+    <description>A service to handle messages (email, SMS, notification) for microservice environment</description>
 
     <repositories>
         <!-- jhipster-needle-maven-repository -->
@@ -30,7 +31,7 @@
         <maven.version>3.3.9</maven.version>
         <java.version>11</java.version>
         <node.version>v14.17.6</node.version>
-        <npm.version>7.23.0</npm.version>
+        <npm.version>7.24.2</npm.version>
 
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
@@ -47,16 +48,20 @@
         <profile.tls />
 
         <!-- Dependency versions -->
-        <jhipster-dependencies.version>7.2.0</jhipster-dependencies.version>
-        <!-- The spring-boot version should match the one managed by https://mvnrepository.com/artifact/tech.jhipster/jhipster-dependencies/${jhipster-dependencies.version} -->
-        <spring-boot.version>2.5.4</spring-boot.version>
-        <!-- The hibernate version should match the one managed by https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-dependencies/${spring-boot.version} -->
+        <jhipster-dependencies.version>7.3.0</jhipster-dependencies.version>
+        <!-- The spring-boot version should match the one managed by
+        https://mvnrepository.com/artifact/tech.jhipster/jhipster-dependencies/${jhipster-dependencies.version} -->
+        <spring-boot.version>2.5.5</spring-boot.version>
+        <!-- The hibernate version should match the one managed by
+        https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-dependencies/${spring-boot.version} -->
         <hibernate.version>5.4.32.Final</hibernate.version>
-        <!-- The javassist version should match the one managed by https://mvnrepository.com/artifact/org.hibernate/hibernate-core/${hibernate.version} -->
+        <!-- The javassist version should match the one managed by
+        https://mvnrepository.com/artifact/org.hibernate/hibernate-core/${hibernate.version} -->
         <javassist.version>3.27.0-GA</javassist.version>
-        <!-- The liquibase version should match the one managed by https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-dependencies/${spring-boot.version} -->
-        <liquibase.version>4.4.3</liquibase.version>
-        <liquibase-hibernate5.version>4.4.3</liquibase-hibernate5.version>
+        <!-- The liquibase version should match the one managed by
+        https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-dependencies/${spring-boot.version} -->
+        <liquibase.version>4.5.0</liquibase.version>
+        <liquibase-hibernate5.version>4.5.0</liquibase-hibernate5.version>
         <h2.version>1.4.200</h2.version>
         <validation-api.version>2.0.1.Final</validation-api.version>
         <jaxb-runtime.version>2.3.3</jaxb-runtime.version>
@@ -204,8 +209,7 @@
         <dependency>
             <groupId>org.liquibase</groupId>
             <artifactId>liquibase-core</artifactId>
-            <!-- Inherited version from Spring Boot can't be used because 
-                of regressions -->
+            <!-- Inherited version from Spring Boot can't be used because of regressions -->
             <version>${liquibase.version}</version>
         </dependency>
         <dependency>
@@ -287,8 +291,7 @@
             <version>${archunit-junit5.version}</version>
             <scope>test</scope>
         </dependency>
-        <!-- Adding the engine dependency to the surefire-plugin unfortunately 
-            does not work in the current version. -->
+        <!-- Adding the engine dependency to the surefire-plugin unfortunately does not work in the current version. -->
         <!-- https://www.archunit.org/userguide/html/000_Index.html#_junit_5 -->
         <dependency>
             <groupId>com.tngtech.archunit</groupId>
@@ -455,9 +458,10 @@
                 <artifactId>modernizer-maven-plugin</artifactId>
             </plugin>
             <plugin>
-                <!-- Plugin that provides API-first development using openapi-generator 
-                    to generate Spring-MVC endpoint stubs at compile time from an OpenAPI definition 
-                    file -->
+                <!--
+                    Plugin that provides API-first development using openapi-generator to
+                    generate Spring-MVC endpoint stubs at compile time from an OpenAPI definition file
+                -->
                 <groupId>org.openapitools</groupId>
                 <artifactId>openapi-generator-maven-plugin</artifactId>
             </plugin>
@@ -626,7 +630,7 @@
                         </execution>
                     </executions>
                     <configuration>
-                        <javaVersion>${java.version}</javaVersion>
+                      <javaVersion>${java.version}</javaVersion>
                     </configuration>
                 </plugin>
                 <plugin>
@@ -640,8 +644,7 @@
                                 <goal>prepare-agent</goal>
                             </goals>
                         </execution>
-                        <!-- Ensures that the code coverage report for unit 
-                            tests is created after unit tests have been run -->
+                        <!-- Ensures that the code coverage report for unit tests is created after unit tests have been run -->
                         <execution>
                             <id>post-unit-test</id>
                             <phase>test</phase>
@@ -655,8 +658,7 @@
                                 <goal>prepare-agent-integration</goal>
                             </goals>
                         </execution>
-                        <!-- Ensures that the code coverage report for integration 
-                            tests is created after integration tests have been run -->
+                        <!-- Ensures that the code coverage report for integration tests is created after integration tests have been run -->
                         <execution>
                             <id>post-integration-tests</id>
                             <phase>post-integration-test</phase>
@@ -804,16 +806,12 @@
                     <configuration>
                         <rules>
                             <requireMavenVersion>
-                                <message>You are running an older
-                                    version of Maven. JHipster requires
-                                    at least Maven ${maven.version}</message>
+                                <message>You are running an older version of Maven. JHipster requires at least Maven ${maven.version}</message>
                                 <version>[${maven.version},)</version>
                             </requireMavenVersion>
                             <requireJavaVersion>
-                                <message>You are running an incompatible
-                                    version of Java. JHipster supports
-                                    JDK 8 to 16.</message>
-                                <version>[1.8,17)</version>
+                                <message>You are running an incompatible version of Java. JHipster supports JDK 8 to 17.</message>
+                                <version>[1.8,18)</version>
                             </requireJavaVersion>
                         </rules>
                     </configuration>
@@ -868,8 +866,7 @@
                     <artifactId>maven-surefire-plugin</artifactId>
                     <version>${maven-surefire-plugin.version}</version>
                     <configuration>
-                        <!-- Force alphabetical order to have a reproducible 
-                            build -->
+                        <!-- Force alphabetical order to have a reproducible build -->
                         <runOrder>alphabetical</runOrder>
                         <excludes>
                             <exclude>**/*IT*</exclude>
@@ -882,11 +879,10 @@
                     <artifactId>maven-failsafe-plugin</artifactId>
                     <version>${maven-failsafe-plugin.version}</version>
                     <configuration>
-                        <!-- Due to spring-boot repackage, without adding 
-                            this property test classes are not found See https://github.com/spring-projects/spring-boot/issues/6254 -->
+                        <!-- Due to spring-boot repackage, without adding this property test classes are not found
+                             See https://github.com/spring-projects/spring-boot/issues/6254 -->
                         <classesDirectory>${project.build.outputDirectory}</classesDirectory>
-                        <!-- Force alphabetical order to have a reproducible 
-                            build -->
+                        <!-- Force alphabetical order to have a reproducible build -->
                         <runOrder>alphabetical</runOrder>
                         <includes>
                             <include>**/*IT*</include>
@@ -909,9 +905,10 @@
                     </executions>
                 </plugin>
                 <plugin>
-                    <!-- Plugin that provides API-first development using 
-                        openapi-generator to generate Spring-MVC endpoint stubs at compile time from 
-                        an OpenAPI definition file -->
+                    <!--
+                        Plugin that provides API-first development using openapi-generator to
+                        generate Spring-MVC endpoint stubs at compile time from an OpenAPI definition file
+                    -->
                     <groupId>org.openapitools</groupId>
                     <artifactId>openapi-generator-maven-plugin</artifactId>
                     <version>${openapi-generator-maven-plugin.version}</version>
@@ -955,8 +952,10 @@
                     <configuration>
                         <mainClass>${start-class}</mainClass>
                         <fork>true</fork>
-                        <!-- Enable the line below to have remote debugging 
-                            of your application on port 5005 <jvmArguments>-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=5005</jvmArguments> -->
+                        <!--
+                        Enable the line below to have remote debugging of your application on port 5005
+                        <jvmArguments>-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=5005</jvmArguments>
+                        -->
                     </configuration>
 
                 </plugin>
@@ -1061,19 +1060,11 @@
                                 </goals>
                                 <configuration>
                                     <target>
-                                        <condition
-                                            property="skip.npm"
-                                            value="true" else="false">
+                                        <condition property="skip.npm" value="true" else="false" >
                                             <and>
-                                                <available
-                                                    file="checksums.csv"
-                                                    filepath="${project.build.directory}" />
-                                                <available
-                                                    file="checksums.csv.old"
-                                                    filepath="${project.build.directory}" />
-                                                <filesmatch
-                                                    file1="${project.build.directory}/checksums.csv"
-                                                    file2="${project.build.directory}/checksums.csv.old" />
+                                                <available file="checksums.csv" filepath="${project.build.directory}" />
+                                                <available file="checksums.csv.old" filepath="${project.build.directory}" />
+                                                <filesmatch file1="${project.build.directory}/checksums.csv" file2="${project.build.directory}/checksums.csv.old" />
                                             </and>
                                         </condition>
                                     </target>
@@ -1251,7 +1242,9 @@
             </build>
         </profile>
         <profile>
-            <!-- Profile for tracing requests with Zipkin. -->
+            <!--
+                Profile for tracing requests with Zipkin.
+            -->
             <id>zipkin</id>
             <dependencies>
                 <dependency>
@@ -1261,9 +1254,11 @@
             </dependencies>
         </profile>
         <profile>
-            <!-- Profile for applying IDE-specific configuration. At the 
-                moment it configures MapStruct and Hibernate JPA Metamodel Generator, which 
-                you need when working with DTOs and entity filtering. -->
+            <!--
+                Profile for applying IDE-specific configuration.
+                At the moment it configures MapStruct and Hibernate JPA Metamodel Generator, which you need when working
+                with DTOs and entity filtering.
+            -->
             <id>IDE</id>
             <dependencies>
                 <dependency>
@@ -1286,7 +1281,7 @@
                 </property>
             </activation>
             <dependencies>
-                <!-- The following dependency is added due to issue #9175 -->
+                <!-- The following dependency is added due to issue #9175-->
                 <dependency>
                     <groupId>org.springframework.boot</groupId>
                     <artifactId>spring-boot-starter-undertow</artifactId>
@@ -1295,9 +1290,11 @@
             <build>
                 <pluginManagement>
                     <plugins>
-                        <!-- This plugin's configuration is used to store 
-                            Eclipse m2e settings only. It has no influence on the Maven build itself. 
-                            Remove when the m2e plugin can correctly bind to Maven lifecycle -->
+                        <!--
+                            This plugin's configuration is used to store Eclipse m2e settings only.
+                            It has no influence on the Maven build itself.
+                            Remove when the m2e plugin can correctly bind to Maven lifecycle
+                        -->
                         <plugin>
                             <groupId>org.eclipse.m2e</groupId>
                             <artifactId>lifecycle-mapping</artifactId>
@@ -1319,7 +1316,7 @@
                                                 </goals>
                                             </pluginExecutionFilter>
                                             <action>
-                                                <ignore />
+                                                <ignore/>
                                             </action>
                                         </pluginExecution>
                                         <pluginExecution>
@@ -1333,7 +1330,7 @@
                                                 </goals>
                                             </pluginExecutionFilter>
                                             <action>
-                                                <ignore />
+                                                <ignore/>
                                             </action>
                                         </pluginExecution>
                                         <pluginExecution>

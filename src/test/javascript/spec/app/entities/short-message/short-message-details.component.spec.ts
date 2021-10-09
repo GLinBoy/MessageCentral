@@ -8,6 +8,7 @@ import ShortMessageDetailComponent from '@/entities/short-message/short-message-
 import ShortMessageClass from '@/entities/short-message/short-message-details.component';
 import ShortMessageService from '@/entities/short-message/short-message.service';
 import router from '@/router';
+import AlertService from '@/shared/alert/alert.service';
 
 const localVue = createLocalVue();
 localVue.use(VueRouter);
@@ -32,7 +33,7 @@ describe('Component Tests', () => {
         i18n,
         localVue,
         router,
-        provide: { shortMessageService: () => shortMessageServiceStub },
+        provide: { shortMessageService: () => shortMessageServiceStub, alertService: () => new AlertService() },
       });
       comp = wrapper.vm;
     });
