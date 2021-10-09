@@ -4,6 +4,8 @@ import { required, maxLength } from 'vuelidate/lib/validators';
 
 import NotificationDataService from '@/entities/notification-data/notification-data.service';
 
+import AlertService from '@/shared/alert/alert.service';
+
 import { INotifications, Notifications } from '@/shared/model/notification.model';
 import { INotificationData, NotificationData } from '@/shared/model/notification-data.model';
 import { IReceiver, Receiver } from '@/shared/model/notification.model';
@@ -32,6 +34,7 @@ const validations: any = {
 export default class NotificationMultiple extends Vue {
   @Inject('notificationService') private notificationService: () => NotificationService;
   @Inject('notificationDataService') private notificationDataService: () => NotificationDataService;
+  @Inject('alertService') private alertService: () => AlertService;
 
   public notifications: INotifications = new Notifications();
   public data: INotificationData = new NotificationData();
@@ -66,6 +69,10 @@ export default class NotificationMultiple extends Vue {
           solid: true,
           autoHideDelay: 5000,
         });
+      })
+      .catch(error => {
+        this.isSaving = false;
+        this.alertService().showHttpError(this, error.response);
       });
   }
 
@@ -97,7 +104,9 @@ export default class NotificationMultiple extends Vue {
 
   public addReceiver(): void {
     if (this.notifications.receivers) {
-      this.notifications.receivers = this.notifications.receivers.filter(obj => obj.username !== this.receiver.username && obj.token !== this.receiver.token);
+      this.notifications.receivers = this.notifications.receivers.filter(
+        obj => obj.username !== this.receiver.username && obj.token !== this.receiver.token
+      );
       this.notifications.receivers.push(this.receiver);
     } else {
       this.notifications.receivers = [this.receiver];
@@ -114,6 +123,8 @@ export default class NotificationMultiple extends Vue {
   }
 
   public prepareReceiverRemove(reciver) {
-    this.notifications.receivers = this.notifications.receivers.filter(obj => obj.username !== reciver.username && obj.token !== reciver.token);
+    this.notifications.receivers = this.notifications.receivers.filter(
+      obj => obj.username !== reciver.username && obj.token !== reciver.token
+    );
   }
 }
