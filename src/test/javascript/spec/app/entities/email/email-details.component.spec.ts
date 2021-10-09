@@ -8,6 +8,7 @@ import EmailDetailComponent from '@/entities/email/email-details.vue';
 import EmailClass from '@/entities/email/email-details.component';
 import EmailService from '@/entities/email/email.service';
 import router from '@/router';
+import AlertService from '@/shared/alert/alert.service';
 
 const localVue = createLocalVue();
 localVue.use(VueRouter);
@@ -32,7 +33,7 @@ describe('Component Tests', () => {
         i18n,
         localVue,
         router,
-        provide: { emailService: () => emailServiceStub },
+        provide: { emailService: () => emailServiceStub, alertService: () => new AlertService() },
       });
       comp = wrapper.vm;
     });

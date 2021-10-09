@@ -6,6 +6,7 @@ import * as config from '@/shared/config/config';
 import NotificationComponent from '@/entities/notification/notification.vue';
 import NotificationClass from '@/entities/notification/notification.component';
 import NotificationService from '@/entities/notification/notification.service';
+import AlertService from '@/shared/alert/alert.service';
 
 const localVue = createLocalVue();
 
@@ -44,6 +45,7 @@ describe('Component Tests', () => {
         stubs: { jhiItemCount: true, bPagination: true, bModal: bModalStub as any },
         provide: {
           notificationService: () => notificationServiceStub,
+          alertService: () => new AlertService(),
         },
       });
       comp = wrapper.vm;

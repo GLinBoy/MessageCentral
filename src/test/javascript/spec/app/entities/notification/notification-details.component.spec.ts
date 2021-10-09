@@ -8,6 +8,7 @@ import NotificationDetailComponent from '@/entities/notification/notification-de
 import NotificationClass from '@/entities/notification/notification-details.component';
 import NotificationService from '@/entities/notification/notification.service';
 import router from '@/router';
+import AlertService from '@/shared/alert/alert.service';
 
 const localVue = createLocalVue();
 localVue.use(VueRouter);
@@ -32,7 +33,7 @@ describe('Component Tests', () => {
         i18n,
         localVue,
         router,
-        provide: { notificationService: () => notificationServiceStub },
+        provide: { notificationService: () => notificationServiceStub, alertService: () => new AlertService() },
       });
       comp = wrapper.vm;
     });

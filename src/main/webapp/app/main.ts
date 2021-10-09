@@ -20,6 +20,7 @@ import RegisterService from './account/register/register.service';
 import UserManagementService from '@/admin/user-management/user-management.service';
 import LoginService from './account/login.service';
 import AccountService from './account/account.service';
+import AlertService from './shared/alert/alert.service';
 
 import '../content/scss/vendor.scss';
 import TranslationService from '@/locale/translation.service';
@@ -95,6 +96,7 @@ new Vue({
     notificationDataService: () => new NotificationDataService(),
     // jhipster-needle-add-entity-service-to-main - JHipster will import entities services here
     accountService: () => accountService,
+    alertService: () => new AlertService(),
   },
   i18n,
   store,

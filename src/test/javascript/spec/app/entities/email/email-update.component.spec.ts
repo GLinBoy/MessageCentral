@@ -8,6 +8,8 @@ import EmailUpdateComponent from '@/entities/email/email-update.vue';
 import EmailClass from '@/entities/email/email-update.component';
 import EmailService from '@/entities/email/email.service';
 
+import AlertService from '@/shared/alert/alert.service';
+
 const localVue = createLocalVue();
 
 config.initVueApp(localVue);
@@ -37,6 +39,7 @@ describe('Component Tests', () => {
         router,
         provide: {
           emailService: () => emailServiceStub,
+          alertService: () => new AlertService(),
         },
       });
       comp = wrapper.vm;

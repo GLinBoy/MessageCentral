@@ -2,6 +2,8 @@ import { Component, Vue, Inject } from 'vue-property-decorator';
 
 import { required, maxLength } from 'vuelidate/lib/validators';
 
+import AlertService from '@/shared/alert/alert.service';
+
 import NotificationService from '@/entities/notification/notification.service';
 import { INotification } from '@/shared/model/notification.model';
 
@@ -29,6 +31,8 @@ const validations: any = {
 })
 export default class NotificationDataUpdate extends Vue {
   @Inject('notificationDataService') private notificationDataService: () => NotificationDataService;
+  @Inject('alertService') private alertService: () => AlertService;
+
   public notificationData: INotificationData = new NotificationData();
 
   @Inject('notificationService') private notificationService: () => NotificationService;
@@ -72,6 +76,10 @@ export default class NotificationDataUpdate extends Vue {
             solid: true,
             autoHideDelay: 5000,
           });
+        })
+        .catch(error => {
+          this.isSaving = false;
+          this.alertService().showHttpError(this, error.response);
         });
     } else {
       this.notificationDataService()
@@ -87,6 +95,10 @@ export default class NotificationDataUpdate extends Vue {
             solid: true,
             autoHideDelay: 5000,
           });
+        })
+        .catch(error => {
+          this.isSaving = false;
+          this.alertService().showHttpError(this, error.response);
         });
     }
   }
@@ -96,6 +108,9 @@ export default class NotificationDataUpdate extends Vue {
       .find(notificationDataId)
       .then(res => {
         this.notificationData = res;
+      })
+      .catch(error => {
+        this.alertService().showHttpError(this, error.response);
       });
   }
 
