@@ -23,6 +23,14 @@
       "subject": "Subject",
       "content": "Content",
       "status": "Status"
+    },
+    "emails": {
+      "home": {
+        "createLabel": "Create an Email(s)"
+      },
+      "receivers": "Receiver",
+      "subject": "Subject",
+      "content": "Content"
     }
   }
 }
