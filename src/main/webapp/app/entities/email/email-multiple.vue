@@ -3,15 +3,15 @@
     <div class="col-8">
       <form name="editForm" role="form" novalidate v-on:submit.prevent="save()">
         <h2
-          id="messageCentralApp.email.home.createOrEditLabel"
-          data-cy="EmailCreateUpdateHeading"
-          v-text="$t('messageCentralApp.email.home.createOrEditLabel')"
+          id="messageCentralApp.emails.home.createLabel"
+          data-cy="EmailCreateHeading"
+          v-text="$t('messageCentralApp.emails.home.createLabel')"
         >
-          Create or edit a Email
+          Create an Email(s)
         </h2>
         <div>
           <div class="form-group">
-            <label class="form-control-label" v-text="$t('messageCentralApp.email.receiver')" for="email-receiver">Receiver</label>
+            <label class="form-control-label" v-text="$t('messageCentralApp.emails.receivers')" for="email-receivers">Receiver</label>
             <b-form-tags
               type="text"
               separator=" ,;"
@@ -34,7 +34,7 @@
             </b-form-text>
           </div>
           <div class="form-group">
-            <label class="form-control-label" v-text="$t('messageCentralApp.email.subject')" for="email-subject">Subject</label>
+            <label class="form-control-label" v-text="$t('messageCentralApp.emails.subject')" for="email-subject">Subject</label>
             <input
               type="text"
               class="form-control"
@@ -66,7 +66,7 @@
             </div>
           </div>
           <div class="form-group">
-            <label class="form-control-label" v-text="$t('messageCentralApp.email.content')" for="email-content">Content</label>
+            <label class="form-control-label" v-text="$t('messageCentralApp.emails.content')" for="email-content">Content</label>
             <textarea
               class="form-control"
               name="content"
