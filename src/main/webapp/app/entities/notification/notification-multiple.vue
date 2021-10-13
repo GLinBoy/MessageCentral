@@ -3,9 +3,9 @@
     <div class="col-8">
       <form name="editForm" role="form" novalidate v-on:submit.prevent="save()">
         <h2
-          id="messageCentralApp.notification.home.createOrEditLabel"
-          data-cy="NotificationCreateUpdateHeading"
-          v-text="$t('messageCentralApp.notification.home.createOrEditLabel')"
+          id="messageCentralApp.notifications.home.createLabel"
+          data-cy="NotificationCreateHeading"
+          v-text="$t('messageCentralApp.notifications.home.createLabel')"
         >
           Create or edit a Notification
         </h2>
@@ -28,10 +28,22 @@
               </div>
               <div class="col-sm-12 col-md-2 align-self-end">
                 <div class="form-group">
-                  <button type="button" id="add-data" class="btn btn-primary" v-on:click="addReceiver()" :disabled="!receiver.username && !receiver.token">
+                  <button
+                    type="button"
+                    id="add-data"
+                    class="btn btn-primary"
+                    v-on:click="addReceiver()"
+                    :disabled="!receiver.username && !receiver.token"
+                  >
                     <font-awesome-icon icon="plus"></font-awesome-icon>
                   </button>
-                  <button type="button" id="reset-data" class="btn btn-secondary" v-on:click="resetReceiver()" :disabled="!receiver.username && !receiver.token">
+                  <button
+                    type="button"
+                    id="reset-data"
+                    class="btn btn-secondary"
+                    v-on:click="resetReceiver()"
+                    :disabled="!receiver.username && !receiver.token"
+                  >
                     <font-awesome-icon icon="sync"></font-awesome-icon>
                   </button>
                 </div>
@@ -88,7 +100,7 @@
         </div>
         <div>
           <div class="form-group">
-            <label class="form-control-label" v-text="$t('messageCentralApp.notification.subject')" for="notification-subject"
+            <label class="form-control-label" v-text="$t('messageCentralApp.notifications.subject')" for="notification-subject"
               >Subject</label
             >
             <input
@@ -115,7 +127,7 @@
             </div>
           </div>
           <div class="form-group">
-            <label class="form-control-label" v-text="$t('messageCentralApp.notification.content')" for="notification-content"
+            <label class="form-control-label" v-text="$t('messageCentralApp.notifications.content')" for="notification-content"
               >Content</label
             >
             <textarea
@@ -141,7 +153,7 @@
             </div>
           </div>
           <div class="form-group">
-            <label class="form-control-label" v-text="$t('messageCentralApp.notification.image')" for="notification-image">Image</label>
+            <label class="form-control-label" v-text="$t('messageCentralApp.notifications.image')" for="notification-image">Image</label>
             <input
               type="text"
               class="form-control"
