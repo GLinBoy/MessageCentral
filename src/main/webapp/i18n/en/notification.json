@@ -26,6 +26,14 @@
       "image": "Image",
       "status": "Status",
       "data": "Data"
+    },
+    "notifications": {
+      "home": {
+        "createLabel": "Create a new Notification(s)"
+      },
+      "subject": "Subject",
+      "content": "Content",
+      "image": "Image"
     }
   }
 }
