@@ -3,22 +3,22 @@
     <div class="col-8">
       <form name="editForm" role="form" novalidate v-on:submit.prevent="save()">
         <h2
-          id="messageCentralApp.shortMessage.home.createOrEditLabel"
-          data-cy="ShortMessageCreateUpdateHeading"
-          v-text="$t('messageCentralApp.shortMessage.home.createOrEditLabel')"
+          id="messageCentralApp.shortMessages.home.createLabel"
+          data-cy="ShortMessagesCreateHeading"
+          v-text="$t('messageCentralApp.shortMessages.home.createLabel')"
         >
           Create or edit a ShortMessage
         </h2>
         <div>
           <div class="form-group">
-            <label class="form-control-label" v-text="$t('messageCentralApp.shortMessage.phoneNumber')" for="short-message-phoneNumber"
+            <label class="form-control-label" v-text="$t('messageCentralApp.shortMessages.phoneNumbers')" for="short-message-phoneNumbers"
               >Phone Number</label
             >
             <b-form-tags
               type="text"
               separator=" ,;"
               name="phoneNumbers"
-              id="short-message-phoneNumber"
+              id="short-message-phoneNumbers"
               class="form-control"
               data-cy="phoneNumbers"
               placeholder="new number"
@@ -36,7 +36,7 @@
             </b-form-text>
           </div>
           <div class="form-group">
-            <label class="form-control-label" v-text="$t('messageCentralApp.shortMessage.content')" for="short-message-content"
+            <label class="form-control-label" v-text="$t('messageCentralApp.shortMessages.content')" for="short-message-content"
               >Content</label
             >
             <textarea
