@@ -28,7 +28,13 @@
       "home": {
         "createLabel": "Create an Email(s)"
       },
-      "receivers": "Receiver",
+      "placeholder": {
+        "newEmail": "new email"
+      },
+      "hint": {
+        "newEmail": "💡 Seprate by <kbd>Space</kbd> or <kbd>,</kbd> or <kbd>;</kbd>"
+      },
+      "receivers": "Receivers",
       "subject": "Subject",
       "content": "Content"
     }
