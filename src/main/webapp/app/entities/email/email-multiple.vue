@@ -11,7 +11,7 @@
         </h2>
         <div>
           <div class="form-group">
-            <label class="form-control-label" v-text="$t('messageCentralApp.emails.receivers')" for="email-receivers">Receiver</label>
+            <label class="form-control-label" v-text="$t('messageCentralApp.emails.receivers')" for="email-receivers">Receivers</label>
             <b-form-tags
               type="text"
               separator=" ,;"
@@ -19,7 +19,7 @@
               id="email-receivers"
               class="form-control"
               data-cy="receivers"
-              placeholder="new email"
+              :placeholder="$t('messageCentralApp.emails.placeholder.newEmail')"
               invalid-tag-text="invalid email(s)"
               :tag-validator="emailValidator"
               remove-on-delete
@@ -29,7 +29,11 @@
               :class="{ valid: !$v.emails.receivers.$invalid, invalid: $v.emails.receivers.$invalid }"
               :input-attrs="{ 'aria-describedby': 'emails-seprate-by-help' }"
             />
-            <b-form-text id="emails-seprate-by-help" class="mt-2 form-text text-muted font-weight-lighter">
+            <b-form-text
+              id="emails-seprate-by-help"
+              class="mt-2 form-text text-muted font-weight-lighter"
+              v-text="$t('messageCentralApp.emails.hint.newEmail')"
+            >
               💡 Seprate by <kbd>Space</kbd> or <kbd>,</kbd> or <kbd>;</kbd>
             </b-form-text>
           </div>
