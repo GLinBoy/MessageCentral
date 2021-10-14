@@ -18,6 +18,12 @@
       "detail": {
         "title": "Email"
       },
+      "placeholder": {
+        "newEmail": "new email"
+      },
+      "hint": {
+        "newEmail": "💡 Seprate by <kbd>Space</kbd> or <kbd>,</kbd> or <kbd>;</kbd>"
+      },
       "id": "ID",
       "receiver": "Receiver",
       "subject": "Subject",
