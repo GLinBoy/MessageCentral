@@ -27,6 +27,12 @@
       "home": {
         "createLabel": "Create a Short Message(s)"
       },
+      "placeholder": {
+        "newNumber": "new number"
+      },
+      "hint": {
+        "newNumber": "💡 Seprate by <kbd>Space</kbd> or <kbd>,</kbd> or <kbd>;</kbd>"
+      },
       "phoneNumbers": "Phone Number(s)",
       "content": "Content"
     }
