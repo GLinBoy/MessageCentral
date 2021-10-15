@@ -11,19 +11,31 @@
         </h2>
 
         <div class="card">
-          <div class="card-header">Notification Receivers:</div>
+          <div class="card-header" v-text="$t('messageCentralApp.notifications.notificationReceiversTitle')">Notification Receivers:</div>
           <div class="card-body">
             <div class="row justify-content-center">
               <div class="col-sm-12 col-md-5">
                 <div class="form-group">
-                  <label for="dataKey">Username</label>
-                  <input type="text" class="form-control" id="dataKey" placeholder="Enter Username" v-model="receiver.username" />
+                  <label for="dataKey" v-text="$t('messageCentralApp.notification.username')">Username</label>
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="dataKey"
+                    :placeholder="$t('messageCentralApp.notifications.placeholder.enterUsername')"
+                    v-model="receiver.username"
+                  />
                 </div>
               </div>
               <div class="col-sm-12 col-md-5 align-self-end">
                 <div class="form-group">
-                  <label for="dataValue">Token</label>
-                  <input type="text" class="form-control" id="dataValue" placeholder="Enter Token" v-model="receiver.token" />
+                  <label for="dataValue" v-text="$t('messageCentralApp.notification.token')">Token</label>
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="dataValue"
+                    :placeholder="$t('messageCentralApp.notifications.placeholder.enterToken')"
+                    v-model="receiver.token"
+                  />
                 </div>
               </div>
               <div class="col-sm-12 col-md-2 align-self-end">
@@ -51,14 +63,14 @@
             </div>
             <div>
               <div class="alert alert-warning" v-if="!notifications.receivers || notifications.receivers.length === 0">
-                <span>No Receiver(s) found</span>
+                <span v-text="$t('messageCentralApp.notifications.messages.noReceiversAdded')">No Receiver(s) has been added</span>
               </div>
               <div class="table-responsive card" v-if="notifications.receivers && notifications.receivers.length > 0">
                 <table class="table table-striped" aria-describedby="notificationData">
                   <thead>
                     <tr>
-                      <th scope="row"><span>username</span></th>
-                      <th scope="row"><span>token</span></th>
+                      <th scope="row"><span v-text="$t('messageCentralApp.notification.username')">username</span></th>
+                      <th scope="row"><span v-text="$t('messageCentralApp.notification.token')">token</span></th>
                       <th scope="row"></th>
                     </tr>
                   </thead>
@@ -175,18 +187,18 @@
           </div>
         </div>
         <div class="card">
-          <div class="card-header">Notification Data:</div>
+          <div class="card-header" v-text="$t('messageCentralApp.notifications.notificationDataTitle')">Notification Data:</div>
           <div class="card-body">
             <div class="row justify-content-center">
               <div class="col-sm-12 col-md-5">
                 <div class="form-group">
-                  <label for="dataKey">Key</label>
+                  <label for="dataKey" v-text="$t('messageCentralApp.notificationData.key')">Key</label>
                   <input type="text" class="form-control" id="dataKey" placeholder="Enter key" v-model="data.key" />
                 </div>
               </div>
               <div class="col-sm-12 col-md-5 align-self-end">
                 <div class="form-group">
-                  <label for="dataValue">Value</label>
+                  <label for="dataValue" v-text="$t('messageCentralApp.notificationData.value')">Value</label>
                   <input type="text" class="form-control" id="dataValue" placeholder="Enter value" v-model="data.value" />
                 </div>
               </div>
