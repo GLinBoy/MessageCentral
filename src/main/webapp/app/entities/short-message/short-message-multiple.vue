@@ -7,7 +7,7 @@
           data-cy="ShortMessagesCreateHeading"
           v-text="$t('messageCentralApp.shortMessages.home.createLabel')"
         >
-          Create or edit a ShortMessage
+          Create a Short Message(s)
         </h2>
         <div>
           <div class="form-group">
@@ -21,7 +21,7 @@
               id="short-message-phoneNumbers"
               class="form-control"
               data-cy="phoneNumbers"
-              placeholder="new number"
+              :placeholder="$t('messageCentralApp.shortMessages.placeholder.newNumber')"
               invalid-tag-text="invalid Number(s)"
               :tag-validator="numberValidator"
               remove-on-delete
@@ -31,7 +31,12 @@
               :class="{ valid: !$v.shortMessages.phoneNumbers.$invalid, invalid: $v.shortMessages.phoneNumbers.$invalid }"
               :input-attrs="{ 'aria-describedby': 'numbers-seprate-by-help' }"
             />
-            <b-form-text name="numbers-seprate-by-help" id="numbers-seprate-by-help" class="mt-2 form-text text-muted font-weight-lighter">
+            <b-form-text
+              name="numbers-seprate-by-help"
+              id="numbers-seprate-by-help"
+              class="mt-2 form-text text-muted font-weight-lighter"
+              v-text="$t('messageCentralApp.shortMessages.hint.newNumber')"
+            >
               💡 Seprate by <kbd>Space</kbd> or <kbd>,</kbd> or <kbd>;</kbd>
             </b-form-text>
           </div>
