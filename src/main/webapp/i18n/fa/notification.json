@@ -31,9 +31,18 @@
       "home": {
         "createLabel": "Create a new Notification(s)"
       },
+      "placeholder": {
+        "enterUsername": "Enter Username",
+        "enterToken": "Enter Token"
+      },
+      "messages": {
+        "noReceiversAdded": "No Receiver(s) has been added"
+      },
       "subject": "Subject",
       "content": "Content",
-      "image": "Image"
+      "image": "Image",
+      "notificationReceiversTitle": "Notification Receivers:",
+      "notificationDataTitle": "Notification Data:"
     }
   }
 }
