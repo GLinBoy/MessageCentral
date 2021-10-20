@@ -1,0 +1,11 @@
+id;receiver;subject;content;status
+1;"BXGN@gOwBI.dUnT.J3T.fx.J.KgZ9F.FShWX";North;../fake-data/blob/hipster.txt;IN_QUEUE
+2;"Xc5LJy.llfPE.DZbV.6aYi.*4_O.X@v.aIwv.cU4.Cu.OKslNq.MHPle";XML dynamic;../fake-data/blob/hipster.txt;IN_QUEUE
+3;"r0k.K+oxO.24HJVy@Z.ySttz3.k196.zCvyp.qAJ";intuitive Producer;../fake-data/blob/hipster.txt;IN_QUEUE
+4;"-.vYVx2.xQ6pzY.&@WD8eb.JyB";Tactics US markets;../fake-data/blob/hipster.txt;IN_QUEUE
+5;"d.ajO@r-cC.9.3E0NjK.I.3Ki.tOLTEi";Specialist;../fake-data/blob/hipster.txt;IN_QUEUE
+6;"&.A*mI.vTX46.Ru&ZRd.03nt56.ZPti4@x.X.W0W0.MXAl";Designer;../fake-data/blob/hipster.txt;FAILED
+7;"3CT@lY9a.AlO.JjyTHcJ";Mobility;../fake-data/blob/hipster.txt;SENT
+8;"sNBn.zUU.N3l*w.au.rXXk.wB@TAaS.Fg.1.0FFA3.whlT";Pants;../fake-data/blob/hipster.txt;IN_QUEUE
+9;"5Ry+9._Qy4.y5.ICsK9A@feo.hlw9.Wg.8vZPJL.K1xnN5.IMwakUD";Intelligent Garden;../fake-data/blob/hipster.txt;SENT
+10;"O8.ynDGfv.V5Fx7.b@K0vtL.0uzB.N6pcPH.BIQn3H.VrwkuG";invoice;../fake-data/blob/hipster.txt;SENT
