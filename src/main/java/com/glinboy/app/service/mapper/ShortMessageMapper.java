@@ -1,6 +1,6 @@
 package com.glinboy.app.service.mapper;
 
-import com.glinboy.app.domain.*;
+import com.glinboy.app.domain.ShortMessage;
 import com.glinboy.app.service.dto.ShortMessageDTO;
 import org.mapstruct.*;
 

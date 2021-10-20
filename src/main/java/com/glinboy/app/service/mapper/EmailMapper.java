@@ -1,6 +1,6 @@
 package com.glinboy.app.service.mapper;
 
-import com.glinboy.app.domain.*;
+import com.glinboy.app.domain.Email;
 import com.glinboy.app.service.dto.EmailDTO;
 import org.mapstruct.*;
 

@@ -97,7 +97,8 @@
             <label class="form-control-label" v-text="$t('messageCentralApp.notification.content')" for="notification-content"
               >Content</label
             >
-            <textarea
+            <input
+              type="text"
               class="form-control"
               name="content"
               id="notification-content"
@@ -105,7 +106,7 @@
               :class="{ valid: !$v.notification.content.$invalid, invalid: $v.notification.content.$invalid }"
               v-model="$v.notification.content.$model"
               required
-            ></textarea>
+            />
             <div v-if="$v.notification.content.$anyDirty && $v.notification.content.$invalid">
               <small class="form-text text-danger" v-if="!$v.notification.content.required" v-text="$t('entity.validation.required')">
                 This field is required.
@@ -140,84 +141,27 @@
               </small>
             </div>
           </div>
-        </div>
-        <div class="card">
-          <div class="card-header">Notification Data:</div>
-          <div class="card-body">
-            <div class="row justify-content-center">
-              <div class="col-sm-12 col-md-5">
-                <div class="form-group">
-                  <label for="dataKey">Key</label>
-                  <input type="text" class="form-control" id="dataKey" placeholder="Enter key" v-model="data.key" />
-                </div>
-              </div>
-              <div class="col-sm-12 col-md-5 align-self-end">
-                <div class="form-group">
-                  <label for="dataValue">Value</label>
-                  <input type="text" class="form-control" id="dataValue" placeholder="Enter value" v-model="data.value" />
-                </div>
-              </div>
-              <div class="col-sm-12 col-md-2 align-self-end">
-                <div class="form-group">
-                  <button type="button" id="add-data" class="btn btn-primary" v-on:click="addData()" :disabled="!data.key">
-                    <font-awesome-icon icon="plus"></font-awesome-icon>
-                  </button>
-                  <button type="button" id="reset-data" class="btn btn-secondary" v-on:click="resetData()" :disabled="!data.key">
-                    <font-awesome-icon icon="sync"></font-awesome-icon>
-                  </button>
-                </div>
-              </div>
-            </div>
-            <div>
-              <div class="alert alert-warning" v-if="!notification.data || notification.data.length === 0">
-                <span v-text="$t('messageCentralApp.notificationData.home.notFound')">No notificationData found</span>
-              </div>
-              <div class="table-responsive card" v-if="notification.data && notification.data.length > 0">
-                <table class="table table-striped" aria-describedby="notificationData">
-                  <thead>
-                    <tr>
-                      <th scope="row"><span v-text="$t('messageCentralApp.notificationData.key')">Key</span></th>
-                      <th scope="row"><span v-text="$t('messageCentralApp.notificationData.value')">Value</span></th>
-                      <th scope="row"></th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr v-for="notificationData in notification.data" :key="notificationData.key" data-cy="entityTable">
-                      <td>{{ notificationData.key }}</td>
-                      <td>{{ notificationData.value }}</td>
-                      <td class="text-right">
-                        <div class="btn-group">
-                          <b-button
-                            v-on:click="prepareDataEdit(notificationData)"
-                            variant="primary"
-                            class="btn btn-sm"
-                            data-cy="entityEditButton"
-                            v-b-tooltip.hover
-                            :title="$t('entity.action.edit')"
-                          >
-                            <font-awesome-icon icon="pencil-alt"></font-awesome-icon>
-                          </b-button>
-                          <b-button
-                            v-on:click="prepareDataRemove(notificationData)"
-                            variant="danger"
-                            class="btn btn-sm"
-                            data-cy="entityDeleteButton"
-                            v-b-modal.removeEntity
-                            v-b-tooltip.hover
-                            :title="$t('entity.action.delete')"
-                          >
-                            <font-awesome-icon icon="trash"></font-awesome-icon>
-                          </b-button>
-                        </div>
-                      </td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
-            </div>
+          <div class="form-group">
+            <label class="form-control-label" v-text="$t('messageCentralApp.notification.status')" for="notification-status">Status</label>
+            <select
+              class="form-control"
+              name="status"
+              :class="{ valid: !$v.notification.status.$invalid, invalid: $v.notification.status.$invalid }"
+              v-model="$v.notification.status.$model"
+              id="notification-status"
+              data-cy="status"
+            >
+              <option
+                v-for="messageStatus in messageStatusValues"
+                :key="messageStatus"
+                v-bind:value="messageStatus"
+                v-bind:label="$t('messageCentralApp.MessageStatus.' + messageStatus)"
+              >
+                {{ messageStatus }}
+              </option>
+            </select>
           </div>
         </div>
-        <br />
         <div>
           <button type="button" id="cancel-save" data-cy="entityCreateCancelButton" class="btn btn-secondary" v-on:click="previousState()">
             <font-awesome-icon icon="ban"></font-awesome-icon>&nbsp;<span v-text="$t('entity.action.cancel')">Cancel</span>

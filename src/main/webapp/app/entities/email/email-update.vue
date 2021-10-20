@@ -102,6 +102,26 @@
               </small>
             </div>
           </div>
+          <div class="form-group">
+            <label class="form-control-label" v-text="$t('messageCentralApp.email.status')" for="email-status">Status</label>
+            <select
+              class="form-control"
+              name="status"
+              :class="{ valid: !$v.email.status.$invalid, invalid: $v.email.status.$invalid }"
+              v-model="$v.email.status.$model"
+              id="email-status"
+              data-cy="status"
+            >
+              <option
+                v-for="messageStatus in messageStatusValues"
+                :key="messageStatus"
+                v-bind:value="messageStatus"
+                v-bind:label="$t('messageCentralApp.MessageStatus.' + messageStatus)"
+              >
+                {{ messageStatus }}
+              </option>
+            </select>
+          </div>
         </div>
         <div>
           <button type="button" id="cancel-save" data-cy="entityCreateCancelButton" class="btn btn-secondary" v-on:click="previousState()">

@@ -6,6 +6,7 @@ import AlertService from '@/shared/alert/alert.service';
 
 import { IShortMessage, ShortMessage } from '@/shared/model/short-message.model';
 import ShortMessageService from './short-message.service';
+import { MessageStatus } from '@/shared/model/enumerations/message-status.model';
 
 const validations: any = {
   shortMessage: {
@@ -31,6 +32,7 @@ export default class ShortMessageUpdate extends Vue {
   @Inject('alertService') private alertService: () => AlertService;
 
   public shortMessage: IShortMessage = new ShortMessage();
+  public messageStatusValues: string[] = Object.keys(MessageStatus);
   public isSaving = false;
   public currentLanguage = '';
 

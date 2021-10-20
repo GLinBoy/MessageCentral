@@ -59,14 +59,16 @@
             <label class="form-control-label" v-text="$t('messageCentralApp.shortMessage.content')" for="short-message-content"
               >Content</label
             >
-            <textarea
+            <input
+              type="text"
               class="form-control"
               name="content"
               id="short-message-content"
               data-cy="content"
               :class="{ valid: !$v.shortMessage.content.$invalid, invalid: $v.shortMessage.content.$invalid }"
               v-model="$v.shortMessage.content.$model"
-            ></textarea>
+              required
+            />
             <div v-if="$v.shortMessage.content.$anyDirty && $v.shortMessage.content.$invalid">
               <small class="form-text text-danger" v-if="!$v.shortMessage.content.required" v-text="$t('entity.validation.required')">
                 This field is required.
@@ -86,6 +88,26 @@
                 This field cannot be longer than 160 characters.
               </small>
             </div>
+          </div>
+          <div class="form-group">
+            <label class="form-control-label" v-text="$t('messageCentralApp.shortMessage.status')" for="short-message-status">Status</label>
+            <select
+              class="form-control"
+              name="status"
+              :class="{ valid: !$v.shortMessage.status.$invalid, invalid: $v.shortMessage.status.$invalid }"
+              v-model="$v.shortMessage.status.$model"
+              id="short-message-status"
+              data-cy="status"
+            >
+              <option
+                v-for="messageStatus in messageStatusValues"
+                :key="messageStatus"
+                v-bind:value="messageStatus"
+                v-bind:label="$t('messageCentralApp.MessageStatus.' + messageStatus)"
+              >
+                {{ messageStatus }}
+              </option>
+            </select>
           </div>
         </div>
         <div>
