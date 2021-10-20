@@ -1,13 +1,13 @@
 package com.glinboy.app.service.mapper;
 
-import com.glinboy.app.domain.*;
+import com.glinboy.app.domain.Notification;
 import com.glinboy.app.service.dto.NotificationDTO;
 import org.mapstruct.*;
 
 /**
  * Mapper for the entity {@link Notification} and its DTO {@link NotificationDTO}.
  */
-@Mapper(componentModel = "spring", uses = {NotificationDataMapper.class})
+@Mapper(componentModel = "spring", uses = { NotificationDataMapper.class })
 public interface NotificationMapper extends EntityMapper<NotificationDTO, Notification> {
     @Named("id")
     @BeanMapping(ignoreByDefault = true)

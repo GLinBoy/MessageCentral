@@ -9,6 +9,7 @@ import AlertService from '@/shared/alert/alert.service';
 
 import { IEmail, Email } from '@/shared/model/email.model';
 import EmailService from './email.service';
+import { MessageStatus } from '@/shared/model/enumerations/message-status.model';
 
 const validations: any = {
   email: {
@@ -37,6 +38,7 @@ export default class EmailUpdate extends mixins(JhiDataUtils) {
   @Inject('alertService') private alertService: () => AlertService;
 
   public email: IEmail = new Email();
+  public messageStatusValues: string[] = Object.keys(MessageStatus);
   public isSaving = false;
   public currentLanguage = '';
 
