@@ -99,9 +99,14 @@
               id="short-message-status"
               data-cy="status"
             >
-              <option value="IN_QUEUE" v-bind:label="$t('messageCentralApp.MessageStatus.IN_QUEUE')">IN_QUEUE</option>
-              <option value="SENT" v-bind:label="$t('messageCentralApp.MessageStatus.SENT')">SENT</option>
-              <option value="FAILED" v-bind:label="$t('messageCentralApp.MessageStatus.FAILED')">FAILED</option>
+              <option
+                v-for="messageStatus in messageStatusValues"
+                :key="messageStatus"
+                v-bind:value="messageStatus"
+                v-bind:label="$t('messageCentralApp.MessageStatus.' + messageStatus)"
+              >
+                {{ messageStatus }}
+              </option>
             </select>
           </div>
         </div>

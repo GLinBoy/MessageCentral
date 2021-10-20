@@ -9,6 +9,7 @@ import { INotificationData } from '@/shared/model/notification-data.model';
 
 import { INotification, Notification } from '@/shared/model/notification.model';
 import NotificationService from './notification.service';
+import { MessageStatus } from '@/shared/model/enumerations/message-status.model';
 
 const validations: any = {
   notification: {
@@ -47,6 +48,7 @@ export default class NotificationUpdate extends Vue {
   @Inject('notificationDataService') private notificationDataService: () => NotificationDataService;
 
   public notificationData: INotificationData[] = [];
+  public messageStatusValues: string[] = Object.keys(MessageStatus);
   public isSaving = false;
   public currentLanguage = '';
 

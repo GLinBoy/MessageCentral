@@ -1,6 +1,6 @@
 package com.glinboy.app.service.mapper;
 
-import com.glinboy.app.domain.*;
+import com.glinboy.app.domain.Notification;
 import com.glinboy.app.service.dto.NotificationDTO;
 import org.mapstruct.*;
 
