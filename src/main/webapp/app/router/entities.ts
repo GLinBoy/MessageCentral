@@ -123,25 +123,25 @@ export default [
     path: '/token',
     name: 'Token',
     component: Token,
-    meta: { authorities: [Authority.USER] },
+    meta: { authorities: [Authority.ADMIN] },
   },
   {
     path: '/token/new',
     name: 'TokenCreate',
     component: TokenUpdate,
-    meta: { authorities: [Authority.USER] },
+    meta: { authorities: [Authority.ADMIN] },
   },
   {
     path: '/token/:tokenId/edit',
     name: 'TokenEdit',
     component: TokenUpdate,
-    meta: { authorities: [Authority.USER] },
+    meta: { authorities: [Authority.ADMIN] },
   },
   {
     path: '/token/:tokenId/view',
     name: 'TokenView',
     component: TokenDetails,
-    meta: { authorities: [Authority.USER] },
+    meta: { authorities: [Authority.ADMIN] },
   },
   // jhipster-needle-add-entity-to-router - JHipster will add entities to the router here
 ];
