@@ -31,7 +31,7 @@ application {
     skipUserManagement false,
     websocket false
   }
-  entities Email, ShortMessage, Notification, NotificationData
+  entities Email, ShortMessage, Notification, NotificationData, Token
 }
 
 entity Email {
@@ -67,11 +67,20 @@ enum MessageStatus {
   FAILED
 }
 
+entity Token {
+    name String required required maxlength(64)
+    token String required maxlength(512)
+    disable Boolean required
+    createdAt Instant required
+    deprecateAt Instant required
+    roles Integer required
+}
+
 relationship OneToMany {
   Notification{data} to NotificationData{notification required}
 }
 
-dto Email, ShortMessage, Notification with mapstruct
-paginate Email, ShortMessage, Notification with pagination
-service Email, ShortMessage, Notification with serviceImpl
-filter Email, ShortMessage, Notification
+dto Email, ShortMessage, Notification, Token with mapstruct
+paginate Email, ShortMessage, Notification, Token with pagination
+service Email, ShortMessage, Notification, Token with serviceImpl
+filter Email, ShortMessage, Notification, Token

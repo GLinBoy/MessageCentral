@@ -32,6 +32,12 @@ const NotificationData = () => import('@/entities/notification-data/notification
 const NotificationDataUpdate = () => import('@/entities/notification-data/notification-data-update.vue');
 // prettier-ignore
 const NotificationDataDetails = () => import('@/entities/notification-data/notification-data-details.vue');
+// prettier-ignore
+const Token = () => import('@/entities/token/token.vue');
+// prettier-ignore
+const TokenUpdate = () => import('@/entities/token/token-update.vue');
+// prettier-ignore
+const TokenDetails = () => import('@/entities/token/token-details.vue');
 // jhipster-needle-add-entity-to-router-import - JHipster will import entities to the router here
 
 export default [
@@ -111,6 +117,30 @@ export default [
     path: '/notification-data/:notificationDataId/view',
     name: 'NotificationDataView',
     component: NotificationDataDetails,
+    meta: { authorities: [Authority.ADMIN] },
+  },
+  {
+    path: '/token',
+    name: 'Token',
+    component: Token,
+    meta: { authorities: [Authority.ADMIN] },
+  },
+  {
+    path: '/token/new',
+    name: 'TokenCreate',
+    component: TokenUpdate,
+    meta: { authorities: [Authority.ADMIN] },
+  },
+  {
+    path: '/token/:tokenId/edit',
+    name: 'TokenEdit',
+    component: TokenUpdate,
+    meta: { authorities: [Authority.ADMIN] },
+  },
+  {
+    path: '/token/:tokenId/view',
+    name: 'TokenView',
+    component: TokenDetails,
     meta: { authorities: [Authority.ADMIN] },
   },
   // jhipster-needle-add-entity-to-router - JHipster will add entities to the router here
