@@ -1,6 +1,7 @@
 import axios from 'axios';
 
 import buildPaginationQueryOpts from '@/shared/sort/sorts';
+import buildSearchQueryOpts from '@/shared/search/searchs';
 
 import { IToken } from '@/shared/model/token.model';
 
@@ -23,7 +24,7 @@ export default class TokenService {
   public retrieve(paginationQuery?: any): Promise<any> {
     return new Promise<any>((resolve, reject) => {
       axios
-        .get(baseApiUrl + `?${buildPaginationQueryOpts(paginationQuery)}`)
+        .get(baseApiUrl + `?${buildPaginationQueryOpts(paginationQuery)}` + `${buildSearchQueryOpts(paginationQuery)}`)
         .then(res => {
           resolve(res);
         })
