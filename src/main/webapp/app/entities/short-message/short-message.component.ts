@@ -108,7 +108,7 @@ export default class ShortMessage extends Vue {
   }
 
   public search(): string {
-    const result = undefined;
+    let result = undefined;
     if (this.currentSearch) {
       result = `phoneNumber==*${this.currentSearch}* or content==*${this.currentSearch}*`;
     }
