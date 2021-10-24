@@ -13,7 +13,7 @@ export default class ShortMessageService {
       axios
         .get(`${baseApiUrl}/${id}`)
         .then(res => {
-          resolve();
+          resolve(res.data);
         })
         .catch(err => {
           reject(err);
