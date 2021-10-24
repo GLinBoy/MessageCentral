@@ -22,6 +22,7 @@ export default class Token extends Vue {
   public propOrder = 'id';
   public reverse = false;
   public totalItems = 0;
+  public currentSearch: string = null;
 
   public tokens: IToken[] = [];
 
@@ -33,6 +34,7 @@ export default class Token extends Vue {
 
   public clear(): void {
     this.page = 1;
+    this.currentSearch = null;
     this.retrieveAllTokens();
   }
 
@@ -95,6 +97,14 @@ export default class Token extends Vue {
     const result = [this.propOrder + ',' + (this.reverse ? 'desc' : 'asc')];
     if (this.propOrder !== 'id') {
       result.push('id');
+    }
+    return result;
+  }
+
+  public search(): string {
+    let result = undefined;
+    if (this.currentSearch) {
+      result = `name==*${this.currentSearch}*`;
     }
     return result;
   }
