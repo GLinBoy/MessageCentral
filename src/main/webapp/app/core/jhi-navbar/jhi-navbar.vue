@@ -56,7 +56,7 @@
             <font-awesome-icon icon="users-cog" />
             <span class="no-bold" v-text="$t('global.menu.admin.main')">Administration</span>
           </span>
-          <b-dropdown-item to="/token" active-class="active">
+          <b-dropdown-item to="/admin/token" active-class="active">
             <font-awesome-icon icon="key" />
             <span v-text="$t('global.menu.entities.token')">Tokens</span>
           </b-dropdown-item>
