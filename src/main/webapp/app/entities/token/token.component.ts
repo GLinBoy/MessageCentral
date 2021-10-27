@@ -61,6 +61,10 @@ export default class Token extends Vue {
       );
   }
 
+  public handleSearch(): void {
+    this.retrieveAllTokens();
+  }
+
   public handleSyncList(): void {
     this.clear();
   }
