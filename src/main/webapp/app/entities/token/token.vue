@@ -1,25 +1,29 @@
 <template>
   <div>
-    <h2 id="page-heading" data-cy="TokenHeading">
-      <span v-text="$t('messageCentralApp.token.home.title')" id="token-heading">Tokens</span>
-      <div class="d-flex justify-content-end">
-        <button class="btn btn-info mr-2" v-on:click="handleSyncList" :disabled="isFetching">
-          <font-awesome-icon icon="sync" :spin="isFetching"></font-awesome-icon>
-          <span v-text="$t('messageCentralApp.token.home.refreshListLabel')">Refresh List</span>
-        </button>
-        <router-link :to="{ name: 'TokenCreate' }" custom v-slot="{ navigate }">
-          <button
-            @click="navigate"
-            id="jh-create-entity"
-            data-cy="entityCreateButton"
-            class="btn btn-primary jh-create-entity create-token"
-          >
-            <font-awesome-icon icon="plus"></font-awesome-icon>
-            <span v-text="$t('messageCentralApp.token.home.createLabel')"> Create a new Token </span>
-          </button>
-        </router-link>
+    <div class="row">
+      <div class="col-xs-12 col-md-4 col-lg-8">
+        <h2 id="page-heading" data-cy="TokenHeading">
+          <span v-text="$t('messageCentralApp.token.home.title')" id="token-heading">Tokens</span>
+        </h2>
       </div>
-    </h2>
+      <div class="col-xs-12 col-md-8 col-lg-4">
+        <div class="d-flex justify-content-end">
+          <button class="btn btn-info mr-2" v-on:click="handleSyncList" :disabled="isFetching">
+            <font-awesome-icon icon="sync" :spin="isFetching"></font-awesome-icon>
+          </button>
+          <router-link :to="{ name: 'TokenCreate' }" custom v-slot="{ navigate }">
+            <button
+              @click="navigate"
+              id="jh-create-entity"
+              data-cy="entityCreateButton"
+              class="btn btn-primary jh-create-entity create-token"
+            >
+              <font-awesome-icon icon="plus"></font-awesome-icon>
+            </button>
+          </router-link>
+        </div>
+      </div>
+    </div>
     <br />
     <div class="alert alert-warning" v-if="!isFetching && tokens && tokens.length === 0">
       <span v-text="$t('messageCentralApp.token.home.notFound')">No tokens found</span>
