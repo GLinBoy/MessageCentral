@@ -153,3 +153,5 @@
 </template>
 
 <script lang="ts" src="./token.component.ts"></script>
+
+<style lang="scss" scoped src="./token.style.scss"></style>
