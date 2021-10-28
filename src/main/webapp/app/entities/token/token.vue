@@ -8,6 +8,20 @@
       </div>
       <div class="col-xs-12 col-md-8 col-lg-4">
         <div class="d-flex justify-content-end">
+          <b-input-group class="mr-2">
+            <b-form-input
+              type="text"
+              v-model="currentSearch"
+              @keydown.enter.native="handleSearch"
+              :placeholder="$t('messageCentralApp.token.home.searchPlaceholder')"
+            />
+
+            <b-input-group-append>
+              <b-button variant="outline-primary" v-on:click="handleSearch">
+                <font-awesome-icon icon="search"></font-awesome-icon>
+              </b-button>
+            </b-input-group-append>
+          </b-input-group>
           <button class="btn btn-info mr-2" v-on:click="handleSyncList" :disabled="isFetching">
             <font-awesome-icon icon="sync" :spin="isFetching"></font-awesome-icon>
           </button>
