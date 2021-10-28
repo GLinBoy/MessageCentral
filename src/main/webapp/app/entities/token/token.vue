@@ -78,7 +78,13 @@
           </tr>
         </thead>
         <tbody>
-          <tr v-for="token in tokens" :key="token.id" data-cy="entityTable">
+          <router-link
+            v-for="token in tokens"
+            :key="token.id"
+            data-cy="entityTable"
+            :to="{ name: 'TokenView', params: { tokenId: token.id } }"
+            tag="tr"
+          >
             <td>
               <router-link :to="{ name: 'TokenView', params: { tokenId: token.id } }">{{ token.id }}</router-link>
             </td>
@@ -90,11 +96,6 @@
             <td>{{ token.roles }}</td>
             <td class="text-right">
               <div class="btn-group">
-                <router-link :to="{ name: 'TokenView', params: { tokenId: token.id } }" custom v-slot="{ navigate }">
-                  <button @click="navigate" class="btn btn-info btn-sm details" data-cy="entityDetailsButton">
-                    <font-awesome-icon icon="eye"></font-awesome-icon>
-                  </button>
-                </router-link>
                 <router-link :to="{ name: 'TokenEdit', params: { tokenId: token.id } }" custom v-slot="{ navigate }">
                   <button @click="navigate" class="btn btn-primary btn-sm edit" data-cy="entityEditButton">
                     <font-awesome-icon icon="pencil-alt"></font-awesome-icon>
@@ -111,7 +112,7 @@
                 </b-button>
               </div>
             </td>
-          </tr>
+          </router-link>
         </tbody>
       </table>
     </div>
