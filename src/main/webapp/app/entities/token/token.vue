@@ -93,13 +93,11 @@
                 <router-link :to="{ name: 'TokenView', params: { tokenId: token.id } }" custom v-slot="{ navigate }">
                   <button @click="navigate" class="btn btn-info btn-sm details" data-cy="entityDetailsButton">
                     <font-awesome-icon icon="eye"></font-awesome-icon>
-                    <span class="d-none d-md-inline" v-text="$t('entity.action.view')">View</span>
                   </button>
                 </router-link>
                 <router-link :to="{ name: 'TokenEdit', params: { tokenId: token.id } }" custom v-slot="{ navigate }">
                   <button @click="navigate" class="btn btn-primary btn-sm edit" data-cy="entityEditButton">
                     <font-awesome-icon icon="pencil-alt"></font-awesome-icon>
-                    <span class="d-none d-md-inline" v-text="$t('entity.action.edit')">Edit</span>
                   </button>
                 </router-link>
                 <b-button
@@ -110,7 +108,6 @@
                   v-b-modal.removeEntity
                 >
                   <font-awesome-icon icon="times"></font-awesome-icon>
-                  <span class="d-none d-md-inline" v-text="$t('entity.action.delete')">Delete</span>
                 </b-button>
               </div>
             </td>
