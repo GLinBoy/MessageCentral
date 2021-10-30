@@ -120,4 +120,10 @@ public class TokenQueryService extends QueryService<Token> {
         }
         return specification;
     }
+
+    @Transactional(readOnly = true)
+    public Page<TokenDTO> findBySearch(Specification<Token> specs, Pageable pageable) {
+        log.debug("find by specification : {}, page: {}", specs, pageable);
+        return tokenRepository.findAll(specs, pageable).map(tokenMapper::toDto);
+    }
 }
