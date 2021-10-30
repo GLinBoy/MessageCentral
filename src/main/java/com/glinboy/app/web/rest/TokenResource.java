@@ -181,19 +181,25 @@ public class TokenResource {
      * {@code GET  /tokens/count} : count all the tokens.
      *
      * @param criteria the criteria which the requested entities should match.
-     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the count in body.
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the count
+     *         in body.
      */
     @GetMapping("/tokens/count")
-    public ResponseEntity<Long> countTokens(TokenCriteria criteria) {
-        log.debug("REST request to count Tokens by criteria: {}", criteria);
-        return ResponseEntity.ok().body(tokenQueryService.countByCriteria(criteria));
+    public ResponseEntity<Long> countTokens(@RequestParam(value = "query", required = false, defaultValue = "") String query) {
+        Specification<Token> specs = Specification.where(null);
+        if (!StringUtils.isBlank(query)) {
+            Node rootNode = new RSQLParser().parse(query);
+            specs = rootNode.accept(new CustomRsqlVisitor<Token>());
+        }
+        return ResponseEntity.ok().body(tokenQueryService.countBySpecification(specs));
     }
 
     /**
      * {@code GET  /tokens/:id} : get the "id" token.
      *
      * @param id the id of the tokenDTO to retrieve.
-     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the tokenDTO, or with status {@code 404 (Not Found)}.
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body
+     *         the tokenDTO, or with status {@code 404 (Not Found)}.
      */
     @GetMapping("/tokens/{id}")
     public ResponseEntity<TokenDTO> getToken(@PathVariable Long id) {
