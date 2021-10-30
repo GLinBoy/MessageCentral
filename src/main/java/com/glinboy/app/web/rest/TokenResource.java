@@ -1,11 +1,14 @@
 package com.glinboy.app.web.rest;
 
+import com.glinboy.app.domain.Token;
 import com.glinboy.app.repository.TokenRepository;
+import com.glinboy.app.rsql.CustomRsqlVisitor;
 import com.glinboy.app.service.TokenQueryService;
 import com.glinboy.app.service.TokenService;
-import com.glinboy.app.service.criteria.TokenCriteria;
 import com.glinboy.app.service.dto.TokenDTO;
 import com.glinboy.app.web.rest.errors.BadRequestAlertException;
+import cz.jirutka.rsql.parser.RSQLParser;
+import cz.jirutka.rsql.parser.ast.Node;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.List;
@@ -13,13 +16,14 @@ import java.util.Objects;
 import java.util.Optional;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -57,7 +61,9 @@ public class TokenResource {
      * {@code POST  /tokens} : Create a new token.
      *
      * @param tokenDTO the tokenDTO to create.
-     * @return the {@link ResponseEntity} with status {@code 201 (Created)} and with body the new tokenDTO, or with status {@code 400 (Bad Request)} if the token has already an ID.
+     * @return the {@link ResponseEntity} with status {@code 201 (Created)} and with
+     *         body the new tokenDTO, or with status {@code 400 (Bad Request)} if
+     *         the token has already an ID.
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PostMapping("/tokens")
@@ -76,11 +82,13 @@ public class TokenResource {
     /**
      * {@code PUT  /tokens/:id} : Updates an existing token.
      *
-     * @param id the id of the tokenDTO to save.
+     * @param id       the id of the tokenDTO to save.
      * @param tokenDTO the tokenDTO to update.
-     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the updated tokenDTO,
-     * or with status {@code 400 (Bad Request)} if the tokenDTO is not valid,
-     * or with status {@code 500 (Internal Server Error)} if the tokenDTO couldn't be updated.
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body
+     *         the updated tokenDTO, or with status {@code 400 (Bad Request)} if the
+     *         tokenDTO is not valid, or with status
+     *         {@code 500 (Internal Server Error)} if the tokenDTO couldn't be
+     *         updated.
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PutMapping("/tokens/{id}")
@@ -108,14 +116,17 @@ public class TokenResource {
     }
 
     /**
-     * {@code PATCH  /tokens/:id} : Partial updates given fields of an existing token, field will ignore if it is null
+     * {@code PATCH  /tokens/:id} : Partial updates given fields of an existing
+     * token, field will ignore if it is null
      *
-     * @param id the id of the tokenDTO to save.
+     * @param id       the id of the tokenDTO to save.
      * @param tokenDTO the tokenDTO to update.
-     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the updated tokenDTO,
-     * or with status {@code 400 (Bad Request)} if the tokenDTO is not valid,
-     * or with status {@code 404 (Not Found)} if the tokenDTO is not found,
-     * or with status {@code 500 (Internal Server Error)} if the tokenDTO couldn't be updated.
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body
+     *         the updated tokenDTO, or with status {@code 400 (Bad Request)} if the
+     *         tokenDTO is not valid, or with status {@code 404 (Not Found)} if the
+     *         tokenDTO is not found, or with status
+     *         {@code 500 (Internal Server Error)} if the tokenDTO couldn't be
+     *         updated.
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PatchMapping(value = "/tokens/{id}", consumes = { "application/json", "application/merge-patch+json" })
@@ -148,12 +159,20 @@ public class TokenResource {
      *
      * @param pageable the pagination information.
      * @param criteria the criteria which the requested entities should match.
-     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of tokens in body.
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list
+     *         of tokens in body.
      */
     @GetMapping("/tokens")
-    public ResponseEntity<List<TokenDTO>> getAllTokens(TokenCriteria criteria, Pageable pageable) {
-        log.debug("REST request to get Tokens by criteria: {}", criteria);
-        Page<TokenDTO> page = tokenQueryService.findByCriteria(criteria, pageable);
+    public ResponseEntity<List<TokenDTO>> getAllTokens(
+        Pageable pageable,
+        @RequestParam(value = "query", required = false, defaultValue = "") String query
+    ) {
+        Specification<Token> specs = Specification.where(null);
+        if (!StringUtils.isBlank(query)) {
+            Node rootNode = new RSQLParser().parse(query);
+            specs = rootNode.accept(new CustomRsqlVisitor<Token>());
+        }
+        Page<TokenDTO> page = tokenQueryService.findBySearch(specs, pageable);
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
         return ResponseEntity.ok().headers(headers).body(page.getContent());
     }
