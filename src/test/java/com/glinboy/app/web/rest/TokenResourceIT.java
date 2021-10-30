@@ -8,7 +8,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import com.glinboy.app.IntegrationTest;
 import com.glinboy.app.domain.Token;
 import com.glinboy.app.repository.TokenRepository;
-import com.glinboy.app.service.criteria.TokenCriteria;
+import com.glinboy.app.security.AuthoritiesConstants;
 import com.glinboy.app.service.dto.TokenDTO;
 import com.glinboy.app.service.mapper.TokenMapper;
 import java.time.Instant;
@@ -114,6 +114,7 @@ class TokenResourceIT {
 
     @Test
     @Transactional
+    @WithMockUser(authorities = { AuthoritiesConstants.ADMIN })
     void createToken() throws Exception {
         int databaseSizeBeforeCreate = tokenRepository.findAll().size();
         // Create the Token
@@ -136,6 +137,7 @@ class TokenResourceIT {
 
     @Test
     @Transactional
+    @WithMockUser(authorities = { AuthoritiesConstants.ADMIN })
     void createTokenWithExistingId() throws Exception {
         // Create the Token with an existing ID
         token.setId(1L);
@@ -155,6 +157,7 @@ class TokenResourceIT {
 
     @Test
     @Transactional
+    @WithMockUser(authorities = { AuthoritiesConstants.ADMIN })
     void checkNameIsRequired() throws Exception {
         int databaseSizeBeforeTest = tokenRepository.findAll().size();
         // set the field null
@@ -173,6 +176,7 @@ class TokenResourceIT {
 
     @Test
     @Transactional
+    @WithMockUser(authorities = { AuthoritiesConstants.ADMIN })
     void checkTokenIsRequired() throws Exception {
         int databaseSizeBeforeTest = tokenRepository.findAll().size();
         // set the field null
@@ -191,6 +195,7 @@ class TokenResourceIT {
 
     @Test
     @Transactional
+    @WithMockUser(authorities = { AuthoritiesConstants.ADMIN })
     void checkDisableIsRequired() throws Exception {
         int databaseSizeBeforeTest = tokenRepository.findAll().size();
         // set the field null
@@ -209,6 +214,7 @@ class TokenResourceIT {
 
     @Test
     @Transactional
+    @WithMockUser(authorities = { AuthoritiesConstants.ADMIN })
     void checkCreatedAtIsRequired() throws Exception {
         int databaseSizeBeforeTest = tokenRepository.findAll().size();
         // set the field null
@@ -227,6 +233,7 @@ class TokenResourceIT {
 
     @Test
     @Transactional
+    @WithMockUser(authorities = { AuthoritiesConstants.ADMIN })
     void checkDeprecateAtIsRequired() throws Exception {
         int databaseSizeBeforeTest = tokenRepository.findAll().size();
         // set the field null
@@ -245,6 +252,7 @@ class TokenResourceIT {
 
     @Test
     @Transactional
+    @WithMockUser(authorities = { AuthoritiesConstants.ADMIN })
     void checkRolesIsRequired() throws Exception {
         int databaseSizeBeforeTest = tokenRepository.findAll().size();
         // set the field null
@@ -263,6 +271,7 @@ class TokenResourceIT {
 
     @Test
     @Transactional
+    @WithMockUser(authorities = { AuthoritiesConstants.ADMIN })
     void getAllTokens() throws Exception {
         // Initialize the database
         tokenRepository.saveAndFlush(token);
@@ -283,6 +292,7 @@ class TokenResourceIT {
 
     @Test
     @Transactional
+    @WithMockUser(authorities = { AuthoritiesConstants.ADMIN })
     void getToken() throws Exception {
         // Initialize the database
         tokenRepository.saveAndFlush(token);
@@ -303,6 +313,7 @@ class TokenResourceIT {
 
     @Test
     @Transactional
+    @WithMockUser(authorities = { AuthoritiesConstants.ADMIN })
     void getTokensByIdFiltering() throws Exception {
         // Initialize the database
         tokenRepository.saveAndFlush(token);
@@ -321,6 +332,7 @@ class TokenResourceIT {
 
     @Test
     @Transactional
+    @WithMockUser(authorities = { AuthoritiesConstants.ADMIN })
     void getAllTokensByNameIsEqualToSomething() throws Exception {
         // Initialize the database
         tokenRepository.saveAndFlush(token);
@@ -334,6 +346,7 @@ class TokenResourceIT {
 
     @Test
     @Transactional
+    @WithMockUser(authorities = { AuthoritiesConstants.ADMIN })
     void getAllTokensByNameIsNotEqualToSomething() throws Exception {
         // Initialize the database
         tokenRepository.saveAndFlush(token);
@@ -347,6 +360,7 @@ class TokenResourceIT {
 
     @Test
     @Transactional
+    @WithMockUser(authorities = { AuthoritiesConstants.ADMIN })
     void getAllTokensByNameIsInShouldWork() throws Exception {
         // Initialize the database
         tokenRepository.saveAndFlush(token);
@@ -360,6 +374,7 @@ class TokenResourceIT {
 
     @Test
     @Transactional
+    @WithMockUser(authorities = { AuthoritiesConstants.ADMIN })
     void getAllTokensByNameIsNullOrNotNull() throws Exception {
         // Initialize the database
         tokenRepository.saveAndFlush(token);
@@ -373,6 +388,7 @@ class TokenResourceIT {
 
     @Test
     @Transactional
+    @WithMockUser(authorities = { AuthoritiesConstants.ADMIN })
     void getAllTokensByNameContainsSomething() throws Exception {
         // Initialize the database
         tokenRepository.saveAndFlush(token);
@@ -386,6 +402,7 @@ class TokenResourceIT {
 
     @Test
     @Transactional
+    @WithMockUser(authorities = { AuthoritiesConstants.ADMIN })
     void getAllTokensByNameNotContainsSomething() throws Exception {
         // Initialize the database
         tokenRepository.saveAndFlush(token);
@@ -399,6 +416,7 @@ class TokenResourceIT {
 
     @Test
     @Transactional
+    @WithMockUser(authorities = { AuthoritiesConstants.ADMIN })
     void getAllTokensByTokenIsEqualToSomething() throws Exception {
         // Initialize the database
         tokenRepository.saveAndFlush(token);
@@ -412,6 +430,7 @@ class TokenResourceIT {
 
     @Test
     @Transactional
+    @WithMockUser(authorities = { AuthoritiesConstants.ADMIN })
     void getAllTokensByTokenIsNotEqualToSomething() throws Exception {
         // Initialize the database
         tokenRepository.saveAndFlush(token);
@@ -425,6 +444,7 @@ class TokenResourceIT {
 
     @Test
     @Transactional
+    @WithMockUser(authorities = { AuthoritiesConstants.ADMIN })
     void getAllTokensByTokenIsInShouldWork() throws Exception {
         // Initialize the database
         tokenRepository.saveAndFlush(token);
@@ -438,6 +458,7 @@ class TokenResourceIT {
 
     @Test
     @Transactional
+    @WithMockUser(authorities = { AuthoritiesConstants.ADMIN })
     void getAllTokensByTokenIsNullOrNotNull() throws Exception {
         // Initialize the database
         tokenRepository.saveAndFlush(token);
@@ -451,6 +472,7 @@ class TokenResourceIT {
 
     @Test
     @Transactional
+    @WithMockUser(authorities = { AuthoritiesConstants.ADMIN })
     void getAllTokensByTokenContainsSomething() throws Exception {
         // Initialize the database
         tokenRepository.saveAndFlush(token);
@@ -464,6 +486,7 @@ class TokenResourceIT {
 
     @Test
     @Transactional
+    @WithMockUser(authorities = { AuthoritiesConstants.ADMIN })
     void getAllTokensByTokenNotContainsSomething() throws Exception {
         // Initialize the database
         tokenRepository.saveAndFlush(token);
@@ -477,6 +500,7 @@ class TokenResourceIT {
 
     @Test
     @Transactional
+    @WithMockUser(authorities = { AuthoritiesConstants.ADMIN })
     void getAllTokensByDisableIsEqualToSomething() throws Exception {
         // Initialize the database
         tokenRepository.saveAndFlush(token);
@@ -490,6 +514,7 @@ class TokenResourceIT {
 
     @Test
     @Transactional
+    @WithMockUser(authorities = { AuthoritiesConstants.ADMIN })
     void getAllTokensByDisableIsNotEqualToSomething() throws Exception {
         // Initialize the database
         tokenRepository.saveAndFlush(token);
@@ -503,6 +528,7 @@ class TokenResourceIT {
 
     @Test
     @Transactional
+    @WithMockUser(authorities = { AuthoritiesConstants.ADMIN })
     void getAllTokensByDisableIsInShouldWork() throws Exception {
         // Initialize the database
         tokenRepository.saveAndFlush(token);
@@ -516,6 +542,7 @@ class TokenResourceIT {
 
     @Test
     @Transactional
+    @WithMockUser(authorities = { AuthoritiesConstants.ADMIN })
     void getAllTokensByDisableIsNullOrNotNull() throws Exception {
         // Initialize the database
         tokenRepository.saveAndFlush(token);
@@ -529,6 +556,7 @@ class TokenResourceIT {
 
     @Test
     @Transactional
+    @WithMockUser(authorities = { AuthoritiesConstants.ADMIN })
     void getAllTokensByCreatedAtIsEqualToSomething() throws Exception {
         // Initialize the database
         tokenRepository.saveAndFlush(token);
@@ -542,6 +570,7 @@ class TokenResourceIT {
 
     @Test
     @Transactional
+    @WithMockUser(authorities = { AuthoritiesConstants.ADMIN })
     void getAllTokensByCreatedAtIsNotEqualToSomething() throws Exception {
         // Initialize the database
         tokenRepository.saveAndFlush(token);
@@ -555,6 +584,7 @@ class TokenResourceIT {
 
     @Test
     @Transactional
+    @WithMockUser(authorities = { AuthoritiesConstants.ADMIN })
     void getAllTokensByCreatedAtIsInShouldWork() throws Exception {
         // Initialize the database
         tokenRepository.saveAndFlush(token);
@@ -568,6 +598,7 @@ class TokenResourceIT {
 
     @Test
     @Transactional
+    @WithMockUser(authorities = { AuthoritiesConstants.ADMIN })
     void getAllTokensByCreatedAtIsNullOrNotNull() throws Exception {
         // Initialize the database
         tokenRepository.saveAndFlush(token);
@@ -581,6 +612,7 @@ class TokenResourceIT {
 
     @Test
     @Transactional
+    @WithMockUser(authorities = { AuthoritiesConstants.ADMIN })
     void getAllTokensByDeprecateAtIsEqualToSomething() throws Exception {
         // Initialize the database
         tokenRepository.saveAndFlush(token);
@@ -594,6 +626,7 @@ class TokenResourceIT {
 
     @Test
     @Transactional
+    @WithMockUser(authorities = { AuthoritiesConstants.ADMIN })
     void getAllTokensByDeprecateAtIsNotEqualToSomething() throws Exception {
         // Initialize the database
         tokenRepository.saveAndFlush(token);
@@ -607,6 +640,7 @@ class TokenResourceIT {
 
     @Test
     @Transactional
+    @WithMockUser(authorities = { AuthoritiesConstants.ADMIN })
     void getAllTokensByDeprecateAtIsInShouldWork() throws Exception {
         // Initialize the database
         tokenRepository.saveAndFlush(token);
@@ -620,6 +654,7 @@ class TokenResourceIT {
 
     @Test
     @Transactional
+    @WithMockUser(authorities = { AuthoritiesConstants.ADMIN })
     void getAllTokensByDeprecateAtIsNullOrNotNull() throws Exception {
         // Initialize the database
         tokenRepository.saveAndFlush(token);
@@ -633,6 +668,7 @@ class TokenResourceIT {
 
     @Test
     @Transactional
+    @WithMockUser(authorities = { AuthoritiesConstants.ADMIN })
     void getAllTokensByRolesIsEqualToSomething() throws Exception {
         // Initialize the database
         tokenRepository.saveAndFlush(token);
@@ -646,6 +682,7 @@ class TokenResourceIT {
 
     @Test
     @Transactional
+    @WithMockUser(authorities = { AuthoritiesConstants.ADMIN })
     void getAllTokensByRolesIsNotEqualToSomething() throws Exception {
         // Initialize the database
         tokenRepository.saveAndFlush(token);
@@ -659,6 +696,7 @@ class TokenResourceIT {
 
     @Test
     @Transactional
+    @WithMockUser(authorities = { AuthoritiesConstants.ADMIN })
     void getAllTokensByRolesIsInShouldWork() throws Exception {
         // Initialize the database
         tokenRepository.saveAndFlush(token);
@@ -672,6 +710,7 @@ class TokenResourceIT {
 
     @Test
     @Transactional
+    @WithMockUser(authorities = { AuthoritiesConstants.ADMIN })
     void getAllTokensByRolesIsNullOrNotNull() throws Exception {
         // Initialize the database
         tokenRepository.saveAndFlush(token);
@@ -685,6 +724,7 @@ class TokenResourceIT {
 
     @Test
     @Transactional
+    @WithMockUser(authorities = { AuthoritiesConstants.ADMIN })
     void getAllTokensByRolesIsGreaterThanOrEqualToSomething() throws Exception {
         // Initialize the database
         tokenRepository.saveAndFlush(token);
@@ -698,6 +738,7 @@ class TokenResourceIT {
 
     @Test
     @Transactional
+    @WithMockUser(authorities = { AuthoritiesConstants.ADMIN })
     void getAllTokensByRolesIsLessThanOrEqualToSomething() throws Exception {
         // Initialize the database
         tokenRepository.saveAndFlush(token);
@@ -711,6 +752,7 @@ class TokenResourceIT {
 
     @Test
     @Transactional
+    @WithMockUser(authorities = { AuthoritiesConstants.ADMIN })
     void getAllTokensByRolesIsLessThanSomething() throws Exception {
         // Initialize the database
         tokenRepository.saveAndFlush(token);
@@ -724,6 +766,7 @@ class TokenResourceIT {
 
     @Test
     @Transactional
+    @WithMockUser(authorities = { AuthoritiesConstants.ADMIN })
     void getAllTokensByRolesIsGreaterThanSomething() throws Exception {
         // Initialize the database
         tokenRepository.saveAndFlush(token);
@@ -780,6 +823,7 @@ class TokenResourceIT {
 
     @Test
     @Transactional
+    @WithMockUser(authorities = { AuthoritiesConstants.ADMIN })
     void getNonExistingToken() throws Exception {
         // Get the token
         restTokenMockMvc.perform(get(ENTITY_API_URL_ID, Long.MAX_VALUE)).andExpect(status().isNotFound());
@@ -787,6 +831,7 @@ class TokenResourceIT {
 
     @Test
     @Transactional
+    @WithMockUser(authorities = { AuthoritiesConstants.ADMIN })
     void putNewToken() throws Exception {
         // Initialize the database
         tokenRepository.saveAndFlush(token);
@@ -828,6 +873,7 @@ class TokenResourceIT {
 
     @Test
     @Transactional
+    @WithMockUser(authorities = { AuthoritiesConstants.ADMIN })
     void putNonExistingToken() throws Exception {
         int databaseSizeBeforeUpdate = tokenRepository.findAll().size();
         token.setId(count.incrementAndGet());
@@ -851,6 +897,7 @@ class TokenResourceIT {
 
     @Test
     @Transactional
+    @WithMockUser(authorities = { AuthoritiesConstants.ADMIN })
     void putWithIdMismatchToken() throws Exception {
         int databaseSizeBeforeUpdate = tokenRepository.findAll().size();
         token.setId(count.incrementAndGet());
@@ -874,6 +921,7 @@ class TokenResourceIT {
 
     @Test
     @Transactional
+    @WithMockUser(authorities = { AuthoritiesConstants.ADMIN })
     void putWithMissingIdPathParamToken() throws Exception {
         int databaseSizeBeforeUpdate = tokenRepository.findAll().size();
         token.setId(count.incrementAndGet());
@@ -893,6 +941,7 @@ class TokenResourceIT {
 
     @Test
     @Transactional
+    @WithMockUser(authorities = { AuthoritiesConstants.ADMIN })
     void partialUpdateTokenWithPatch() throws Exception {
         // Initialize the database
         tokenRepository.saveAndFlush(token);
@@ -927,6 +976,7 @@ class TokenResourceIT {
 
     @Test
     @Transactional
+    @WithMockUser(authorities = { AuthoritiesConstants.ADMIN })
     void fullUpdateTokenWithPatch() throws Exception {
         // Initialize the database
         tokenRepository.saveAndFlush(token);
@@ -967,6 +1017,7 @@ class TokenResourceIT {
 
     @Test
     @Transactional
+    @WithMockUser(authorities = { AuthoritiesConstants.ADMIN })
     void patchNonExistingToken() throws Exception {
         int databaseSizeBeforeUpdate = tokenRepository.findAll().size();
         token.setId(count.incrementAndGet());
@@ -990,6 +1041,7 @@ class TokenResourceIT {
 
     @Test
     @Transactional
+    @WithMockUser(authorities = { AuthoritiesConstants.ADMIN })
     void patchWithIdMismatchToken() throws Exception {
         int databaseSizeBeforeUpdate = tokenRepository.findAll().size();
         token.setId(count.incrementAndGet());
@@ -1013,6 +1065,7 @@ class TokenResourceIT {
 
     @Test
     @Transactional
+    @WithMockUser(authorities = { AuthoritiesConstants.ADMIN })
     void patchWithMissingIdPathParamToken() throws Exception {
         int databaseSizeBeforeUpdate = tokenRepository.findAll().size();
         token.setId(count.incrementAndGet());
@@ -1032,6 +1085,7 @@ class TokenResourceIT {
 
     @Test
     @Transactional
+    @WithMockUser(authorities = { AuthoritiesConstants.ADMIN })
     void deleteToken() throws Exception {
         // Initialize the database
         tokenRepository.saveAndFlush(token);
