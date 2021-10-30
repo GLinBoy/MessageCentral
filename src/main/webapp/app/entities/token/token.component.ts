@@ -44,6 +44,7 @@ export default class Token extends Vue {
       page: this.page - 1,
       size: this.itemsPerPage,
       sort: this.sort(),
+      search: this.search(),
     };
     this.tokenService()
       .retrieve(paginationQuery)
