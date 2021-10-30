@@ -1,13 +1,11 @@
 package com.glinboy.app.service;
 
 import com.glinboy.app.domain.*; // for static metamodels
-import com.glinboy.app.domain.Token;
 import com.glinboy.app.repository.TokenRepository;
 import com.glinboy.app.service.criteria.TokenCriteria;
 import com.glinboy.app.service.dto.TokenDTO;
 import com.glinboy.app.service.mapper.TokenMapper;
 import java.util.List;
-import javax.persistence.criteria.JoinType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -72,6 +70,17 @@ public class TokenQueryService extends QueryService<Token> {
     public long countByCriteria(TokenCriteria criteria) {
         log.debug("count by criteria : {}", criteria);
         final Specification<Token> specification = createSpecification(criteria);
+        return tokenRepository.count(specification);
+    }
+
+    /**
+     * Return the number of matching entities in the database.
+     * @param criteria The object which holds all the filters, which the entities should match.
+     * @return the number of matching entities.
+     */
+    @Transactional(readOnly = true)
+    public long countBySpecification(Specification<Token> specification) {
+        log.debug("count by specification: {}", specification);
         return tokenRepository.count(specification);
     }
 
