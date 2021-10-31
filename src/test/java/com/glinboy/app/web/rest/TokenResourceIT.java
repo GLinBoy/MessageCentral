@@ -366,10 +366,10 @@ class TokenResourceIT {
         tokenRepository.saveAndFlush(token);
 
         // Get all the tokenList where name in DEFAULT_NAME or UPDATED_NAME
-        defaultTokenShouldBeFound("name.in=" + DEFAULT_NAME + "," + UPDATED_NAME);
+        defaultTokenShouldBeFound(String.format("query=name=in=(%s, %s)", DEFAULT_NAME, UPDATED_NAME));
 
         // Get all the tokenList where name equals to UPDATED_NAME
-        defaultTokenShouldNotBeFound("name.in=" + UPDATED_NAME);
+        defaultTokenShouldNotBeFound(String.format("query=name=in=(%s)", UPDATED_NAME));
     }
 
     @Test
