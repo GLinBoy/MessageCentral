@@ -408,10 +408,10 @@ class TokenResourceIT {
         tokenRepository.saveAndFlush(token);
 
         // Get all the tokenList where name does not contain DEFAULT_NAME
-        defaultTokenShouldNotBeFound("name.doesNotContain=" + DEFAULT_NAME);
+        defaultTokenShouldNotBeFound("query=name!=*" + DEFAULT_NAME + "*");
 
         // Get all the tokenList where name does not contain UPDATED_NAME
-        defaultTokenShouldBeFound("name.doesNotContain=" + UPDATED_NAME);
+        defaultTokenShouldBeFound("query=name!=*" + UPDATED_NAME + "*");
     }
 
     @Test
