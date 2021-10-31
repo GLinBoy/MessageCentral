@@ -450,10 +450,10 @@ class TokenResourceIT {
         tokenRepository.saveAndFlush(token);
 
         // Get all the tokenList where token in DEFAULT_TOKEN or UPDATED_TOKEN
-        defaultTokenShouldBeFound("token.in=" + DEFAULT_TOKEN + "," + UPDATED_TOKEN);
+        defaultTokenShouldBeFound(String.format("query=token=in=(%s, %s)", DEFAULT_TOKEN, UPDATED_TOKEN));
 
         // Get all the tokenList where token equals to UPDATED_TOKEN
-        defaultTokenShouldNotBeFound("token.in=" + UPDATED_TOKEN);
+        defaultTokenShouldNotBeFound(String.format("query=token=in=(%s)", UPDATED_TOKEN));
     }
 
     @Test
