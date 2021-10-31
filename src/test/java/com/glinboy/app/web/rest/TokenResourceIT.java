@@ -352,10 +352,10 @@ class TokenResourceIT {
         tokenRepository.saveAndFlush(token);
 
         // Get all the tokenList where name not equals to DEFAULT_NAME
-        defaultTokenShouldNotBeFound("name.notEquals=" + DEFAULT_NAME);
+        defaultTokenShouldNotBeFound("query=name!=" + DEFAULT_NAME);
 
         // Get all the tokenList where name not equals to UPDATED_NAME
-        defaultTokenShouldBeFound("name.notEquals=" + UPDATED_NAME);
+        defaultTokenShouldBeFound("query=name!=" + UPDATED_NAME);
     }
 
     @Test
