@@ -320,14 +320,14 @@ class TokenResourceIT {
 
         Long id = token.getId();
 
-        defaultTokenShouldBeFound("id.equals=" + id);
-        defaultTokenShouldNotBeFound("id.notEquals=" + id);
+        defaultTokenShouldBeFound("query=id==" + id);
+        defaultTokenShouldNotBeFound("query=id!=" + id);
 
-        defaultTokenShouldBeFound("id.greaterThanOrEqual=" + id);
-        defaultTokenShouldNotBeFound("id.greaterThan=" + id);
+        defaultTokenShouldBeFound("query=id>=" + id);
+        defaultTokenShouldNotBeFound("query=id>" + id);
 
-        defaultTokenShouldBeFound("id.lessThanOrEqual=" + id);
-        defaultTokenShouldNotBeFound("id.lessThan=" + id);
+        defaultTokenShouldBeFound("query=id<=" + id);
+        defaultTokenShouldNotBeFound("query=id<" + id);
     }
 
     @Test
