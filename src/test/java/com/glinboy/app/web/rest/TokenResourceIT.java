@@ -436,10 +436,10 @@ class TokenResourceIT {
         tokenRepository.saveAndFlush(token);
 
         // Get all the tokenList where token not equals to DEFAULT_TOKEN
-        defaultTokenShouldNotBeFound("token.notEquals=" + DEFAULT_TOKEN);
+        defaultTokenShouldNotBeFound("query=token!=" + DEFAULT_TOKEN);
 
         // Get all the tokenList where token not equals to UPDATED_TOKEN
-        defaultTokenShouldBeFound("token.notEquals=" + UPDATED_TOKEN);
+        defaultTokenShouldBeFound("query=token!=" + UPDATED_TOKEN);
     }
 
     @Test
