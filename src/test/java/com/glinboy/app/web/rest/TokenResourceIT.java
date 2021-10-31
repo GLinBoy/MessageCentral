@@ -380,10 +380,10 @@ class TokenResourceIT {
         tokenRepository.saveAndFlush(token);
 
         // Get all the tokenList where name is not null
-        defaultTokenShouldBeFound("name.specified=true");
+        defaultTokenShouldBeFound("query=name!=null");
 
         // Get all the tokenList where name is null
-        defaultTokenShouldNotBeFound("name.specified=false");
+        defaultTokenShouldNotBeFound("query=name==null");
     }
 
     @Test
