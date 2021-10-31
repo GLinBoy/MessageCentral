@@ -338,10 +338,10 @@ class TokenResourceIT {
         tokenRepository.saveAndFlush(token);
 
         // Get all the tokenList where name equals to DEFAULT_NAME
-        defaultTokenShouldBeFound("name.equals=" + DEFAULT_NAME);
+        defaultTokenShouldBeFound("query=name==" + DEFAULT_NAME);
 
         // Get all the tokenList where name equals to UPDATED_NAME
-        defaultTokenShouldNotBeFound("name.equals=" + UPDATED_NAME);
+        defaultTokenShouldNotBeFound("query=name==" + UPDATED_NAME);
     }
 
     @Test
