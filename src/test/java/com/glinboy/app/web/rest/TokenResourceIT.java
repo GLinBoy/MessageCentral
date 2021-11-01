@@ -674,10 +674,10 @@ class TokenResourceIT {
         tokenRepository.saveAndFlush(token);
 
         // Get all the tokenList where roles equals to DEFAULT_ROLES
-        defaultTokenShouldBeFound("roles.equals=" + DEFAULT_ROLES);
+        defaultTokenShouldBeFound("query=roles==" + DEFAULT_ROLES);
 
         // Get all the tokenList where roles equals to UPDATED_ROLES
-        defaultTokenShouldNotBeFound("roles.equals=" + UPDATED_ROLES);
+        defaultTokenShouldNotBeFound("query=roles==" + UPDATED_ROLES);
     }
 
     @Test
