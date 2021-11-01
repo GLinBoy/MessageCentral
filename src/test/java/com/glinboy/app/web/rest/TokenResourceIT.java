@@ -716,10 +716,10 @@ class TokenResourceIT {
         tokenRepository.saveAndFlush(token);
 
         // Get all the tokenList where roles is not null
-        defaultTokenShouldBeFound("roles.specified=true");
+        defaultTokenShouldBeFound("query=roles!=null");
 
         // Get all the tokenList where roles is null
-        defaultTokenShouldNotBeFound("roles.specified=false");
+        defaultTokenShouldNotBeFound("query=roles==null");
     }
 
     @Test
