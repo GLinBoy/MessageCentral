@@ -758,10 +758,10 @@ class TokenResourceIT {
         tokenRepository.saveAndFlush(token);
 
         // Get all the tokenList where roles is less than DEFAULT_ROLES
-        defaultTokenShouldNotBeFound("roles.lessThan=" + DEFAULT_ROLES);
+        defaultTokenShouldNotBeFound("query=roles<" + DEFAULT_ROLES);
 
         // Get all the tokenList where roles is less than UPDATED_ROLES
-        defaultTokenShouldBeFound("roles.lessThan=" + UPDATED_ROLES);
+        defaultTokenShouldBeFound("query=roles<" + UPDATED_ROLES);
     }
 
     @Test
