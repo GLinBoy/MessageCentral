@@ -702,10 +702,10 @@ class TokenResourceIT {
         tokenRepository.saveAndFlush(token);
 
         // Get all the tokenList where roles in DEFAULT_ROLES or UPDATED_ROLES
-        defaultTokenShouldBeFound("roles.in=" + DEFAULT_ROLES + "," + UPDATED_ROLES);
+        defaultTokenShouldBeFound(String.format("query=roles=in=(%s, %s)", DEFAULT_ROLES, UPDATED_ROLES));
 
         // Get all the tokenList where roles equals to UPDATED_ROLES
-        defaultTokenShouldNotBeFound("roles.in=" + UPDATED_ROLES);
+        defaultTokenShouldNotBeFound(String.format("query=roles=in=(%s)", UPDATED_ROLES));
     }
 
     @Test
