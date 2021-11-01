@@ -772,10 +772,10 @@ class TokenResourceIT {
         tokenRepository.saveAndFlush(token);
 
         // Get all the tokenList where roles is greater than DEFAULT_ROLES
-        defaultTokenShouldNotBeFound("roles.greaterThan=" + DEFAULT_ROLES);
+        defaultTokenShouldNotBeFound("query=roles>" + DEFAULT_ROLES);
 
         // Get all the tokenList where roles is greater than SMALLER_ROLES
-        defaultTokenShouldBeFound("roles.greaterThan=" + SMALLER_ROLES);
+        defaultTokenShouldBeFound("query=roles>" + SMALLER_ROLES);
     }
 
     /**
