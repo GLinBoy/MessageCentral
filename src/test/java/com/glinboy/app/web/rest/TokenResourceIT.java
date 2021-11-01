@@ -604,10 +604,10 @@ class TokenResourceIT {
         tokenRepository.saveAndFlush(token);
 
         // Get all the tokenList where createdAt is not null
-        defaultTokenShouldBeFound("createdAt.specified=true");
+        defaultTokenShouldBeFound("query=createdAt!=null");
 
         // Get all the tokenList where createdAt is null
-        defaultTokenShouldNotBeFound("createdAt.specified=false");
+        defaultTokenShouldNotBeFound("query=createdAt==null");
     }
 
     @Test
