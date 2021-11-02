@@ -660,10 +660,10 @@ class TokenResourceIT {
         tokenRepository.saveAndFlush(token);
 
         // Get all the tokenList where deprecateAt is not null
-        defaultTokenShouldBeFound("deprecateAt.specified=true");
+        defaultTokenShouldBeFound("query=deprecateAt!=null");
 
         // Get all the tokenList where deprecateAt is null
-        defaultTokenShouldNotBeFound("deprecateAt.specified=false");
+        defaultTokenShouldNotBeFound("query=deprecateAt==false");
     }
 
     @Test
