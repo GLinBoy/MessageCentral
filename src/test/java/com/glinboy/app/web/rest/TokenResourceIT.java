@@ -646,10 +646,10 @@ class TokenResourceIT {
         tokenRepository.saveAndFlush(token);
 
         // Get all the tokenList where deprecateAt in DEFAULT_DEPRECATE_AT or UPDATED_DEPRECATE_AT
-        defaultTokenShouldBeFound("deprecateAt.in=" + DEFAULT_DEPRECATE_AT + "," + UPDATED_DEPRECATE_AT);
+        defaultTokenShouldBeFound(String.format("query=deprecateAt=in=(%s, %s)", DEFAULT_DEPRECATE_AT, UPDATED_DEPRECATE_AT));
 
         // Get all the tokenList where deprecateAt equals to UPDATED_DEPRECATE_AT
-        defaultTokenShouldNotBeFound("deprecateAt.in=" + UPDATED_DEPRECATE_AT);
+        defaultTokenShouldNotBeFound(String.format("query=deprecateAt=in=(%s)" + UPDATED_DEPRECATE_AT));
     }
 
     @Test
