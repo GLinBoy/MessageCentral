@@ -576,10 +576,10 @@ class TokenResourceIT {
         tokenRepository.saveAndFlush(token);
 
         // Get all the tokenList where createdAt not equals to DEFAULT_CREATED_AT
-        defaultTokenShouldNotBeFound("createdAt.notEquals=" + DEFAULT_CREATED_AT);
+        defaultTokenShouldNotBeFound("query=createdAt!=" + DEFAULT_CREATED_AT);
 
         // Get all the tokenList where createdAt not equals to UPDATED_CREATED_AT
-        defaultTokenShouldBeFound("createdAt.notEquals=" + UPDATED_CREATED_AT);
+        defaultTokenShouldBeFound("query=createdAt!=" + UPDATED_CREATED_AT);
     }
 
     @Test
