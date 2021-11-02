@@ -534,10 +534,10 @@ class TokenResourceIT {
         tokenRepository.saveAndFlush(token);
 
         // Get all the tokenList where disable in DEFAULT_DISABLE or UPDATED_DISABLE
-        defaultTokenShouldBeFound("disable.in=" + DEFAULT_DISABLE + "," + UPDATED_DISABLE);
+        defaultTokenShouldBeFound(String.format("query=disable=in=(%s, %s)", DEFAULT_DISABLE, UPDATED_DISABLE));
 
         // Get all the tokenList where disable equals to UPDATED_DISABLE
-        defaultTokenShouldNotBeFound("disable.in=" + UPDATED_DISABLE);
+        defaultTokenShouldNotBeFound(String.format("query=disable=in=(%s)", UPDATED_DISABLE));
     }
 
     @Test
