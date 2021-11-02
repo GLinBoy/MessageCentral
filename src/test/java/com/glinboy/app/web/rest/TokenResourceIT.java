@@ -590,10 +590,10 @@ class TokenResourceIT {
         tokenRepository.saveAndFlush(token);
 
         // Get all the tokenList where createdAt in DEFAULT_CREATED_AT or UPDATED_CREATED_AT
-        defaultTokenShouldBeFound("createdAt.in=" + DEFAULT_CREATED_AT + "," + UPDATED_CREATED_AT);
+        defaultTokenShouldBeFound(String.format("query=createdAt=in=(%s, %s)", DEFAULT_CREATED_AT, UPDATED_CREATED_AT));
 
         // Get all the tokenList where createdAt equals to UPDATED_CREATED_AT
-        defaultTokenShouldNotBeFound("createdAt.in=" + UPDATED_CREATED_AT);
+        defaultTokenShouldNotBeFound(String.format("query=createdAt=in=(%s)" + UPDATED_CREATED_AT));
     }
 
     @Test
