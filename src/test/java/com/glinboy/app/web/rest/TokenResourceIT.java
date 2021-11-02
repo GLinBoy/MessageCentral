@@ -548,10 +548,10 @@ class TokenResourceIT {
         tokenRepository.saveAndFlush(token);
 
         // Get all the tokenList where disable is not null
-        defaultTokenShouldBeFound("disable.specified=true");
+        defaultTokenShouldBeFound("query=disable!=null");
 
         // Get all the tokenList where disable is null
-        defaultTokenShouldNotBeFound("disable.specified=false");
+        defaultTokenShouldNotBeFound("query=disable==null");
     }
 
     @Test
