@@ -520,10 +520,10 @@ class TokenResourceIT {
         tokenRepository.saveAndFlush(token);
 
         // Get all the tokenList where disable not equals to DEFAULT_DISABLE
-        defaultTokenShouldNotBeFound("disable.notEquals=" + DEFAULT_DISABLE);
+        defaultTokenShouldNotBeFound("query=disable!=" + DEFAULT_DISABLE);
 
         // Get all the tokenList where disable not equals to UPDATED_DISABLE
-        defaultTokenShouldBeFound("disable.notEquals=" + UPDATED_DISABLE);
+        defaultTokenShouldBeFound("query=disable!=" + UPDATED_DISABLE);
     }
 
     @Test
