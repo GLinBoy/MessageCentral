@@ -663,7 +663,7 @@ class TokenResourceIT {
         defaultTokenShouldBeFound("query=deprecateAt!=null");
 
         // Get all the tokenList where deprecateAt is null
-        defaultTokenShouldNotBeFound("query=deprecateAt==false");
+        defaultTokenShouldNotBeFound("query=deprecateAt==null");
     }
 
     @Test
