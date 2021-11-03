@@ -945,6 +945,45 @@ class TokenResourceIT {
 
     @Test
     @Transactional
+    @WithMockUser(
+        authorities = {
+            AuthoritiesConstants.ANONYMOUS,
+            AuthoritiesConstants.USER,
+            AuthoritiesConstants.EMAIL_USER,
+            AuthoritiesConstants.NOTIFICATION_USER,
+            AuthoritiesConstants.SMS_USER,
+        }
+    )
+    void putNewTokenForbidenForNormalUsers() throws Exception {
+        // Initialize the database
+        tokenRepository.saveAndFlush(token);
+
+        int databaseSizeBeforeUpdate = tokenRepository.findAll().size();
+
+        // Update the token
+        Token updatedToken = tokenRepository.findById(token.getId()).get();
+        // Disconnect from session so that the updates on updatedToken are not directly saved in db
+        em.detach(updatedToken);
+        updatedToken
+            .name(UPDATED_NAME)
+            .token(UPDATED_TOKEN)
+            .disable(UPDATED_DISABLE)
+            .createdAt(UPDATED_CREATED_AT)
+            .deprecateAt(UPDATED_DEPRECATE_AT)
+            .roles(UPDATED_ROLES);
+        TokenDTO tokenDTO = tokenMapper.toDto(updatedToken);
+
+        restTokenMockMvc
+            .perform(
+                put(ENTITY_API_URL_ID, tokenDTO.getId())
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(TestUtil.convertObjectToJsonBytes(tokenDTO))
+            )
+            .andExpect(status().isForbidden());
+    }
+
+    @Test
+    @Transactional
     @WithMockUser(authorities = { AuthoritiesConstants.ADMIN })
     void putNonExistingToken() throws Exception {
         int databaseSizeBeforeUpdate = tokenRepository.findAll().size();
