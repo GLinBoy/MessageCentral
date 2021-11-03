@@ -312,6 +312,25 @@ class TokenResourceIT {
 
     @Test
     @Transactional
+    @WithMockUser(
+        authorities = {
+            AuthoritiesConstants.ANONYMOUS,
+            AuthoritiesConstants.USER,
+            AuthoritiesConstants.EMAIL_USER,
+            AuthoritiesConstants.NOTIFICATION_USER,
+            AuthoritiesConstants.SMS_USER,
+        }
+    )
+    void getAllTokensForbidenForNormalUsers() throws Exception {
+        // Initialize the database
+        tokenRepository.saveAndFlush(token);
+
+        // Get all the tokenList
+        restTokenMockMvc.perform(get(ENTITY_API_URL + "?sort=id,desc")).andExpect(status().isForbidden());
+    }
+
+    @Test
+    @Transactional
     @WithMockUser(authorities = { AuthoritiesConstants.ADMIN })
     void getToken() throws Exception {
         // Initialize the database
