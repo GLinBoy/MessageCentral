@@ -478,10 +478,10 @@ class TokenResourceIT {
         tokenRepository.saveAndFlush(token);
 
         // Get all the tokenList where token contains DEFAULT_TOKEN
-        defaultTokenShouldBeFound("token.contains=" + DEFAULT_TOKEN);
+        defaultTokenShouldBeFound("query=token==*" + DEFAULT_TOKEN + "*");
 
         // Get all the tokenList where token contains UPDATED_TOKEN
-        defaultTokenShouldNotBeFound("token.contains=" + UPDATED_TOKEN);
+        defaultTokenShouldNotBeFound("query=token==*" + UPDATED_TOKEN + "*");
     }
 
     @Test
