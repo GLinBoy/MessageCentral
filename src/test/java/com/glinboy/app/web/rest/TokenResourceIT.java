@@ -138,6 +138,25 @@ class TokenResourceIT {
 
     @Test
     @Transactional
+    @WithMockUser(
+        authorities = {
+            AuthoritiesConstants.ANONYMOUS,
+            AuthoritiesConstants.USER,
+            AuthoritiesConstants.EMAIL_USER,
+            AuthoritiesConstants.NOTIFICATION_USER,
+            AuthoritiesConstants.SMS_USER,
+        }
+    )
+    void createTokenFailedForNormalUSers() throws Exception {
+        // Create the Token
+        TokenDTO tokenDTO = tokenMapper.toDto(token);
+        restTokenMockMvc
+            .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(tokenDTO)))
+            .andExpect(status().isForbidden());
+    }
+
+    @Test
+    @Transactional
     @WithMockUser(authorities = { AuthoritiesConstants.ADMIN })
     void createTokenWithExistingId() throws Exception {
         // Create the Token with an existing ID
