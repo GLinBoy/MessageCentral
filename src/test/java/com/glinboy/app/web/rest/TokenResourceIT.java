@@ -1212,4 +1212,24 @@ class TokenResourceIT {
         List<Token> tokenList = tokenRepository.findAll();
         assertThat(tokenList).hasSize(databaseSizeBeforeDelete - 1);
     }
+
+    @Test
+    @Transactional
+    @WithMockUser(
+        authorities = {
+            AuthoritiesConstants.ANONYMOUS,
+            AuthoritiesConstants.USER,
+            AuthoritiesConstants.EMAIL_USER,
+            AuthoritiesConstants.NOTIFICATION_USER,
+            AuthoritiesConstants.SMS_USER,
+        }
+    )
+    void deleteTokenForbidenForNormalUsers() throws Exception {
+        // Initialize the database
+        tokenRepository.saveAndFlush(token);
+        // Delete the token
+        restTokenMockMvc
+            .perform(delete(ENTITY_API_URL_ID, token.getId()).accept(MediaType.APPLICATION_JSON))
+            .andExpect(status().isForbidden());
+    }
 }
