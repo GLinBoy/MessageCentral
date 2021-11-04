@@ -1087,6 +1087,35 @@ class TokenResourceIT {
 
     @Test
     @Transactional
+    @WithMockUser(
+        authorities = {
+            AuthoritiesConstants.ANONYMOUS,
+            AuthoritiesConstants.USER,
+            AuthoritiesConstants.EMAIL_USER,
+            AuthoritiesConstants.NOTIFICATION_USER,
+            AuthoritiesConstants.SMS_USER,
+        }
+    )
+    void partialUpdateTokenWithPatchIsForbidenForNormalUsers() throws Exception {
+        // Initialize the database
+        tokenRepository.saveAndFlush(token);
+        // Update the token using partial update
+        Token partialUpdatedToken = new Token();
+        partialUpdatedToken.setId(token.getId());
+
+        partialUpdatedToken.name(UPDATED_NAME).roles(UPDATED_ROLES);
+
+        restTokenMockMvc
+            .perform(
+                patch(ENTITY_API_URL_ID, partialUpdatedToken.getId())
+                    .contentType("application/merge-patch+json")
+                    .content(TestUtil.convertObjectToJsonBytes(partialUpdatedToken))
+            )
+            .andExpect(status().isForbidden());
+    }
+
+    @Test
+    @Transactional
     @WithMockUser(authorities = { AuthoritiesConstants.ADMIN })
     void fullUpdateTokenWithPatch() throws Exception {
         // Initialize the database
