@@ -957,9 +957,6 @@ class TokenResourceIT {
     void putNewTokenForbidenForNormalUsers() throws Exception {
         // Initialize the database
         tokenRepository.saveAndFlush(token);
-
-        int databaseSizeBeforeUpdate = tokenRepository.findAll().size();
-
         // Update the token
         Token updatedToken = tokenRepository.findById(token.getId()).get();
         // Disconnect from session so that the updates on updatedToken are not directly saved in db
