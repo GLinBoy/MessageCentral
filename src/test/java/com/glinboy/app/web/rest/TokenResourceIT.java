@@ -147,7 +147,7 @@ class TokenResourceIT {
             AuthoritiesConstants.SMS_USER,
         }
     )
-    void createTokenFailedForNormalUSers() throws Exception {
+    void createTokenIsForbidenForNormalUSers() throws Exception {
         // Create the Token
         TokenDTO tokenDTO = tokenMapper.toDto(token);
         restTokenMockMvc
