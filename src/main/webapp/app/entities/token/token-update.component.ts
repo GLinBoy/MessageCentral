@@ -71,7 +71,7 @@ export default class TokenUpdate extends Vue {
         .update(this.token)
         .then(param => {
           this.isSaving = false;
-          this.$router.go(-1);
+          this.$router.push({ name: 'TokenView', params: { tokenId: param.id } });
           const message = this.$t('messageCentralApp.token.updated', { param: param.id });
           return this.$root.$bvToast.toast(message.toString(), {
             toaster: 'b-toaster-top-center',
@@ -90,7 +90,7 @@ export default class TokenUpdate extends Vue {
         .create(this.token)
         .then(param => {
           this.isSaving = false;
-          this.$router.go(-1);
+          this.$router.push({ name: 'TokenView', params: { tokenId: param.id } });
           const message = this.$t('messageCentralApp.token.created', { param: param.id });
           this.$root.$bvToast.toast(message.toString(), {
             toaster: 'b-toaster-top-center',
