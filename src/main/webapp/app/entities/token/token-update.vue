@@ -37,15 +37,16 @@
           </div>
           <div class="form-group">
             <label class="form-control-label" v-text="$t('messageCentralApp.token.disable')" for="token-disable">Disable</label>
-            <input
-              type="checkbox"
+            <b-form-checkbox
               class="form-check"
               name="disable"
               id="token-disable"
               data-cy="disable"
-              :class="{ valid: !$v.token.disable.$invalid, invalid: $v.token.disable.$invalid }"
-              v-model="$v.token.disable.$model"
+              switch
               required
+              size="lg"
+              v-model="$v.token.disable.$model"
+              :class="{ valid: !$v.token.disable.$invalid, invalid: $v.token.disable.$invalid }"
             />
             <div v-if="$v.token.disable.$anyDirty && $v.token.disable.$invalid">
               <small class="form-text text-danger" v-if="!$v.token.disable.required" v-text="$t('entity.validation.required')">
