@@ -16,7 +16,6 @@ public class TokenDTO implements Serializable {
     @Size(max = 64)
     private String name;
 
-    @NotNull
     @Size(max = 512)
     private String token;
 
