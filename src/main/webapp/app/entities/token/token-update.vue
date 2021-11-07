@@ -36,31 +36,6 @@
             </div>
           </div>
           <div class="form-group">
-            <label class="form-control-label" v-text="$t('messageCentralApp.token.token')" for="token-token">Token</label>
-            <input
-              type="text"
-              class="form-control"
-              name="token"
-              id="token-token"
-              data-cy="token"
-              :class="{ valid: !$v.token.token.$invalid, invalid: $v.token.token.$invalid }"
-              v-model="$v.token.token.$model"
-              required
-            />
-            <div v-if="$v.token.token.$anyDirty && $v.token.token.$invalid">
-              <small class="form-text text-danger" v-if="!$v.token.token.required" v-text="$t('entity.validation.required')">
-                This field is required.
-              </small>
-              <small
-                class="form-text text-danger"
-                v-if="!$v.token.token.maxLength"
-                v-text="$t('entity.validation.maxlength', { max: 512 })"
-              >
-                This field cannot be longer than 512 characters.
-              </small>
-            </div>
-          </div>
-          <div class="form-group">
             <label class="form-control-label" v-text="$t('messageCentralApp.token.disable')" for="token-disable">Disable</label>
             <input
               type="checkbox"
