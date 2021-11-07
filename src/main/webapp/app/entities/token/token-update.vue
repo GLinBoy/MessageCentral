@@ -54,34 +54,6 @@
             </div>
           </div>
           <div class="form-group">
-            <label class="form-control-label" v-text="$t('messageCentralApp.token.createdAt')" for="token-createdAt">Created At</label>
-            <div class="d-flex">
-              <input
-                id="token-createdAt"
-                data-cy="createdAt"
-                type="datetime-local"
-                class="form-control"
-                name="createdAt"
-                :class="{ valid: !$v.token.createdAt.$invalid, invalid: $v.token.createdAt.$invalid }"
-                required
-                :value="convertDateTimeFromServer($v.token.createdAt.$model)"
-                @change="updateInstantField('createdAt', $event)"
-              />
-            </div>
-            <div v-if="$v.token.createdAt.$anyDirty && $v.token.createdAt.$invalid">
-              <small class="form-text text-danger" v-if="!$v.token.createdAt.required" v-text="$t('entity.validation.required')">
-                This field is required.
-              </small>
-              <small
-                class="form-text text-danger"
-                v-if="!$v.token.createdAt.ZonedDateTimelocal"
-                v-text="$t('entity.validation.ZonedDateTimelocal')"
-              >
-                This field should be a date and time.
-              </small>
-            </div>
-          </div>
-          <div class="form-group">
             <label class="form-control-label" v-text="$t('messageCentralApp.token.deprecateAt')" for="token-deprecateAt"
               >Deprecate At</label
             >
