@@ -30,6 +30,7 @@ import {
   VBTooltip,
   BFormTags,
   BFormText,
+  BFormSelect,
 } from 'bootstrap-vue';
 
 export function initBootstrapVue(vue) {
@@ -65,4 +66,5 @@ export function initBootstrapVue(vue) {
   vue.component('b-form-tags', BFormTags);
   vue.component('b-form-text', BFormText);
   vue.directive('b-tooltip', VBTooltip);
+  vue.component('b-form-select', BFormSelect);
 }
