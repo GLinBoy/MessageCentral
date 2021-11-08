@@ -41,7 +41,18 @@
                 >Deprecate At</label
               >
               <div class="d-flex">
+                <b-form-select
+                  :options="options"
+                  id="token-deprecateAt"
+                  data-cy="deprecateAt"
+                  type="datetime-local"
+                  class="form-control"
+                  name="deprecateAt"
+                  :class="{ valid: !$v.token.deprecateAt.$invalid, invalid: $v.token.deprecateAt.$invalid }"
+                  required
+                ></b-form-select>
                 <input
+                  v-if="false"
                   id="token-deprecateAt"
                   data-cy="deprecateAt"
                   type="datetime-local"
