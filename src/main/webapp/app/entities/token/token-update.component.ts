@@ -45,6 +45,13 @@ export default class TokenUpdate extends Vue {
   public token: IToken = new Token();
   public isSaving = false;
   public currentLanguage = '';
+  public options = [
+    { value: null, text: 'Please select duration' },
+    { value: 1, text: '1 Month' },
+    { value: 3, text: '3 Months' },
+    { value: 6, text: '6 Months' },
+    { value: 12, text: '12 Months' },
+  ];
 
   beforeRouteEnter(to, from, next) {
     next(vm => {
