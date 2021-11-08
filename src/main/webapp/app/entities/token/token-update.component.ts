@@ -52,6 +52,7 @@ export default class TokenUpdate extends Vue {
     { value: 6, text: '6 Months' },
     { value: 12, text: '12 Months' },
   ];
+  public userRoleOptions: [{ value: 1; text: 'Email' }, { value: 2; text: 'Short Message' }, { value: 3; text: 'Notification' }];
 
   beforeRouteEnter(to, from, next) {
     next(vm => {
