@@ -35,74 +35,76 @@
               </small>
             </div>
           </div>
-          <div class="form-group">
-            <label class="form-control-label" v-text="$t('messageCentralApp.token.disable')" for="token-disable">Disable</label>
-            <b-form-checkbox
-              class="form-check"
-              name="disable"
-              id="token-disable"
-              data-cy="disable"
-              switch
-              required
-              size="lg"
-              v-model="$v.token.disable.$model"
-              :class="{ valid: !$v.token.disable.$invalid, invalid: $v.token.disable.$invalid }"
-            />
-            <div v-if="$v.token.disable.$anyDirty && $v.token.disable.$invalid">
-              <small class="form-text text-danger" v-if="!$v.token.disable.required" v-text="$t('entity.validation.required')">
-                This field is required.
-              </small>
-            </div>
-          </div>
-          <div class="form-group">
-            <label class="form-control-label" v-text="$t('messageCentralApp.token.deprecateAt')" for="token-deprecateAt"
-              >Deprecate At</label
-            >
-            <div class="d-flex">
-              <input
-                id="token-deprecateAt"
-                data-cy="deprecateAt"
-                type="datetime-local"
-                class="form-control"
-                name="deprecateAt"
-                :class="{ valid: !$v.token.deprecateAt.$invalid, invalid: $v.token.deprecateAt.$invalid }"
-                required
-                :value="convertDateTimeFromServer($v.token.deprecateAt.$model)"
-                @change="updateInstantField('deprecateAt', $event)"
-              />
-            </div>
-            <div v-if="$v.token.deprecateAt.$anyDirty && $v.token.deprecateAt.$invalid">
-              <small class="form-text text-danger" v-if="!$v.token.deprecateAt.required" v-text="$t('entity.validation.required')">
-                This field is required.
-              </small>
-              <small
-                class="form-text text-danger"
-                v-if="!$v.token.deprecateAt.ZonedDateTimelocal"
-                v-text="$t('entity.validation.ZonedDateTimelocal')"
+          <div class="row">
+            <div class="form-group col-5">
+              <label class="form-control-label" v-text="$t('messageCentralApp.token.deprecateAt')" for="token-deprecateAt"
+                >Deprecate At</label
               >
-                This field should be a date and time.
-              </small>
+              <div class="d-flex">
+                <input
+                  id="token-deprecateAt"
+                  data-cy="deprecateAt"
+                  type="datetime-local"
+                  class="form-control"
+                  name="deprecateAt"
+                  :class="{ valid: !$v.token.deprecateAt.$invalid, invalid: $v.token.deprecateAt.$invalid }"
+                  required
+                  :value="convertDateTimeFromServer($v.token.deprecateAt.$model)"
+                  @change="updateInstantField('deprecateAt', $event)"
+                />
+              </div>
+              <div v-if="$v.token.deprecateAt.$anyDirty && $v.token.deprecateAt.$invalid">
+                <small class="form-text text-danger" v-if="!$v.token.deprecateAt.required" v-text="$t('entity.validation.required')">
+                  This field is required.
+                </small>
+                <small
+                  class="form-text text-danger"
+                  v-if="!$v.token.deprecateAt.ZonedDateTimelocal"
+                  v-text="$t('entity.validation.ZonedDateTimelocal')"
+                >
+                  This field should be a date and time.
+                </small>
+              </div>
             </div>
-          </div>
-          <div class="form-group">
-            <label class="form-control-label" v-text="$t('messageCentralApp.token.roles')" for="token-roles">Roles</label>
-            <input
-              type="number"
-              class="form-control"
-              name="roles"
-              id="token-roles"
-              data-cy="roles"
-              :class="{ valid: !$v.token.roles.$invalid, invalid: $v.token.roles.$invalid }"
-              v-model.number="$v.token.roles.$model"
-              required
-            />
-            <div v-if="$v.token.roles.$anyDirty && $v.token.roles.$invalid">
-              <small class="form-text text-danger" v-if="!$v.token.roles.required" v-text="$t('entity.validation.required')">
-                This field is required.
-              </small>
-              <small class="form-text text-danger" v-if="!$v.token.roles.numeric" v-text="$t('entity.validation.number')">
-                This field should be a number.
-              </small>
+            <div class="form-group col-5">
+              <label class="form-control-label" v-text="$t('messageCentralApp.token.roles')" for="token-roles">Roles</label>
+              <input
+                type="number"
+                class="form-control"
+                name="roles"
+                id="token-roles"
+                data-cy="roles"
+                :class="{ valid: !$v.token.roles.$invalid, invalid: $v.token.roles.$invalid }"
+                v-model.number="$v.token.roles.$model"
+                required
+              />
+              <div v-if="$v.token.roles.$anyDirty && $v.token.roles.$invalid">
+                <small class="form-text text-danger" v-if="!$v.token.roles.required" v-text="$t('entity.validation.required')">
+                  This field is required.
+                </small>
+                <small class="form-text text-danger" v-if="!$v.token.roles.numeric" v-text="$t('entity.validation.number')">
+                  This field should be a number.
+                </small>
+              </div>
+            </div>
+            <div class="form-group col-2">
+              <label class="form-control-label" v-text="$t('messageCentralApp.token.disable')" for="token-disable">Disable</label>
+              <b-form-checkbox
+                class="form-check"
+                name="disable"
+                id="token-disable"
+                data-cy="disable"
+                switch
+                required
+                size="lg"
+                v-model="$v.token.disable.$model"
+                :class="{ valid: !$v.token.disable.$invalid, invalid: $v.token.disable.$invalid }"
+              />
+              <div v-if="$v.token.disable.$anyDirty && $v.token.disable.$invalid">
+                <small class="form-text text-danger" v-if="!$v.token.disable.required" v-text="$t('entity.validation.required')">
+                  This field is required.
+                </small>
+              </div>
             </div>
           </div>
         </div>
