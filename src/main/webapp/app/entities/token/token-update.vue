@@ -42,7 +42,7 @@
               >
               <div class="d-flex">
                 <b-form-select
-                  :options="options"
+                  :options="tokenValidityOption"
                   id="token-deprecateAt"
                   data-cy="deprecateAt"
                   type="datetime-local"
