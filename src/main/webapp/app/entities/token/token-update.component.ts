@@ -166,5 +166,10 @@ export default class TokenUpdate extends Vue {
     console.log(value, oldValue);
   }
 
+  @Watch('userRoleSelected')
+  onUserRoleSelectedChanged(value: string, oldValue: string) {
+    console.log(value, oldValue);
+  }
+
   public initRelationships(): void {}
 }
