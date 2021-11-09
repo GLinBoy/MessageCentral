@@ -36,7 +36,7 @@
             </div>
           </div>
           <div class="row">
-            <div class="form-group col-5">
+            <div class="form-group col-sm-12 col-md-5">
               <label class="form-control-label" v-text="$t('messageCentralApp.token.deprecateAt')" for="token-deprecateAt"
                 >Deprecate At</label
               >
@@ -77,7 +77,7 @@
                 </small>
               </div>
             </div>
-            <div class="form-group col-5">
+            <div class="form-group col-sm-12 col-md-5">
               <label class="form-control-label" v-text="$t('messageCentralApp.token.roles')" for="token-roles">Roles</label>
               <input
                 type="number"
@@ -98,7 +98,7 @@
                 </small>
               </div>
             </div>
-            <div class="form-group col-2">
+            <div class="form-group col-sm-12 col-md-2">
               <label class="form-control-label" v-text="$t('messageCentralApp.token.disable')" for="token-disable">Disable</label>
               <b-form-checkbox
                 class="form-check"
