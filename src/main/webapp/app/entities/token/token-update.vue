@@ -37,6 +37,29 @@
           </div>
           <div class="row">
             <div class="form-group col-sm-12 col-md-5">
+              <label class="form-control-label" v-text="$t('messageCentralApp.token.roles')" for="token-roles">Roles</label>
+              <input
+                v-if="false"
+                type="number"
+                class="form-control"
+                name="roles"
+                id="token-roles"
+                data-cy="roles"
+                :class="{ valid: !$v.token.roles.$invalid, invalid: $v.token.roles.$invalid }"
+                v-model.number="$v.token.roles.$model"
+                required
+              />
+              <b-form-select v-model="userRoleSelected" :options="userRoleOptions" multiple :select-size="3"> </b-form-select>
+              <div v-if="$v.token.roles.$anyDirty && $v.token.roles.$invalid">
+                <small class="form-text text-danger" v-if="!$v.token.roles.required" v-text="$t('entity.validation.required')">
+                  This field is required.
+                </small>
+                <small class="form-text text-danger" v-if="!$v.token.roles.numeric" v-text="$t('entity.validation.number')">
+                  This field should be a number.
+                </small>
+              </div>
+            </div>
+            <div class="form-group col-sm-12 col-md-5">
               <label class="form-control-label" v-text="$t('messageCentralApp.token.deprecateAt')" for="token-deprecateAt"
                 >Deprecate At</label
               >
@@ -74,29 +97,6 @@
                   v-text="$t('entity.validation.ZonedDateTimelocal')"
                 >
                   This field should be a date and time.
-                </small>
-              </div>
-            </div>
-            <div class="form-group col-sm-12 col-md-5">
-              <label class="form-control-label" v-text="$t('messageCentralApp.token.roles')" for="token-roles">Roles</label>
-              <input
-                v-if="false"
-                type="number"
-                class="form-control"
-                name="roles"
-                id="token-roles"
-                data-cy="roles"
-                :class="{ valid: !$v.token.roles.$invalid, invalid: $v.token.roles.$invalid }"
-                v-model.number="$v.token.roles.$model"
-                required
-              />
-              <b-form-select v-model="userRoleSelected" :options="userRoleOptions" multiple :select-size="3"> </b-form-select>
-              <div v-if="$v.token.roles.$anyDirty && $v.token.roles.$invalid">
-                <small class="form-text text-danger" v-if="!$v.token.roles.required" v-text="$t('entity.validation.required')">
-                  This field is required.
-                </small>
-                <small class="form-text text-danger" v-if="!$v.token.roles.numeric" v-text="$t('entity.validation.number')">
-                  This field should be a number.
                 </small>
               </div>
             </div>
