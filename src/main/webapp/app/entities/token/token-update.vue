@@ -80,6 +80,7 @@
             <div class="form-group col-sm-12 col-md-5">
               <label class="form-control-label" v-text="$t('messageCentralApp.token.roles')" for="token-roles">Roles</label>
               <input
+                v-if="false"
                 type="number"
                 class="form-control"
                 name="roles"
@@ -89,6 +90,7 @@
                 v-model.number="$v.token.roles.$model"
                 required
               />
+              <b-form-select v-model="userRoleSelected" :options="userRoleOptions" multiple :select-size="3"> </b-form-select>
               <div v-if="$v.token.roles.$anyDirty && $v.token.roles.$invalid">
                 <small class="form-text text-danger" v-if="!$v.token.roles.required" v-text="$t('entity.validation.required')">
                   This field is required.
