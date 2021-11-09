@@ -1,4 +1,4 @@
-import { Component, Vue, Inject } from 'vue-property-decorator';
+import { Component, Vue, Inject, Watch } from 'vue-property-decorator';
 
 import { required, maxLength, numeric } from 'vuelidate/lib/validators';
 import dayjs from 'dayjs';
@@ -159,6 +159,11 @@ export default class TokenUpdate extends Vue {
 
   public previousState(): void {
     this.$router.go(-1);
+  }
+
+  @Watch('tokenValidityPeriod')
+  onTokenValidityChanged(value: string, oldValue: string) {
+    console.log(value, oldValue);
   }
 
   public initRelationships(): void {}
