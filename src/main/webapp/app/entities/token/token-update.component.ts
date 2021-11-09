@@ -57,6 +57,7 @@ export default class TokenUpdate extends Vue {
     { value: 2, text: 'Short Message' },
     { value: 3, text: 'Notification' },
   ];
+  public userRoleSelected = [];
 
   beforeRouteEnter(to, from, next) {
     next(vm => {
