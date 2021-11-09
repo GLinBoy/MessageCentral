@@ -49,7 +49,18 @@
                 v-model.number="$v.token.roles.$model"
                 required
               />
-              <b-form-select v-model="userRoleSelected" :options="userRoleOptions" multiple :select-size="3"> </b-form-select>
+              <b-form-select
+                required
+                multiple
+                :select-size="3"
+                class="form-control"
+                name="roles"
+                id="token-roles"
+                data-cy="roles"
+                v-model="userRoleSelected"
+                :options="userRoleOptions"
+                :class="{ valid: !$v.token.roles.$invalid, invalid: $v.token.roles.$invalid }"
+              ></b-form-select>
               <div v-if="$v.token.roles.$anyDirty && $v.token.roles.$invalid">
                 <small class="form-text text-danger" v-if="!$v.token.roles.required" v-text="$t('entity.validation.required')">
                   This field is required.
