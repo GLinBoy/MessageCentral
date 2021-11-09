@@ -76,6 +76,7 @@
               >
               <div class="d-flex">
                 <b-form-select
+                  v-model="tokenValidityPeriod"
                   :options="tokenValidityOption"
                   id="token-deprecateAt"
                   data-cy="deprecateAt"
