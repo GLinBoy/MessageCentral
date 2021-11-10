@@ -46,7 +46,7 @@ export default class TokenUpdate extends Vue {
   public isSaving = false;
   public currentLanguage = '';
   public tokenValidityOption = [
-    { value: null, text: 'Please select duration' },
+    { value: null, text: 'Please select duration', disabled: true },
     { value: 1, text: '1 Month' },
     { value: 3, text: '3 Months' },
     { value: 6, text: '6 Months' },
