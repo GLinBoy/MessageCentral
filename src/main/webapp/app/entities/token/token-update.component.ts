@@ -2,7 +2,7 @@ import { Component, Vue, Inject, Watch } from 'vue-property-decorator';
 
 import { required, maxLength, numeric } from 'vuelidate/lib/validators';
 import dayjs from 'dayjs';
-import { DATE_TIME_LONG_FORMAT } from '@/shared/date/filters';
+import { DATE_TIME_LONG_FORMAT, DATE_TIME_FORMAT } from '@/shared/date/filters';
 
 import AlertService from '@/shared/alert/alert.service';
 
@@ -187,6 +187,13 @@ export default class TokenUpdate extends Vue {
         break;
       }
     }
+  }
+
+  public convertDateTimeToHuman(date: Date): string {
+    if (date && dayjs(date).isValid()) {
+      return dayjs(date).format(DATE_TIME_FORMAT);
+    }
+    return null;
   }
 
   @Watch('userRoleSelected')
