@@ -187,7 +187,6 @@ export default class TokenUpdate extends Vue {
         break;
       }
     }
-    console.log(this.token.deprecateAt);
   }
 
   @Watch('userRoleSelected')
