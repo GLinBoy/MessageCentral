@@ -74,7 +74,7 @@
               <label class="form-control-label" v-text="$t('messageCentralApp.token.deprecateAt')" for="token-deprecateAt"
                 >Deprecate At</label
               >
-              <div class="d-flex">
+              <div class="d-flex flex-column">
                 <b-form-select
                   v-model="tokenValidityPeriod"
                   :options="tokenValidityOption"
@@ -86,6 +86,10 @@
                   :class="{ valid: !$v.token.deprecateAt.$invalid, invalid: $v.token.deprecateAt.$invalid }"
                   required
                 ></b-form-select>
+                <div class="mx-2 my-1 font-weight-light text-secondary" v-if="tokenValidityPeriod">
+                  <font-awesome-icon icon="calendar" />&nbsp;
+                  <span v-text="convertDateTimeToHuman($v.token.deprecateAt.$model)" />
+                </div>
                 <input
                   v-if="false"
                   id="token-deprecateAt"
