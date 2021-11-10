@@ -44,6 +44,7 @@ import { faWrench } from '@fortawesome/free-solid-svg-icons/faWrench';
 import { faAt } from '@fortawesome/free-solid-svg-icons/faAt';
 import { faSms } from '@fortawesome/free-solid-svg-icons/faSms';
 import { faKey } from '@fortawesome/free-solid-svg-icons/faKey';
+import { faCalendar } from '@fortawesome/free-solid-svg-icons/faCalendar';
 
 import VueCookie from 'vue-cookie';
 import Vuelidate from 'vuelidate';
@@ -159,7 +160,8 @@ export function initFortAwesome(vue) {
     faWrench,
     faAt,
     faSms,
-    faKey
+    faKey,
+    faCalendar
   );
 }
 
