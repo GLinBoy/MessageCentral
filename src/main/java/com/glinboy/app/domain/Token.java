@@ -2,11 +2,17 @@ package com.glinboy.app.domain;
 
 import java.io.Serializable;
 import java.time.Instant;
-import javax.persistence.*;
-import javax.validation.constraints.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.SequenceGenerator;
+import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
-import org.hibernate.annotations.CreationTimestamp;
 
 /**
  * A Token.
@@ -39,7 +45,6 @@ public class Token implements Serializable {
     private Boolean disable;
 
     @NotNull
-    @CreationTimestamp
     @Column(name = "created_at", nullable = false)
     private Instant createdAt;
 
