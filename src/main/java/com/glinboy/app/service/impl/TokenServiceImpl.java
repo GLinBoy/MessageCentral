@@ -5,7 +5,9 @@ import com.glinboy.app.repository.TokenRepository;
 import com.glinboy.app.service.TokenService;
 import com.glinboy.app.service.dto.TokenDTO;
 import com.glinboy.app.service.mapper.TokenMapper;
+import java.time.Instant;
 import java.util.Optional;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -35,6 +37,9 @@ public class TokenServiceImpl implements TokenService {
     public TokenDTO save(TokenDTO tokenDTO) {
         log.debug("Request to save Token : {}", tokenDTO);
         Token token = tokenMapper.toEntity(tokenDTO);
+        if (token.getCreatedAt() == null) {
+            token.createdAt(Instant.now());
+        }
         token = tokenRepository.save(token);
         return tokenMapper.toDto(token);
     }
