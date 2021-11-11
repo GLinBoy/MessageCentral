@@ -2,18 +2,27 @@ package com.glinboy.app.service.impl;
 
 import com.glinboy.app.domain.Token;
 import com.glinboy.app.repository.TokenRepository;
+import com.glinboy.app.security.AuthoritiesConstants;
+import com.glinboy.app.security.jwt.TokenProvider;
 import com.glinboy.app.service.TokenService;
 import com.glinboy.app.service.dto.TokenDTO;
 import com.glinboy.app.service.mapper.TokenMapper;
 import java.time.Instant;
 import java.util.Optional;
+import java.util.Set;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.server.ResponseStatusException;
 
 /**
  * Service Implementation for managing {@link Token}.
@@ -28,9 +37,12 @@ public class TokenServiceImpl implements TokenService {
 
     private final TokenMapper tokenMapper;
 
-    public TokenServiceImpl(TokenRepository tokenRepository, TokenMapper tokenMapper) {
+    private final TokenProvider tokenProvider;
+
+    public TokenServiceImpl(TokenRepository tokenRepository, TokenMapper tokenMapper, TokenProvider tokenProvider) {
         this.tokenRepository = tokenRepository;
         this.tokenMapper = tokenMapper;
+        this.tokenProvider = tokenProvider;
     }
 
     @Override
