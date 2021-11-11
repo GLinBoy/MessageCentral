@@ -1,6 +1,6 @@
 import { Component, Vue, Inject, Watch } from 'vue-property-decorator';
 
-import { required, maxLength, numeric } from 'vuelidate/lib/validators';
+import { required, maxLength, numeric, between } from 'vuelidate/lib/validators';
 import dayjs from 'dayjs';
 import { DATE_TIME_LONG_FORMAT, DATE_TIME_FORMAT } from '@/shared/date/filters';
 
@@ -31,6 +31,7 @@ const validations: any = {
     roles: {
       required,
       numeric,
+      between: between(1, 7),
     },
   },
 };
@@ -197,8 +198,27 @@ export default class TokenUpdate extends Vue {
   }
 
   @Watch('userRoleSelected')
-  onUserRoleSelectedChanged(value: string, oldValue: string) {
-    console.log(value, oldValue);
+  onUserRoleSelectedChanged(newValue: int[], oldValue: int[]) {
+    if (!this.token.roles) this.token.roles = 0;
+    console.log(newValue, oldValue);
+    if (newValue.includes(1) && !oldValue.includes(1)) {
+      this.token.roles ^= 1;
+    }
+    if (!newValue.includes(1) && oldValue.includes(1)) {
+      this.token.roles ^= 1;
+    }
+    if (newValue.includes(2) && !oldValue.includes(2)) {
+      this.token.roles ^= 2;
+    }
+    if (!newValue.includes(2) && oldValue.includes(2)) {
+      this.token.roles ^= 2;
+    }
+    if (newValue.includes(3) && !oldValue.includes(3)) {
+      this.token.roles ^= 4;
+    }
+    if (!newValue.includes(3) && oldValue.includes(3)) {
+      this.token.roles ^= 4;
+    }
   }
 
   public initRelationships(): void {}
