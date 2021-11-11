@@ -78,4 +78,8 @@ public class TokenServiceImpl implements TokenService {
         log.debug("Request to delete Token : {}", id);
         tokenRepository.deleteById(id);
     }
+
+    public String generateToken(TokenDTO tokenDTO) {
+        return "Test Token";
+    }
 }
