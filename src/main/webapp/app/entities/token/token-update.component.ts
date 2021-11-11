@@ -200,7 +200,6 @@ export default class TokenUpdate extends Vue {
   @Watch('userRoleSelected')
   onUserRoleSelectedChanged(newValue: int[], oldValue: int[]) {
     if (!this.token.roles) this.token.roles = 0;
-    console.log(newValue, oldValue);
     if (newValue.includes(1) && !oldValue.includes(1)) {
       this.token.roles ^= 1;
     }
