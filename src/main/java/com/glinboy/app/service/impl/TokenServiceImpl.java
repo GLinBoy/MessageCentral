@@ -40,6 +40,9 @@ public class TokenServiceImpl implements TokenService {
         if (token.getCreatedAt() == null) {
             token.createdAt(Instant.now());
         }
+        if (StringUtils.isBlank(token.getToken())) {
+            token.setToken(generateToken(tokenDTO));
+        }
         token = tokenRepository.save(token);
         return tokenMapper.toDto(token);
     }
