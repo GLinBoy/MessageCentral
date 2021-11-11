@@ -95,6 +95,45 @@ public class TokenServiceImpl implements TokenService {
     }
 
     public String generateToken(TokenDTO tokenDTO) {
-        return "Test Token";
+        Authentication authentication = new UsernamePasswordAuthenticationToken(
+            tokenDTO.getName(),
+            null,
+            getTokenRoles(tokenDTO.getRoles())
+        );
+        return tokenProvider.createToken(authentication, false);
+    }
+
+    private Set<GrantedAuthority> getTokenRoles(Integer rolesId) {
+        switch (rolesId) {
+            case 1:
+                return Set.of(new SimpleGrantedAuthority(AuthoritiesConstants.EMAIL_USER));
+            case 2:
+                return Set.of(new SimpleGrantedAuthority(AuthoritiesConstants.SMS_USER));
+            case 3:
+                return Set.of(
+                    new SimpleGrantedAuthority(AuthoritiesConstants.EMAIL_USER),
+                    new SimpleGrantedAuthority(AuthoritiesConstants.SMS_USER)
+                );
+            case 4:
+                return Set.of(new SimpleGrantedAuthority(AuthoritiesConstants.NOTIFICATION_USER));
+            case 5:
+                return Set.of(
+                    new SimpleGrantedAuthority(AuthoritiesConstants.EMAIL_USER),
+                    new SimpleGrantedAuthority(AuthoritiesConstants.NOTIFICATION_USER)
+                );
+            case 6:
+                return Set.of(
+                    new SimpleGrantedAuthority(AuthoritiesConstants.SMS_USER),
+                    new SimpleGrantedAuthority(AuthoritiesConstants.NOTIFICATION_USER)
+                );
+            case 7:
+                return Set.of(
+                    new SimpleGrantedAuthority(AuthoritiesConstants.EMAIL_USER),
+                    new SimpleGrantedAuthority(AuthoritiesConstants.SMS_USER),
+                    new SimpleGrantedAuthority(AuthoritiesConstants.NOTIFICATION_USER)
+                );
+            default:
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Roles is unclear!");
+        }
     }
 }
