@@ -15,14 +15,7 @@ const validations: any = {
       required,
       maxLength: maxLength(64),
     },
-    token: {
-      required,
-      maxLength: maxLength(512),
-    },
     disable: {
-      required,
-    },
-    createdAt: {
       required,
     },
     deprecateAt: {
