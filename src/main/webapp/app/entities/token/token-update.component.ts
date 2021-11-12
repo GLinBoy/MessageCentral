@@ -165,22 +165,22 @@ export default class TokenUpdate extends Vue {
   @Watch('tokenValidityPeriod')
   onTokenValidityChanged(value: int, _) {
     var today = new Date();
-    today.setHours(23, 59, 59);
+    today.setHours(23, 59, 59, 999);
     switch (value) {
       case 1: {
-        this.token.deprecateAt = today.setMonth(today.getMonth() + 1);
+        this.token.deprecateAt = this.convertDateTimeToServer(today.setMonth(today.getMonth() + 1));
         break;
       }
       case 3: {
-        this.token.deprecateAt = today.setMonth(today.getMonth() + 3);
+        this.token.deprecateAt = this.convertDateTimeToServer(today.setMonth(today.getMonth() + 3));
         break;
       }
       case 6: {
-        this.token.deprecateAt = today.setMonth(today.getMonth() + 6);
+        this.token.deprecateAt = this.convertDateTimeToServer(today.setMonth(today.getMonth() + 6));
         break;
       }
       case 12: {
-        this.token.deprecateAt = today.setMonth(today.getMonth() + 12);
+        this.token.deprecateAt = this.convertDateTimeToServer(today.setMonth(today.getMonth() + 12));
         break;
       }
       default: {
