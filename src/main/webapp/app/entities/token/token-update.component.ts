@@ -2,7 +2,7 @@ import { Component, Vue, Inject, Watch } from 'vue-property-decorator';
 
 import { required, maxLength, numeric, between } from 'vuelidate/lib/validators';
 import dayjs from 'dayjs';
-import { DATE_TIME_LONG_FORMAT, DATE_TIME_FORMAT } from '@/shared/date/filters';
+import { DATE_TIME_LONG_FORMAT, DATE_TIME_FORMAT, DATE_TIME_SERVER_LONG_FORMAT } from '@/shared/date/filters';
 
 import AlertService from '@/shared/alert/alert.service';
 
@@ -118,6 +118,13 @@ export default class TokenUpdate extends Vue {
   public convertDateTimeFromServer(date: Date): string {
     if (date && dayjs(date).isValid()) {
       return dayjs(date).format(DATE_TIME_LONG_FORMAT);
+    }
+    return null;
+  }
+
+  public convertDateTimeToServer(date: Date): string {
+    if (date && dayjs(date).isValid()) {
+      return dayjs(date).format(DATE_TIME_SERVER_LONG_FORMAT);
     }
     return null;
   }
