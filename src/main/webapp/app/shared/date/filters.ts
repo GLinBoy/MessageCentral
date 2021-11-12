@@ -6,6 +6,8 @@ export const DATE_TIME_FORMAT = 'YYYY-MM-DD HH:mm';
 
 export const DATE_TIME_LONG_FORMAT = 'YYYY-MM-DDTHH:mm';
 
+export const DATE_TIME_SERVER_LONG_FORMAT = 'YYYY-MM-DDTHH:mm:ssZ';
+
 export function initFilters() {
   Vue.filter('formatDate', value => {
     if (value) {
