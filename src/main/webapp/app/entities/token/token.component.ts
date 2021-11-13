@@ -20,7 +20,7 @@ export default class Token extends Vue {
   public page = 1;
   public previousPage = 1;
   public propOrder = 'id';
-  public reverse = false;
+  public reverse = true;
   public totalItems = 0;
   public currentSearch: string = null;
 
