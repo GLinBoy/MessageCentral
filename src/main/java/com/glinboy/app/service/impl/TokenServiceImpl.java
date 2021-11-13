@@ -132,8 +132,8 @@ public class TokenServiceImpl implements TokenService {
      * @param tokenRoles TokenDTO/Token roles filed
      * @return a Set of authority that token present.
      */
-    private Set<GrantedAuthority> getTokenRoles(Integer rolesId) {
-        switch (rolesId) {
+    private Set<GrantedAuthority> getTokenRoles(Integer tokenRoles) {
+        switch (tokenRoles) {
             case 1:
                 return Set.of(new SimpleGrantedAuthority(AuthoritiesConstants.EMAIL_USER));
             case 2:
