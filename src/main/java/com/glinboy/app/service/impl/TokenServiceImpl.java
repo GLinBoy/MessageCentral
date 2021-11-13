@@ -103,6 +103,35 @@ public class TokenServiceImpl implements TokenService {
         return tokenProvider.createToken(authentication, false);
     }
 
+    /**
+     * Roles are between 1-7 and its in binary format.
+     * First position from right, present email role,
+     * the next one present SMS role
+     * and the last one present Notification role
+     * the result of theme has been save as a integer number.
+     * Check the blow table (Use as a reference):
+     *
+     * +---+---+---+---+
+     * | N | S | E |   |
+     * +===+===+===+===+
+     * | 0 | 0 | 1 | 1 |
+     * +---+---+---+---+
+     * | 0 | 1 | 0 | 2 |
+     * +---+---+---+---+
+     * | 0 | 1 | 1 | 3 |
+     * +---+---+---+---+
+     * | 1 | 0 | 0 | 4 |
+     * +---+---+---+---+
+     * | 1 | 0 | 1 | 5 |
+     * +---+---+---+---+
+     * | 1 | 1 | 0 | 6 |
+     * +---+---+---+---+
+     * | 1 | 1 | 1 | 7 |
+     * +---+---+---+---+
+     *
+     * @param rolesId
+     * @return
+     */
     private Set<GrantedAuthority> getTokenRoles(Integer rolesId) {
         switch (rolesId) {
             case 1:
