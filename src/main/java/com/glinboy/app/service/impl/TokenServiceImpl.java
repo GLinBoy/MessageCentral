@@ -110,27 +110,27 @@ public class TokenServiceImpl implements TokenService {
      * and the last one present Notification role
      * the result of theme has been save as a integer number.
      * Check the blow table (Use as a reference):
+     *<br/>
+     * +---+---+---+---+<br/>
+     * | N | S | E |   |<br/>
+     * +===+===+===+===+<br/>
+     * | 0 | 0 | 1 | 1 |<br/>
+     * +---+---+---+---+<br/>
+     * | 0 | 1 | 0 | 2 |<br/>
+     * +---+---+---+---+<br/>
+     * | 0 | 1 | 1 | 3 |<br/>
+     * +---+---+---+---+<br/>
+     * | 1 | 0 | 0 | 4 |<br/>
+     * +---+---+---+---+<br/>
+     * | 1 | 0 | 1 | 5 |<br/>
+     * +---+---+---+---+<br/>
+     * | 1 | 1 | 0 | 6 |<br/>
+     * +---+---+---+---+<br/>
+     * | 1 | 1 | 1 | 7 |<br/>
+     * +---+---+---+---+<br/>
      *
-     * +---+---+---+---+
-     * | N | S | E |   |
-     * +===+===+===+===+
-     * | 0 | 0 | 1 | 1 |
-     * +---+---+---+---+
-     * | 0 | 1 | 0 | 2 |
-     * +---+---+---+---+
-     * | 0 | 1 | 1 | 3 |
-     * +---+---+---+---+
-     * | 1 | 0 | 0 | 4 |
-     * +---+---+---+---+
-     * | 1 | 0 | 1 | 5 |
-     * +---+---+---+---+
-     * | 1 | 1 | 0 | 6 |
-     * +---+---+---+---+
-     * | 1 | 1 | 1 | 7 |
-     * +---+---+---+---+
-     *
-     * @param rolesId
-     * @return
+     * @param tokenRoles TokenDTO/Token roles filed
+     * @return a Set of authority that token present.
      */
     private Set<GrantedAuthority> getTokenRoles(Integer rolesId) {
         switch (rolesId) {
