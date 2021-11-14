@@ -96,11 +96,6 @@
             <td>{{ token.roles }}</td>
             <td class="text-right" @click.stop>
               <div class="btn-group">
-                <router-link :to="{ name: 'TokenEdit', params: { tokenId: token.id } }" custom v-slot="{ navigate }">
-                  <button @click="navigate" class="btn btn-primary btn-sm edit" data-cy="entityEditButton">
-                    <font-awesome-icon icon="pencil-alt"></font-awesome-icon>
-                  </button>
-                </router-link>
                 <b-button
                   v-on:click="prepareRemove(token)"
                   variant="danger"
