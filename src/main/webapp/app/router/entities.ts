@@ -132,12 +132,6 @@ export default [
     meta: { authorities: [Authority.ADMIN] },
   },
   {
-    path: '/admin/token/:tokenId/edit',
-    name: 'TokenEdit',
-    component: TokenUpdate,
-    meta: { authorities: [Authority.ADMIN] },
-  },
-  {
     path: '/admin/token/:tokenId/view',
     name: 'TokenView',
     component: TokenDetails,
