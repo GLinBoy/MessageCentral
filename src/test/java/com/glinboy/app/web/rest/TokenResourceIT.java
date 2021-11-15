@@ -1054,8 +1054,6 @@ class TokenResourceIT {
         // Initialize the database
         tokenRepository.saveAndFlush(token);
 
-        int databaseSizeBeforeUpdate = tokenRepository.findAll().size();
-
         // Update the token using partial update
         Token partialUpdatedToken = new Token();
         partialUpdatedToken.setId(token.getId());
@@ -1145,7 +1143,6 @@ class TokenResourceIT {
     @Transactional
     @WithMockUser(authorities = { AuthoritiesConstants.ADMIN })
     void patchNonExistingToken() throws Exception {
-        int databaseSizeBeforeUpdate = tokenRepository.findAll().size();
         token.setId(count.incrementAndGet());
 
         // Create the Token
@@ -1158,11 +1155,7 @@ class TokenResourceIT {
                     .contentType("application/merge-patch+json")
                     .content(TestUtil.convertObjectToJsonBytes(tokenDTO))
             )
-            .andExpect(status().isBadRequest());
-
-        // Validate the Token in the database
-        List<Token> tokenList = tokenRepository.findAll();
-        assertThat(tokenList).hasSize(databaseSizeBeforeUpdate);
+            .andExpect(status().isMethodNotAllowed());
     }
 
     @Test
