@@ -1068,18 +1068,7 @@ class TokenResourceIT {
                     .contentType("application/merge-patch+json")
                     .content(TestUtil.convertObjectToJsonBytes(partialUpdatedToken))
             )
-            .andExpect(status().isOk());
-
-        // Validate the Token in the database
-        List<Token> tokenList = tokenRepository.findAll();
-        assertThat(tokenList).hasSize(databaseSizeBeforeUpdate);
-        Token testToken = tokenList.get(tokenList.size() - 1);
-        assertThat(testToken.getName()).isEqualTo(UPDATED_NAME);
-        assertThat(testToken.getToken()).isEqualTo(DEFAULT_TOKEN);
-        assertThat(testToken.getDisable()).isEqualTo(DEFAULT_DISABLE);
-        assertThat(testToken.getCreatedAt()).isEqualTo(DEFAULT_CREATED_AT);
-        assertThat(testToken.getDeprecateAt()).isEqualTo(DEFAULT_DEPRECATE_AT);
-        assertThat(testToken.getRoles()).isEqualTo(UPDATED_ROLES);
+            .andExpect(status().isMethodNotAllowed());
     }
 
     @Test
