@@ -996,7 +996,7 @@ class TokenResourceIT {
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(TestUtil.convertObjectToJsonBytes(tokenDTO))
             )
-            .andExpect(status().isBadRequest());
+            .andExpect(status().isMethodNotAllowed());
 
         // Validate the Token in the database
         List<Token> tokenList = tokenRepository.findAll();
