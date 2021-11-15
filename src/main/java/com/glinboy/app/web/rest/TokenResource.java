@@ -91,7 +91,7 @@ public class TokenResource {
      *         updated.
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
-    @PutMapping("/tokens/{id}")
+    //    @PutMapping("/tokens/{id}")
     public ResponseEntity<TokenDTO> updateToken(
         @PathVariable(value = "id", required = false) final Long id,
         @Valid @RequestBody TokenDTO tokenDTO
