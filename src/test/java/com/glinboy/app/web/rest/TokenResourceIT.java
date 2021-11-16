@@ -1093,8 +1093,6 @@ class TokenResourceIT {
         // Initialize the database
         tokenRepository.saveAndFlush(token);
 
-        int databaseSizeBeforeUpdate = tokenRepository.findAll().size();
-
         // Update the token using partial update
         Token partialUpdatedToken = new Token();
         partialUpdatedToken.setId(token.getId());
@@ -1113,18 +1111,7 @@ class TokenResourceIT {
                     .contentType("application/merge-patch+json")
                     .content(TestUtil.convertObjectToJsonBytes(partialUpdatedToken))
             )
-            .andExpect(status().isOk());
-
-        // Validate the Token in the database
-        List<Token> tokenList = tokenRepository.findAll();
-        assertThat(tokenList).hasSize(databaseSizeBeforeUpdate);
-        Token testToken = tokenList.get(tokenList.size() - 1);
-        assertThat(testToken.getName()).isEqualTo(UPDATED_NAME);
-        assertThat(testToken.getToken()).isEqualTo(UPDATED_TOKEN);
-        assertThat(testToken.getDisable()).isEqualTo(UPDATED_DISABLE);
-        assertThat(testToken.getCreatedAt()).isEqualTo(UPDATED_CREATED_AT);
-        assertThat(testToken.getDeprecateAt()).isEqualTo(UPDATED_DEPRECATE_AT);
-        assertThat(testToken.getRoles()).isEqualTo(UPDATED_ROLES);
+            .andExpect(status().isMethodNotAllowed());
     }
 
     @Test
