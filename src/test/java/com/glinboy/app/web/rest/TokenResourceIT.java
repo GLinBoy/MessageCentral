@@ -232,6 +232,7 @@ class TokenResourceIT {
         assertThat(tokenList).hasSize(databaseSizeBeforeTest);
     }
 
+    @Disabled("This test isn't required anymore")
     @Test
     @Transactional
     @WithMockUser(authorities = { AuthoritiesConstants.ADMIN })
