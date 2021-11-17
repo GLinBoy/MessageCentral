@@ -99,6 +99,11 @@ public class TokenServiceImpl implements TokenService {
         this.tokenRepository.updateTokenStatus(id, Boolean.TRUE);
     }
 
+    @Override
+    public void disableToken(Long id) {
+        this.tokenRepository.updateTokenStatus(id, Boolean.FALSE);
+    }
+
     public String generateToken(TokenDTO tokenDTO) {
         Authentication authentication = new UsernamePasswordAuthenticationToken(
             tokenDTO.getName(),
