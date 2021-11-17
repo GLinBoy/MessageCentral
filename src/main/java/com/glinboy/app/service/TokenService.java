@@ -49,4 +49,6 @@ public interface TokenService {
     void delete(Long id);
 
     String generateToken(TokenDTO tokenDTO);
+
+    void enableToken(Long id);
 }
