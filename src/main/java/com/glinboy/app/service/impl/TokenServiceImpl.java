@@ -94,6 +94,11 @@ public class TokenServiceImpl implements TokenService {
         tokenRepository.deleteById(id);
     }
 
+    @Override
+    public void enableToken(Long id) {
+        this.tokenRepository.updateTokenStatus(id, Boolean.TRUE);
+    }
+
     public String generateToken(TokenDTO tokenDTO) {
         Authentication authentication = new UsernamePasswordAuthenticationToken(
             tokenDTO.getName(),
