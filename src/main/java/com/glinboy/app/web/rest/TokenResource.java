@@ -223,4 +223,10 @@ public class TokenResource {
             .headers(HeaderUtil.createEntityDeletionAlert(applicationName, true, ENTITY_NAME, id.toString()))
             .build();
     }
+
+    @PutMapping
+    public ResponseEntity<Void> enableToken(@PathVariable Long id) {
+        this.tokenService.enableToken(id);
+        return ResponseEntity.ok().build();
+    }
 }
