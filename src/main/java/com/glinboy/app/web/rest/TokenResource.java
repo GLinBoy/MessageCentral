@@ -229,4 +229,10 @@ public class TokenResource {
         this.tokenService.enableToken(id);
         return ResponseEntity.ok().build();
     }
+
+    @PutMapping
+    public ResponseEntity<Void> disableToken(@PathVariable Long id) {
+        this.tokenService.disableToken(id);
+        return ResponseEntity.ok().build();
+    }
 }
