@@ -95,6 +95,7 @@ public class TokenServiceImpl implements TokenService {
     }
 
     @Override
+    @Transactional
     public void enableToken(Long id) {
         this.tokenRepository.updateTokenStatus(id, Boolean.TRUE);
     }
