@@ -12,6 +12,6 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface TokenRepository extends JpaRepository<Token, Long>, JpaSpecificationExecutor<Token> {
     @Modifying
-    @Query("update token t set t.disable = :disable where t.id = :id")
+    @Query("update Token t set t.disable = :disable where t.id = :id")
     void updateTokenStatus(@Param("id") Long id, @Param("disable") Boolean disable);
 }
