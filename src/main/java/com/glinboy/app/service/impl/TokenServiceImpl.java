@@ -97,13 +97,13 @@ public class TokenServiceImpl implements TokenService {
     @Override
     @Transactional
     public void enableToken(Long id) {
-        this.tokenRepository.updateTokenStatus(id, Boolean.TRUE);
+        this.tokenRepository.updateTokenStatus(id, Boolean.FALSE);
     }
 
     @Override
     @Transactional
     public void disableToken(Long id) {
-        this.tokenRepository.updateTokenStatus(id, Boolean.FALSE);
+        this.tokenRepository.updateTokenStatus(id, Boolean.TRUE);
     }
 
     public String generateToken(TokenDTO tokenDTO) {
