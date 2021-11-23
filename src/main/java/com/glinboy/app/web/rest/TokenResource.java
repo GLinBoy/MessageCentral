@@ -227,7 +227,7 @@ public class TokenResource {
     @PutMapping("/tokens/{id}/enable")
     public ResponseEntity<Void> enableToken(@PathVariable Long id) {
         this.tokenService.enableToken(id);
-        return ResponseEntity.ok().build();
+        return ResponseEntity.noContent().build();
     }
 
     @PutMapping("/tokens/{id}/disable")
