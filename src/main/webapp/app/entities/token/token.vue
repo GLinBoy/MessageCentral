@@ -97,6 +97,24 @@
             <td class="text-right" @click.stop>
               <div class="btn-group">
                 <b-button
+                  v-show="token.disable"
+                  v-on:click="enableToken(token)"
+                  variant="info"
+                  class="btn btn-sm"
+                  data-cy="entityEnableButton"
+                >
+                  <font-awesome-icon icon="toggle-off"></font-awesome-icon>
+                </b-button>
+                <b-button
+                  v-show="!token.disable"
+                  v-on:click="disableToken(token)"
+                  variant="info"
+                  class="btn btn-sm"
+                  data-cy="entityDisableButton"
+                >
+                  <font-awesome-icon icon="toggle-on"></font-awesome-icon>
+                </b-button>
+                <b-button
                   v-on:click="prepareRemove(token)"
                   variant="danger"
                   class="btn btn-sm"
