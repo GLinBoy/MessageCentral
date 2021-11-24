@@ -98,4 +98,17 @@ export default class TokenService {
         });
     });
   }
+
+  public disableToken(id: number): Promise<any> {
+    return new Promise<any>((resolve, reject) => {
+      axios
+        .put(`${baseApiUrl}/${id}/disable`)
+        .then(res => {
+          resolve(res);
+        })
+        .catch(err => {
+          reject(err);
+        });
+    });
+  }
 }
