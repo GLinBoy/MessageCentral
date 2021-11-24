@@ -134,4 +134,23 @@ export default class Token extends Vue {
   public closeDialog(): void {
     (<any>this.$refs.removeEntity).hide();
   }
+
+  public enableToken(token: IToken): void {
+    this.tokenService()
+      .enableToken(token.id)
+      .then(() => {
+        const message = this.$t('messageCentralApp.token.enabled', { param: token.id });
+        this.$bvToast.toast(message.toString(), {
+          toaster: 'b-toaster-top-center',
+          title: 'Info',
+          variant: 'info',
+          solid: true,
+          autoHideDelay: 5000,
+        });
+        token.disable = false;
+      })
+      .catch(error => {
+        this.alertService().showHttpError(this, error.response);
+      });
+  }
 }
