@@ -153,4 +153,23 @@ export default class Token extends Vue {
         this.alertService().showHttpError(this, error.response);
       });
   }
+
+  public disableToken(token: IToken): void {
+    this.tokenService()
+      .disableToken(token.id)
+      .then(() => {
+        const message = this.$t('messageCentralApp.token.disabled', { param: token.id });
+        this.$bvToast.toast(message.toString(), {
+          toaster: 'b-toaster-top-center',
+          title: 'Info',
+          variant: 'info',
+          solid: true,
+          autoHideDelay: 5000,
+        });
+        token.disable = true;
+      })
+      .catch(error => {
+        this.alertService().showHttpError(this, error.response);
+      });
+  }
 }
