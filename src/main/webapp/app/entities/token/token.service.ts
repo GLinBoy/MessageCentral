@@ -85,4 +85,17 @@ export default class TokenService {
         });
     });
   }
+
+  public enableToken(id: number): Promise<any> {
+    return new Promise<any>((resolve, reject) => {
+      axios
+        .put(`${baseApiUrl}/${id}/enable`)
+        .then(res => {
+          resolve(res);
+        })
+        .catch(err => {
+          reject(err);
+        });
+    });
+  }
 }
