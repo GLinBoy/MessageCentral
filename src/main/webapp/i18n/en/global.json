@@ -102,7 +102,9 @@
       "edit": "Edit",
       "open": "Open",
       "save": "Save",
-      "view": "View"
+      "view": "View",
+      "enable": "Enable",
+      "disable": "disable"
     },
     "detail": {
       "field": "Field",
