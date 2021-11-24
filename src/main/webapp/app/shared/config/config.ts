@@ -45,6 +45,8 @@ import { faAt } from '@fortawesome/free-solid-svg-icons/faAt';
 import { faSms } from '@fortawesome/free-solid-svg-icons/faSms';
 import { faKey } from '@fortawesome/free-solid-svg-icons/faKey';
 import { faCalendar } from '@fortawesome/free-solid-svg-icons/faCalendar';
+import { faToggleOn } from '@fortawesome/free-solid-svg-icons/faToggleOn';
+import { faToggleOff } from '@fortawesome/free-solid-svg-icons/faToggleOff';
 
 import VueCookie from 'vue-cookie';
 import Vuelidate from 'vuelidate';
@@ -161,7 +163,9 @@ export function initFortAwesome(vue) {
     faAt,
     faSms,
     faKey,
-    faCalendar
+    faCalendar,
+    faToggleOn,
+    faToggleOff
   );
 }
 
