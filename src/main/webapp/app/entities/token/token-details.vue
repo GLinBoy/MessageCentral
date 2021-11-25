@@ -46,6 +46,26 @@
         <button type="submit" v-on:click.prevent="previousState()" class="btn btn-info" data-cy="entityDetailsBackButton">
           <font-awesome-icon icon="arrow-left"></font-awesome-icon>&nbsp;<span v-text="$t('entity.action.back')"> Back</span>
         </button>
+        <button
+          v-show="token.disable"
+          type="submit"
+          v-on:click.prevent="enableToken()"
+          class="btn btn-info"
+          data-cy="entityDetailsBackButton"
+          ariant="info"
+        >
+          <font-awesome-icon icon="toggle-off"></font-awesome-icon>&nbsp;<span v-text="$t('entity.action.enable')"> Enable</span>
+        </button>
+        <button
+          v-show="!token.disable"
+          type="submit"
+          v-on:click.prevent="disableToken()"
+          class="btn btn-info"
+          data-cy="entityDetailsBackButton"
+          ariant="info"
+        >
+          <font-awesome-icon icon="toggle-on"></font-awesome-icon>&nbsp;<span v-text="$t('entity.action.disable')"> Disable</span>
+        </button>
       </div>
     </div>
   </div>
