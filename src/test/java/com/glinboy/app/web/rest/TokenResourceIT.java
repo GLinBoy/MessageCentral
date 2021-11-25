@@ -1257,4 +1257,27 @@ class TokenResourceIT {
         token = tokenRepository.getById(token.getId());
         assertThat(token.getDisable()).isEqualTo(Boolean.TRUE);
     }
+
+    @Test
+    @WithMockUser(
+        authorities = {
+            AuthoritiesConstants.ANONYMOUS,
+            AuthoritiesConstants.USER,
+            AuthoritiesConstants.EMAIL_USER,
+            AuthoritiesConstants.NOTIFICATION_USER,
+            AuthoritiesConstants.SMS_USER,
+        }
+    )
+    void checkTokenStatusChangeByNoneAdminUsers() throws Exception {
+        // Initialize the database
+        tokenRepository.saveAndFlush(token);
+
+        restTokenMockMvc
+            .perform(put(ENTITY_API_URL_ENABLE_ID, token.getId()).accept(MediaType.APPLICATION_JSON))
+            .andExpect(status().isForbidden());
+
+        restTokenMockMvc
+            .perform(put(ENTITY_API_URL_DISABLE_ID, token.getId()).accept(MediaType.APPLICATION_JSON))
+            .andExpect(status().isForbidden());
+    }
 }
