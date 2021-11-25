@@ -57,6 +57,9 @@ class TokenResourceIT {
     private static final String ENTITY_API_URL = "/api/tokens";
     private static final String ENTITY_API_URL_ID = ENTITY_API_URL + "/{id}";
 
+    private static final String ENTITY_API_URL_ENABLE_ID = ENTITY_API_URL + "/{id}/enable";
+    private static final String ENTITY_API_URL_DISABLE_ID = ENTITY_API_URL + "/{id}/disable";
+
     private static Random random = new Random();
     private static AtomicLong count = new AtomicLong(random.nextInt() + (2 * Integer.MAX_VALUE));
 
