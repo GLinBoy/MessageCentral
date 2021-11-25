@@ -1219,4 +1219,23 @@ class TokenResourceIT {
             .perform(delete(ENTITY_API_URL_ID, token.getId()).accept(MediaType.APPLICATION_JSON))
             .andExpect(status().isForbidden());
     }
+
+    @Test
+    @Transactional
+    @WithMockUser(authorities = { AuthoritiesConstants.ADMIN })
+    void checkTokenEnableByAdminUsers() throws Exception {
+        // Initialize the database
+        token.setDisable(Boolean.TRUE);
+        tokenRepository.saveAndFlush(token);
+
+        assertThat(token.getDisable()).isEqualTo(Boolean.TRUE);
+
+        // Enable the token
+        restTokenMockMvc
+            .perform(put(ENTITY_API_URL_ENABLE_ID, token.getId()).accept(MediaType.APPLICATION_JSON))
+            .andExpect(status().isNoContent());
+
+        Token token_ = tokenRepository.getById(token.getId());
+        assertThat(token_.getDisable()).isEqualTo(Boolean.FALSE);
+    }
 }
