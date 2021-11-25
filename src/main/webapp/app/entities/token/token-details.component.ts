@@ -33,4 +33,23 @@ export default class TokenDetails extends Vue {
   public previousState() {
     this.$router.push({ name: 'Token' });
   }
+
+  public enableToken(): void {
+    this.tokenService()
+      .enableToken(this.token.id)
+      .then(() => {
+        const message = this.$t('messageCentralApp.token.enabled', { param: this.token.id });
+        this.$bvToast.toast(message.toString(), {
+          toaster: 'b-toaster-top-center',
+          title: 'Info',
+          variant: 'info',
+          solid: true,
+          autoHideDelay: 5000,
+        });
+        this.token.disable = false;
+      })
+      .catch(error => {
+        this.alertService().showHttpError(this, error.response);
+      });
+  }
 }
