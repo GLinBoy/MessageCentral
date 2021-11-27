@@ -10,7 +10,10 @@
             <span v-text="$t('messageCentralApp.token.name')">Name</span>
           </dt>
           <dd>
-            <span>{{ token.name }}</span>
+            <span>{{ token.name }}&nbsp;</span>
+            <b-badge :variant="token.disable ? 'danger' : 'success'">
+              {{ token.disable ? $t('entity.action.disable') : $t('entity.action.enable') }}
+            </b-badge>
           </dd>
           <dt>
             <span v-text="$t('messageCentralApp.token.token')">Token</span>
