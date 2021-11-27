@@ -27,12 +27,6 @@
             </div>
           </dd>
           <dt>
-            <span v-text="$t('messageCentralApp.token.disable')">Disable</span>
-          </dt>
-          <dd>
-            <span>{{ token.disable }}</span>
-          </dd>
-          <dt>
             <span v-text="$t('messageCentralApp.token.createdAt')">Created At</span>
           </dt>
           <dd>
