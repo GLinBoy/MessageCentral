@@ -47,6 +47,7 @@ import { faKey } from '@fortawesome/free-solid-svg-icons/faKey';
 import { faCalendar } from '@fortawesome/free-solid-svg-icons/faCalendar';
 import { faToggleOn } from '@fortawesome/free-solid-svg-icons/faToggleOn';
 import { faToggleOff } from '@fortawesome/free-solid-svg-icons/faToggleOff';
+import { faClipboard } from '@fortawesome/free-solid-svg-icons/faClipboard';
 
 import VueCookie from 'vue-cookie';
 import Vuelidate from 'vuelidate';
@@ -165,7 +166,8 @@ export function initFortAwesome(vue) {
     faKey,
     faCalendar,
     faToggleOn,
-    faToggleOff
+    faToggleOff,
+    faClipboard
   );
 }
 
