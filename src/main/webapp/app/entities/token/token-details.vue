@@ -16,7 +16,12 @@
             <span v-text="$t('messageCentralApp.token.token')">Token</span>
           </dt>
           <dd>
-            <span>{{ token.token }}</span>
+            <div class="input-group">
+              <b-form-input v-on:focus="$event.target.select()" ref="clone" readonly :value="token.token" />
+              <b-button variant="dark" squared size="sm" @click="copy" v-b-tooltip.hover title="Copy Token to clipboard">
+                <font-awesome-icon icon="clipboard" />
+              </b-button>
+            </div>
           </dd>
           <dt>
             <span v-text="$t('messageCentralApp.token.disable')">Disable</span>
