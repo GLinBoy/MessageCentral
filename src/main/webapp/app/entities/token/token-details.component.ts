@@ -71,4 +71,9 @@ export default class TokenDetails extends Vue {
         this.alertService().showHttpError(this, error.response);
       });
   }
+
+  copy() {
+    this.$refs.clone.focus();
+    document.execCommand('copy');
+  }
 }
