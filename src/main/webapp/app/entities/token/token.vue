@@ -90,7 +90,11 @@
             </td>
             <td>{{ token.name }}</td>
             <td>{{ token.token }}</td>
-            <td>{{ token.disable }}</td>
+            <td>
+              <b-badge :variant="token.disable ? 'danger' : 'success'">
+                {{ token.disable ? $t('entity.action.disable') : $t('entity.action.enable') }}
+              </b-badge>
+            </td>
             <td>{{ token.createdAt ? $d(Date.parse(token.createdAt), 'short') : '' }}</td>
             <td>{{ token.deprecateAt ? $d(Date.parse(token.deprecateAt), 'short') : '' }}</td>
             <td>{{ token.roles }}</td>
