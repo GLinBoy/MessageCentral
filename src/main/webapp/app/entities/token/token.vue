@@ -117,6 +117,8 @@
                   variant="info"
                   class="btn btn-sm"
                   data-cy="entityDisableButton"
+                  v-b-tooltip.hover
+                  :title="$t('entity.action.disable')"
                 >
                   <font-awesome-icon icon="toggle-on"></font-awesome-icon>
                 </b-button>
