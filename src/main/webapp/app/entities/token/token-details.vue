@@ -42,7 +42,20 @@
             <span v-text="$t('messageCentralApp.token.roles')">Roles</span>
           </dt>
           <dd>
-            <span>{{ token.roles }}</span>
+            <p class="h4">
+              <font-awesome-icon
+                icon="at"
+                :style="[1, 3, 5, 7].includes(token.roles) ? { color: 'var(--primary)' } : { color: 'var(--gray)' }"
+              />
+              <font-awesome-icon
+                icon="sms"
+                :style="[2, 3, 6, 7].includes(token.roles) ? { color: 'var(--primary)' } : { color: 'var(--gray)' }"
+              />
+              <font-awesome-icon
+                icon="bell"
+                :style="[4, 5, 6, 7].includes(token.roles) ? { color: 'var(--primary)' } : { color: 'var(--gray)' }"
+              />
+            </p>
           </dd>
         </dl>
         <button type="submit" v-on:click.prevent="previousState()" class="btn btn-info" data-cy="entityDetailsBackButton">
