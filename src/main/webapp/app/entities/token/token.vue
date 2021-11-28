@@ -97,7 +97,20 @@
             </td>
             <td>{{ token.createdAt ? $d(Date.parse(token.createdAt), 'short') : '' }}</td>
             <td>{{ token.deprecateAt ? $d(Date.parse(token.deprecateAt), 'short') : '' }}</td>
-            <td>{{ token.roles }}</td>
+            <td>
+              <font-awesome-icon
+                icon="at"
+                :style="[1, 3, 5, 7].includes(token.roles) ? { color: 'var(--primary)' } : { color: 'var(--gray)' }"
+              />
+              <font-awesome-icon
+                icon="sms"
+                :style="[2, 3, 6, 7].includes(token.roles) ? { color: 'var(--primary)' } : { color: 'var(--gray)' }"
+              />
+              <font-awesome-icon
+                icon="bell"
+                :style="[4, 5, 6, 7].includes(token.roles) ? { color: 'var(--primary)' } : { color: 'var(--gray)' }"
+              />
+            </td>
             <td class="text-right" @click.stop>
               <div class="btn-group">
                 <b-button
