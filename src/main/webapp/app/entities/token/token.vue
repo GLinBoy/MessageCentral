@@ -131,7 +131,7 @@
                   v-b-tooltip.hover
                   :title="$t('entity.action.delete')"
                 >
-                  <font-awesome-icon icon="times"></font-awesome-icon>
+                  <font-awesome-icon icon="trash"></font-awesome-icon>
                 </b-button>
               </div>
             </td>
