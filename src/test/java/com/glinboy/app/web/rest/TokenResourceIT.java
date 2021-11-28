@@ -1259,6 +1259,7 @@ class TokenResourceIT {
     }
 
     @Test
+    @Transactional
     @WithMockUser(
         authorities = {
             AuthoritiesConstants.ANONYMOUS,
