@@ -68,7 +68,7 @@ enum MessageStatus {
 }
 
 entity Token {
-    name String required required maxlength(64)
+    name String required unique maxlength(64)
     token String required maxlength(512)
     disable Boolean required
     createdAt Instant required
