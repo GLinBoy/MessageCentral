@@ -1281,4 +1281,27 @@ class TokenResourceIT {
             .perform(put(ENTITY_API_URL_DISABLE_ID, token.getId()).accept(MediaType.APPLICATION_JSON))
             .andExpect(status().isForbidden());
     }
+
+    @Test
+    @Transactional
+    @WithMockUser(authorities = { AuthoritiesConstants.ADMIN })
+    void createTokenWithExistingName() throws Exception {
+        // Create the Token with an existing name
+        TokenDTO tokenDTO1 = tokenMapper.toDto(token);
+        TokenDTO tokenDTO2 = tokenMapper.toDto(token);
+
+        int databaseSizeBeforeCreate = tokenRepository.findAll().size();
+
+        restTokenMockMvc
+            .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(tokenDTO1)))
+            .andExpect(status().isCreated());
+
+        // Validate the Token in the database
+        List<Token> tokenList = tokenRepository.findAll();
+        assertThat(tokenList).hasSize(databaseSizeBeforeCreate + 1);
+
+        restTokenMockMvc
+            .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(tokenDTO2)))
+            .andExpect(status().isBadRequest());
+    }
 }
