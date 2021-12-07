@@ -4,7 +4,7 @@
     "otherModules": [],
     "applicationType": "monolith",
     "baseName": "MessageCentral",
-    "jhipsterVersion": "7.4.0",
+    "jhipsterVersion": "7.4.1",
     "skipClient": false,
     "skipServer": false,
     "skipUserManagement": false,

@@ -1,6 +1,7 @@
 /* tslint:disable max-line-length */
 import { shallowMount, createLocalVue, Wrapper } from '@vue/test-utils';
 import sinon, { SinonStubbedInstance } from 'sinon';
+import { ToastPlugin } from 'bootstrap-vue';
 
 import * as config from '@/shared/config/config';
 import NotificationComponent from '@/entities/notification/notification.vue';
@@ -9,6 +10,7 @@ import NotificationService from '@/entities/notification/notification.service';
 import AlertService from '@/shared/alert/alert.service';
 
 const localVue = createLocalVue();
+localVue.use(ToastPlugin);
 
 config.initVueApp(localVue);
 const i18n = config.initI18N(localVue);
@@ -131,12 +133,14 @@ describe('Component Tests', () => {
 
       // WHEN
       comp.prepareRemove({ id: 123 });
+      expect(notificationServiceStub.retrieve.callCount).toEqual(1);
+
       comp.removeNotification();
       await comp.$nextTick();
 
       // THEN
       expect(notificationServiceStub.delete.called).toBeTruthy();
-      expect(notificationServiceStub.retrieve.callCount).toEqual(1);
+      expect(notificationServiceStub.retrieve.callCount).toEqual(2);
     });
   });
 });
