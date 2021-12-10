@@ -58,6 +58,7 @@ entity Notification {
   content String required maxlength(4000)
   image String maxlength(256)
   status MessageStatus
+  createdAt Instant required
 }
 
 entity NotificationData {
