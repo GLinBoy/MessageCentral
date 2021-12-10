@@ -81,6 +81,7 @@ entity Token {
   deprecateAt Instant required
   roles Integer required
   createdAt Instant required
+  createdBy String required
 }
 
 relationship OneToMany {
