@@ -82,6 +82,7 @@ entity Token {
   roles Integer required
   createdAt Instant required
   createdBy String required
+  updatedAt Instant required
 }
 
 relationship OneToMany {
