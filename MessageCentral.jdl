@@ -39,6 +39,7 @@ entity Email {
   subject String required minlength(4) maxlength(128)
   content TextBlob required
   status MessageStatus
+  createdAt Instant required
 }
 
 entity ShortMessage {
