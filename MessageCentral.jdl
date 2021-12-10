@@ -83,6 +83,7 @@ entity Token {
   createdAt Instant required
   createdBy String required
   updatedAt Instant required
+  updatedBy String required
 }
 
 relationship OneToMany {
