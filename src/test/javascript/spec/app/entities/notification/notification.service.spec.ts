@@ -1,7 +1,9 @@
 /* tslint:disable max-line-length */
 import axios from 'axios';
 import sinon from 'sinon';
+import dayjs from 'dayjs';
 
+import { DATE_TIME_FORMAT } from '@/shared/date/filters';
 import NotificationService from '@/entities/notification/notification.service';
 import { Notification } from '@/shared/model/notification.model';
 import { MessageStatus } from '@/shared/model/enumerations/message-status.model';
@@ -27,15 +29,32 @@ describe('Service Tests', () => {
   describe('Notification Service', () => {
     let service: NotificationService;
     let elemDefault;
+    let currentDate: Date;
 
     beforeEach(() => {
       service = new NotificationService();
-      elemDefault = new Notification(123, 'AAAAAAA', 'AAAAAAA', 'AAAAAAA', 'AAAAAAA', 'AAAAAAA', MessageStatus.IN_QUEUE);
+      currentDate = new Date();
+      elemDefault = new Notification(
+        123,
+        'AAAAAAA',
+        'AAAAAAA',
+        'AAAAAAA',
+        'AAAAAAA',
+        'AAAAAAA',
+        MessageStatus.IN_QUEUE,
+        currentDate,
+        'AAAAAAA'
+      );
     });
 
     describe('Service methods', () => {
       it('should find an element', async () => {
-        const returnedFromService = Object.assign({}, elemDefault);
+        const returnedFromService = Object.assign(
+          {
+            createdAt: dayjs(currentDate).format(DATE_TIME_FORMAT),
+          },
+          elemDefault
+        );
         axiosStub.get.resolves({ data: returnedFromService });
 
         return service.find(123).then(res => {
@@ -57,10 +76,16 @@ describe('Service Tests', () => {
         const returnedFromService = Object.assign(
           {
             id: 123,
+            createdAt: dayjs(currentDate).format(DATE_TIME_FORMAT),
           },
           elemDefault
         );
-        const expected = Object.assign({}, returnedFromService);
+        const expected = Object.assign(
+          {
+            createdAt: currentDate,
+          },
+          returnedFromService
+        );
 
         axiosStub.post.resolves({ data: returnedFromService });
         return service.create({}).then(res => {
@@ -88,11 +113,18 @@ describe('Service Tests', () => {
             content: 'BBBBBB',
             image: 'BBBBBB',
             status: 'BBBBBB',
+            createdAt: dayjs(currentDate).format(DATE_TIME_FORMAT),
+            createdBy: 'BBBBBB',
           },
           elemDefault
         );
 
-        const expected = Object.assign({}, returnedFromService);
+        const expected = Object.assign(
+          {
+            createdAt: currentDate,
+          },
+          returnedFromService
+        );
         axiosStub.put.resolves({ data: returnedFromService });
 
         return service.update(expected).then(res => {
@@ -117,12 +149,18 @@ describe('Service Tests', () => {
             username: 'BBBBBB',
             content: 'BBBBBB',
             image: 'BBBBBB',
+            createdAt: dayjs(currentDate).format(DATE_TIME_FORMAT),
           },
           new Notification()
         );
         const returnedFromService = Object.assign(patchObject, elemDefault);
 
-        const expected = Object.assign({}, returnedFromService);
+        const expected = Object.assign(
+          {
+            createdAt: currentDate,
+          },
+          returnedFromService
+        );
         axiosStub.patch.resolves({ data: returnedFromService });
 
         return service.partialUpdate(patchObject).then(res => {
@@ -150,10 +188,17 @@ describe('Service Tests', () => {
             content: 'BBBBBB',
             image: 'BBBBBB',
             status: 'BBBBBB',
+            createdAt: dayjs(currentDate).format(DATE_TIME_FORMAT),
+            createdBy: 'BBBBBB',
           },
           elemDefault
         );
-        const expected = Object.assign({}, returnedFromService);
+        const expected = Object.assign(
+          {
+            createdAt: currentDate,
+          },
+          returnedFromService
+        );
         axiosStub.get.resolves([returnedFromService]);
         return service.retrieve({ sort: {}, page: 0, size: 10 }).then(res => {
           expect(res).toContainEqual(expected);

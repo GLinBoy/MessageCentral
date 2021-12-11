@@ -8,6 +8,7 @@ import tech.jhipster.service.filter.BooleanFilter;
 import tech.jhipster.service.filter.DoubleFilter;
 import tech.jhipster.service.filter.Filter;
 import tech.jhipster.service.filter.FloatFilter;
+import tech.jhipster.service.filter.InstantFilter;
 import tech.jhipster.service.filter.IntegerFilter;
 import tech.jhipster.service.filter.LongFilter;
 import tech.jhipster.service.filter.StringFilter;
@@ -56,6 +57,10 @@ public class NotificationCriteria implements Serializable, Criteria {
 
     private MessageStatusFilter status;
 
+    private InstantFilter createdAt;
+
+    private StringFilter createdBy;
+
     private LongFilter dataId;
 
     private Boolean distinct;
@@ -70,6 +75,8 @@ public class NotificationCriteria implements Serializable, Criteria {
         this.content = other.content == null ? null : other.content.copy();
         this.image = other.image == null ? null : other.image.copy();
         this.status = other.status == null ? null : other.status.copy();
+        this.createdAt = other.createdAt == null ? null : other.createdAt.copy();
+        this.createdBy = other.createdBy == null ? null : other.createdBy.copy();
         this.dataId = other.dataId == null ? null : other.dataId.copy();
         this.distinct = other.distinct;
     }
@@ -184,6 +191,36 @@ public class NotificationCriteria implements Serializable, Criteria {
         this.status = status;
     }
 
+    public InstantFilter getCreatedAt() {
+        return createdAt;
+    }
+
+    public InstantFilter createdAt() {
+        if (createdAt == null) {
+            createdAt = new InstantFilter();
+        }
+        return createdAt;
+    }
+
+    public void setCreatedAt(InstantFilter createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public StringFilter getCreatedBy() {
+        return createdBy;
+    }
+
+    public StringFilter createdBy() {
+        if (createdBy == null) {
+            createdBy = new StringFilter();
+        }
+        return createdBy;
+    }
+
+    public void setCreatedBy(StringFilter createdBy) {
+        this.createdBy = createdBy;
+    }
+
     public LongFilter getDataId() {
         return dataId;
     }
@@ -224,6 +261,8 @@ public class NotificationCriteria implements Serializable, Criteria {
             Objects.equals(content, that.content) &&
             Objects.equals(image, that.image) &&
             Objects.equals(status, that.status) &&
+            Objects.equals(createdAt, that.createdAt) &&
+            Objects.equals(createdBy, that.createdBy) &&
             Objects.equals(dataId, that.dataId) &&
             Objects.equals(distinct, that.distinct)
         );
@@ -231,7 +270,7 @@ public class NotificationCriteria implements Serializable, Criteria {
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, username, token, subject, content, image, status, dataId, distinct);
+        return Objects.hash(id, username, token, subject, content, image, status, createdAt, createdBy, dataId, distinct);
     }
 
     // prettier-ignore
@@ -245,6 +284,8 @@ public class NotificationCriteria implements Serializable, Criteria {
             (content != null ? "content=" + content + ", " : "") +
             (image != null ? "image=" + image + ", " : "") +
             (status != null ? "status=" + status + ", " : "") +
+            (createdAt != null ? "createdAt=" + createdAt + ", " : "") +
+            (createdBy != null ? "createdBy=" + createdBy + ", " : "") +
             (dataId != null ? "dataId=" + dataId + ", " : "") +
             (distinct != null ? "distinct=" + distinct + ", " : "") +
             "}";

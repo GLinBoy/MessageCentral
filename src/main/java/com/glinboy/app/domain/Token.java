@@ -49,6 +49,18 @@ public class Token implements Serializable {
     @Column(name = "roles", nullable = false)
     private Integer roles;
 
+    @NotNull
+    @Column(name = "created_by", nullable = false)
+    private String createdBy;
+
+    @NotNull
+    @Column(name = "updated_at", nullable = false)
+    private Instant updatedAt;
+
+    @NotNull
+    @Column(name = "updated_by", nullable = false)
+    private String updatedBy;
+
     // jhipster-needle-entity-add-field - JHipster will add fields here
 
     public Long getId() {
@@ -142,6 +154,45 @@ public class Token implements Serializable {
         this.roles = roles;
     }
 
+    public String getCreatedBy() {
+        return this.createdBy;
+    }
+
+    public Token createdBy(String createdBy) {
+        this.setCreatedBy(createdBy);
+        return this;
+    }
+
+    public void setCreatedBy(String createdBy) {
+        this.createdBy = createdBy;
+    }
+
+    public Instant getUpdatedAt() {
+        return this.updatedAt;
+    }
+
+    public Token updatedAt(Instant updatedAt) {
+        this.setUpdatedAt(updatedAt);
+        return this;
+    }
+
+    public void setUpdatedAt(Instant updatedAt) {
+        this.updatedAt = updatedAt;
+    }
+
+    public String getUpdatedBy() {
+        return this.updatedBy;
+    }
+
+    public Token updatedBy(String updatedBy) {
+        this.setUpdatedBy(updatedBy);
+        return this;
+    }
+
+    public void setUpdatedBy(String updatedBy) {
+        this.updatedBy = updatedBy;
+    }
+
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here
 
     @Override
@@ -172,6 +223,9 @@ public class Token implements Serializable {
             ", createdAt='" + getCreatedAt() + "'" +
             ", deprecateAt='" + getDeprecateAt() + "'" +
             ", roles=" + getRoles() +
+            ", createdBy='" + getCreatedBy() + "'" +
+            ", updatedAt='" + getUpdatedAt() + "'" +
+            ", updatedBy='" + getUpdatedBy() + "'" +
             "}";
     }
 }

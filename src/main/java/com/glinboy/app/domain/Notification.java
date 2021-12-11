@@ -3,6 +3,7 @@ package com.glinboy.app.domain;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.glinboy.app.domain.enumeration.MessageStatus;
 import java.io.Serializable;
+import java.time.Instant;
 import java.util.HashSet;
 import java.util.Set;
 import javax.persistence.*;
@@ -53,6 +54,14 @@ public class Notification implements Serializable {
     @Enumerated(EnumType.STRING)
     @Column(name = "status")
     private MessageStatus status;
+
+    @NotNull
+    @Column(name = "created_at", nullable = false)
+    private Instant createdAt;
+
+    @NotNull
+    @Column(name = "created_by", nullable = false)
+    private String createdBy;
 
     @OneToMany(mappedBy = "notification", cascade = CascadeType.ALL)
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
@@ -152,6 +161,32 @@ public class Notification implements Serializable {
         this.status = status;
     }
 
+    public Instant getCreatedAt() {
+        return this.createdAt;
+    }
+
+    public Notification createdAt(Instant createdAt) {
+        this.setCreatedAt(createdAt);
+        return this;
+    }
+
+    public void setCreatedAt(Instant createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public String getCreatedBy() {
+        return this.createdBy;
+    }
+
+    public Notification createdBy(String createdBy) {
+        this.setCreatedBy(createdBy);
+        return this;
+    }
+
+    public void setCreatedBy(String createdBy) {
+        this.createdBy = createdBy;
+    }
+
     public Set<NotificationData> getData() {
         return this.data;
     }
@@ -213,6 +248,8 @@ public class Notification implements Serializable {
             ", content='" + getContent() + "'" +
             ", image='" + getImage() + "'" +
             ", status='" + getStatus() + "'" +
+            ", createdAt='" + getCreatedAt() + "'" +
+            ", createdBy='" + getCreatedBy() + "'" +
             "}";
     }
 }

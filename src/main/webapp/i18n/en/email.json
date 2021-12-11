@@ -22,7 +22,9 @@
       "receiver": "Receiver",
       "subject": "Subject",
       "content": "Content",
-      "status": "Status"
+      "status": "Status",
+      "createdAt": "Created At",
+      "createdBy": "Created By"
     },
     "emails": {
       "home": {

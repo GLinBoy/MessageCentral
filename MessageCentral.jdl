@@ -39,12 +39,16 @@ entity Email {
   subject String required minlength(4) maxlength(128)
   content TextBlob required
   status MessageStatus
+  createdAt Instant required
+  createdBy String required
 }
 
 entity ShortMessage {
   phoneNumber String required minlength(7) maxlength(15) pattern(/^\+(?:[0-9]●?){6,14}[0-9]$/)
   content String required minlength(6) maxlength(160)
   status MessageStatus
+  createdAt Instant required
+  createdBy String required
 }
 
 entity Notification {
@@ -54,6 +58,8 @@ entity Notification {
   content String required maxlength(4000)
   image String maxlength(256)
   status MessageStatus
+  createdAt Instant required
+  createdBy String required
 }
 
 entity NotificationData {
@@ -68,12 +74,16 @@ enum MessageStatus {
 }
 
 entity Token {
-    name String required unique maxlength(64)
-    token String required maxlength(512)
-    disable Boolean required
-    createdAt Instant required
-    deprecateAt Instant required
-    roles Integer required
+  name String required unique maxlength(64)
+  token String required maxlength(512)
+  disable Boolean required
+  createdAt Instant required
+  deprecateAt Instant required
+  roles Integer required
+  createdAt Instant required
+  createdBy String required
+  updatedAt Instant required
+  updatedBy String required
 }
 
 relationship OneToMany {

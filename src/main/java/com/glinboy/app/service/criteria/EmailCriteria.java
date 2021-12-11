@@ -8,6 +8,7 @@ import tech.jhipster.service.filter.BooleanFilter;
 import tech.jhipster.service.filter.DoubleFilter;
 import tech.jhipster.service.filter.Filter;
 import tech.jhipster.service.filter.FloatFilter;
+import tech.jhipster.service.filter.InstantFilter;
 import tech.jhipster.service.filter.IntegerFilter;
 import tech.jhipster.service.filter.LongFilter;
 import tech.jhipster.service.filter.StringFilter;
@@ -50,6 +51,10 @@ public class EmailCriteria implements Serializable, Criteria {
 
     private MessageStatusFilter status;
 
+    private InstantFilter createdAt;
+
+    private StringFilter createdBy;
+
     private Boolean distinct;
 
     public EmailCriteria() {}
@@ -59,6 +64,8 @@ public class EmailCriteria implements Serializable, Criteria {
         this.receiver = other.receiver == null ? null : other.receiver.copy();
         this.subject = other.subject == null ? null : other.subject.copy();
         this.status = other.status == null ? null : other.status.copy();
+        this.createdAt = other.createdAt == null ? null : other.createdAt.copy();
+        this.createdBy = other.createdBy == null ? null : other.createdBy.copy();
         this.distinct = other.distinct;
     }
 
@@ -127,6 +134,36 @@ public class EmailCriteria implements Serializable, Criteria {
         this.status = status;
     }
 
+    public InstantFilter getCreatedAt() {
+        return createdAt;
+    }
+
+    public InstantFilter createdAt() {
+        if (createdAt == null) {
+            createdAt = new InstantFilter();
+        }
+        return createdAt;
+    }
+
+    public void setCreatedAt(InstantFilter createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public StringFilter getCreatedBy() {
+        return createdBy;
+    }
+
+    public StringFilter createdBy() {
+        if (createdBy == null) {
+            createdBy = new StringFilter();
+        }
+        return createdBy;
+    }
+
+    public void setCreatedBy(StringFilter createdBy) {
+        this.createdBy = createdBy;
+    }
+
     public Boolean getDistinct() {
         return distinct;
     }
@@ -149,13 +186,15 @@ public class EmailCriteria implements Serializable, Criteria {
             Objects.equals(receiver, that.receiver) &&
             Objects.equals(subject, that.subject) &&
             Objects.equals(status, that.status) &&
+            Objects.equals(createdAt, that.createdAt) &&
+            Objects.equals(createdBy, that.createdBy) &&
             Objects.equals(distinct, that.distinct)
         );
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, receiver, subject, status, distinct);
+        return Objects.hash(id, receiver, subject, status, createdAt, createdBy, distinct);
     }
 
     // prettier-ignore
@@ -166,6 +205,8 @@ public class EmailCriteria implements Serializable, Criteria {
             (receiver != null ? "receiver=" + receiver + ", " : "") +
             (subject != null ? "subject=" + subject + ", " : "") +
             (status != null ? "status=" + status + ", " : "") +
+            (createdAt != null ? "createdAt=" + createdAt + ", " : "") +
+            (createdBy != null ? "createdBy=" + createdBy + ", " : "") +
             (distinct != null ? "distinct=" + distinct + ", " : "") +
             "}";
     }

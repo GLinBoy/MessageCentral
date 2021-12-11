@@ -16,12 +16,14 @@ public class TokenDTO implements Serializable {
     @Size(max = 64)
     private String name;
 
+    @NotNull
     @Size(max = 512)
     private String token;
 
     @NotNull
     private Boolean disable;
 
+    @NotNull
     private Instant createdAt;
 
     @NotNull
@@ -29,6 +31,15 @@ public class TokenDTO implements Serializable {
 
     @NotNull
     private Integer roles;
+
+    @NotNull
+    private String createdBy;
+
+    @NotNull
+    private Instant updatedAt;
+
+    @NotNull
+    private String updatedBy;
 
     public Long getId() {
         return id;
@@ -86,6 +97,30 @@ public class TokenDTO implements Serializable {
         this.roles = roles;
     }
 
+    public String getCreatedBy() {
+        return createdBy;
+    }
+
+    public void setCreatedBy(String createdBy) {
+        this.createdBy = createdBy;
+    }
+
+    public Instant getUpdatedAt() {
+        return updatedAt;
+    }
+
+    public void setUpdatedAt(Instant updatedAt) {
+        this.updatedAt = updatedAt;
+    }
+
+    public String getUpdatedBy() {
+        return updatedBy;
+    }
+
+    public void setUpdatedBy(String updatedBy) {
+        this.updatedBy = updatedBy;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -118,6 +153,9 @@ public class TokenDTO implements Serializable {
             ", createdAt='" + getCreatedAt() + "'" +
             ", deprecateAt='" + getDeprecateAt() + "'" +
             ", roles=" + getRoles() +
+            ", createdBy='" + getCreatedBy() + "'" +
+            ", updatedAt='" + getUpdatedAt() + "'" +
+            ", updatedBy='" + getUpdatedBy() + "'" +
             "}";
     }
 }

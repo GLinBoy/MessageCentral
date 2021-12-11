@@ -2,6 +2,7 @@ package com.glinboy.app.service.dto;
 
 import com.glinboy.app.domain.enumeration.MessageStatus;
 import java.io.Serializable;
+import java.time.Instant;
 import java.util.Objects;
 import javax.persistence.Lob;
 import javax.validation.constraints.*;
@@ -26,6 +27,12 @@ public class EmailDTO implements Serializable {
     private String content;
 
     private MessageStatus status;
+
+    @NotNull
+    private Instant createdAt;
+
+    @NotNull
+    private String createdBy;
 
     public Long getId() {
         return id;
@@ -67,6 +74,22 @@ public class EmailDTO implements Serializable {
         this.status = status;
     }
 
+    public Instant getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(Instant createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public String getCreatedBy() {
+        return createdBy;
+    }
+
+    public void setCreatedBy(String createdBy) {
+        this.createdBy = createdBy;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -97,6 +120,8 @@ public class EmailDTO implements Serializable {
             ", subject='" + getSubject() + "'" +
             ", content='" + getContent() + "'" +
             ", status='" + getStatus() + "'" +
+            ", createdAt='" + getCreatedAt() + "'" +
+            ", createdBy='" + getCreatedBy() + "'" +
             "}";
     }
 }

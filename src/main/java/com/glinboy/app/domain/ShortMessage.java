@@ -2,6 +2,7 @@ package com.glinboy.app.domain;
 
 import com.glinboy.app.domain.enumeration.MessageStatus;
 import java.io.Serializable;
+import java.time.Instant;
 import javax.persistence.*;
 import javax.validation.constraints.*;
 import org.hibernate.annotations.Cache;
@@ -37,6 +38,14 @@ public class ShortMessage implements Serializable {
     @Enumerated(EnumType.STRING)
     @Column(name = "status")
     private MessageStatus status;
+
+    @NotNull
+    @Column(name = "created_at", nullable = false)
+    private Instant createdAt;
+
+    @NotNull
+    @Column(name = "created_by", nullable = false)
+    private String createdBy;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here
 
@@ -92,6 +101,32 @@ public class ShortMessage implements Serializable {
         this.status = status;
     }
 
+    public Instant getCreatedAt() {
+        return this.createdAt;
+    }
+
+    public ShortMessage createdAt(Instant createdAt) {
+        this.setCreatedAt(createdAt);
+        return this;
+    }
+
+    public void setCreatedAt(Instant createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public String getCreatedBy() {
+        return this.createdBy;
+    }
+
+    public ShortMessage createdBy(String createdBy) {
+        this.setCreatedBy(createdBy);
+        return this;
+    }
+
+    public void setCreatedBy(String createdBy) {
+        this.createdBy = createdBy;
+    }
+
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here
 
     @Override
@@ -119,6 +154,8 @@ public class ShortMessage implements Serializable {
             ", phoneNumber='" + getPhoneNumber() + "'" +
             ", content='" + getContent() + "'" +
             ", status='" + getStatus() + "'" +
+            ", createdAt='" + getCreatedAt() + "'" +
+            ", createdBy='" + getCreatedBy() + "'" +
             "}";
     }
 }
