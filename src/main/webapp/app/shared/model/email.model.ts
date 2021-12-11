@@ -5,6 +5,8 @@ export interface IEmail {
   subject?: string;
   content?: string;
   status?: MessageStatus | null;
+  createdAt?: Date;
+  createdBy?: string;
 }
 
 export class Email implements IEmail {
@@ -13,7 +15,9 @@ export class Email implements IEmail {
     public receiver?: string,
     public subject?: string,
     public content?: string,
-    public status?: MessageStatus | null
+    public status?: MessageStatus | null,
+    public createdAt?: Date,
+    public createdBy?: string
   ) {}
 }
 

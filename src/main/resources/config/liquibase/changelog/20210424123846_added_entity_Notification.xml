@@ -32,8 +32,15 @@
             <column name="status" type="varchar(255)">
                 <constraints nullable="true" />
             </column>
+            <column name="created_at" type="${datetimeType}">
+                <constraints nullable="false" />
+            </column>
+            <column name="created_by" type="varchar(255)">
+                <constraints nullable="false" />
+            </column>
             <!-- jhipster-needle-liquibase-add-column - JHipster will add columns here -->
         </createTable>
+        <dropDefaultValue tableName="notification" columnName="created_at" columnDataType="${datetimeType}"/>
     </changeSet>
 
     <!-- jhipster-needle-liquibase-add-changeset - JHipster will add changesets here -->
@@ -59,6 +66,8 @@
             <column name="content" type="string"/>
             <column name="image" type="string"/>
             <column name="status" type="string"/>
+            <column name="created_at" type="date"/>
+            <column name="created_by" type="string"/>
             <!-- jhipster-needle-liquibase-add-loadcolumn - JHipster (and/or extensions) can add load columns here -->
         </loadData>
     </changeSet>

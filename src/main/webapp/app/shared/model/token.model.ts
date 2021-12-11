@@ -6,6 +6,9 @@ export interface IToken {
   createdAt?: Date;
   deprecateAt?: Date;
   roles?: number;
+  createdBy?: string;
+  updatedAt?: Date;
+  updatedBy?: string;
 }
 
 export class Token implements IToken {
@@ -16,7 +19,10 @@ export class Token implements IToken {
     public disable?: boolean,
     public createdAt?: Date,
     public deprecateAt?: Date,
-    public roles?: number
+    public roles?: number,
+    public createdBy?: string,
+    public updatedAt?: Date,
+    public updatedBy?: string
   ) {
     this.disable = this.disable ?? false;
   }

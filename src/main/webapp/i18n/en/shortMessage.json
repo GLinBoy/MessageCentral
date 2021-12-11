@@ -21,7 +21,9 @@
       "id": "ID",
       "phoneNumber": "Phone Number",
       "content": "Content",
-      "status": "Status"
+      "status": "Status",
+      "createdAt": "Created At",
+      "createdBy": "Created By"
     },
     "shortMessages": {
       "home": {

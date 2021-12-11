@@ -25,6 +25,8 @@
       "content": "Content",
       "image": "Image",
       "status": "Status",
+      "createdAt": "Created At",
+      "createdBy": "Created By",
       "data": "Data"
     },
     "notifications": {

@@ -2,11 +2,11 @@ package com.glinboy.app.service.dto;
 
 import com.glinboy.app.domain.enumeration.MessageStatus;
 import java.io.Serializable;
+import java.time.Instant;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
-
 import javax.validation.constraints.*;
 
 /**
@@ -38,6 +38,12 @@ public class NotificationDTO implements Serializable {
     private MessageStatus status;
 
     private Set<NotificationDataDTO> data = new HashSet<>();
+
+    @NotNull
+    private Instant createdAt;
+
+    @NotNull
+    private String createdBy;
 
     public Long getId() {
         return id;
@@ -99,8 +105,24 @@ public class NotificationDTO implements Serializable {
         return data;
     }
 
+    public Instant getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(Instant createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public String getCreatedBy() {
+        return createdBy;
+    }
+
     public void setData(Set<NotificationDataDTO> data) {
         this.data = data;
+    }
+
+    public void setCreatedBy(String createdBy) {
+        this.createdBy = createdBy;
     }
 
     @Override
@@ -137,6 +159,8 @@ public class NotificationDTO implements Serializable {
             ", data='" + getData().stream().map(NotificationDataDTO::toString)
                 .collect(Collectors.joining(", ")) + "'" +
             ", status='" + getStatus() + "'" +
+            ", createdAt='" + getCreatedAt() + "'" +
+            ", createdBy='" + getCreatedBy() + "'" +
             "}";
     }
 }

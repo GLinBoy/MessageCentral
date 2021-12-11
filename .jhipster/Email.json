@@ -25,6 +25,16 @@
       "fieldName": "status",
       "fieldType": "MessageStatus",
       "fieldValues": "IN_QUEUE,SENT,FAILED"
+    },
+    {
+      "fieldName": "createdAt",
+      "fieldType": "Instant",
+      "fieldValidateRules": ["required"]
+    },
+    {
+      "fieldName": "createdBy",
+      "fieldType": "String",
+      "fieldValidateRules": ["required"]
     }
   ],
   "relationships": [],

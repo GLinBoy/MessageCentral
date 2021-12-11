@@ -33,7 +33,7 @@ describe('Service Tests', () => {
     beforeEach(() => {
       service = new TokenService();
       currentDate = new Date();
-      elemDefault = new Token(123, 'AAAAAAA', 'AAAAAAA', false, currentDate, currentDate, 0);
+      elemDefault = new Token(123, 'AAAAAAA', 'AAAAAAA', false, currentDate, currentDate, 0, 'AAAAAAA', currentDate, 'AAAAAAA');
     });
 
     describe('Service methods', () => {
@@ -42,6 +42,7 @@ describe('Service Tests', () => {
           {
             createdAt: dayjs(currentDate).format(DATE_TIME_FORMAT),
             deprecateAt: dayjs(currentDate).format(DATE_TIME_FORMAT),
+            updatedAt: dayjs(currentDate).format(DATE_TIME_FORMAT),
           },
           elemDefault
         );
@@ -68,6 +69,7 @@ describe('Service Tests', () => {
             id: 123,
             createdAt: dayjs(currentDate).format(DATE_TIME_FORMAT),
             deprecateAt: dayjs(currentDate).format(DATE_TIME_FORMAT),
+            updatedAt: dayjs(currentDate).format(DATE_TIME_FORMAT),
           },
           elemDefault
         );
@@ -75,6 +77,7 @@ describe('Service Tests', () => {
           {
             createdAt: currentDate,
             deprecateAt: currentDate,
+            updatedAt: currentDate,
           },
           returnedFromService
         );
@@ -105,6 +108,9 @@ describe('Service Tests', () => {
             createdAt: dayjs(currentDate).format(DATE_TIME_FORMAT),
             deprecateAt: dayjs(currentDate).format(DATE_TIME_FORMAT),
             roles: 1,
+            createdBy: 'BBBBBB',
+            updatedAt: dayjs(currentDate).format(DATE_TIME_FORMAT),
+            updatedBy: 'BBBBBB',
           },
           elemDefault
         );
@@ -113,6 +119,7 @@ describe('Service Tests', () => {
           {
             createdAt: currentDate,
             deprecateAt: currentDate,
+            updatedAt: currentDate,
           },
           returnedFromService
         );
@@ -138,6 +145,7 @@ describe('Service Tests', () => {
         const patchObject = Object.assign(
           {
             name: 'BBBBBB',
+            createdBy: 'BBBBBB',
           },
           new Token()
         );
@@ -147,6 +155,7 @@ describe('Service Tests', () => {
           {
             createdAt: currentDate,
             deprecateAt: currentDate,
+            updatedAt: currentDate,
           },
           returnedFromService
         );
@@ -177,6 +186,9 @@ describe('Service Tests', () => {
             createdAt: dayjs(currentDate).format(DATE_TIME_FORMAT),
             deprecateAt: dayjs(currentDate).format(DATE_TIME_FORMAT),
             roles: 1,
+            createdBy: 'BBBBBB',
+            updatedAt: dayjs(currentDate).format(DATE_TIME_FORMAT),
+            updatedBy: 'BBBBBB',
           },
           elemDefault
         );
@@ -184,6 +196,7 @@ describe('Service Tests', () => {
           {
             createdAt: currentDate,
             deprecateAt: currentDate,
+            updatedAt: currentDate,
           },
           returnedFromService
         );
