@@ -77,7 +77,6 @@ entity Token {
   name String required unique maxlength(64)
   token String required maxlength(512)
   disable Boolean required
-  createdAt Instant required
   deprecateAt Instant required
   roles Integer required
   createdAt Instant required
