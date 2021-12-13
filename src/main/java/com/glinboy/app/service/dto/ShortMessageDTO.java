@@ -24,7 +24,6 @@ public class ShortMessageDTO implements Serializable {
 
     private MessageStatus status;
 
-    @NotNull
     private Instant createdAt;
 
     @NotNull
