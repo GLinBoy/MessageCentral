@@ -32,7 +32,6 @@ public class EmailDTO implements Serializable {
 
     private Instant createdAt;
 
-    @NotNull
     private String createdBy;
 
     public Long getId() {
