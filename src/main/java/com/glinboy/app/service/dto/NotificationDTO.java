@@ -39,7 +39,6 @@ public class NotificationDTO implements Serializable {
 
     private Set<NotificationDataDTO> data = new HashSet<>();
 
-    @NotNull
     private Instant createdAt;
 
     @NotNull
