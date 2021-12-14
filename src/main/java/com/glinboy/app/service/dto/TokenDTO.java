@@ -35,7 +35,6 @@ public class TokenDTO implements Serializable {
 
     private Instant updatedAt;
 
-    @NotNull
     private String updatedBy;
 
     public Long getId() {
