@@ -23,7 +23,6 @@ public class TokenDTO implements Serializable {
     @NotNull
     private Boolean disable;
 
-    @NotNull
     private Instant createdAt;
 
     @NotNull
