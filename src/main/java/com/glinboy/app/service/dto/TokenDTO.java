@@ -31,7 +31,6 @@ public class TokenDTO implements Serializable {
     @NotNull
     private Integer roles;
 
-    @NotNull
     private String createdBy;
 
     @NotNull
