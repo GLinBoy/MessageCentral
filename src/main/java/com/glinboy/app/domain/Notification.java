@@ -60,6 +60,7 @@ public class Notification implements Serializable {
     private MessageStatus status;
 
     @NotNull
+    @CreatedDate
     @Column(name = "created_at", nullable = false)
     private Instant createdAt;
 
