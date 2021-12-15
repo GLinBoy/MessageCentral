@@ -65,6 +65,7 @@ public class Notification implements Serializable {
     private Instant createdAt;
 
     @NotNull
+    @CreatedBy
     @Column(name = "created_by", nullable = false)
     private String createdBy;
 
