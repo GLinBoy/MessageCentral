@@ -134,7 +134,6 @@ class TokenResourceIT {
         assertThat(testToken.getName()).isEqualTo(DEFAULT_NAME);
         assertThat(testToken.getToken()).isEqualTo(DEFAULT_TOKEN);
         assertThat(testToken.getDisable()).isEqualTo(DEFAULT_DISABLE);
-        assertThat(testToken.getCreatedAt()).isEqualTo(DEFAULT_CREATED_AT);
         assertThat(testToken.getDeprecateAt()).isEqualTo(DEFAULT_DEPRECATE_AT);
         assertThat(testToken.getRoles()).isEqualTo(DEFAULT_ROLES);
     }
@@ -310,7 +309,6 @@ class TokenResourceIT {
             .andExpect(jsonPath("$.[*].name").value(hasItem(DEFAULT_NAME)))
             .andExpect(jsonPath("$.[*].token").value(hasItem(DEFAULT_TOKEN)))
             .andExpect(jsonPath("$.[*].disable").value(hasItem(DEFAULT_DISABLE.booleanValue())))
-            .andExpect(jsonPath("$.[*].createdAt").value(hasItem(DEFAULT_CREATED_AT.toString())))
             .andExpect(jsonPath("$.[*].deprecateAt").value(hasItem(DEFAULT_DEPRECATE_AT.toString())))
             .andExpect(jsonPath("$.[*].roles").value(hasItem(DEFAULT_ROLES)));
     }
@@ -350,7 +348,6 @@ class TokenResourceIT {
             .andExpect(jsonPath("$.name").value(DEFAULT_NAME))
             .andExpect(jsonPath("$.token").value(DEFAULT_TOKEN))
             .andExpect(jsonPath("$.disable").value(DEFAULT_DISABLE.booleanValue()))
-            .andExpect(jsonPath("$.createdAt").value(DEFAULT_CREATED_AT.toString()))
             .andExpect(jsonPath("$.deprecateAt").value(DEFAULT_DEPRECATE_AT.toString()))
             .andExpect(jsonPath("$.roles").value(DEFAULT_ROLES));
     }
@@ -867,7 +864,6 @@ class TokenResourceIT {
             .andExpect(jsonPath("$.[*].name").value(hasItem(DEFAULT_NAME)))
             .andExpect(jsonPath("$.[*].token").value(hasItem(DEFAULT_TOKEN)))
             .andExpect(jsonPath("$.[*].disable").value(hasItem(DEFAULT_DISABLE.booleanValue())))
-            .andExpect(jsonPath("$.[*].createdAt").value(hasItem(DEFAULT_CREATED_AT.toString())))
             .andExpect(jsonPath("$.[*].deprecateAt").value(hasItem(DEFAULT_DEPRECATE_AT.toString())))
             .andExpect(jsonPath("$.[*].roles").value(hasItem(DEFAULT_ROLES)));
 
