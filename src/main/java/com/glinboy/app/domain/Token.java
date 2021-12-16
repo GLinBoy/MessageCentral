@@ -6,12 +6,18 @@ import javax.persistence.*;
 import javax.validation.constraints.*;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
+import org.springframework.data.annotation.CreatedBy;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedBy;
+import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 /**
  * A Token.
  */
 @Entity
 @Table(name = "token")
+@EntityListeners(AuditingEntityListener.class)
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 public class Token implements Serializable {
 
