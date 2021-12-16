@@ -49,9 +49,6 @@ public class TokenServiceImpl implements TokenService {
     public TokenDTO save(TokenDTO tokenDTO) {
         log.debug("Request to save Token : {}", tokenDTO);
         Token token = tokenMapper.toEntity(tokenDTO);
-        if (token.getCreatedAt() == null) {
-            token.createdAt(Instant.now());
-        }
         if (StringUtils.isBlank(token.getToken())) {
             token.setToken(generateToken(tokenDTO));
         }
