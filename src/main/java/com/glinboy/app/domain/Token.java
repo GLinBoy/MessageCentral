@@ -57,6 +57,7 @@ public class Token implements Serializable {
     private Integer roles;
 
     @NotNull
+    @CreatedBy
     @Column(name = "created_by", nullable = false)
     private String createdBy;
 
