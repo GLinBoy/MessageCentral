@@ -44,6 +44,7 @@ public class Token implements Serializable {
     private Boolean disable;
 
     @NotNull
+    @CreatedDate
     @Column(name = "created_at", nullable = false)
     private Instant createdAt;
 
