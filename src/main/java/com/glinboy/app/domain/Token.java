@@ -67,6 +67,7 @@ public class Token implements Serializable {
     private Instant updatedAt;
 
     @NotNull
+    @LastModifiedBy
     @Column(name = "updated_by", nullable = false)
     private String updatedBy;
 
