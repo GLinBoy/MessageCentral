@@ -82,6 +82,10 @@
               <span v-text="$t('messageCentralApp.notification.createdAt')">createdAt</span>
               <jhi-sort-indicator :current-order="propOrder" :reverse="reverse" :field-name="'createdAt'"></jhi-sort-indicator>
             </th>
+            <th scope="row" v-on:click="changeOrder('createdBy')">
+              <span v-text="$t('messageCentralApp.notification.createdBy')">createdBy</span>
+              <jhi-sort-indicator :current-order="propOrder" :reverse="reverse" :field-name="'createdBy'"></jhi-sort-indicator>
+            </th>
             <th scope="row" v-on:click="changeOrder('status')">
               <span v-text="$t('messageCentralApp.notification.status')">Status</span>
               <jhi-sort-indicator :current-order="propOrder" :reverse="reverse" :field-name="'status'"></jhi-sort-indicator>
@@ -107,6 +111,7 @@
             <td>{{ notification.content }}</td>
             <td>{{ notification.image }}</td>
             <td>{{ notification.createdAt }}</td>
+            <td>{{ notification.createdBy }}</td>
             <td>
               <b-badge :variant="getVariant(notification.status)">
                 {{ notification.status.replace('_', ' ') }}
