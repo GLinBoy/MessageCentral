@@ -98,7 +98,7 @@
             <td>{{ email.receiver }}</td>
             <td>{{ email.subject }}</td>
             <td>{{ email.content }}</td>
-            <td>{{ email.createdAt }}</td>
+            <td>{{ email.createdAt ? $d(Date.parse(email.createdAt), 'short') : '' }}</td>
             <td>{{ email.createdBy }}</td>
             <td>
               <b-badge :variant="getVariant(email.status)">
