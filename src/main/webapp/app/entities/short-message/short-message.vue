@@ -66,6 +66,10 @@
               <span v-text="$t('messageCentralApp.shortMessage.content')">Content</span>
               <jhi-sort-indicator :current-order="propOrder" :reverse="reverse" :field-name="'content'"></jhi-sort-indicator>
             </th>
+            <th scope="row" v-on:click="changeOrder('createdAt')">
+              <span v-text="$t('messageCentralApp.shortMessage.createdAt')">createdAt</span>
+              <jhi-sort-indicator :current-order="propOrder" :reverse="reverse" :field-name="'createdAt'"></jhi-sort-indicator>
+            </th>
             <th scope="row" v-on:click="changeOrder('status')">
               <span v-text="$t('messageCentralApp.shortMessage.status')">Status</span>
               <jhi-sort-indicator :current-order="propOrder" :reverse="reverse" :field-name="'status'"></jhi-sort-indicator>
@@ -87,6 +91,7 @@
             </td>
             <td>{{ shortMessage.phoneNumber }}</td>
             <td>{{ shortMessage.content }}</td>
+            <td>{{ shortMessage.createdAt }}</td>
             <td>
               <b-badge :variant="getVariant(shortMessage.status)">
                 {{ shortMessage.status.replace('_', ' ') }}
