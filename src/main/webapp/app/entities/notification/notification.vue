@@ -110,7 +110,7 @@
             <td>{{ notification.subject }}</td>
             <td>{{ notification.content }}</td>
             <td>{{ notification.image }}</td>
-            <td>{{ notification.createdAt }}</td>
+            <td>{{ notification.createdAt ? $d(Date.parse(notification.createdAt), 'short') : '' }}</td>
             <td>{{ notification.createdBy }}</td>
             <td>
               <b-badge :variant="getVariant(notification.status)">
