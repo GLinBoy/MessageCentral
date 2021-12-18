@@ -95,7 +95,7 @@
             </td>
             <td>{{ shortMessage.phoneNumber }}</td>
             <td>{{ shortMessage.content }}</td>
-            <td>{{ shortMessage.createdAt }}</td>
+            <td>{{ shortMessage.createdAt ? $d(Date.parse(shortMessage.createdAt), 'short') : '' }}</td>
             <td>{{ shortMessage.createdBy }}</td>
             <td>
               <b-badge :variant="getVariant(shortMessage.status)">
