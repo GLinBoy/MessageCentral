@@ -110,7 +110,7 @@
             <td>{{ token.deprecateAt ? $d(Date.parse(token.deprecateAt), 'short') : '' }}</td>
             <td>{{ token.createdAt ? $d(Date.parse(token.createdAt), 'short') : '' }}</td>
             <td>{{ token.createdBy }}</td>
-            <td>{{ token.lastModifiedAt }}</td>
+            <td>{{ token.lastModifiedAt ? $d(Date.parse(token.lastModifiedAt), 'short') : '' }}</td>
             <td>{{ token.lastModifiedBy }}</td>
             <td>
               <font-awesome-icon
