@@ -62,13 +62,13 @@
               <span v-text="$t('messageCentralApp.token.disable')">Disable</span>
               <jhi-sort-indicator :current-order="propOrder" :reverse="reverse" :field-name="'disable'"></jhi-sort-indicator>
             </th>
-            <th scope="row" v-on:click="changeOrder('createdAt')">
-              <span v-text="$t('messageCentralApp.token.createdAt')">Created At</span>
-              <jhi-sort-indicator :current-order="propOrder" :reverse="reverse" :field-name="'createdAt'"></jhi-sort-indicator>
-            </th>
             <th scope="row" v-on:click="changeOrder('deprecateAt')">
               <span v-text="$t('messageCentralApp.token.deprecateAt')">Deprecate At</span>
               <jhi-sort-indicator :current-order="propOrder" :reverse="reverse" :field-name="'deprecateAt'"></jhi-sort-indicator>
+            </th>
+            <th scope="row" v-on:click="changeOrder('createdAt')">
+              <span v-text="$t('messageCentralApp.token.createdAt')">Created At</span>
+              <jhi-sort-indicator :current-order="propOrder" :reverse="reverse" :field-name="'createdAt'"></jhi-sort-indicator>
             </th>
             <th scope="row" v-on:click="changeOrder('roles')">
               <span v-text="$t('messageCentralApp.token.roles')">Roles</span>
@@ -95,8 +95,8 @@
                 {{ token.disable ? $t('entity.action.disable') : $t('entity.action.enable') }}
               </b-badge>
             </td>
-            <td>{{ token.createdAt ? $d(Date.parse(token.createdAt), 'short') : '' }}</td>
             <td>{{ token.deprecateAt ? $d(Date.parse(token.deprecateAt), 'short') : '' }}</td>
+            <td>{{ token.createdAt ? $d(Date.parse(token.createdAt), 'short') : '' }}</td>
             <td>
               <font-awesome-icon
                 icon="at"
