@@ -78,9 +78,9 @@
               <span v-text="$t('messageCentralApp.token.updatedAt')">Updated At</span>
               <jhi-sort-indicator :current-order="propOrder" :reverse="reverse" :field-name="'updatedAt'"></jhi-sort-indicator>
             </th>
-            <th scope="row" v-on:click="changeOrder('lastModifiedBy')">
-              <span v-text="$t('messageCentralApp.token.lastModifiedBy')">Last Modified By</span>
-              <jhi-sort-indicator :current-order="propOrder" :reverse="reverse" :field-name="'lastModifiedBy'"></jhi-sort-indicator>
+            <th scope="row" v-on:click="changeOrder('updatedBy')">
+              <span v-text="$t('messageCentralApp.token.updatedBy')">Updated By</span>
+              <jhi-sort-indicator :current-order="propOrder" :reverse="reverse" :field-name="'updatedBy'"></jhi-sort-indicator>
             </th>
             <th scope="row" v-on:click="changeOrder('roles')">
               <span v-text="$t('messageCentralApp.token.roles')">Roles</span>
@@ -111,7 +111,7 @@
             <td>{{ token.createdAt ? $d(Date.parse(token.createdAt), 'short') : '' }}</td>
             <td>{{ token.createdBy }}</td>
             <td>{{ token.updatedAt ? $d(Date.parse(token.updatedAt), 'short') : '' }}</td>
-            <td>{{ token.lastModifiedBy }}</td>
+            <td>{{ token.updatedBy }}</td>
             <td>
               <font-awesome-icon
                 icon="at"
