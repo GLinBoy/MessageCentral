@@ -70,6 +70,10 @@
               <span v-text="$t('messageCentralApp.token.createdAt')">Created At</span>
               <jhi-sort-indicator :current-order="propOrder" :reverse="reverse" :field-name="'createdAt'"></jhi-sort-indicator>
             </th>
+            <th scope="row" v-on:click="changeOrder('createdBy')">
+              <span v-text="$t('messageCentralApp.token.createdBy')">created By</span>
+              <jhi-sort-indicator :current-order="propOrder" :reverse="reverse" :field-name="'createdBy'"></jhi-sort-indicator>
+            </th>
             <th scope="row" v-on:click="changeOrder('roles')">
               <span v-text="$t('messageCentralApp.token.roles')">Roles</span>
               <jhi-sort-indicator :current-order="propOrder" :reverse="reverse" :field-name="'roles'"></jhi-sort-indicator>
@@ -97,6 +101,7 @@
             </td>
             <td>{{ token.deprecateAt ? $d(Date.parse(token.deprecateAt), 'short') : '' }}</td>
             <td>{{ token.createdAt ? $d(Date.parse(token.createdAt), 'short') : '' }}</td>
+            <td>{{ token.createdBy }}</td>
             <td>
               <font-awesome-icon
                 icon="at"
