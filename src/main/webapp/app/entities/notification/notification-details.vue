@@ -50,6 +50,12 @@
           <dd>
             <span>{{ notification.createdAt }}</span>
           </dd>
+          <dt>
+            <span v-text="$t('messageCentralApp.notification.createdBy')">Created By</span>
+          </dt>
+          <dd>
+            <span>{{ notification.createdBy }}</span>
+          </dd>
         </dl>
         <button type="submit" v-on:click.prevent="previousState()" class="btn btn-info" data-cy="entityDetailsBackButton">
           <font-awesome-icon icon="arrow-left"></font-awesome-icon>&nbsp;<span v-text="$t('entity.action.back')"> Back</span>
