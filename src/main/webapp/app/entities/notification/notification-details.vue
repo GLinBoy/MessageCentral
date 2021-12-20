@@ -48,7 +48,7 @@
             <span v-text="$t('messageCentralApp.notification.createdAt')">Created At</span>
           </dt>
           <dd>
-            <span>{{ notification.createdAt }}</span>
+            <span>{{ notification.createdAt ? $d(Date.parse(notification.createdAt), 'short') : '' }}</span>
           </dd>
           <dt>
             <span v-text="$t('messageCentralApp.notification.createdBy')">Created By</span>
