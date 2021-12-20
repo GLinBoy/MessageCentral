@@ -30,7 +30,7 @@
             <span v-text="$t('messageCentralApp.shortMessage.createdAt')">Created At</span>
           </dt>
           <dd>
-            <span>{{ shortMessage.createdAt }}</span>
+            <span>{{ shortMessage.createdAt ? $d(Date.parse(shortMessage.createdAt), 'short') : '' }}</span>
           </dd>
           <dt>
             <span v-text="$t('messageCentralApp.shortMessage.createdBy')">Created By</span>
