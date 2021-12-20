@@ -44,6 +44,12 @@
               {{ notification && notification.status ? notification.status.replace('_', ' ') : '' }}
             </b-badge>
           </dd>
+          <dt>
+            <span v-text="$t('messageCentralApp.notification.createdAt')">Created At</span>
+          </dt>
+          <dd>
+            <span>{{ notification.createdAt }}</span>
+          </dd>
         </dl>
         <button type="submit" v-on:click.prevent="previousState()" class="btn btn-info" data-cy="entityDetailsBackButton">
           <font-awesome-icon icon="arrow-left"></font-awesome-icon>&nbsp;<span v-text="$t('entity.action.back')"> Back</span>
