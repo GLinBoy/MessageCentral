@@ -27,6 +27,12 @@
             </b-badge>
           </dd>
           <dt>
+            <span v-text="$t('messageCentralApp.shortMessage.createdAt')">Created At</span>
+          </dt>
+          <dd>
+            <span>{{ shortMessage.createdAt }}</span>
+          </dd>
+          <dt>
             <span v-text="$t('messageCentralApp.shortMessage.createdBy')">Created By</span>
           </dt>
           <dd>
