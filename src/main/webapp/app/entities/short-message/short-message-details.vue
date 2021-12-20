@@ -26,6 +26,12 @@
               {{ shortMessage && shortMessage.status ? shortMessage.status.replace('_', ' ') : '' }}
             </b-badge>
           </dd>
+          <dt>
+            <span v-text="$t('messageCentralApp.shortMessage.createdBy')">Created By</span>
+          </dt>
+          <dd>
+            <span>{{ shortMessage.createdBy }}</span>
+          </dd>
         </dl>
         <button type="submit" v-on:click.prevent="previousState()" class="btn btn-info" data-cy="entityDetailsBackButton">
           <font-awesome-icon icon="arrow-left"></font-awesome-icon>&nbsp;<span v-text="$t('entity.action.back')"> Back</span>
