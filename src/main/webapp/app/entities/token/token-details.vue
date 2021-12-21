@@ -27,12 +27,6 @@
             </div>
           </dd>
           <dt>
-            <span v-text="$t('messageCentralApp.token.createdAt')">Created At</span>
-          </dt>
-          <dd>
-            <span v-if="token.createdAt">{{ $d(Date.parse(token.createdAt), 'long') }}</span>
-          </dd>
-          <dt>
             <span v-text="$t('messageCentralApp.token.deprecateAt')">Deprecate At</span>
           </dt>
           <dd>
@@ -56,6 +50,12 @@
                 :style="[4, 5, 6, 7].includes(token.roles) ? { color: 'var(--primary)' } : { color: 'var(--gray)' }"
               />
             </p>
+          </dd>
+          <dt>
+            <span v-text="$t('messageCentralApp.token.createdAt')">Created At</span>
+          </dt>
+          <dd>
+            <span v-if="token.createdAt">{{ $d(Date.parse(token.createdAt), 'long') }}</span>
           </dd>
         </dl>
         <button type="submit" v-on:click.prevent="previousState()" class="btn btn-info" data-cy="entityDetailsBackButton">
