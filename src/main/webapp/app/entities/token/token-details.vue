@@ -67,7 +67,7 @@
             <span v-text="$t('messageCentralApp.token.updatedAt')">Updated At</span>
           </dt>
           <dd>
-            <span v-if="token.updatedAt">{{ token.updatedAt }}</span>
+            <span v-if="token.updatedAt">{{ $d(Date.parse(token.updatedAt), 'short') }}</span>
           </dd>
           <dt>
             <span v-text="$t('messageCentralApp.token.updatedBy')">Updated By</span>
