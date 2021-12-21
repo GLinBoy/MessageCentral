@@ -55,7 +55,7 @@
             <span v-text="$t('messageCentralApp.token.createdAt')">Created At</span>
           </dt>
           <dd>
-            <span v-if="token.createdAt">{{ $d(Date.parse(token.createdAt), 'long') }}</span>
+            <span v-if="token.createdAt">{{ $d(Date.parse(token.createdAt), 'short') }}</span>
           </dd>
         </dl>
         <button type="submit" v-on:click.prevent="previousState()" class="btn btn-info" data-cy="entityDetailsBackButton">
