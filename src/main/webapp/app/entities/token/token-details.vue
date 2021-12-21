@@ -57,6 +57,12 @@
           <dd>
             <span v-if="token.createdAt">{{ $d(Date.parse(token.createdAt), 'short') }}</span>
           </dd>
+          <dt>
+            <span v-text="$t('messageCentralApp.token.createdBy')">Created By</span>
+          </dt>
+          <dd>
+            <span v-if="token.createdBy">{{ token.createdBy }}</span>
+          </dd>
         </dl>
         <button type="submit" v-on:click.prevent="previousState()" class="btn btn-info" data-cy="entityDetailsBackButton">
           <font-awesome-icon icon="arrow-left"></font-awesome-icon>&nbsp;<span v-text="$t('entity.action.back')"> Back</span>
