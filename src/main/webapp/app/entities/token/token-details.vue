@@ -69,6 +69,12 @@
           <dd>
             <span v-if="token.updatedAt">{{ token.updatedAt }}</span>
           </dd>
+          <dt>
+            <span v-text="$t('messageCentralApp.token.updatedBy')">Updated By</span>
+          </dt>
+          <dd>
+            <span v-if="token.updatedBy">{{ token.updatedBy }}</span>
+          </dd>
         </dl>
         <button type="submit" v-on:click.prevent="previousState()" class="btn btn-info" data-cy="entityDetailsBackButton">
           <font-awesome-icon icon="arrow-left"></font-awesome-icon>&nbsp;<span v-text="$t('entity.action.back')"> Back</span>
