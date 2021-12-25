@@ -88,7 +88,9 @@ public class TokenServiceImpl implements TokenService {
     @Override
     public void delete(Long id) {
         log.debug("Request to delete Token : {}", id);
-        Token token = this.tokenRepository.findById(id).orElseThrow();
+        Token token =
+            this.tokenRepository.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Couldn't find token with id: " + id));
         if (Instant.now().isBefore(token.getDeprecateAt())) {
             this.tokenRepository.updateTokenStatus(id, Boolean.TRUE);
         } else {
