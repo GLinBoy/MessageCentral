@@ -109,7 +109,7 @@ export default class Token extends Vue {
   public search(): string {
     let result = undefined;
     if (this.currentSearch) {
-      result = `name==*${this.currentSearch}* or createdBy==*${this.currentSearch}*`;
+      result = `name==*${this.currentSearch}* or createdBy==*${this.currentSearch}* or updatedBy==*${this.currentSearch}*`;
     }
     return result;
   }
