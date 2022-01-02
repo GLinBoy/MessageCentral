@@ -2,6 +2,7 @@
 import { shallowMount, createLocalVue, Wrapper } from '@vue/test-utils';
 import sinon, { SinonStubbedInstance } from 'sinon';
 import Router from 'vue-router';
+import { ToastPlugin } from 'bootstrap-vue';
 
 import * as config from '@/shared/config/config';
 import NotificationDataUpdateComponent from '@/entities/notification-data/notification-data-update.vue';
@@ -18,6 +19,7 @@ const i18n = config.initI18N(localVue);
 const store = config.initVueXStore(localVue);
 const router = new Router();
 localVue.use(Router);
+localVue.use(ToastPlugin);
 localVue.component('font-awesome-icon', {});
 localVue.component('b-input-group', {});
 localVue.component('b-input-group-prepend', {});
@@ -42,7 +44,10 @@ describe('Component Tests', () => {
           notificationDataService: () => notificationDataServiceStub,
           alertService: () => new AlertService(),
 
-          notificationService: () => new NotificationService(),
+          notificationService: () =>
+            sinon.createStubInstance<NotificationService>(NotificationService, {
+              retrieve: sinon.stub().resolves({}),
+            } as any),
         },
       });
       comp = wrapper.vm;

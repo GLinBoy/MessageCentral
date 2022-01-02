@@ -21,108 +21,106 @@ const NotificationDataDetails = () => import('@/entities/notification-data/notif
 
 // jhipster-needle-add-entity-to-router-import - JHipster will import entities to the router here
 
-export default [
-  {
-    path: '/',
-    component: Entities,
-    children: [
-      {
-        path: 'email',
-        name: 'Email',
-        component: Email,
-        meta: { authorities: [Authority.USER] },
-      },
-      {
-        path: 'email/new',
-        name: 'EmailCreate',
-        component: EmailUpdate,
-        meta: { authorities: [Authority.USER] },
-      },
-      {
-        path: 'email/:emailId/edit',
-        name: 'EmailEdit',
-        component: EmailUpdate,
-        meta: { authorities: [Authority.USER] },
-      },
-      {
-        path: 'email/:emailId/view',
-        name: 'EmailView',
-        component: EmailDetails,
-        meta: { authorities: [Authority.USER] },
-      },
-      {
-        path: 'short-message',
-        name: 'ShortMessage',
-        component: ShortMessage,
-        meta: { authorities: [Authority.USER] },
-      },
-      {
-        path: 'short-message/new',
-        name: 'ShortMessageCreate',
-        component: ShortMessageUpdate,
-        meta: { authorities: [Authority.USER] },
-      },
-      {
-        path: 'short-message/:shortMessageId/edit',
-        name: 'ShortMessageEdit',
-        component: ShortMessageUpdate,
-        meta: { authorities: [Authority.USER] },
-      },
-      {
-        path: 'short-message/:shortMessageId/view',
-        name: 'ShortMessageView',
-        component: ShortMessageDetails,
-        meta: { authorities: [Authority.USER] },
-      },
-      {
-        path: 'notification',
-        name: 'Notification',
-        component: Notification,
-        meta: { authorities: [Authority.USER] },
-      },
-      {
-        path: 'notification/new',
-        name: 'NotificationCreate',
-        component: NotificationUpdate,
-        meta: { authorities: [Authority.USER] },
-      },
-      {
-        path: 'notification/:notificationId/edit',
-        name: 'NotificationEdit',
-        component: NotificationUpdate,
-        meta: { authorities: [Authority.USER] },
-      },
-      {
-        path: 'notification/:notificationId/view',
-        name: 'NotificationView',
-        component: NotificationDetails,
-        meta: { authorities: [Authority.USER] },
-      },
-      {
-        path: 'notification-data',
-        name: 'NotificationData',
-        component: NotificationData,
-        meta: { authorities: [Authority.USER] },
-      },
-      {
-        path: 'notification-data/new',
-        name: 'NotificationDataCreate',
-        component: NotificationDataUpdate,
-        meta: { authorities: [Authority.USER] },
-      },
-      {
-        path: 'notification-data/:notificationDataId/edit',
-        name: 'NotificationDataEdit',
-        component: NotificationDataUpdate,
-        meta: { authorities: [Authority.USER] },
-      },
-      {
-        path: 'notification-data/:notificationDataId/view',
-        name: 'NotificationDataView',
-        component: NotificationDataDetails,
-        meta: { authorities: [Authority.USER] },
-      },
-      // jhipster-needle-add-entity-to-router - JHipster will add entities to the router here
-    ],
-  },
-];
+export default {
+  path: '/',
+  component: Entities,
+  children: [
+    {
+      path: 'email',
+      name: 'Email',
+      component: Email,
+      meta: { authorities: [Authority.USER] },
+    },
+    {
+      path: 'email/new',
+      name: 'EmailCreate',
+      component: EmailUpdate,
+      meta: { authorities: [Authority.USER] },
+    },
+    {
+      path: 'email/:emailId/edit',
+      name: 'EmailEdit',
+      component: EmailUpdate,
+      meta: { authorities: [Authority.USER] },
+    },
+    {
+      path: 'email/:emailId/view',
+      name: 'EmailView',
+      component: EmailDetails,
+      meta: { authorities: [Authority.USER] },
+    },
+    {
+      path: 'short-message',
+      name: 'ShortMessage',
+      component: ShortMessage,
+      meta: { authorities: [Authority.USER] },
+    },
+    {
+      path: 'short-message/new',
+      name: 'ShortMessageCreate',
+      component: ShortMessageUpdate,
+      meta: { authorities: [Authority.USER] },
+    },
+    {
+      path: 'short-message/:shortMessageId/edit',
+      name: 'ShortMessageEdit',
+      component: ShortMessageUpdate,
+      meta: { authorities: [Authority.USER] },
+    },
+    {
+      path: 'short-message/:shortMessageId/view',
+      name: 'ShortMessageView',
+      component: ShortMessageDetails,
+      meta: { authorities: [Authority.USER] },
+    },
+    {
+      path: 'notification',
+      name: 'Notification',
+      component: Notification,
+      meta: { authorities: [Authority.USER] },
+    },
+    {
+      path: 'notification/new',
+      name: 'NotificationCreate',
+      component: NotificationUpdate,
+      meta: { authorities: [Authority.USER] },
+    },
+    {
+      path: 'notification/:notificationId/edit',
+      name: 'NotificationEdit',
+      component: NotificationUpdate,
+      meta: { authorities: [Authority.USER] },
+    },
+    {
+      path: 'notification/:notificationId/view',
+      name: 'NotificationView',
+      component: NotificationDetails,
+      meta: { authorities: [Authority.USER] },
+    },
+    {
+      path: 'notification-data',
+      name: 'NotificationData',
+      component: NotificationData,
+      meta: { authorities: [Authority.USER] },
+    },
+    {
+      path: 'notification-data/new',
+      name: 'NotificationDataCreate',
+      component: NotificationDataUpdate,
+      meta: { authorities: [Authority.USER] },
+    },
+    {
+      path: 'notification-data/:notificationDataId/edit',
+      name: 'NotificationDataEdit',
+      component: NotificationDataUpdate,
+      meta: { authorities: [Authority.USER] },
+    },
+    {
+      path: 'notification-data/:notificationDataId/view',
+      name: 'NotificationDataView',
+      component: NotificationDataDetails,
+      meta: { authorities: [Authority.USER] },
+    },
+    // jhipster-needle-add-entity-to-router - JHipster will add entities to the router here
+  ],
+};
