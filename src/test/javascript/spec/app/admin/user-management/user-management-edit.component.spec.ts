@@ -78,8 +78,8 @@ describe('UserManagementEdit Component', () => {
       // GIVEN
       axiosStub.put.resolves({
         headers: {
-          'x-jhipsterapp-alert': '',
-          'x-jhipsterapp-params': '',
+          'x-messagecentralapp-alert': '',
+          'x-messagecentralapp-params': '',
         },
       });
       userManagementEdit.userAccount = { id: 123, authorities: [] };
@@ -97,8 +97,8 @@ describe('UserManagementEdit Component', () => {
       // GIVEN
       axiosStub.post.resolves({
         headers: {
-          'x-jhipsterapp-alert': '',
-          'x-jhipsterapp-params': '',
+          'x-messagecentralapp-alert': '',
+          'x-messagecentralapp-params': '',
         },
       });
       userManagementEdit.userAccount = { authorities: [] };
