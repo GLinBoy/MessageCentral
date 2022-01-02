@@ -4,7 +4,7 @@
     "otherModules": [],
     "applicationType": "monolith",
     "baseName": "MessageCentral",
-    "jhipsterVersion": "7.4.1",
+    "jhipsterVersion": "7.5.0",
     "skipClient": false,
     "skipServer": false,
     "skipUserManagement": false,
@@ -42,11 +42,10 @@
     "jwtSecretKey": "MjM4NmU0MDA4ZWVmNDU5YWQ2ZDMzZDVjYWRjNDAxMWM3NGNhOTcxZWUwZTZjYmIwMDI2MzNhYTgwODRiMDNlZGQ2YjJmZjRjNjRjMTg3NjZhOWQwZjM2Zjg2NTA3MDY4Zjc1YThiMDBlMTZlODkyYjRlZDk5ZmI2YmJmZTY5OGU=",
     "clientPackageManager": "npm",
     "languages": ["en", "fa"],
-    "lastLiquibaseTimestamp": 1634909925000,
+    "lastLiquibaseTimestamp": 1619431745000,
     "entities": ["Email", "ShortMessage", "Notification", "NotificationData", "Token"],
     "applicationIndex": 0,
     "devServerPort": 9060,
-    "enableGradleEnterprise": false,
-    "gradleEnterpriseHost": ""
+    "enableGradleEnterprise": false
   }
 }

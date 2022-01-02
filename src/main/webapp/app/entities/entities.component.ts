@@ -1,5 +1,6 @@
 import { Component, Provide, Vue } from 'vue-property-decorator';
 
+import UserService from '@/entities/user/user.service';
 import EmailService from './email/email.service';
 import ShortMessageService from './short-message/short-message.service';
 import NotificationService from './notification/notification.service';
@@ -9,6 +10,7 @@ import TokenService from './token/token.service';
 
 @Component
 export default class Entities extends Vue {
+  @Provide('userService') private userService = () => new UserService();
   @Provide('emailService') private emailService = () => new EmailService();
   @Provide('shortMessageService') private shortMessageService = () => new ShortMessageService();
   @Provide('notificationService') private notificationService = () => new NotificationService();
