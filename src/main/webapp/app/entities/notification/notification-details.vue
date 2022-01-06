@@ -57,6 +57,33 @@
             <span>{{ notification.createdBy }}</span>
           </dd>
         </dl>
+        <div class="card">
+          <div class="card-header" v-text="$t('messageCentralApp.notifications.notificationDataTitle')">Notification Data:</div>
+          <div class="card-body">
+            <div>
+              <div class="alert alert-warning" v-if="!notification.data || notification.data.length === 0">
+                <span v-text="$t('messageCentralApp.notificationData.home.notFound')">No notificationData found</span>
+              </div>
+              <div class="table-responsive card" v-if="notification.data && notification.data.length > 0">
+                <table class="table table-striped" aria-describedby="notificationData">
+                  <thead>
+                    <tr>
+                      <th scope="row"><span v-text="$t('messageCentralApp.notificationData.key')">Key</span></th>
+                      <th scope="row"><span v-text="$t('messageCentralApp.notificationData.value')">Value</span></th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr v-for="notificationData in notification.data" :key="notificationData.key" data-cy="entityTable">
+                      <td>{{ notificationData.key }}</td>
+                      <td>{{ notificationData.value }}</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+        <br />
         <button type="submit" v-on:click.prevent="previousState()" class="btn btn-info" data-cy="entityDetailsBackButton">
           <font-awesome-icon icon="arrow-left"></font-awesome-icon>&nbsp;<span v-text="$t('entity.action.back')"> Back</span>
         </button>
@@ -66,3 +93,5 @@
 </template>
 
 <script lang="ts" src="./notification-details.component.ts"></script>
+
+<style lang="scss" scoped src="./notification-details.style.scss"></style>
