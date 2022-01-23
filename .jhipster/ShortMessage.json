@@ -1,19 +1,24 @@
 {
+  "applications": ["MessageCentral"],
+  "changelogDate": "20210421105843",
+  "dto": "mapstruct",
+  "embedded": false,
+  "entityTableName": "short_message",
   "fields": [
     {
       "fieldName": "phoneNumber",
       "fieldType": "String",
       "fieldValidateRules": ["required", "minlength", "maxlength", "pattern"],
-      "fieldValidateRulesMinlength": "7",
       "fieldValidateRulesMaxlength": "15",
+      "fieldValidateRulesMinlength": "7",
       "fieldValidateRulesPattern": "^\\+(?:[0-9]●?){6,14}[0-9]$"
     },
     {
       "fieldName": "content",
       "fieldType": "String",
       "fieldValidateRules": ["required", "minlength", "maxlength"],
-      "fieldValidateRulesMinlength": "6",
-      "fieldValidateRulesMaxlength": "160"
+      "fieldValidateRulesMaxlength": "160",
+      "fieldValidateRulesMinlength": "6"
     },
     {
       "fieldName": "status",
@@ -21,16 +26,11 @@
       "fieldValues": "IN_QUEUE,SENT,FAILED"
     }
   ],
-  "relationships": [],
-  "service": "serviceImpl",
-  "dto": "mapstruct",
-  "jpaMetamodelFiltering": true,
-  "readOnly": false,
-  "pagination": "pagination",
-  "name": "ShortMessage",
-  "changelogDate": "20210421105843",
-  "entityTableName": "short_message",
   "fluentMethods": true,
-  "embedded": false,
-  "applications": ["MessageCentral"]
+  "jpaMetamodelFiltering": true,
+  "name": "ShortMessage",
+  "pagination": "pagination",
+  "readOnly": false,
+  "relationships": [],
+  "service": "serviceImpl"
 }
