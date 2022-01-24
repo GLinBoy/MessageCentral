@@ -67,6 +67,10 @@ spring:
     password:
   main:
     allow-bean-definition-overriding: true
+    allow-circular-references: true
+  mvc:
+    pathmatch:
+      matching-strategy: ant_path_matcher
   messages:
     basename: i18n/messages
   task:
@@ -153,4 +157,3 @@ application:
       url: https://api.pushe.co/v2/messaging/notifications/
       token: XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
       app-id: XXXXXXXXXXXXXXXX
-

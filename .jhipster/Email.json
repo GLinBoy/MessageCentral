@@ -1,19 +1,24 @@
 {
+  "applications": ["MessageCentral"],
+  "changelogDate": "20210415085652",
+  "dto": "mapstruct",
+  "embedded": false,
+  "entityTableName": "email",
   "fields": [
     {
       "fieldName": "receiver",
       "fieldType": "String",
       "fieldValidateRules": ["required", "minlength", "maxlength", "pattern"],
-      "fieldValidateRulesMinlength": "8",
       "fieldValidateRulesMaxlength": "128",
+      "fieldValidateRulesMinlength": "8",
       "fieldValidateRulesPattern": "^[a-zA-Z0-9_+&*-]+(?:\\.[a-zA-Z0-9_+&*-]+)*@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,7}$"
     },
     {
       "fieldName": "subject",
       "fieldType": "String",
       "fieldValidateRules": ["required", "minlength", "maxlength"],
-      "fieldValidateRulesMinlength": "4",
-      "fieldValidateRulesMaxlength": "128"
+      "fieldValidateRulesMaxlength": "128",
+      "fieldValidateRulesMinlength": "4"
     },
     {
       "fieldName": "content",
@@ -37,16 +42,11 @@
       "fieldValidateRules": ["required"]
     }
   ],
-  "relationships": [],
-  "service": "serviceImpl",
-  "dto": "mapstruct",
-  "jpaMetamodelFiltering": true,
-  "readOnly": false,
-  "pagination": "pagination",
-  "name": "Email",
-  "changelogDate": "20210415085652",
-  "entityTableName": "email",
   "fluentMethods": true,
-  "embedded": false,
-  "applications": ["MessageCentral"]
+  "jpaMetamodelFiltering": true,
+  "name": "Email",
+  "pagination": "pagination",
+  "readOnly": false,
+  "relationships": [],
+  "service": "serviceImpl"
 }
