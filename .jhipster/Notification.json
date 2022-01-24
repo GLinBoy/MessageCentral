@@ -1,4 +1,9 @@
 {
+  "applications": ["MessageCentral"],
+  "changelogDate": "20210424123846",
+  "dto": "mapstruct",
+  "embedded": false,
+  "entityTableName": "notification",
   "fields": [
     {
       "fieldName": "username",
@@ -46,23 +51,18 @@
       "fieldValidateRules": ["required"]
     }
   ],
+  "fluentMethods": true,
+  "jpaMetamodelFiltering": true,
+  "name": "Notification",
+  "pagination": "pagination",
+  "readOnly": false,
   "relationships": [
     {
-      "relationshipType": "one-to-many",
       "otherEntityName": "notificationData",
       "otherEntityRelationshipName": "notification",
-      "relationshipName": "data"
+      "relationshipName": "data",
+      "relationshipType": "one-to-many"
     }
   ],
-  "service": "serviceImpl",
-  "dto": "mapstruct",
-  "jpaMetamodelFiltering": true,
-  "readOnly": false,
-  "pagination": "pagination",
-  "name": "Notification",
-  "changelogDate": "20210424123846",
-  "entityTableName": "notification",
-  "fluentMethods": true,
-  "embedded": false,
-  "applications": ["MessageCentral"]
+  "service": "serviceImpl"
 }

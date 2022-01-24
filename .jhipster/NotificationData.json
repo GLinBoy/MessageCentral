@@ -1,4 +1,9 @@
 {
+  "applications": ["MessageCentral"],
+  "changelogDate": "20210426100905",
+  "dto": "no",
+  "embedded": false,
+  "entityTableName": "notification_data",
   "fields": [
     {
       "fieldName": "key",
@@ -13,24 +18,19 @@
       "fieldValidateRulesMaxlength": "256"
     }
   ],
+  "fluentMethods": true,
+  "jpaMetamodelFiltering": false,
+  "name": "NotificationData",
+  "pagination": "no",
+  "readOnly": false,
   "relationships": [
     {
-      "relationshipType": "many-to-one",
       "otherEntityName": "notification",
       "otherEntityRelationshipName": "data",
-      "relationshipValidateRules": "required",
-      "relationshipName": "notification"
+      "relationshipName": "notification",
+      "relationshipType": "many-to-one",
+      "relationshipValidateRules": "required"
     }
   ],
-  "service": "no",
-  "readOnly": false,
-  "pagination": "no",
-  "name": "NotificationData",
-  "changelogDate": "20210426100905",
-  "entityTableName": "notification_data",
-  "dto": "no",
-  "jpaMetamodelFiltering": false,
-  "fluentMethods": true,
-  "embedded": false,
-  "applications": ["MessageCentral"]
+  "service": "no"
 }
