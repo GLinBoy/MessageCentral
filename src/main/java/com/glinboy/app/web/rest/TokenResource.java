@@ -164,7 +164,7 @@ public class TokenResource {
      */
     @GetMapping("/tokens")
     public ResponseEntity<List<TokenDTO>> getAllTokens(
-        Pageable pageable,
+        @org.springdoc.api.annotations.ParameterObject Pageable pageable,
         @RequestParam(value = "query", required = false, defaultValue = "") String query
     ) {
         Specification<Token> specs = Specification.where(null);
