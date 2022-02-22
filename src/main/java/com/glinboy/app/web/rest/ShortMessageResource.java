@@ -183,7 +183,7 @@ public class ShortMessageResource {
      */
     @GetMapping("/short-messages")
     public ResponseEntity<List<ShortMessageDTO>> getAllShortMessages(
-        Pageable pageable,
+        @org.springdoc.api.annotations.ParameterObject Pageable pageable,
         @RequestParam(value = "query", required = false, defaultValue = "") String query
     ) {
         Specification<ShortMessage> specs = Specification.where(null);
