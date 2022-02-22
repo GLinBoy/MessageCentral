@@ -183,7 +183,7 @@ public class NotificationResource {
      */
     @GetMapping("/notifications")
     public ResponseEntity<List<NotificationDTO>> getAllNotifications(
-        Pageable pageable,
+        @org.springdoc.api.annotations.ParameterObject Pageable pageable,
         @RequestParam(value = "query", required = false, defaultValue = "") String query
     ) {
         Specification<Notification> specs = Specification.where(null);
