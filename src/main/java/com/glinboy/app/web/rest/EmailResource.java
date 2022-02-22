@@ -5,7 +5,6 @@ import com.glinboy.app.repository.EmailRepository;
 import com.glinboy.app.rsql.CustomRsqlVisitor;
 import com.glinboy.app.service.EmailQueryService;
 import com.glinboy.app.service.EmailService;
-import com.glinboy.app.service.criteria.EmailCriteria;
 import com.glinboy.app.service.dto.EmailDTO;
 import com.glinboy.app.service.dto.EmailsDTO;
 import com.glinboy.app.web.rest.errors.BadRequestAlertException;
@@ -28,7 +27,13 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import tech.jhipster.web.util.HeaderUtil;
 import tech.jhipster.web.util.PaginationUtil;
@@ -173,7 +178,7 @@ public class EmailResource {
      */
     @GetMapping("/emails")
     public ResponseEntity<List<EmailDTO>> getAllEmails(
-        Pageable pageable,
+        @org.springdoc.api.annotations.ParameterObject Pageable pageable,
         @RequestParam(value = "query", required = false, defaultValue = "") String query
     ) {
         Specification<Email> specs = Specification.where(null);
