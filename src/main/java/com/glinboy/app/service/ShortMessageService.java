@@ -28,6 +28,14 @@ public interface ShortMessageService {
     ShortMessageDTO save(ShortMessageDTO shortMessageDTO);
 
     /**
+     * Updates a shortMessage.
+     *
+     * @param shortMessageDTO the entity to update.
+     * @return the persisted entity.
+     */
+    ShortMessageDTO update(ShortMessageDTO shortMessageDTO);
+
+    /**
      * Partially updates a shortMessage.
      *
      * @param shortMessageDTO the entity to update partially.

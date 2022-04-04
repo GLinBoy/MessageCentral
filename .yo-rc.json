@@ -23,7 +23,7 @@
     "entities": ["Email", "ShortMessage", "Notification", "NotificationData"],
     "entitySuffix": "",
     "jhiPrefix": "jhi",
-    "jhipsterVersion": "7.7.0",
+    "jhipsterVersion": "7.8.0",
     "jwtSecretKey": "MjM4NmU0MDA4ZWVmNDU5YWQ2ZDMzZDVjYWRjNDAxMWM3NGNhOTcxZWUwZTZjYmIwMDI2MzNhYTgwODRiMDNlZGQ2YjJmZjRjNjRjMTg3NjZhOWQwZjM2Zjg2NTA3MDY4Zjc1YThiMDBlMTZlODkyYjRlZDk5ZmI2YmJmZTY5OGU=",
     "languages": ["en", "fa"],
     "lastLiquibaseTimestamp": 1619431745000,
