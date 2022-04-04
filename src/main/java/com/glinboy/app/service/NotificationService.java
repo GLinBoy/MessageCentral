@@ -28,6 +28,14 @@ public interface NotificationService {
     NotificationDTO save(NotificationDTO notificationDTO);
 
     /**
+     * Updates a notification.
+     *
+     * @param notificationDTO the entity to update.
+     * @return the persisted entity.
+     */
+    NotificationDTO update(NotificationDTO notificationDTO);
+
+    /**
      * Partially updates a notification.
      *
      * @param notificationDTO the entity to update partially.

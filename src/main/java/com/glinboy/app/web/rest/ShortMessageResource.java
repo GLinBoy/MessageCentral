@@ -131,7 +131,7 @@ public class ShortMessageResource {
             throw new BadRequestAlertException("Entity not found", ENTITY_NAME, "idnotfound");
         }
 
-        ShortMessageDTO result = shortMessageService.save(shortMessageDTO);
+        ShortMessageDTO result = shortMessageService.update(shortMessageDTO);
         return ResponseEntity
             .ok()
             .headers(HeaderUtil.createEntityUpdateAlert(applicationName, true, ENTITY_NAME, shortMessageDTO.getId().toString()))

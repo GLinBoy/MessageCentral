@@ -126,7 +126,7 @@ public class EmailResource {
             throw new BadRequestAlertException("Entity not found", ENTITY_NAME, "idnotfound");
         }
 
-        EmailDTO result = emailService.save(emailDTO);
+        EmailDTO result = emailService.update(emailDTO);
         return ResponseEntity
             .ok()
             .headers(HeaderUtil.createEntityUpdateAlert(applicationName, true, ENTITY_NAME, emailDTO.getId().toString()))
