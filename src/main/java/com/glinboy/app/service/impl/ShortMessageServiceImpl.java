@@ -40,6 +40,14 @@ public class ShortMessageServiceImpl implements ShortMessageService {
     }
 
     @Override
+    public ShortMessageDTO update(ShortMessageDTO shortMessageDTO) {
+        log.debug("Request to save ShortMessage : {}", shortMessageDTO);
+        ShortMessage shortMessage = shortMessageMapper.toEntity(shortMessageDTO);
+        shortMessage = shortMessageRepository.save(shortMessage);
+        return shortMessageMapper.toDto(shortMessage);
+    }
+
+    @Override
     public Optional<ShortMessageDTO> partialUpdate(ShortMessageDTO shortMessageDTO) {
         log.debug("Request to partially update ShortMessage : {}", shortMessageDTO);
 

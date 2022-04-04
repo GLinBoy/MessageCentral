@@ -18,6 +18,14 @@ public interface EmailService {
     EmailDTO save(EmailDTO emailDTO);
 
     /**
+     * Updates a email.
+     *
+     * @param emailDTO the entity to update.
+     * @return the persisted entity.
+     */
+    EmailDTO update(EmailDTO emailDTO);
+
+    /**
      * Partially updates a email.
      *
      * @param emailDTO the entity to update partially.

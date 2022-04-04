@@ -40,6 +40,14 @@ public class EmailServiceImpl implements EmailService {
     }
 
     @Override
+    public EmailDTO update(EmailDTO emailDTO) {
+        log.debug("Request to save Email : {}", emailDTO);
+        Email email = emailMapper.toEntity(emailDTO);
+        email = emailRepository.save(email);
+        return emailMapper.toDto(email);
+    }
+
+    @Override
     public Optional<EmailDTO> partialUpdate(EmailDTO emailDTO) {
         log.debug("Request to partially update Email : {}", emailDTO);
 
