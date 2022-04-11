@@ -97,7 +97,7 @@
         <sonar-maven-plugin.version>3.9.1.2184</sonar-maven-plugin.version>
         <!-- jhipster-needle-maven-property -->
         <greenmail.version>1.6.8</greenmail.version>
-        <twilio-version>8.21.0</twilio-version>
+        <twilio-version>8.29.0</twilio-version>
         <kavenegar.version>2.0.3</kavenegar.version>
         <firebase-admin.version>8.1.0</firebase-admin.version>
         <rsql-parser.version>2.1.0</rsql-parser.version>
