@@ -124,8 +124,7 @@ public class EmailServiceImpl implements EmailService {
     }
 
     @Transactional
-    @JmsListener(destination = EmailServiceImpl.TOPIC_NAME_FAILED)
-    public void onMessageFailed(Long... ids) {
-        this.emailRepository.updateStatus(MessageStatus.FAILED, ids);
+    public void onMessageFailed(EmailSentFailedEvent event) {
+        this.emailRepository.updateStatus(MessageStatus.FAILED, event.getIds().toArray(new Long[event.getIds().size()]));
     }
 }
