@@ -7,14 +7,16 @@ import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.context.event.EventListener;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.jms.annotation.JmsListener;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.glinboy.app.domain.Email;
 import com.glinboy.app.domain.enumeration.MessageStatus;
+import com.glinboy.app.event.EmailSentFailedEvent;
+import com.glinboy.app.event.EmailSentSuccessfulEvent;
 import com.glinboy.app.repository.EmailRepository;
 import com.glinboy.app.service.EmailService;
 import com.glinboy.app.service.MailChannelService;
@@ -116,9 +118,9 @@ public class EmailServiceImpl implements EmailService {
     }
 
     @Transactional
-    @JmsListener(destination = EmailServiceImpl.TOPIC_NAME_SENT)
-    public void onMessageSent(Long... ids) {
-        this.emailRepository.updateStatus(MessageStatus.SENT, ids);
+    @EventListener()
+    public void onMessageSent(EmailSentSuccessfulEvent event) {
+        this.emailRepository.updateStatus(MessageStatus.SENT, event.getIds().toArray(new Long[event.getIds().size()]));
     }
 
     @Transactional
