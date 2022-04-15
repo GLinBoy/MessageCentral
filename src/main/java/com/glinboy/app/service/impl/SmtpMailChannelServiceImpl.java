@@ -3,7 +3,7 @@ package com.glinboy.app.service.impl;
 import java.util.Arrays;
 
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
-import org.springframework.jms.core.JmsTemplate;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
@@ -17,10 +17,10 @@ public class SmtpMailChannelServiceImpl extends AbstractMailChannelServiceImpl {
 
     private final JavaMailSender emailSender;
 
-    protected SmtpMailChannelServiceImpl(JmsTemplate jmsTemplate,
+    protected SmtpMailChannelServiceImpl(ApplicationEventPublisher publisher,
             ApplicationProperties properties,
             JavaMailSender emailSender) {
-        super(jmsTemplate, properties);
+        super(publisher, properties);
         this.emailSender = emailSender;
     }
 
