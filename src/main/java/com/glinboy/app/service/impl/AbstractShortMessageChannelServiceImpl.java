@@ -36,7 +36,7 @@ public abstract class AbstractShortMessageChannelServiceImpl implements ShortMes
     }
 
     @Override
-    @JmsListener(destination = AbstractShortMessageChannelServiceImpl.TOPIC_NAME)
+    @EventListener
     public void onMessage(ShortMessageDTO... shortMessageDTOs) {
         try {
             deliverMessage(shortMessageDTOs);
