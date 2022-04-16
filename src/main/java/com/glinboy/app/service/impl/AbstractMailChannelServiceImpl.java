@@ -16,8 +16,6 @@ import com.glinboy.app.service.dto.EmailDTO;
 
 public abstract class AbstractMailChannelServiceImpl implements MailChannelService<EmailDTO> {
 
-    public static final String TOPIC_NAME = "MAILBOX";
-    
     protected final Logger log = LoggerFactory.getLogger(this.getClass());
 
     protected final ApplicationProperties properties;
