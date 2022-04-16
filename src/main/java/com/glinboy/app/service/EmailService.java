@@ -16,9 +16,6 @@ import org.springframework.data.domain.Pageable;
  */
 public interface EmailService {
 
-    String TOPIC_NAME_SENT = "MAIL_SERVICE_BOX::SENT";
-    String TOPIC_NAME_FAILED = "MAIL_SERVICE_BOX::FAILED";
-
     /**
      * Save a email.
      *
