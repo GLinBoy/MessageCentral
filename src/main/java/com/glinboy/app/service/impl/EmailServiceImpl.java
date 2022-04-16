@@ -118,12 +118,13 @@ public class EmailServiceImpl implements EmailService {
     }
 
     @Transactional
-    @EventListener()
+    @EventListener
     public void onMessageSent(EmailSentSuccessfulEvent event) {
         this.emailRepository.updateStatus(MessageStatus.SENT, event.getIds().toArray(new Long[event.getIds().size()]));
     }
 
     @Transactional
+    @EventListener
     public void onMessageFailed(EmailSentFailedEvent event) {
         this.emailRepository.updateStatus(MessageStatus.FAILED, event.getIds().toArray(new Long[event.getIds().size()]));
     }
