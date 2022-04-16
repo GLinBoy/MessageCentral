@@ -32,9 +32,7 @@ public abstract class AbstractShortMessageChannelServiceImpl implements ShortMes
 
     @Override
     public void sendMessage(ShortMessageDTO... shortMessageDTOs) {
-        for(var i = 0; i < shortMessageDTOs.length; i++) {
-            jmsTemplate.convertAndSend(TOPIC_NAME, shortMessageDTOs[i]);
-        }
+        publisher.publishEvent(shortMessageDTOs);
     }
 
     @Override
