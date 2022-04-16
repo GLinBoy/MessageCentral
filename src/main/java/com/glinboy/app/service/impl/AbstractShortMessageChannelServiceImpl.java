@@ -1,15 +1,17 @@
 package com.glinboy.app.service.impl;
 
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.jms.annotation.JmsListener;
-import org.springframework.jms.core.JmsTemplate;
+import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.context.event.EventListener;
 
 import com.glinboy.app.config.ApplicationProperties;
+import com.glinboy.app.event.ShortMessageSentFailedEvent;
+import com.glinboy.app.event.ShortMessageSentSuccessfulEvent;
 import com.glinboy.app.service.ShortMessageChannelService;
-import com.glinboy.app.service.ShortMessageService;
 import com.glinboy.app.service.dto.ShortMessageDTO;
 
 public abstract class AbstractShortMessageChannelServiceImpl implements ShortMessageChannelService<ShortMessageDTO> {
@@ -19,12 +21,12 @@ public abstract class AbstractShortMessageChannelServiceImpl implements ShortMes
 
     protected final ApplicationProperties properties;
 
-    protected final JmsTemplate jmsTemplate;
+    private final ApplicationEventPublisher publisher;
     
-    protected AbstractShortMessageChannelServiceImpl(JmsTemplate jmsTemplate,
+    protected AbstractShortMessageChannelServiceImpl(ApplicationEventPublisher publisher,
             ApplicationProperties properties) {
         log = LoggerFactory.getLogger(this.getClass());
-        this.jmsTemplate = jmsTemplate;
+        this.publisher = publisher;
         this.properties = properties;
     }
 
