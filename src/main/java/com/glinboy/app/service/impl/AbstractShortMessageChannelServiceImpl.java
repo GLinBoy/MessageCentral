@@ -15,8 +15,6 @@ import com.glinboy.app.service.dto.ShortMessageDTO;
 public abstract class AbstractShortMessageChannelServiceImpl implements ShortMessageChannelService<ShortMessageDTO> {
 
 
-    public static final String TOPIC_NAME = "SMSBOX";
-    
     protected final Logger log;
 
     protected final ApplicationProperties properties;
