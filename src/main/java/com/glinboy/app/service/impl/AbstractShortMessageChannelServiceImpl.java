@@ -40,8 +40,8 @@ public abstract class AbstractShortMessageChannelServiceImpl implements ShortMes
     public void onMessage(ShortMessageDTO... shortMessageDTOs) {
         try {
             deliverMessage(shortMessageDTOs);
-            jmsTemplate.convertAndSend(ShortMessageService.TOPIC_NAME_SENT,
-                    Stream.of(shortMessageDTOs).map(ShortMessageDTO::getId).toArray());
+            publisher.publishEvent(new ShortMessageSentSuccessfulEvent(this,
+                    Stream.of(shortMessageDTOs).map(ShortMessageDTO::getId).collect(Collectors.toList())));
         } catch (Exception e) {
             log.error("Parsing message failed: {}", e.getMessage(), e);
             jmsTemplate.convertAndSend(ShortMessageService.TOPIC_NAME_FAILED,
