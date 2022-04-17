@@ -1,7 +1,7 @@
 package com.glinboy.app.service.impl;
 
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
-import org.springframework.jms.core.JmsTemplate;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 
 import com.glinboy.app.config.ApplicationProperties;
@@ -13,9 +13,9 @@ import com.twilio.type.PhoneNumber;
 @ConditionalOnProperty(value = "application.sms.provider", havingValue = "twilio", matchIfMissing = true)
 public class TwilioSMSChannelServiceImpl extends AbstractShortMessageChannelServiceImpl {
 
-    protected TwilioSMSChannelServiceImpl(JmsTemplate jmsTemplate,
+    protected TwilioSMSChannelServiceImpl(ApplicationEventPublisher publisher,
             ApplicationProperties properties) {
-        super(jmsTemplate, properties);
+        super(publisher, properties);
     }
 
     @Override
