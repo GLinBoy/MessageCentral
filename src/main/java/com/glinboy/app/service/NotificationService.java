@@ -16,9 +16,6 @@ import org.springframework.data.domain.Pageable;
  */
 public interface NotificationService {
 
-    String TOPIC_NAME_SENT = "NOTIFICATION_SERVICE_BOX::SENT";
-    String TOPIC_NAME_FAILED = "NOTIFICATION_SERVICE_BOX::FAILED";
-
     /**
      * Save a notification.
      *
