@@ -139,8 +139,8 @@ public class ShortMessageServiceImpl implements ShortMessageService {
     }
 
     @Transactional
-    @JmsListener(destination = ShortMessageService.TOPIC_NAME_FAILED)
-    public void onMessageFailed(Long... ids) {
-        this.shortMessageRepository.updateStatus(MessageStatus.FAILED, ids);
+    @EventListener
+    public void onMessageFailed(ShortMessageSentFailedEvent event) {
+        this.shortMessageRepository.updateStatus(MessageStatus.FAILED, event.getIds().toArray(new Long[event.getIds().size()]));
     }
 }
