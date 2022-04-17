@@ -1,7 +1,7 @@
 package com.glinboy.app.service.impl;
 
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
-import org.springframework.jms.core.JmsTemplate;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 
 import com.glinboy.app.config.ApplicationProperties;
@@ -15,9 +15,9 @@ import com.kavenegar.sdk.models.SendResult;
 @ConditionalOnProperty(value = "application.sms.provider", havingValue = "kavenegar")
 public class KavenegarSMSChannelServiceImpl extends AbstractShortMessageChannelServiceImpl {
 
-    protected KavenegarSMSChannelServiceImpl(JmsTemplate jmsTemplate,
+    protected KavenegarSMSChannelServiceImpl(ApplicationEventPublisher publisher,
             ApplicationProperties properties) {
-        super(jmsTemplate, properties);
+        super(publisher, properties);
     }
 
     @Override
