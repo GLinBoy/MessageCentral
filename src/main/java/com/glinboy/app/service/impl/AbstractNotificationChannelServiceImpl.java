@@ -15,8 +15,6 @@ import com.glinboy.app.service.dto.NotificationDTO;
 public abstract class AbstractNotificationChannelServiceImpl implements NotificationChannelService<NotificationDTO> {
 
 
-    public static final String TOPIC_NAME = "NOTIFICATIONBOX";
-    
     protected final Logger log;
 
     protected final ApplicationProperties properties;
