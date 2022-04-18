@@ -36,7 +36,7 @@ public abstract class AbstractNotificationChannelServiceImpl implements Notifica
     }
 
     @Override
-    @JmsListener(destination = AbstractNotificationChannelServiceImpl.TOPIC_NAME)
+    @EventListener
     public void onMessage(NotificationDTO... notificationDTOs) {
         try {
             deliverMessage(notificationDTOs);
