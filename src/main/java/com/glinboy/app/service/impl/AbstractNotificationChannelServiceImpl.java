@@ -32,9 +32,7 @@ public abstract class AbstractNotificationChannelServiceImpl implements Notifica
 
     @Override
     public void sendMessage(NotificationDTO... notificationDTOs) {
-        for(var i = 0; i < notificationDTOs.length; i++) {
-            jmsTemplate.convertAndSend(TOPIC_NAME, notificationDTOs[i]);
-        }
+        publisher.publishEvent(notificationDTOs);
     }
 
     @Override
