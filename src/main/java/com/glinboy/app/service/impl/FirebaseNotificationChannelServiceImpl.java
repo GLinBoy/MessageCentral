@@ -4,7 +4,7 @@ import java.util.stream.Collectors;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
-import org.springframework.jms.core.JmsTemplate;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 
 import com.glinboy.app.config.ApplicationProperties;
@@ -21,10 +21,10 @@ public class FirebaseNotificationChannelServiceImpl extends AbstractNotification
 
     private final FirebaseMessaging firebaseMessaging;
 
-    protected FirebaseNotificationChannelServiceImpl(JmsTemplate jmsTemplate,
+    protected FirebaseNotificationChannelServiceImpl(ApplicationEventPublisher publisher,
             ApplicationProperties properties,
             FirebaseMessaging firebaseMessaging) {
-        super(jmsTemplate, properties);
+        super(publisher, properties);
         this.firebaseMessaging = firebaseMessaging;
     }
 
