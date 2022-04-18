@@ -40,8 +40,8 @@ public abstract class AbstractNotificationChannelServiceImpl implements Notifica
     public void onMessage(NotificationDTO... notificationDTOs) {
         try {
             deliverMessage(notificationDTOs);
-            jmsTemplate.convertAndSend(NotificationService.TOPIC_NAME_SENT,
-                    Stream.of(notificationDTOs).map(NotificationDTO::getId).toArray());
+            publisher.publishEvent(new NotificationSentSuccessfulEvent(this,
+                    Stream.of(notificationDTOs).map(NotificationDTO::getId).collect(Collectors.toList())));
         } catch (Exception e) {
             log.error("Parsing message failed: {}", e.getMessage(), e);
             jmsTemplate.convertAndSend(NotificationService.TOPIC_NAME_FAILED,
