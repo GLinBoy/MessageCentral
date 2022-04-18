@@ -156,8 +156,8 @@ public class NotificationServiceImpl implements NotificationService {
     }
 
     @Transactional
-    @JmsListener(destination = NotificationService.TOPIC_NAME_FAILED)
-    public void onMessageFailed(Long... ids) {
-        this.notificationRepository.updateStatus(MessageStatus.FAILED, ids);
+    @EventListener
+    public void onMessageFailed(NotificationSentFailedEvent event) {
+        this.notificationRepository.updateStatus(MessageStatus.FAILED, event.getIds().toArray(new Long[event.getIds().size()]));
     }
 }
