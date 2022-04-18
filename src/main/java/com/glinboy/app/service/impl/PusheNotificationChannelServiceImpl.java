@@ -6,10 +6,10 @@ import java.util.List;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
-import org.springframework.jms.core.JmsTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
@@ -20,9 +20,9 @@ import com.glinboy.app.service.dto.NotificationDTO;
 @ConditionalOnProperty(value = "application.notification.provider", havingValue = "pushe")
 public class PusheNotificationChannelServiceImpl extends AbstractNotificationChannelServiceImpl {
 
-    protected PusheNotificationChannelServiceImpl(JmsTemplate jmsTemplate,
+    protected PusheNotificationChannelServiceImpl(ApplicationEventPublisher publisher,
             ApplicationProperties properties) {
-        super(jmsTemplate, properties);
+        super(publisher, properties);
     }
 
     @Override
