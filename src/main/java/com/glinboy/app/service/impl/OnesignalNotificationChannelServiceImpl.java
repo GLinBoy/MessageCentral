@@ -8,10 +8,10 @@ import org.apache.commons.collections.CollectionUtils;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
-import org.springframework.jms.core.JmsTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
@@ -23,9 +23,9 @@ import com.glinboy.app.service.dto.NotificationDataDTO;
 @ConditionalOnProperty(value = "application.notification.provider", havingValue = "onesignal", matchIfMissing = true)
 public class OnesignalNotificationChannelServiceImpl extends AbstractNotificationChannelServiceImpl {
 
-    protected OnesignalNotificationChannelServiceImpl(JmsTemplate jmsTemplate,
+    protected OnesignalNotificationChannelServiceImpl(ApplicationEventPublisher publisher,
             ApplicationProperties properties) {
-        super(jmsTemplate, properties);
+        super(publisher, properties);
     }
 
     @Override
