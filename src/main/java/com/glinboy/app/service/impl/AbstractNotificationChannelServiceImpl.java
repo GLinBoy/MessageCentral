@@ -1,15 +1,17 @@
 package com.glinboy.app.service.impl;
 
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.jms.annotation.JmsListener;
-import org.springframework.jms.core.JmsTemplate;
+import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.context.event.EventListener;
 
 import com.glinboy.app.config.ApplicationProperties;
+import com.glinboy.app.event.NotificationSentFailedEvent;
+import com.glinboy.app.event.NotificationSentSuccessfulEvent;
 import com.glinboy.app.service.NotificationChannelService;
-import com.glinboy.app.service.NotificationService;
 import com.glinboy.app.service.dto.NotificationDTO;
 
 public abstract class AbstractNotificationChannelServiceImpl implements NotificationChannelService<NotificationDTO> {
@@ -19,12 +21,12 @@ public abstract class AbstractNotificationChannelServiceImpl implements Notifica
 
     protected final ApplicationProperties properties;
 
-    protected final JmsTemplate jmsTemplate;
+    private final ApplicationEventPublisher publisher;
     
-    protected AbstractNotificationChannelServiceImpl(JmsTemplate jmsTemplate,
+    protected AbstractNotificationChannelServiceImpl(ApplicationEventPublisher publisher,
             ApplicationProperties properties) {
         log = LoggerFactory.getLogger(this.getClass());
-        this.jmsTemplate = jmsTemplate;
+        this.publisher = publisher;
         this.properties = properties;
     }
 
