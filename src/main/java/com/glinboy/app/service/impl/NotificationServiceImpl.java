@@ -1,8 +1,22 @@
 package com.glinboy.app.service.impl;
 
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.context.event.EventListener;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import com.glinboy.app.domain.Notification;
 import com.glinboy.app.domain.NotificationData;
 import com.glinboy.app.domain.enumeration.MessageStatus;
+import com.glinboy.app.event.NotificationSentFailedEvent;
+import com.glinboy.app.event.NotificationSentSuccessfulEvent;
 import com.glinboy.app.repository.NotificationRepository;
 import com.glinboy.app.service.NotificationChannelService;
 import com.glinboy.app.service.NotificationService;
@@ -10,16 +24,6 @@ import com.glinboy.app.service.dto.NotificationDTO;
 import com.glinboy.app.service.dto.NotificationsDTO;
 import com.glinboy.app.service.mapper.NotificationDataMapper;
 import com.glinboy.app.service.mapper.NotificationMapper;
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.jms.annotation.JmsListener;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 /**
  * Service Implementation for managing {@link Notification}.
@@ -146,9 +150,9 @@ public class NotificationServiceImpl implements NotificationService {
     }
 
     @Transactional
-    @JmsListener(destination = NotificationService.TOPIC_NAME_SENT)
-    public void onMessageSent(Long... ids) {
-        this.notificationRepository.updateStatus(MessageStatus.SENT, ids);
+    @EventListener
+    public void onMessageSent(NotificationSentSuccessfulEvent event) {
+        this.notificationRepository.updateStatus(MessageStatus.SENT, event.getIds().toArray(new Long[event.getIds().size()]));
     }
 
     @Transactional
