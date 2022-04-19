@@ -2,7 +2,6 @@ package com.glinboy.app.service.impl;
 
 import java.util.stream.Collectors;
 
-import org.apache.commons.collections.CollectionUtils;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
@@ -41,7 +40,7 @@ public class FirebaseNotificationChannelServiceImpl extends AbstractNotification
                 Builder message = com.google.firebase.messaging.Message.builder()
                         .setToken(notificationDTO.getToken())
                         .setNotification(notification);
-                if (!CollectionUtils.isEmpty(notificationDTO.getData())) {
+                if (notificationDTO.getData() != null && !notificationDTO.getData().isEmpty()) {
                     message.putAllData(notificationDTO.getData().stream()
                             .collect(Collectors.toMap(NotificationDataDTO::getKey, NotificationDataDTO::getValue)));
                 }
