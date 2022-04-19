@@ -88,10 +88,6 @@ spring:
     locator:
       discovery:
         enabled: true
-  artemis:
-    mode: embedded
-    host: localhost
-    port: 61616
 
 server:
   port: 8080
