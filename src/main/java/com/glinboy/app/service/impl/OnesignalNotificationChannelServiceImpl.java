@@ -4,7 +4,6 @@ import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import org.apache.commons.collections.CollectionUtils;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
@@ -45,7 +44,7 @@ public class OnesignalNotificationChannelServiceImpl extends AbstractNotificatio
             var contents = new JSONObject();
             contents.put("en", notificationDTO.getContent());
             requestBody.put("contents", contents);
-            if (!CollectionUtils.isEmpty(notificationDTO.getData())) {
+            if (notificationDTO.getData() != null && !notificationDTO.getData().isEmpty()) {
                 requestBody.put("data", notificationDTO.getData().stream()
                         .collect(Collectors.toMap(NotificationDataDTO::getKey, NotificationDataDTO::getValue)));
             }
