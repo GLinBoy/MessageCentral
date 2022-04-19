@@ -10,8 +10,6 @@ import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
-import org.apache.commons.collections.CollectionUtils;
-
 /**
  * A DTO for the {@link com.glinboy.app.domain.ShortMessage} entity.
  */
@@ -51,7 +49,7 @@ public class ShortMessagesDTO implements Serializable {
 
         ShortMessagesDTO shortMessagesDTO = (ShortMessagesDTO) o;
 
-        return !CollectionUtils.isEmpty(this.phoneNumbers) &&
+        return this.phoneNumbers != null && !this.phoneNumbers.isEmpty() &&
                 this.phoneNumbers.size() == shortMessagesDTO.getPhoneNumbers().size() &&
                 this.phoneNumbers.containsAll(shortMessagesDTO.phoneNumbers) &&
                 (this.content == null ? shortMessagesDTO.content == null : this.content.equals(shortMessagesDTO.content));
