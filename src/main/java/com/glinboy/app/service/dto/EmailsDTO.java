@@ -11,8 +11,6 @@ import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
-import org.apache.commons.collections.CollectionUtils;
-
 /**
  * A DTO for the {@link com.glinboy.app.domain.Email} entity.
  */
@@ -63,7 +61,7 @@ public class EmailsDTO implements Serializable {
         }
 
         EmailsDTO emailsDTO = (EmailsDTO) o;
-        return !CollectionUtils.isEmpty(this.receivers) &&
+        return this.receivers != null && !this.receivers.isEmpty() &&
                 this.receivers.size() == emailsDTO.receivers.size() &&
                 this.receivers.containsAll(emailsDTO.receivers) &&
                 (this.subject == null ? emailsDTO.subject == null : this.subject.equals(emailsDTO.subject)) &&
