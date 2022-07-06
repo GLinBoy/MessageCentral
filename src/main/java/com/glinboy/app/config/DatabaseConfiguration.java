@@ -1,6 +1,5 @@
 package com.glinboy.app.config;
 
-import java.sql.SQLException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Bean;
@@ -13,8 +12,10 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 import tech.jhipster.config.JHipsterConstants;
 import tech.jhipster.config.h2.H2ConfigurationHelper;
 
+import java.sql.SQLException;
+
 @Configuration
-@EnableJpaRepositories({ "com.glinboy.app.repository" })
+@EnableJpaRepositories({"com.glinboy.app.repository"})
 @EnableJpaAuditing(auditorAwareRef = "springSecurityAuditorAware")
 @EnableTransactionManagement
 public class DatabaseConfiguration {

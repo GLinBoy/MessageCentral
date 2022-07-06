@@ -11,216 +11,216 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 @ConfigurationProperties(prefix = "application", ignoreUnknownFields = false)
 public class ApplicationProperties {
 
-	private final Email email = new Email();
+    private final Email email = new Email();
 
-	private final SMS sms = new SMS();
+    private final SMS sms = new SMS();
 
-	private final Notification notification = new Notification();
+    private final Notification notification = new Notification();
 
-	private final Credential credential = new Credential();
+    private final Credential credential = new Credential();
 
-	public Email getEmail() {
-		return email;
-	}
+    public Email getEmail() {
+        return email;
+    }
 
-	public SMS getSms() {
-		return sms;
-	}
+    public SMS getSms() {
+        return sms;
+    }
 
-	public Notification getNotification() {
-		return notification;
-	}
+    public Notification getNotification() {
+        return notification;
+    }
 
-	public Credential getCredential() {
-		return credential;
-	}
+    public Credential getCredential() {
+        return credential;
+    }
 
-	public static class Email {
+    public static class Email {
 
-		private String provider;
-		private String from;
+        private String provider;
+        private String from;
 
-		public String getProvider() {
-			return provider;
-		}
+        public String getProvider() {
+            return provider;
+        }
 
-		public void setProvider(String provider) {
-			this.provider = provider;
-		}
+        public void setProvider(String provider) {
+            this.provider = provider;
+        }
 
-		public String getFrom() {
-			return from;
-		}
+        public String getFrom() {
+            return from;
+        }
 
-		public void setFrom(String from) {
-			this.from = from;
-		}
+        public void setFrom(String from) {
+            this.from = from;
+        }
 
-	}
+    }
 
-	public static class SMS {
+    public static class SMS {
 
-		private String provider;
-		private String from;
+        private String provider;
+        private String from;
 
-		public String getProvider() {
-			return provider;
-		}
+        public String getProvider() {
+            return provider;
+        }
 
-		public void setProvider(String provider) {
-			this.provider = provider;
-		}
+        public void setProvider(String provider) {
+            this.provider = provider;
+        }
 
-		public String getFrom() {
-			return from;
-		}
+        public String getFrom() {
+            return from;
+        }
 
-		public void setFrom(String from) {
-			this.from = from;
-		}
+        public void setFrom(String from) {
+            this.from = from;
+        }
 
-	}
+    }
 
-	public static class Notification {
+    public static class Notification {
 
-		private String provider;
-		private final Firebase firebase = new Firebase();
-		private final Onesignal onesignal = new Onesignal();
-		private final Pushe pushe = new Pushe();
+        private final Firebase firebase = new Firebase();
+        private final Onesignal onesignal = new Onesignal();
+        private final Pushe pushe = new Pushe();
+        private String provider;
 
-		public String getProvider() {
-			return provider;
-		}
+        public String getProvider() {
+            return provider;
+        }
 
-		public void setProvider(String provider) {
-			this.provider = provider;
-		}
+        public void setProvider(String provider) {
+            this.provider = provider;
+        }
 
-		public Firebase getFirebase() {
-			return firebase;
-		}
+        public Firebase getFirebase() {
+            return firebase;
+        }
 
-		public Onesignal getOnesignal() {
-			return onesignal;
-		}
-		
-		public Pushe getPushe() {
-			return pushe;
-		}
+        public Onesignal getOnesignal() {
+            return onesignal;
+        }
 
-		public static class Firebase {
+        public Pushe getPushe() {
+            return pushe;
+        }
 
-			private String filePath;
+        public static class Firebase {
 
-			public String getFilePath() {
-				return filePath;
-			}
+            private String filePath;
 
-			public void setFilePath(String filePath) {
-				this.filePath = filePath;
-			}
-		}
+            public String getFilePath() {
+                return filePath;
+            }
 
-		public static class Onesignal {
+            public void setFilePath(String filePath) {
+                this.filePath = filePath;
+            }
+        }
 
-			private String url;
-			private String appId;
+        public static class Onesignal {
 
-			public String getUrl() {
-				return url;
-			}
+            private String url;
+            private String appId;
 
-			public void setUrl(String url) {
-				this.url = url;
-			}
+            public String getUrl() {
+                return url;
+            }
 
-			public String getAppId() {
-				return appId;
-			}
+            public void setUrl(String url) {
+                this.url = url;
+            }
 
-			public void setAppId(String appId) {
-				this.appId = appId;
-			}
-		}
+            public String getAppId() {
+                return appId;
+            }
 
-		public static class Pushe {
+            public void setAppId(String appId) {
+                this.appId = appId;
+            }
+        }
 
-			private String url;
-			private String token;
-			private String appId;
+        public static class Pushe {
 
-			public String getUrl() {
-				return url;
-			}
+            private String url;
+            private String token;
+            private String appId;
 
-			public void setUrl(String url) {
-				this.url = url;
-			}
+            public String getUrl() {
+                return url;
+            }
 
-			public String getToken() {
-				return token;
-			}
+            public void setUrl(String url) {
+                this.url = url;
+            }
 
-			public void setToken(String token) {
-				this.token = token;
-			}
+            public String getToken() {
+                return token;
+            }
 
-			public String getAppId() {
-				return appId;
-			}
+            public void setToken(String token) {
+                this.token = token;
+            }
 
-			public void setAppId(String appId) {
-				this.appId = appId;
-			}
-		}
-	}
+            public String getAppId() {
+                return appId;
+            }
 
-	public static class Credential {
+            public void setAppId(String appId) {
+                this.appId = appId;
+            }
+        }
+    }
 
-		private final Twilio twilio = new Twilio();
-		private final Kavenegar kavenegar = new Kavenegar();
+    public static class Credential {
 
-		public Twilio getTwilio() {
-			return twilio;
-		}
+        private final Twilio twilio = new Twilio();
+        private final Kavenegar kavenegar = new Kavenegar();
 
-		public Kavenegar getKavenegar() {
-			return kavenegar;
-		}
+        public Twilio getTwilio() {
+            return twilio;
+        }
 
-		public static class Twilio {
+        public Kavenegar getKavenegar() {
+            return kavenegar;
+        }
 
-			private String accountSid;
-			private String token;
+        public static class Twilio {
 
-			public String getAccountSid() {
-				return accountSid;
-			}
+            private String accountSid;
+            private String token;
 
-			public void setAccountSid(String accountSid) {
-				this.accountSid = accountSid;
-			}
+            public String getAccountSid() {
+                return accountSid;
+            }
 
-			public String getToken() {
-				return token;
-			}
+            public void setAccountSid(String accountSid) {
+                this.accountSid = accountSid;
+            }
 
-			public void setToken(String token) {
-				this.token = token;
-			}
-		}
+            public String getToken() {
+                return token;
+            }
 
-		public static class Kavenegar {
+            public void setToken(String token) {
+                this.token = token;
+            }
+        }
 
-			private String token;
+        public static class Kavenegar {
 
-			public String getToken() {
-				return token;
-			}
+            private String token;
 
-			public void setToken(String token) {
-				this.token = token;
-			}
-		}
-	}
+            public String getToken() {
+                return token;
+            }
+
+            public void setToken(String token) {
+                this.token = token;
+            }
+        }
+    }
 }
