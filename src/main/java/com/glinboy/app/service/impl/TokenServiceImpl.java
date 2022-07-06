@@ -7,9 +7,6 @@ import com.glinboy.app.security.jwt.TokenProvider;
 import com.glinboy.app.service.TokenService;
 import com.glinboy.app.service.dto.TokenDTO;
 import com.glinboy.app.service.mapper.TokenMapper;
-import java.time.Instant;
-import java.util.Optional;
-import java.util.Set;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,6 +20,10 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
+
+import java.time.Instant;
+import java.util.Optional;
+import java.util.Set;
 
 /**
  * Service Implementation for managing {@link Token}.
@@ -124,7 +125,7 @@ public class TokenServiceImpl implements TokenService {
      * and the last one present Notification role
      * the result of theme has been save as a integer number.
      * Check the blow table (Use as a reference):
-     *<br/>
+     * <br/>
      * +---+---+---+---+<br/>
      * | N | S | E |   |<br/>
      * +===+===+===+===+<br/>

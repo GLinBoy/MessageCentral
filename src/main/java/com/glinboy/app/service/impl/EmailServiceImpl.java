@@ -1,18 +1,5 @@
 package com.glinboy.app.service.impl;
 
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
-import java.util.stream.Collectors;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.context.event.EventListener;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
 import com.glinboy.app.domain.Email;
 import com.glinboy.app.domain.enumeration.MessageStatus;
 import com.glinboy.app.event.EmailSentFailedEvent;
@@ -24,6 +11,18 @@ import com.glinboy.app.service.dto.EmailDTO;
 import com.glinboy.app.service.dto.EmailsDTO;
 import com.glinboy.app.service.mapper.EmailMapper;
 import com.glinboy.app.util.Patterns;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.context.event.EventListener;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
+import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * Service Implementation for managing {@link Email}.
@@ -41,7 +40,7 @@ public class EmailServiceImpl implements EmailService {
     private final MailChannelService<EmailDTO> mailProviderService;
 
     public EmailServiceImpl(EmailRepository emailRepository, EmailMapper emailMapper,
-            MailChannelService<EmailDTO> mailProviderService) {
+                            MailChannelService<EmailDTO> mailProviderService) {
         this.emailRepository = emailRepository;
         this.emailMapper = emailMapper;
         this.mailProviderService = mailProviderService;
@@ -51,7 +50,7 @@ public class EmailServiceImpl implements EmailService {
     public EmailDTO save(EmailDTO emailDTO) {
         log.debug("Request to save Email : {}", emailDTO);
         var email = emailMapper.toEntity(emailDTO);
-        if(email.getId() == null) {
+        if (email.getId() == null) {
             email.setStatus(MessageStatus.IN_QUEUE);
         }
         email = emailRepository.save(email);
@@ -64,14 +63,14 @@ public class EmailServiceImpl implements EmailService {
     public List<EmailDTO> save(List<EmailsDTO> emailsDTO) {
         log.debug("Request to save Emails : {}", emailsDTO);
         var emails = emailsDTO.stream().flatMap(
-                es -> Set.copyOf(es.getReceivers()).stream().filter(r -> r.matches(Patterns.EMAIL_PATTERN)).map(r -> {
-                    var e = new Email();
-                    e.setReceiver(r);
-                    e.setSubject(es.getSubject());
-                    e.setContent(es.getContent());
-                    e.setStatus(MessageStatus.IN_QUEUE);
-                    return e;
-                })).collect(Collectors.toList());
+            es -> Set.copyOf(es.getReceivers()).stream().filter(r -> r.matches(Patterns.EMAIL_PATTERN)).map(r -> {
+                var e = new Email();
+                e.setReceiver(r);
+                e.setSubject(es.getSubject());
+                e.setContent(es.getContent());
+                e.setStatus(MessageStatus.IN_QUEUE);
+                return e;
+            })).collect(Collectors.toList());
         log.info("List of {} Emails: {}", emails.size(), emails);
         emails = this.emailRepository.saveAll(emails);
         var dtoList = this.emailMapper.toDto(emails);

@@ -1,14 +1,13 @@
 package com.glinboy.app.service.dto;
 
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
-
-import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
 
 /**
  * A DTO for the {@link com.glinboy.app.domain.ShortMessage} entity.
@@ -50,9 +49,9 @@ public class ShortMessagesDTO implements Serializable {
         ShortMessagesDTO shortMessagesDTO = (ShortMessagesDTO) o;
 
         return this.phoneNumbers != null && !this.phoneNumbers.isEmpty() &&
-                this.phoneNumbers.size() == shortMessagesDTO.getPhoneNumbers().size() &&
-                this.phoneNumbers.containsAll(shortMessagesDTO.phoneNumbers) &&
-                (this.content == null ? shortMessagesDTO.content == null : this.content.equals(shortMessagesDTO.content));
+            this.phoneNumbers.size() == shortMessagesDTO.getPhoneNumbers().size() &&
+            this.phoneNumbers.containsAll(shortMessagesDTO.phoneNumbers) &&
+            (this.content == null ? shortMessagesDTO.content == null : this.content.equals(shortMessagesDTO.content));
     }
 
     @Override

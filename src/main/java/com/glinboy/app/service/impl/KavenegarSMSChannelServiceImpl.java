@@ -1,22 +1,21 @@
 package com.glinboy.app.service.impl;
 
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
-import org.springframework.context.ApplicationEventPublisher;
-import org.springframework.stereotype.Service;
-
 import com.glinboy.app.config.ApplicationProperties;
 import com.glinboy.app.service.dto.ShortMessageDTO;
 import com.kavenegar.sdk.KavenegarApi;
 import com.kavenegar.sdk.excepctions.ApiException;
 import com.kavenegar.sdk.excepctions.HttpException;
 import com.kavenegar.sdk.models.SendResult;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.stereotype.Service;
 
 @Service
 @ConditionalOnProperty(value = "application.sms.provider", havingValue = "kavenegar")
 public class KavenegarSMSChannelServiceImpl extends AbstractShortMessageChannelServiceImpl {
 
     protected KavenegarSMSChannelServiceImpl(ApplicationEventPublisher publisher,
-            ApplicationProperties properties) {
+                                             ApplicationProperties properties) {
         super(publisher, properties);
     }
 
@@ -27,7 +26,7 @@ public class KavenegarSMSChannelServiceImpl extends AbstractShortMessageChannelS
             ShortMessageDTO shortMessageDTO = shortMessageDTOs[i];
             try {
                 SendResult result = api.send(properties.getSms().getFrom(), shortMessageDTO.getPhoneNumber(),
-                        shortMessageDTO.getContent());
+                    shortMessageDTO.getContent());
                 log.info("SMS sent! {}", shortMessageDTO);
                 log.info("SMS Result {}", result);
             } catch (HttpException ex) { // در صورتی که خروجی وب سرویس 200 نباشد این خطارخ می دهد.

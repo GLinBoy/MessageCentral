@@ -1,15 +1,14 @@
 package com.glinboy.app.service.impl;
 
-import java.util.Arrays;
-
+import com.glinboy.app.config.ApplicationProperties;
+import com.glinboy.app.service.dto.EmailDTO;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 
-import com.glinboy.app.config.ApplicationProperties;
-import com.glinboy.app.service.dto.EmailDTO;
+import java.util.Arrays;
 
 @Service
 @ConditionalOnProperty(value = "application.email.provider", havingValue = "mail-server", matchIfMissing = true)
@@ -18,8 +17,8 @@ public class SmtpMailChannelServiceImpl extends AbstractMailChannelServiceImpl {
     private final JavaMailSender emailSender;
 
     protected SmtpMailChannelServiceImpl(ApplicationEventPublisher publisher,
-            ApplicationProperties properties,
-            JavaMailSender emailSender) {
+                                         ApplicationProperties properties,
+                                         JavaMailSender emailSender) {
         super(publisher, properties);
         this.emailSender = emailSender;
     }

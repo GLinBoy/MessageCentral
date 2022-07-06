@@ -1,13 +1,15 @@
 package com.glinboy.app.service.dto;
 
 import com.glinboy.app.domain.enumeration.MessageStatus;
+
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import java.io.Serializable;
 import java.time.Instant;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
-import javax.validation.constraints.*;
 
 /**
  * A DTO for the {@link com.glinboy.app.domain.Notification} entity.
@@ -103,6 +105,10 @@ public class NotificationDTO implements Serializable {
         return data;
     }
 
+    public void setData(Set<NotificationDataDTO> data) {
+        this.data = data;
+    }
+
     public Instant getCreatedAt() {
         return createdAt;
     }
@@ -113,10 +119,6 @@ public class NotificationDTO implements Serializable {
 
     public String getCreatedBy() {
         return createdBy;
-    }
-
-    public void setData(Set<NotificationDataDTO> data) {
-        this.data = data;
     }
 
     public void setCreatedBy(String createdBy) {
@@ -155,7 +157,7 @@ public class NotificationDTO implements Serializable {
             ", content='" + getContent() + "'" +
             ", image='" + getImage() + "'" +
             ", data='" + getData().stream().map(NotificationDataDTO::toString)
-                .collect(Collectors.joining(", ")) + "'" +
+            .collect(Collectors.joining(", ")) + "'" +
             ", status='" + getStatus() + "'" +
             ", createdAt='" + getCreatedAt() + "'" +
             ", createdBy='" + getCreatedBy() + "'" +

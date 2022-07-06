@@ -1,15 +1,13 @@
 package com.glinboy.app.service;
 
-import java.util.List;
-import java.util.Optional;
-
-import javax.validation.Valid;
-
+import com.glinboy.app.service.dto.ShortMessageDTO;
+import com.glinboy.app.service.dto.ShortMessagesDTO;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
-import com.glinboy.app.service.dto.ShortMessageDTO;
-import com.glinboy.app.service.dto.ShortMessagesDTO;
+import javax.validation.Valid;
+import java.util.List;
+import java.util.Optional;
 
 /**
  * Service Interface for managing {@link com.glinboy.app.domain.ShortMessage}.

@@ -1,18 +1,15 @@
 package com.glinboy.app.service.criteria;
 
 import com.glinboy.app.domain.enumeration.MessageStatus;
-import java.io.Serializable;
-import java.util.Objects;
 import org.springdoc.api.annotations.ParameterObject;
 import tech.jhipster.service.Criteria;
-import tech.jhipster.service.filter.BooleanFilter;
-import tech.jhipster.service.filter.DoubleFilter;
 import tech.jhipster.service.filter.Filter;
-import tech.jhipster.service.filter.FloatFilter;
 import tech.jhipster.service.filter.InstantFilter;
-import tech.jhipster.service.filter.IntegerFilter;
 import tech.jhipster.service.filter.LongFilter;
 import tech.jhipster.service.filter.StringFilter;
+
+import java.io.Serializable;
+import java.util.Objects;
 
 /**
  * Criteria class for the {@link com.glinboy.app.domain.ShortMessage} entity. This class is used
@@ -26,40 +23,17 @@ import tech.jhipster.service.filter.StringFilter;
 @ParameterObject
 public class ShortMessageCriteria implements Serializable, Criteria {
 
-    /**
-     * Class for filtering MessageStatus
-     */
-    public static class MessageStatusFilter extends Filter<MessageStatus> {
-
-        public MessageStatusFilter() {}
-
-        public MessageStatusFilter(MessageStatusFilter filter) {
-            super(filter);
-        }
-
-        @Override
-        public MessageStatusFilter copy() {
-            return new MessageStatusFilter(this);
-        }
-    }
-
     private static final long serialVersionUID = 1L;
-
     private LongFilter id;
-
     private StringFilter phoneNumber;
-
     private StringFilter content;
-
     private MessageStatusFilter status;
-
     private InstantFilter createdAt;
-
     private StringFilter createdBy;
-
     private Boolean distinct;
 
-    public ShortMessageCriteria() {}
+    public ShortMessageCriteria() {
+    }
 
     public ShortMessageCriteria(ShortMessageCriteria other) {
         this.id = other.id == null ? null : other.id.copy();
@@ -80,6 +54,10 @@ public class ShortMessageCriteria implements Serializable, Criteria {
         return id;
     }
 
+    public void setId(LongFilter id) {
+        this.id = id;
+    }
+
     public LongFilter id() {
         if (id == null) {
             id = new LongFilter();
@@ -87,12 +65,12 @@ public class ShortMessageCriteria implements Serializable, Criteria {
         return id;
     }
 
-    public void setId(LongFilter id) {
-        this.id = id;
-    }
-
     public StringFilter getPhoneNumber() {
         return phoneNumber;
+    }
+
+    public void setPhoneNumber(StringFilter phoneNumber) {
+        this.phoneNumber = phoneNumber;
     }
 
     public StringFilter phoneNumber() {
@@ -102,12 +80,12 @@ public class ShortMessageCriteria implements Serializable, Criteria {
         return phoneNumber;
     }
 
-    public void setPhoneNumber(StringFilter phoneNumber) {
-        this.phoneNumber = phoneNumber;
-    }
-
     public StringFilter getContent() {
         return content;
+    }
+
+    public void setContent(StringFilter content) {
+        this.content = content;
     }
 
     public StringFilter content() {
@@ -117,12 +95,12 @@ public class ShortMessageCriteria implements Serializable, Criteria {
         return content;
     }
 
-    public void setContent(StringFilter content) {
-        this.content = content;
-    }
-
     public MessageStatusFilter getStatus() {
         return status;
+    }
+
+    public void setStatus(MessageStatusFilter status) {
+        this.status = status;
     }
 
     public MessageStatusFilter status() {
@@ -132,12 +110,12 @@ public class ShortMessageCriteria implements Serializable, Criteria {
         return status;
     }
 
-    public void setStatus(MessageStatusFilter status) {
-        this.status = status;
-    }
-
     public InstantFilter getCreatedAt() {
         return createdAt;
+    }
+
+    public void setCreatedAt(InstantFilter createdAt) {
+        this.createdAt = createdAt;
     }
 
     public InstantFilter createdAt() {
@@ -147,12 +125,12 @@ public class ShortMessageCriteria implements Serializable, Criteria {
         return createdAt;
     }
 
-    public void setCreatedAt(InstantFilter createdAt) {
-        this.createdAt = createdAt;
-    }
-
     public StringFilter getCreatedBy() {
         return createdBy;
+    }
+
+    public void setCreatedBy(StringFilter createdBy) {
+        this.createdBy = createdBy;
     }
 
     public StringFilter createdBy() {
@@ -160,10 +138,6 @@ public class ShortMessageCriteria implements Serializable, Criteria {
             createdBy = new StringFilter();
         }
         return createdBy;
-    }
-
-    public void setCreatedBy(StringFilter createdBy) {
-        this.createdBy = createdBy;
     }
 
     public Boolean getDistinct() {
@@ -185,12 +159,12 @@ public class ShortMessageCriteria implements Serializable, Criteria {
         final ShortMessageCriteria that = (ShortMessageCriteria) o;
         return (
             Objects.equals(id, that.id) &&
-            Objects.equals(phoneNumber, that.phoneNumber) &&
-            Objects.equals(content, that.content) &&
-            Objects.equals(status, that.status) &&
-            Objects.equals(createdAt, that.createdAt) &&
-            Objects.equals(createdBy, that.createdBy) &&
-            Objects.equals(distinct, that.distinct)
+                Objects.equals(phoneNumber, that.phoneNumber) &&
+                Objects.equals(content, that.content) &&
+                Objects.equals(status, that.status) &&
+                Objects.equals(createdAt, that.createdAt) &&
+                Objects.equals(createdBy, that.createdBy) &&
+                Objects.equals(distinct, that.distinct)
         );
     }
 
@@ -211,5 +185,23 @@ public class ShortMessageCriteria implements Serializable, Criteria {
             (createdBy != null ? "createdBy=" + createdBy + ", " : "") +
             (distinct != null ? "distinct=" + distinct + ", " : "") +
             "}";
+    }
+
+    /**
+     * Class for filtering MessageStatus
+     */
+    public static class MessageStatusFilter extends Filter<MessageStatus> {
+
+        public MessageStatusFilter() {
+        }
+
+        public MessageStatusFilter(MessageStatusFilter filter) {
+            super(filter);
+        }
+
+        @Override
+        public MessageStatusFilter copy() {
+            return new MessageStatusFilter(this);
+        }
     }
 }

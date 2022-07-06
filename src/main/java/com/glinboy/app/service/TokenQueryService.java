@@ -1,11 +1,11 @@
 package com.glinboy.app.service;
 
-import com.glinboy.app.domain.*; // for static metamodels
+import com.glinboy.app.domain.Token;
+import com.glinboy.app.domain.Token_;
 import com.glinboy.app.repository.TokenRepository;
 import com.glinboy.app.service.criteria.TokenCriteria;
 import com.glinboy.app.service.dto.TokenDTO;
 import com.glinboy.app.service.mapper.TokenMapper;
-import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -14,6 +14,8 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import tech.jhipster.service.QueryService;
+
+import java.util.List;
 
 /**
  * Service for executing complex queries for {@link Token} entities in the database.
@@ -38,6 +40,7 @@ public class TokenQueryService extends QueryService<Token> {
 
     /**
      * Return a {@link List} of {@link TokenDTO} which matches the criteria from the database.
+     *
      * @param criteria The object which holds all the filters, which the entities should match.
      * @return the matching entities.
      */
@@ -50,8 +53,9 @@ public class TokenQueryService extends QueryService<Token> {
 
     /**
      * Return a {@link Page} of {@link TokenDTO} which matches the criteria from the database.
+     *
      * @param criteria The object which holds all the filters, which the entities should match.
-     * @param page The page, which should be returned.
+     * @param page     The page, which should be returned.
      * @return the matching entities.
      */
     @Transactional(readOnly = true)
@@ -63,6 +67,7 @@ public class TokenQueryService extends QueryService<Token> {
 
     /**
      * Return the number of matching entities in the database.
+     *
      * @param criteria The object which holds all the filters, which the entities should match.
      * @return the number of matching entities.
      */
@@ -75,6 +80,7 @@ public class TokenQueryService extends QueryService<Token> {
 
     /**
      * Return the number of matching entities in the database.
+     *
      * @param criteria The object which holds all the filters, which the entities should match.
      * @return the number of matching entities.
      */
@@ -86,6 +92,7 @@ public class TokenQueryService extends QueryService<Token> {
 
     /**
      * Function to convert {@link TokenCriteria} to a {@link Specification}
+     *
      * @param criteria The object which holds all the filters, which the entities should match.
      * @return the matching {@link Specification} of the entity.
      */

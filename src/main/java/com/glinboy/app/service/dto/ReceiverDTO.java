@@ -1,10 +1,9 @@
 package com.glinboy.app.service.dto;
 
-import java.io.Serializable;
-import java.util.Objects;
-
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import java.io.Serializable;
+import java.util.Objects;
 
 public class ReceiverDTO implements Serializable {
 
@@ -15,12 +14,12 @@ public class ReceiverDTO implements Serializable {
     @NotNull
     @Size(max = 164)
     private String token;
-    
+
     public ReceiverDTO username(String username) {
         this.username = username;
         return this;
     }
-    
+
     public ReceiverDTO token(String token) {
         this.token = token;
         return this;

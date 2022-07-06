@@ -1,18 +1,15 @@
 package com.glinboy.app.service.criteria;
 
 import com.glinboy.app.domain.enumeration.MessageStatus;
-import java.io.Serializable;
-import java.util.Objects;
 import org.springdoc.api.annotations.ParameterObject;
 import tech.jhipster.service.Criteria;
-import tech.jhipster.service.filter.BooleanFilter;
-import tech.jhipster.service.filter.DoubleFilter;
 import tech.jhipster.service.filter.Filter;
-import tech.jhipster.service.filter.FloatFilter;
 import tech.jhipster.service.filter.InstantFilter;
-import tech.jhipster.service.filter.IntegerFilter;
 import tech.jhipster.service.filter.LongFilter;
 import tech.jhipster.service.filter.StringFilter;
+
+import java.io.Serializable;
+import java.util.Objects;
 
 /**
  * Criteria class for the {@link com.glinboy.app.domain.Notification} entity. This class is used
@@ -26,48 +23,21 @@ import tech.jhipster.service.filter.StringFilter;
 @ParameterObject
 public class NotificationCriteria implements Serializable, Criteria {
 
-    /**
-     * Class for filtering MessageStatus
-     */
-    public static class MessageStatusFilter extends Filter<MessageStatus> {
-
-        public MessageStatusFilter() {}
-
-        public MessageStatusFilter(MessageStatusFilter filter) {
-            super(filter);
-        }
-
-        @Override
-        public MessageStatusFilter copy() {
-            return new MessageStatusFilter(this);
-        }
-    }
-
     private static final long serialVersionUID = 1L;
-
     private LongFilter id;
-
     private StringFilter username;
-
     private StringFilter token;
-
     private StringFilter subject;
-
     private StringFilter content;
-
     private StringFilter image;
-
     private MessageStatusFilter status;
-
     private InstantFilter createdAt;
-
     private StringFilter createdBy;
-
     private LongFilter dataId;
-
     private Boolean distinct;
 
-    public NotificationCriteria() {}
+    public NotificationCriteria() {
+    }
 
     public NotificationCriteria(NotificationCriteria other) {
         this.id = other.id == null ? null : other.id.copy();
@@ -92,6 +62,10 @@ public class NotificationCriteria implements Serializable, Criteria {
         return id;
     }
 
+    public void setId(LongFilter id) {
+        this.id = id;
+    }
+
     public LongFilter id() {
         if (id == null) {
             id = new LongFilter();
@@ -99,12 +73,12 @@ public class NotificationCriteria implements Serializable, Criteria {
         return id;
     }
 
-    public void setId(LongFilter id) {
-        this.id = id;
-    }
-
     public StringFilter getUsername() {
         return username;
+    }
+
+    public void setUsername(StringFilter username) {
+        this.username = username;
     }
 
     public StringFilter username() {
@@ -114,12 +88,12 @@ public class NotificationCriteria implements Serializable, Criteria {
         return username;
     }
 
-    public void setUsername(StringFilter username) {
-        this.username = username;
-    }
-
     public StringFilter getToken() {
         return token;
+    }
+
+    public void setToken(StringFilter token) {
+        this.token = token;
     }
 
     public StringFilter token() {
@@ -129,12 +103,12 @@ public class NotificationCriteria implements Serializable, Criteria {
         return token;
     }
 
-    public void setToken(StringFilter token) {
-        this.token = token;
-    }
-
     public StringFilter getSubject() {
         return subject;
+    }
+
+    public void setSubject(StringFilter subject) {
+        this.subject = subject;
     }
 
     public StringFilter subject() {
@@ -144,12 +118,12 @@ public class NotificationCriteria implements Serializable, Criteria {
         return subject;
     }
 
-    public void setSubject(StringFilter subject) {
-        this.subject = subject;
-    }
-
     public StringFilter getContent() {
         return content;
+    }
+
+    public void setContent(StringFilter content) {
+        this.content = content;
     }
 
     public StringFilter content() {
@@ -159,12 +133,12 @@ public class NotificationCriteria implements Serializable, Criteria {
         return content;
     }
 
-    public void setContent(StringFilter content) {
-        this.content = content;
-    }
-
     public StringFilter getImage() {
         return image;
+    }
+
+    public void setImage(StringFilter image) {
+        this.image = image;
     }
 
     public StringFilter image() {
@@ -174,12 +148,12 @@ public class NotificationCriteria implements Serializable, Criteria {
         return image;
     }
 
-    public void setImage(StringFilter image) {
-        this.image = image;
-    }
-
     public MessageStatusFilter getStatus() {
         return status;
+    }
+
+    public void setStatus(MessageStatusFilter status) {
+        this.status = status;
     }
 
     public MessageStatusFilter status() {
@@ -189,12 +163,12 @@ public class NotificationCriteria implements Serializable, Criteria {
         return status;
     }
 
-    public void setStatus(MessageStatusFilter status) {
-        this.status = status;
-    }
-
     public InstantFilter getCreatedAt() {
         return createdAt;
+    }
+
+    public void setCreatedAt(InstantFilter createdAt) {
+        this.createdAt = createdAt;
     }
 
     public InstantFilter createdAt() {
@@ -204,12 +178,12 @@ public class NotificationCriteria implements Serializable, Criteria {
         return createdAt;
     }
 
-    public void setCreatedAt(InstantFilter createdAt) {
-        this.createdAt = createdAt;
-    }
-
     public StringFilter getCreatedBy() {
         return createdBy;
+    }
+
+    public void setCreatedBy(StringFilter createdBy) {
+        this.createdBy = createdBy;
     }
 
     public StringFilter createdBy() {
@@ -219,12 +193,12 @@ public class NotificationCriteria implements Serializable, Criteria {
         return createdBy;
     }
 
-    public void setCreatedBy(StringFilter createdBy) {
-        this.createdBy = createdBy;
-    }
-
     public LongFilter getDataId() {
         return dataId;
+    }
+
+    public void setDataId(LongFilter dataId) {
+        this.dataId = dataId;
     }
 
     public LongFilter dataId() {
@@ -232,10 +206,6 @@ public class NotificationCriteria implements Serializable, Criteria {
             dataId = new LongFilter();
         }
         return dataId;
-    }
-
-    public void setDataId(LongFilter dataId) {
-        this.dataId = dataId;
     }
 
     public Boolean getDistinct() {
@@ -257,16 +227,16 @@ public class NotificationCriteria implements Serializable, Criteria {
         final NotificationCriteria that = (NotificationCriteria) o;
         return (
             Objects.equals(id, that.id) &&
-            Objects.equals(username, that.username) &&
-            Objects.equals(token, that.token) &&
-            Objects.equals(subject, that.subject) &&
-            Objects.equals(content, that.content) &&
-            Objects.equals(image, that.image) &&
-            Objects.equals(status, that.status) &&
-            Objects.equals(createdAt, that.createdAt) &&
-            Objects.equals(createdBy, that.createdBy) &&
-            Objects.equals(dataId, that.dataId) &&
-            Objects.equals(distinct, that.distinct)
+                Objects.equals(username, that.username) &&
+                Objects.equals(token, that.token) &&
+                Objects.equals(subject, that.subject) &&
+                Objects.equals(content, that.content) &&
+                Objects.equals(image, that.image) &&
+                Objects.equals(status, that.status) &&
+                Objects.equals(createdAt, that.createdAt) &&
+                Objects.equals(createdBy, that.createdBy) &&
+                Objects.equals(dataId, that.dataId) &&
+                Objects.equals(distinct, that.distinct)
         );
     }
 
@@ -291,5 +261,23 @@ public class NotificationCriteria implements Serializable, Criteria {
             (dataId != null ? "dataId=" + dataId + ", " : "") +
             (distinct != null ? "distinct=" + distinct + ", " : "") +
             "}";
+    }
+
+    /**
+     * Class for filtering MessageStatus
+     */
+    public static class MessageStatusFilter extends Filter<MessageStatus> {
+
+        public MessageStatusFilter() {
+        }
+
+        public MessageStatusFilter(MessageStatusFilter filter) {
+            super(filter);
+        }
+
+        @Override
+        public MessageStatusFilter copy() {
+            return new MessageStatusFilter(this);
+        }
     }
 }

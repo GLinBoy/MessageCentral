@@ -1,14 +1,13 @@
 package com.glinboy.app.service.dto;
 
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import java.io.Serializable;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
-
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
 
 /**
  * A DTO for the {@link com.glinboy.app.domain.Notification} entity.
@@ -82,32 +81,32 @@ public class NotificationsDTO implements Serializable {
         NotificationsDTO notificationsDTO = (NotificationsDTO) o;
 
         return this.receivers != null && this.receivers.isEmpty()
-                && this.receivers.size() == notificationsDTO.receivers.size()
-                && this.receivers.containsAll(notificationsDTO.receivers)
-                && (this.subject == null ? notificationsDTO.subject == null
-                        : this.subject.equals(notificationsDTO.subject))
-                && (this.content == null ? notificationsDTO.content == null
-                        : this.content.equals(notificationsDTO.content));
+            && this.receivers.size() == notificationsDTO.receivers.size()
+            && this.receivers.containsAll(notificationsDTO.receivers)
+            && (this.subject == null ? notificationsDTO.subject == null
+            : this.subject.equals(notificationsDTO.subject))
+            && (this.content == null ? notificationsDTO.content == null
+            : this.content.equals(notificationsDTO.content));
     }
 
     @Override
     public int hashCode() {
         return Objects.hash(this.receivers.stream()
-                .map(r -> String.join(r.getUsername(), r.getToken(), ":"))
-                .collect(Collectors.joining(", ", "{", "}")));
+            .map(r -> String.join(r.getUsername(), r.getToken(), ":"))
+            .collect(Collectors.joining(", ", "{", "}")));
     }
 
     // prettier-ignore
     @Override
     public String toString() {
         return "NotificationDTO{" + "receivers="
-                + getReceivers().stream()
-                    .map(r -> String.join(r.getUsername(), r.getToken(), ":"))
-                    .collect(Collectors.joining(", ", "{", "}"))
-                + ", subject='" + getSubject() + "'" + ", content='" + getContent() + "'" + ", image='" + getImage()
-                + "'" + ", data='"
-                + getData().stream()
-                    .map(NotificationDataDTO::toString)
-                    .collect(Collectors.joining(", ")) + "'" + "}";
+            + getReceivers().stream()
+            .map(r -> String.join(r.getUsername(), r.getToken(), ":"))
+            .collect(Collectors.joining(", ", "{", "}"))
+            + ", subject='" + getSubject() + "'" + ", content='" + getContent() + "'" + ", image='" + getImage()
+            + "'" + ", data='"
+            + getData().stream()
+            .map(NotificationDataDTO::toString)
+            .collect(Collectors.joining(", ")) + "'" + "}";
     }
 }

@@ -1,8 +1,7 @@
 package com.glinboy.app.service.impl;
 
-import java.nio.charset.StandardCharsets;
-import java.util.List;
-
+import com.glinboy.app.config.ApplicationProperties;
+import com.glinboy.app.service.dto.NotificationDTO;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
@@ -13,15 +12,15 @@ import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
-import com.glinboy.app.config.ApplicationProperties;
-import com.glinboy.app.service.dto.NotificationDTO;
+import java.nio.charset.StandardCharsets;
+import java.util.List;
 
 @Service
 @ConditionalOnProperty(value = "application.notification.provider", havingValue = "pushe")
 public class PusheNotificationChannelServiceImpl extends AbstractNotificationChannelServiceImpl {
 
     protected PusheNotificationChannelServiceImpl(ApplicationEventPublisher publisher,
-            ApplicationProperties properties) {
+                                                  ApplicationProperties properties) {
         super(publisher, properties);
     }
 
@@ -45,7 +44,7 @@ public class PusheNotificationChannelServiceImpl extends AbstractNotificationCha
             requestBody.put("data", data);
             HttpEntity<String> request = new HttpEntity<>(requestBody.toString(), headers);
             String result = restTemplate.postForObject(properties.getNotification().getPushe().getUrl(), request,
-                    String.class);
+                String.class);
             log.info("Notification sent! {}", notificationDTO);
             log.info("Notification Result {}", result);
         }

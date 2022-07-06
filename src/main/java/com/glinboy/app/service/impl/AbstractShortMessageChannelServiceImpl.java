@@ -1,18 +1,17 @@
 package com.glinboy.app.service.impl;
 
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.context.ApplicationEventPublisher;
-import org.springframework.context.event.EventListener;
-
 import com.glinboy.app.config.ApplicationProperties;
 import com.glinboy.app.event.ShortMessageSentFailedEvent;
 import com.glinboy.app.event.ShortMessageSentSuccessfulEvent;
 import com.glinboy.app.service.ShortMessageChannelService;
 import com.glinboy.app.service.dto.ShortMessageDTO;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.context.event.EventListener;
+
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public abstract class AbstractShortMessageChannelServiceImpl implements ShortMessageChannelService<ShortMessageDTO> {
 
@@ -22,9 +21,9 @@ public abstract class AbstractShortMessageChannelServiceImpl implements ShortMes
     protected final ApplicationProperties properties;
 
     private final ApplicationEventPublisher publisher;
-    
+
     protected AbstractShortMessageChannelServiceImpl(ApplicationEventPublisher publisher,
-            ApplicationProperties properties) {
+                                                     ApplicationProperties properties) {
         log = LoggerFactory.getLogger(this.getClass());
         this.publisher = publisher;
         this.properties = properties;
@@ -41,11 +40,11 @@ public abstract class AbstractShortMessageChannelServiceImpl implements ShortMes
         try {
             deliverMessage(shortMessageDTOs);
             publisher.publishEvent(new ShortMessageSentSuccessfulEvent(this,
-                    Stream.of(shortMessageDTOs).map(ShortMessageDTO::getId).collect(Collectors.toList())));
+                Stream.of(shortMessageDTOs).map(ShortMessageDTO::getId).collect(Collectors.toList())));
         } catch (Exception e) {
             log.error("Parsing message failed: {}", e.getMessage(), e);
             publisher.publishEvent(new ShortMessageSentFailedEvent(this,
-                    Stream.of(shortMessageDTOs).map(ShortMessageDTO::getId).collect(Collectors.toList())));
+                Stream.of(shortMessageDTOs).map(ShortMessageDTO::getId).collect(Collectors.toList())));
         }
     }
 }

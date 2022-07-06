@@ -1,16 +1,10 @@
 package com.glinboy.app.service.criteria;
 
+import tech.jhipster.service.Criteria;
+import tech.jhipster.service.filter.*;
+
 import java.io.Serializable;
 import java.util.Objects;
-import tech.jhipster.service.Criteria;
-import tech.jhipster.service.filter.BooleanFilter;
-import tech.jhipster.service.filter.DoubleFilter;
-import tech.jhipster.service.filter.Filter;
-import tech.jhipster.service.filter.FloatFilter;
-import tech.jhipster.service.filter.InstantFilter;
-import tech.jhipster.service.filter.IntegerFilter;
-import tech.jhipster.service.filter.LongFilter;
-import tech.jhipster.service.filter.StringFilter;
 
 /**
  * Criteria class for the {@link com.glinboy.app.domain.Token} entity. This class is used
@@ -47,7 +41,8 @@ public class TokenCriteria implements Serializable, Criteria {
 
     private Boolean distinct;
 
-    public TokenCriteria() {}
+    public TokenCriteria() {
+    }
 
     public TokenCriteria(TokenCriteria other) {
         this.id = other.id == null ? null : other.id.copy();
@@ -72,6 +67,10 @@ public class TokenCriteria implements Serializable, Criteria {
         return id;
     }
 
+    public void setId(LongFilter id) {
+        this.id = id;
+    }
+
     public LongFilter id() {
         if (id == null) {
             id = new LongFilter();
@@ -79,12 +78,12 @@ public class TokenCriteria implements Serializable, Criteria {
         return id;
     }
 
-    public void setId(LongFilter id) {
-        this.id = id;
-    }
-
     public StringFilter getName() {
         return name;
+    }
+
+    public void setName(StringFilter name) {
+        this.name = name;
     }
 
     public StringFilter name() {
@@ -94,12 +93,12 @@ public class TokenCriteria implements Serializable, Criteria {
         return name;
     }
 
-    public void setName(StringFilter name) {
-        this.name = name;
-    }
-
     public StringFilter getToken() {
         return token;
+    }
+
+    public void setToken(StringFilter token) {
+        this.token = token;
     }
 
     public StringFilter token() {
@@ -109,12 +108,12 @@ public class TokenCriteria implements Serializable, Criteria {
         return token;
     }
 
-    public void setToken(StringFilter token) {
-        this.token = token;
-    }
-
     public BooleanFilter getDisable() {
         return disable;
+    }
+
+    public void setDisable(BooleanFilter disable) {
+        this.disable = disable;
     }
 
     public BooleanFilter disable() {
@@ -124,12 +123,12 @@ public class TokenCriteria implements Serializable, Criteria {
         return disable;
     }
 
-    public void setDisable(BooleanFilter disable) {
-        this.disable = disable;
-    }
-
     public InstantFilter getCreatedAt() {
         return createdAt;
+    }
+
+    public void setCreatedAt(InstantFilter createdAt) {
+        this.createdAt = createdAt;
     }
 
     public InstantFilter createdAt() {
@@ -139,12 +138,12 @@ public class TokenCriteria implements Serializable, Criteria {
         return createdAt;
     }
 
-    public void setCreatedAt(InstantFilter createdAt) {
-        this.createdAt = createdAt;
-    }
-
     public InstantFilter getDeprecateAt() {
         return deprecateAt;
+    }
+
+    public void setDeprecateAt(InstantFilter deprecateAt) {
+        this.deprecateAt = deprecateAt;
     }
 
     public InstantFilter deprecateAt() {
@@ -154,12 +153,12 @@ public class TokenCriteria implements Serializable, Criteria {
         return deprecateAt;
     }
 
-    public void setDeprecateAt(InstantFilter deprecateAt) {
-        this.deprecateAt = deprecateAt;
-    }
-
     public IntegerFilter getRoles() {
         return roles;
+    }
+
+    public void setRoles(IntegerFilter roles) {
+        this.roles = roles;
     }
 
     public IntegerFilter roles() {
@@ -169,12 +168,12 @@ public class TokenCriteria implements Serializable, Criteria {
         return roles;
     }
 
-    public void setRoles(IntegerFilter roles) {
-        this.roles = roles;
-    }
-
     public StringFilter getCreatedBy() {
         return createdBy;
+    }
+
+    public void setCreatedBy(StringFilter createdBy) {
+        this.createdBy = createdBy;
     }
 
     public StringFilter createdBy() {
@@ -184,12 +183,12 @@ public class TokenCriteria implements Serializable, Criteria {
         return createdBy;
     }
 
-    public void setCreatedBy(StringFilter createdBy) {
-        this.createdBy = createdBy;
-    }
-
     public InstantFilter getUpdatedAt() {
         return updatedAt;
+    }
+
+    public void setUpdatedAt(InstantFilter updatedAt) {
+        this.updatedAt = updatedAt;
     }
 
     public InstantFilter updatedAt() {
@@ -199,12 +198,12 @@ public class TokenCriteria implements Serializable, Criteria {
         return updatedAt;
     }
 
-    public void setUpdatedAt(InstantFilter updatedAt) {
-        this.updatedAt = updatedAt;
-    }
-
     public StringFilter getUpdatedBy() {
         return updatedBy;
+    }
+
+    public void setUpdatedBy(StringFilter updatedBy) {
+        this.updatedBy = updatedBy;
     }
 
     public StringFilter updatedBy() {
@@ -212,10 +211,6 @@ public class TokenCriteria implements Serializable, Criteria {
             updatedBy = new StringFilter();
         }
         return updatedBy;
-    }
-
-    public void setUpdatedBy(StringFilter updatedBy) {
-        this.updatedBy = updatedBy;
     }
 
     public Boolean getDistinct() {
@@ -237,16 +232,16 @@ public class TokenCriteria implements Serializable, Criteria {
         final TokenCriteria that = (TokenCriteria) o;
         return (
             Objects.equals(id, that.id) &&
-            Objects.equals(name, that.name) &&
-            Objects.equals(token, that.token) &&
-            Objects.equals(disable, that.disable) &&
-            Objects.equals(createdAt, that.createdAt) &&
-            Objects.equals(deprecateAt, that.deprecateAt) &&
-            Objects.equals(roles, that.roles) &&
-            Objects.equals(createdBy, that.createdBy) &&
-            Objects.equals(updatedAt, that.updatedAt) &&
-            Objects.equals(updatedBy, that.updatedBy) &&
-            Objects.equals(distinct, that.distinct)
+                Objects.equals(name, that.name) &&
+                Objects.equals(token, that.token) &&
+                Objects.equals(disable, that.disable) &&
+                Objects.equals(createdAt, that.createdAt) &&
+                Objects.equals(deprecateAt, that.deprecateAt) &&
+                Objects.equals(roles, that.roles) &&
+                Objects.equals(createdBy, that.createdBy) &&
+                Objects.equals(updatedAt, that.updatedAt) &&
+                Objects.equals(updatedBy, that.updatedBy) &&
+                Objects.equals(distinct, that.distinct)
         );
     }
 

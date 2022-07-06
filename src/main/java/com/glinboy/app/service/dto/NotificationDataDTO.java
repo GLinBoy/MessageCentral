@@ -1,9 +1,8 @@
 package com.glinboy.app.service.dto;
 
-import java.io.Serializable;
-
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import java.io.Serializable;
 
 /**
  * A NotificationDataDTO.
@@ -39,26 +38,26 @@ public class NotificationDataDTO implements Serializable {
         return this.key;
     }
 
+    public void setKey(String key) {
+        this.key = key;
+    }
+
     public NotificationDataDTO key(String key) {
         this.key = key;
         return this;
-    }
-
-    public void setKey(String key) {
-        this.key = key;
     }
 
     public String getValue() {
         return this.value;
     }
 
+    public void setValue(String value) {
+        this.value = value;
+    }
+
     public NotificationDataDTO value(String value) {
         this.value = value;
         return this;
-    }
-
-    public void setValue(String value) {
-        this.value = value;
     }
 
     public Long getNotificationId() {

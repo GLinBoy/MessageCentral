@@ -1,13 +1,14 @@
 package com.glinboy.app.service.dto;
 
 import com.glinboy.app.domain.enumeration.MessageStatus;
-import java.io.Serializable;
-import java.time.Instant;
-import java.util.Objects;
+
 import javax.persistence.Lob;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
+import java.io.Serializable;
+import java.time.Instant;
+import java.util.Objects;
 
 /**
  * A DTO for the {@link com.glinboy.app.domain.Email} entity.
