@@ -1,11 +1,13 @@
 package com.glinboy.app.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import java.io.Serializable;
-import javax.persistence.*;
-import javax.validation.constraints.*;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
+
+import javax.persistence.*;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
+import java.io.Serializable;
 
 /**
  * A NotificationData.
@@ -35,7 +37,7 @@ public class NotificationData implements Serializable {
 
     @ManyToOne(optional = false, cascade = CascadeType.ALL)
     @NotNull
-    @JsonIgnoreProperties(value = { "data" }, allowSetters = true)
+    @JsonIgnoreProperties(value = {"data"}, allowSetters = true)
     private Notification notification;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here
@@ -44,17 +46,21 @@ public class NotificationData implements Serializable {
         return this.id;
     }
 
+    public void setId(Long id) {
+        this.id = id;
+    }
+
     public NotificationData id(Long id) {
         this.setId(id);
         return this;
     }
 
-    public void setId(Long id) {
-        this.id = id;
-    }
-
     public String getKey() {
         return this.key;
+    }
+
+    public void setKey(String key) {
+        this.key = key;
     }
 
     public NotificationData key(String key) {
@@ -62,21 +68,17 @@ public class NotificationData implements Serializable {
         return this;
     }
 
-    public void setKey(String key) {
-        this.key = key;
-    }
-
     public String getValue() {
         return this.value;
+    }
+
+    public void setValue(String value) {
+        this.value = value;
     }
 
     public NotificationData value(String value) {
         this.setValue(value);
         return this;
-    }
-
-    public void setValue(String value) {
-        this.value = value;
     }
 
     public Notification getNotification() {

@@ -1,16 +1,19 @@
 package com.glinboy.app.domain;
 
 import com.glinboy.app.domain.enumeration.MessageStatus;
-import java.io.Serializable;
-import java.time.Instant;
-import javax.persistence.*;
-import javax.validation.constraints.*;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.Type;
 import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+
+import javax.persistence.*;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
+import javax.validation.constraints.Size;
+import java.io.Serializable;
+import java.time.Instant;
 
 /**
  * A Email.
@@ -65,17 +68,21 @@ public class Email implements Serializable {
         return this.id;
     }
 
+    public void setId(Long id) {
+        this.id = id;
+    }
+
     public Email id(Long id) {
         this.setId(id);
         return this;
     }
 
-    public void setId(Long id) {
-        this.id = id;
-    }
-
     public String getReceiver() {
         return this.receiver;
+    }
+
+    public void setReceiver(String receiver) {
+        this.receiver = receiver;
     }
 
     public Email receiver(String receiver) {
@@ -83,12 +90,12 @@ public class Email implements Serializable {
         return this;
     }
 
-    public void setReceiver(String receiver) {
-        this.receiver = receiver;
-    }
-
     public String getSubject() {
         return this.subject;
+    }
+
+    public void setSubject(String subject) {
+        this.subject = subject;
     }
 
     public Email subject(String subject) {
@@ -96,12 +103,12 @@ public class Email implements Serializable {
         return this;
     }
 
-    public void setSubject(String subject) {
-        this.subject = subject;
-    }
-
     public String getContent() {
         return this.content;
+    }
+
+    public void setContent(String content) {
+        this.content = content;
     }
 
     public Email content(String content) {
@@ -109,12 +116,12 @@ public class Email implements Serializable {
         return this;
     }
 
-    public void setContent(String content) {
-        this.content = content;
-    }
-
     public MessageStatus getStatus() {
         return this.status;
+    }
+
+    public void setStatus(MessageStatus status) {
+        this.status = status;
     }
 
     public Email status(MessageStatus status) {
@@ -122,12 +129,12 @@ public class Email implements Serializable {
         return this;
     }
 
-    public void setStatus(MessageStatus status) {
-        this.status = status;
-    }
-
     public Instant getCreatedAt() {
         return this.createdAt;
+    }
+
+    public void setCreatedAt(Instant createdAt) {
+        this.createdAt = createdAt;
     }
 
     public Email createdAt(Instant createdAt) {
@@ -135,21 +142,17 @@ public class Email implements Serializable {
         return this;
     }
 
-    public void setCreatedAt(Instant createdAt) {
-        this.createdAt = createdAt;
-    }
-
     public String getCreatedBy() {
         return this.createdBy;
+    }
+
+    public void setCreatedBy(String createdBy) {
+        this.createdBy = createdBy;
     }
 
     public Email createdBy(String createdBy) {
         this.setCreatedBy(createdBy);
         return this;
-    }
-
-    public void setCreatedBy(String createdBy) {
-        this.createdBy = createdBy;
     }
 
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here

@@ -1,9 +1,5 @@
 package com.glinboy.app.domain;
 
-import java.io.Serializable;
-import java.time.Instant;
-import javax.persistence.*;
-import javax.validation.constraints.*;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.springframework.data.annotation.CreatedBy;
@@ -11,6 +7,12 @@ import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedBy;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+
+import javax.persistence.*;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
+import java.io.Serializable;
+import java.time.Instant;
 
 /**
  * A Token.
@@ -77,17 +79,21 @@ public class Token implements Serializable {
         return this.id;
     }
 
+    public void setId(Long id) {
+        this.id = id;
+    }
+
     public Token id(Long id) {
         this.setId(id);
         return this;
     }
 
-    public void setId(Long id) {
-        this.id = id;
-    }
-
     public String getName() {
         return this.name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public Token name(String name) {
@@ -95,12 +101,12 @@ public class Token implements Serializable {
         return this;
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
-
     public String getToken() {
         return this.token;
+    }
+
+    public void setToken(String token) {
+        this.token = token;
     }
 
     public Token token(String token) {
@@ -108,12 +114,12 @@ public class Token implements Serializable {
         return this;
     }
 
-    public void setToken(String token) {
-        this.token = token;
-    }
-
     public Boolean getDisable() {
         return this.disable;
+    }
+
+    public void setDisable(Boolean disable) {
+        this.disable = disable;
     }
 
     public Token disable(Boolean disable) {
@@ -121,12 +127,12 @@ public class Token implements Serializable {
         return this;
     }
 
-    public void setDisable(Boolean disable) {
-        this.disable = disable;
-    }
-
     public Instant getCreatedAt() {
         return this.createdAt;
+    }
+
+    public void setCreatedAt(Instant createdAt) {
+        this.createdAt = createdAt;
     }
 
     public Token createdAt(Instant createdAt) {
@@ -134,12 +140,12 @@ public class Token implements Serializable {
         return this;
     }
 
-    public void setCreatedAt(Instant createdAt) {
-        this.createdAt = createdAt;
-    }
-
     public Instant getDeprecateAt() {
         return this.deprecateAt;
+    }
+
+    public void setDeprecateAt(Instant deprecateAt) {
+        this.deprecateAt = deprecateAt;
     }
 
     public Token deprecateAt(Instant deprecateAt) {
@@ -147,12 +153,12 @@ public class Token implements Serializable {
         return this;
     }
 
-    public void setDeprecateAt(Instant deprecateAt) {
-        this.deprecateAt = deprecateAt;
-    }
-
     public Integer getRoles() {
         return this.roles;
+    }
+
+    public void setRoles(Integer roles) {
+        this.roles = roles;
     }
 
     public Token roles(Integer roles) {
@@ -160,12 +166,12 @@ public class Token implements Serializable {
         return this;
     }
 
-    public void setRoles(Integer roles) {
-        this.roles = roles;
-    }
-
     public String getCreatedBy() {
         return this.createdBy;
+    }
+
+    public void setCreatedBy(String createdBy) {
+        this.createdBy = createdBy;
     }
 
     public Token createdBy(String createdBy) {
@@ -173,12 +179,12 @@ public class Token implements Serializable {
         return this;
     }
 
-    public void setCreatedBy(String createdBy) {
-        this.createdBy = createdBy;
-    }
-
     public Instant getUpdatedAt() {
         return this.updatedAt;
+    }
+
+    public void setUpdatedAt(Instant updatedAt) {
+        this.updatedAt = updatedAt;
     }
 
     public Token updatedAt(Instant updatedAt) {
@@ -186,21 +192,17 @@ public class Token implements Serializable {
         return this;
     }
 
-    public void setUpdatedAt(Instant updatedAt) {
-        this.updatedAt = updatedAt;
-    }
-
     public String getUpdatedBy() {
         return this.updatedBy;
+    }
+
+    public void setUpdatedBy(String updatedBy) {
+        this.updatedBy = updatedBy;
     }
 
     public Token updatedBy(String updatedBy) {
         this.setUpdatedBy(updatedBy);
         return this;
-    }
-
-    public void setUpdatedBy(String updatedBy) {
-        this.updatedBy = updatedBy;
     }
 
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here
