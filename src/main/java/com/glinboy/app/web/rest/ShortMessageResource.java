@@ -10,13 +10,6 @@ import com.glinboy.app.service.dto.ShortMessagesDTO;
 import com.glinboy.app.web.rest.errors.BadRequestAlertException;
 import cz.jirutka.rsql.parser.RSQLParser;
 import cz.jirutka.rsql.parser.ast.Node;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
-import javax.validation.Valid;
-import javax.validation.constraints.NotNull;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,17 +19,19 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import tech.jhipster.web.util.HeaderUtil;
 import tech.jhipster.web.util.PaginationUtil;
 import tech.jhipster.web.util.ResponseUtil;
+
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
 
 /**
  * REST controller for managing {@link com.glinboy.app.domain.ShortMessage}.
@@ -45,18 +40,13 @@ import tech.jhipster.web.util.ResponseUtil;
 @RequestMapping("/api")
 public class ShortMessageResource {
 
-    private final Logger log = LoggerFactory.getLogger(ShortMessageResource.class);
-
     private static final String ENTITY_NAME = "shortMessage";
-
+    private final Logger log = LoggerFactory.getLogger(ShortMessageResource.class);
+    private final ShortMessageService shortMessageService;
+    private final ShortMessageRepository shortMessageRepository;
+    private final ShortMessageQueryService shortMessageQueryService;
     @Value("${jhipster.clientApp.name}")
     private String applicationName;
-
-    private final ShortMessageService shortMessageService;
-
-    private final ShortMessageRepository shortMessageRepository;
-
-    private final ShortMessageQueryService shortMessageQueryService;
 
     public ShortMessageResource(
         ShortMessageService shortMessageService,
@@ -107,7 +97,7 @@ public class ShortMessageResource {
     /**
      * {@code PUT  /short-messages/:id} : Updates an existing shortMessage.
      *
-     * @param id the id of the shortMessageDTO to save.
+     * @param id              the id of the shortMessageDTO to save.
      * @param shortMessageDTO the shortMessageDTO to update.
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the updated shortMessageDTO,
      * or with status {@code 400 (Bad Request)} if the shortMessageDTO is not valid,
@@ -141,7 +131,7 @@ public class ShortMessageResource {
     /**
      * {@code PATCH  /short-messages/:id} : Partial updates given fields of an existing shortMessage, field will ignore if it is null
      *
-     * @param id the id of the shortMessageDTO to save.
+     * @param id              the id of the shortMessageDTO to save.
      * @param shortMessageDTO the shortMessageDTO to update.
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the updated shortMessageDTO,
      * or with status {@code 400 (Bad Request)} if the shortMessageDTO is not valid,

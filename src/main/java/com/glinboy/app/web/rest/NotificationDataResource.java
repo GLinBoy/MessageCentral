@@ -3,13 +3,6 @@ package com.glinboy.app.web.rest;
 import com.glinboy.app.domain.NotificationData;
 import com.glinboy.app.repository.NotificationDataRepository;
 import com.glinboy.app.web.rest.errors.BadRequestAlertException;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
-import javax.validation.Valid;
-import javax.validation.constraints.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -19,6 +12,14 @@ import org.springframework.web.bind.annotation.*;
 import tech.jhipster.web.util.HeaderUtil;
 import tech.jhipster.web.util.ResponseUtil;
 
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
+
 /**
  * REST controller for managing {@link com.glinboy.app.domain.NotificationData}.
  */
@@ -27,14 +28,11 @@ import tech.jhipster.web.util.ResponseUtil;
 @Transactional
 public class NotificationDataResource {
 
-    private final Logger log = LoggerFactory.getLogger(NotificationDataResource.class);
-
     private static final String ENTITY_NAME = "notificationData";
-
+    private final Logger log = LoggerFactory.getLogger(NotificationDataResource.class);
+    private final NotificationDataRepository notificationDataRepository;
     @Value("${jhipster.clientApp.name}")
     private String applicationName;
-
-    private final NotificationDataRepository notificationDataRepository;
 
     public NotificationDataResource(NotificationDataRepository notificationDataRepository) {
         this.notificationDataRepository = notificationDataRepository;
@@ -64,7 +62,7 @@ public class NotificationDataResource {
     /**
      * {@code PUT  /notification-data/:id} : Updates an existing notificationData.
      *
-     * @param id the id of the notificationData to save.
+     * @param id               the id of the notificationData to save.
      * @param notificationData the notificationData to update.
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the updated notificationData,
      * or with status {@code 400 (Bad Request)} if the notificationData is not valid,
@@ -98,7 +96,7 @@ public class NotificationDataResource {
     /**
      * {@code PATCH  /notification-data/:id} : Partial updates given fields of an existing notificationData, field will ignore if it is null
      *
-     * @param id the id of the notificationData to save.
+     * @param id               the id of the notificationData to save.
      * @param notificationData the notificationData to update.
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the updated notificationData,
      * or with status {@code 400 (Bad Request)} if the notificationData is not valid,
@@ -106,7 +104,7 @@ public class NotificationDataResource {
      * or with status {@code 500 (Internal Server Error)} if the notificationData couldn't be updated.
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
-    @PatchMapping(value = "/notification-data/{id}", consumes = { "application/json", "application/merge-patch+json" })
+    @PatchMapping(value = "/notification-data/{id}", consumes = {"application/json", "application/merge-patch+json"})
     public ResponseEntity<NotificationData> partialUpdateNotificationData(
         @PathVariable(value = "id", required = false) final Long id,
         @NotNull @RequestBody NotificationData notificationData

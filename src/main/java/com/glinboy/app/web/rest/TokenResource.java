@@ -9,13 +9,6 @@ import com.glinboy.app.service.dto.TokenDTO;
 import com.glinboy.app.web.rest.errors.BadRequestAlertException;
 import cz.jirutka.rsql.parser.RSQLParser;
 import cz.jirutka.rsql.parser.ast.Node;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
-import javax.validation.Valid;
-import javax.validation.constraints.NotNull;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -31,6 +24,14 @@ import tech.jhipster.web.util.HeaderUtil;
 import tech.jhipster.web.util.PaginationUtil;
 import tech.jhipster.web.util.ResponseUtil;
 
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
+
 /**
  * REST controller for managing {@link com.glinboy.app.domain.Token}.
  */
@@ -38,18 +39,13 @@ import tech.jhipster.web.util.ResponseUtil;
 @RequestMapping("/api")
 public class TokenResource {
 
-    private final Logger log = LoggerFactory.getLogger(TokenResource.class);
-
     private static final String ENTITY_NAME = "token";
-
+    private final Logger log = LoggerFactory.getLogger(TokenResource.class);
+    private final TokenService tokenService;
+    private final TokenRepository tokenRepository;
+    private final TokenQueryService tokenQueryService;
     @Value("${jhipster.clientApp.name}")
     private String applicationName;
-
-    private final TokenService tokenService;
-
-    private final TokenRepository tokenRepository;
-
-    private final TokenQueryService tokenQueryService;
 
     public TokenResource(TokenService tokenService, TokenRepository tokenRepository, TokenQueryService tokenQueryService) {
         this.tokenService = tokenService;
@@ -62,8 +58,8 @@ public class TokenResource {
      *
      * @param tokenDTO the tokenDTO to create.
      * @return the {@link ResponseEntity} with status {@code 201 (Created)} and with
-     *         body the new tokenDTO, or with status {@code 400 (Bad Request)} if
-     *         the token has already an ID.
+     * body the new tokenDTO, or with status {@code 400 (Bad Request)} if
+     * the token has already an ID.
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PostMapping("/tokens")
@@ -85,10 +81,10 @@ public class TokenResource {
      * @param id       the id of the tokenDTO to save.
      * @param tokenDTO the tokenDTO to update.
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body
-     *         the updated tokenDTO, or with status {@code 400 (Bad Request)} if the
-     *         tokenDTO is not valid, or with status
-     *         {@code 500 (Internal Server Error)} if the tokenDTO couldn't be
-     *         updated.
+     * the updated tokenDTO, or with status {@code 400 (Bad Request)} if the
+     * tokenDTO is not valid, or with status
+     * {@code 500 (Internal Server Error)} if the tokenDTO couldn't be
+     * updated.
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     //    @PutMapping("/tokens/{id}")
@@ -122,11 +118,11 @@ public class TokenResource {
      * @param id       the id of the tokenDTO to save.
      * @param tokenDTO the tokenDTO to update.
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body
-     *         the updated tokenDTO, or with status {@code 400 (Bad Request)} if the
-     *         tokenDTO is not valid, or with status {@code 404 (Not Found)} if the
-     *         tokenDTO is not found, or with status
-     *         {@code 500 (Internal Server Error)} if the tokenDTO couldn't be
-     *         updated.
+     * the updated tokenDTO, or with status {@code 400 (Bad Request)} if the
+     * tokenDTO is not valid, or with status {@code 404 (Not Found)} if the
+     * tokenDTO is not found, or with status
+     * {@code 500 (Internal Server Error)} if the tokenDTO couldn't be
+     * updated.
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     //    @PatchMapping(value = "/tokens/{id}", consumes = { "application/json", "application/merge-patch+json" })
@@ -160,7 +156,7 @@ public class TokenResource {
      * @param pageable the pagination information.
      * @param criteria the criteria which the requested entities should match.
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list
-     *         of tokens in body.
+     * of tokens in body.
      */
     @GetMapping("/tokens")
     public ResponseEntity<List<TokenDTO>> getAllTokens(
@@ -182,7 +178,7 @@ public class TokenResource {
      *
      * @param criteria the criteria which the requested entities should match.
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the count
-     *         in body.
+     * in body.
      */
     @GetMapping("/tokens/count")
     public ResponseEntity<Long> countTokens(@RequestParam(value = "query", required = false, defaultValue = "") String query) {
@@ -199,7 +195,7 @@ public class TokenResource {
      *
      * @param id the id of the tokenDTO to retrieve.
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body
-     *         the tokenDTO, or with status {@code 404 (Not Found)}.
+     * the tokenDTO, or with status {@code 404 (Not Found)}.
      */
     @GetMapping("/tokens/{id}")
     public ResponseEntity<TokenDTO> getToken(@PathVariable Long id) {
