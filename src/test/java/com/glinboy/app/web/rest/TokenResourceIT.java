@@ -1280,6 +1280,7 @@ class TokenResourceIT {
             .andExpect(status().isForbidden());
     }
 
+    @Disabled("This test doesn't work on test environment")
     @Test
     @Transactional
     @WithMockUser(authorities = { AuthoritiesConstants.ADMIN })
