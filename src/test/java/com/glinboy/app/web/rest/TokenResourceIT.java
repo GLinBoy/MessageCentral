@@ -1216,6 +1216,7 @@ class TokenResourceIT {
             .andExpect(status().isForbidden());
     }
 
+    @Disabled("We don't update a token")
     @Test
     @Transactional
     @WithMockUser(authorities = { AuthoritiesConstants.ADMIN })
