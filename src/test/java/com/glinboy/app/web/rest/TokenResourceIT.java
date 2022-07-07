@@ -1236,6 +1236,7 @@ class TokenResourceIT {
         assertThat(token_.getDisable()).isEqualTo(Boolean.FALSE);
     }
 
+    @Disabled("We don't update a token")
     @Test
     @Transactional
     @WithMockUser(authorities = { AuthoritiesConstants.ADMIN })
