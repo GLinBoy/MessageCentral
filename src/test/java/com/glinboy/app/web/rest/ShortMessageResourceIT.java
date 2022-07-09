@@ -1,17 +1,5 @@
 package com.glinboy.app.web.rest;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.hamcrest.Matchers.hasItem;
-import static org.mockito.Mockito.doNothing;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-
 import com.glinboy.app.IntegrationTest;
 import com.glinboy.app.domain.ShortMessage;
 import com.glinboy.app.domain.enumeration.MessageStatus;
@@ -21,13 +9,6 @@ import com.glinboy.app.service.ShortMessageChannelService;
 import com.glinboy.app.service.dto.ShortMessageDTO;
 import com.glinboy.app.service.dto.ShortMessagesDTO;
 import com.glinboy.app.service.mapper.ShortMessageMapper;
-import java.util.List;
-import java.util.Random;
-import java.util.Set;
-import java.util.concurrent.atomic.AtomicLong;
-import java.util.stream.Collectors;
-import java.util.stream.IntStream;
-import javax.persistence.EntityManager;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
@@ -37,6 +18,20 @@ import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
+
+import javax.persistence.EntityManager;
+import java.util.List;
+import java.util.Random;
+import java.util.Set;
+import java.util.concurrent.atomic.AtomicLong;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.hamcrest.Matchers.hasItem;
+import static org.mockito.Mockito.doNothing;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 /**
  * Integration tests for the {@link ShortMessageResource} REST controller.
@@ -78,7 +73,7 @@ class ShortMessageResourceIT {
 
     /**
      * Create an entity for this test.
-     *
+     * <p>
      * This is a static method, as tests for other entities might also need it, if
      * they test an entity which requires the current entity.
      */
@@ -89,7 +84,7 @@ class ShortMessageResourceIT {
 
     /**
      * Create multiple entity for this test.
-     *
+     * <p>
      * This is a static method, as tests for other entities might also need it, if
      * they test an entity which requires the current entity.
      */
@@ -114,7 +109,7 @@ class ShortMessageResourceIT {
 
     /**
      * Create an updated entity for this test.
-     *
+     * <p>
      * This is a static method, as tests for other entities might also need it, if
      * they test an entity which requires the current entity.
      */
@@ -130,7 +125,7 @@ class ShortMessageResourceIT {
 
     @Test
     @Transactional
-    @WithMockUser(authorities = { AuthoritiesConstants.SMS_USER })
+    @WithMockUser(authorities = {AuthoritiesConstants.SMS_USER})
     void createShortMessage() throws Exception {
         int databaseSizeBeforeCreate = shortMessageRepository.findAll().size();
         // Create the ShortMessage
@@ -166,7 +161,7 @@ class ShortMessageResourceIT {
 
     @Test
     @Transactional
-    @WithMockUser(authorities = { AuthoritiesConstants.SMS_USER })
+    @WithMockUser(authorities = {AuthoritiesConstants.SMS_USER})
     void createBulkShortMessage() throws Exception {
         int databaseSizeBeforeCreate = shortMessageRepository.findAll().size();
         // Create Multiple ShortMessage
@@ -206,7 +201,7 @@ class ShortMessageResourceIT {
 
     @Test
     @Transactional
-    @WithMockUser(authorities = { AuthoritiesConstants.SMS_USER })
+    @WithMockUser(authorities = {AuthoritiesConstants.SMS_USER})
     void createShortMessageWithExistingId() throws Exception {
         // Create the ShortMessage with an existing ID
         shortMessage.setId(1L);
@@ -228,7 +223,7 @@ class ShortMessageResourceIT {
 
     @Test
     @Transactional
-    @WithMockUser(authorities = { AuthoritiesConstants.SMS_USER })
+    @WithMockUser(authorities = {AuthoritiesConstants.SMS_USER})
     void checkPhoneNumberIsRequired() throws Exception {
         int databaseSizeBeforeTest = shortMessageRepository.findAll().size();
         // set the field null
@@ -249,7 +244,7 @@ class ShortMessageResourceIT {
 
     @Test
     @Transactional
-    @WithMockUser(authorities = { AuthoritiesConstants.SMS_USER })
+    @WithMockUser(authorities = {AuthoritiesConstants.SMS_USER})
     void checkContentIsRequired() throws Exception {
         int databaseSizeBeforeTest = shortMessageRepository.findAll().size();
         // set the field null
@@ -270,7 +265,7 @@ class ShortMessageResourceIT {
 
     @Test
     @Transactional
-    @WithMockUser(authorities = { AuthoritiesConstants.SMS_USER })
+    @WithMockUser(authorities = {AuthoritiesConstants.SMS_USER})
     void getAllShortMessages() throws Exception {
         // Initialize the database
         shortMessageRepository.saveAndFlush(shortMessage);
@@ -287,7 +282,7 @@ class ShortMessageResourceIT {
 
     @Test
     @Transactional
-    @WithMockUser(authorities = { AuthoritiesConstants.SMS_USER })
+    @WithMockUser(authorities = {AuthoritiesConstants.SMS_USER})
     void getShortMessage() throws Exception {
         // Initialize the database
         shortMessageRepository.saveAndFlush(shortMessage);
@@ -317,7 +312,7 @@ class ShortMessageResourceIT {
 
     @Test
     @Transactional
-    @WithMockUser(authorities = { AuthoritiesConstants.SMS_USER })
+    @WithMockUser(authorities = {AuthoritiesConstants.SMS_USER})
     void getShortMessagesByIdFiltering() throws Exception {
         // Initialize the database
         shortMessageRepository.saveAndFlush(shortMessage);
@@ -336,7 +331,7 @@ class ShortMessageResourceIT {
 
     @Test
     @Transactional
-    @WithMockUser(authorities = { AuthoritiesConstants.SMS_USER })
+    @WithMockUser(authorities = {AuthoritiesConstants.SMS_USER})
     void getAllShortMessagesByPhoneNumberIsEqualToSomething() throws Exception {
         // Initialize the database
         shortMessageRepository.saveAndFlush(shortMessage);
@@ -350,7 +345,7 @@ class ShortMessageResourceIT {
 
     @Test
     @Transactional
-    @WithMockUser(authorities = { AuthoritiesConstants.SMS_USER })
+    @WithMockUser(authorities = {AuthoritiesConstants.SMS_USER})
     void getAllShortMessagesByPhoneNumberIsNotEqualToSomething() throws Exception {
         // Initialize the database
         shortMessageRepository.saveAndFlush(shortMessage);
@@ -366,7 +361,7 @@ class ShortMessageResourceIT {
 
     @Test
     @Transactional
-    @WithMockUser(authorities = { AuthoritiesConstants.SMS_USER })
+    @WithMockUser(authorities = {AuthoritiesConstants.SMS_USER})
     void getAllShortMessagesByPhoneNumberIsInShouldWork() throws Exception {
         // Initialize the database
         shortMessageRepository.saveAndFlush(shortMessage);
@@ -383,7 +378,7 @@ class ShortMessageResourceIT {
 
     @Test
     @Transactional
-    @WithMockUser(authorities = { AuthoritiesConstants.SMS_USER })
+    @WithMockUser(authorities = {AuthoritiesConstants.SMS_USER})
     void getAllShortMessagesByPhoneNumberIsNullOrNotNull() throws Exception {
         // Initialize the database
         shortMessageRepository.saveAndFlush(shortMessage);
@@ -397,7 +392,7 @@ class ShortMessageResourceIT {
 
     @Test
     @Transactional
-    @WithMockUser(authorities = { AuthoritiesConstants.SMS_USER })
+    @WithMockUser(authorities = {AuthoritiesConstants.SMS_USER})
     void getAllShortMessagesByPhoneNumberContainsSomething() throws Exception {
         // Initialize the database
         shortMessageRepository.saveAndFlush(shortMessage);
@@ -411,7 +406,7 @@ class ShortMessageResourceIT {
 
     @Test
     @Transactional
-    @WithMockUser(authorities = { AuthoritiesConstants.SMS_USER })
+    @WithMockUser(authorities = {AuthoritiesConstants.SMS_USER})
     void getAllShortMessagesByPhoneNumberNotContainsSomething() throws Exception {
         // Initialize the database
         shortMessageRepository.saveAndFlush(shortMessage);
@@ -427,7 +422,7 @@ class ShortMessageResourceIT {
 
     @Test
     @Transactional
-    @WithMockUser(authorities = { AuthoritiesConstants.SMS_USER })
+    @WithMockUser(authorities = {AuthoritiesConstants.SMS_USER})
     void getAllShortMessagesByContentIsEqualToSomething() throws Exception {
         // Initialize the database
         shortMessageRepository.saveAndFlush(shortMessage);
@@ -441,7 +436,7 @@ class ShortMessageResourceIT {
 
     @Test
     @Transactional
-    @WithMockUser(authorities = { AuthoritiesConstants.SMS_USER })
+    @WithMockUser(authorities = {AuthoritiesConstants.SMS_USER})
     void getAllShortMessagesByContentIsNotEqualToSomething() throws Exception {
         // Initialize the database
         shortMessageRepository.saveAndFlush(shortMessage);
@@ -455,7 +450,7 @@ class ShortMessageResourceIT {
 
     @Test
     @Transactional
-    @WithMockUser(authorities = { AuthoritiesConstants.SMS_USER })
+    @WithMockUser(authorities = {AuthoritiesConstants.SMS_USER})
     void getAllShortMessagesByContentIsInShouldWork() throws Exception {
         // Initialize the database
         shortMessageRepository.saveAndFlush(shortMessage);
@@ -470,7 +465,7 @@ class ShortMessageResourceIT {
 
     @Test
     @Transactional
-    @WithMockUser(authorities = { AuthoritiesConstants.SMS_USER })
+    @WithMockUser(authorities = {AuthoritiesConstants.SMS_USER})
     void getAllShortMessagesByContentIsNullOrNotNull() throws Exception {
         // Initialize the database
         shortMessageRepository.saveAndFlush(shortMessage);
@@ -484,7 +479,7 @@ class ShortMessageResourceIT {
 
     @Test
     @Transactional
-    @WithMockUser(authorities = { AuthoritiesConstants.SMS_USER })
+    @WithMockUser(authorities = {AuthoritiesConstants.SMS_USER})
     void getAllShortMessagesByContentContainsSomething() throws Exception {
         // Initialize the database
         shortMessageRepository.saveAndFlush(shortMessage);
@@ -498,7 +493,7 @@ class ShortMessageResourceIT {
 
     @Test
     @Transactional
-    @WithMockUser(authorities = { AuthoritiesConstants.SMS_USER })
+    @WithMockUser(authorities = {AuthoritiesConstants.SMS_USER})
     void getAllShortMessagesByContentNotContainsSomething() throws Exception {
         // Initialize the database
         shortMessageRepository.saveAndFlush(shortMessage);
@@ -551,7 +546,7 @@ class ShortMessageResourceIT {
 
     @Test
     @Transactional
-    @WithMockUser(authorities = { AuthoritiesConstants.SMS_USER })
+    @WithMockUser(authorities = {AuthoritiesConstants.SMS_USER})
     void getNonExistingShortMessage() throws Exception {
         // Get the shortMessage
         restShortMessageMockMvc.perform(get(ENTITY_API_URL_ID, Long.MAX_VALUE)).andExpect(status().isNotFound());
@@ -559,7 +554,7 @@ class ShortMessageResourceIT {
 
     @Test
     @Transactional
-    @WithMockUser(authorities = { AuthoritiesConstants.SMS_USER })
+    @WithMockUser(authorities = {AuthoritiesConstants.SMS_USER})
     void putNewShortMessage() throws Exception {
         // Initialize the database
         shortMessageRepository.saveAndFlush(shortMessage);
@@ -615,7 +610,7 @@ class ShortMessageResourceIT {
 
     @Test
     @Transactional
-    @WithMockUser(authorities = { AuthoritiesConstants.SMS_USER })
+    @WithMockUser(authorities = {AuthoritiesConstants.SMS_USER})
     void putNonExistingShortMessage() throws Exception {
         int databaseSizeBeforeUpdate = shortMessageRepository.findAll().size();
         shortMessage.setId(count.incrementAndGet());
@@ -639,7 +634,7 @@ class ShortMessageResourceIT {
 
     @Test
     @Transactional
-    @WithMockUser(authorities = { AuthoritiesConstants.SMS_USER })
+    @WithMockUser(authorities = {AuthoritiesConstants.SMS_USER})
     void putWithIdMismatchShortMessage() throws Exception {
         int databaseSizeBeforeUpdate = shortMessageRepository.findAll().size();
         shortMessage.setId(count.incrementAndGet());
@@ -663,7 +658,7 @@ class ShortMessageResourceIT {
 
     @Test
     @Transactional
-    @WithMockUser(authorities = { AuthoritiesConstants.SMS_USER })
+    @WithMockUser(authorities = {AuthoritiesConstants.SMS_USER})
     void putWithMissingIdPathParamShortMessage() throws Exception {
         int databaseSizeBeforeUpdate = shortMessageRepository.findAll().size();
         shortMessage.setId(count.incrementAndGet());
@@ -685,7 +680,7 @@ class ShortMessageResourceIT {
 
     @Test
     @Transactional
-    @WithMockUser(authorities = { AuthoritiesConstants.SMS_USER })
+    @WithMockUser(authorities = {AuthoritiesConstants.SMS_USER})
     void partialUpdateShortMessageWithPatch() throws Exception {
         // Initialize the database
         shortMessageRepository.saveAndFlush(shortMessage);
@@ -733,7 +728,7 @@ class ShortMessageResourceIT {
 
     @Test
     @Transactional
-    @WithMockUser(authorities = { AuthoritiesConstants.SMS_USER })
+    @WithMockUser(authorities = {AuthoritiesConstants.SMS_USER})
     void fullUpdateShortMessageWithPatch() throws Exception {
         // Initialize the database
         shortMessageRepository.saveAndFlush(shortMessage);
@@ -764,7 +759,7 @@ class ShortMessageResourceIT {
 
     @Test
     @Transactional
-    @WithMockUser(authorities = { AuthoritiesConstants.SMS_USER })
+    @WithMockUser(authorities = {AuthoritiesConstants.SMS_USER})
     void patchNonExistingShortMessage() throws Exception {
         int databaseSizeBeforeUpdate = shortMessageRepository.findAll().size();
         shortMessage.setId(count.incrementAndGet());
@@ -788,7 +783,7 @@ class ShortMessageResourceIT {
 
     @Test
     @Transactional
-    @WithMockUser(authorities = { AuthoritiesConstants.SMS_USER })
+    @WithMockUser(authorities = {AuthoritiesConstants.SMS_USER})
     void patchWithIdMismatchShortMessage() throws Exception {
         int databaseSizeBeforeUpdate = shortMessageRepository.findAll().size();
         shortMessage.setId(count.incrementAndGet());
@@ -812,7 +807,7 @@ class ShortMessageResourceIT {
 
     @Test
     @Transactional
-    @WithMockUser(authorities = { AuthoritiesConstants.SMS_USER })
+    @WithMockUser(authorities = {AuthoritiesConstants.SMS_USER})
     void patchWithMissingIdPathParamShortMessage() throws Exception {
         int databaseSizeBeforeUpdate = shortMessageRepository.findAll().size();
         shortMessage.setId(count.incrementAndGet());
@@ -836,7 +831,7 @@ class ShortMessageResourceIT {
 
     @Test
     @Transactional
-    @WithMockUser(authorities = { AuthoritiesConstants.SMS_USER })
+    @WithMockUser(authorities = {AuthoritiesConstants.SMS_USER})
     void deleteShortMessage() throws Exception {
         // Initialize the database
         shortMessageRepository.saveAndFlush(shortMessage);

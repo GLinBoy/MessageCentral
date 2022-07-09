@@ -1,17 +1,5 @@
 package com.glinboy.app.web.rest;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.hamcrest.Matchers.hasItem;
-import static org.mockito.Mockito.doNothing;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-
 import com.glinboy.app.IntegrationTest;
 import com.glinboy.app.domain.Notification;
 import com.glinboy.app.domain.NotificationData;
@@ -23,17 +11,6 @@ import com.glinboy.app.service.dto.NotificationDTO;
 import com.glinboy.app.service.dto.NotificationsDTO;
 import com.glinboy.app.service.dto.ReceiverDTO;
 import com.glinboy.app.service.mapper.NotificationMapper;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Random;
-import java.util.Set;
-import java.util.concurrent.atomic.AtomicLong;
-import java.util.stream.Collectors;
-import java.util.stream.IntStream;
-import javax.persistence.EntityManager;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
@@ -44,6 +21,21 @@ import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
+
+import javax.persistence.EntityManager;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
+import java.util.Set;
+import java.util.concurrent.atomic.AtomicLong;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.hamcrest.Matchers.hasItem;
+import static org.mockito.Mockito.doNothing;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 /**
  * Integration tests for the {@link NotificationResource} REST controller.
@@ -99,7 +91,7 @@ class NotificationResourceIT {
 
     /**
      * Create an entity for this test.
-     *
+     * <p>
      * This is a static method, as tests for other entities might also need it,
      * if they test an entity which requires the current entity.
      */
@@ -115,7 +107,7 @@ class NotificationResourceIT {
 
     /**
      * Create multiple entities for this test.
-     *
+     * <p>
      * This is a static method, as tests for other entities might also need it, if
      * they test an entity which requires the current entity.
      */
@@ -126,8 +118,8 @@ class NotificationResourceIT {
                 List<ReceiverDTO> rs = new ArrayList<>();
                 for (int j = 1; j <= reciversCount; j++) {
                     rs.add(new ReceiverDTO()
-                            .username("USER_" + j)
-                            .token("TOKEN_" + j));
+                        .username("USER_" + j)
+                        .token("TOKEN_" + j));
                 }
                 NotificationsDTO n = new NotificationsDTO();
                 n.setReceivers(rs);
@@ -143,7 +135,7 @@ class NotificationResourceIT {
 
     /**
      * Create an updated entity for this test.
-     *
+     * <p>
      * This is a static method, as tests for other entities might also need it,
      * if they test an entity which requires the current entity.
      */
@@ -164,7 +156,7 @@ class NotificationResourceIT {
 
     @Test
     @Transactional
-    @WithMockUser(authorities = { AuthoritiesConstants.NOTIFICATION_USER })
+    @WithMockUser(authorities = {AuthoritiesConstants.NOTIFICATION_USER})
     void createNotification() throws Exception {
         int databaseSizeBeforeCreate = notificationRepository.findAll().size();
         // Create the Notification
@@ -203,7 +195,7 @@ class NotificationResourceIT {
 
     @Test
     @Transactional
-    @WithMockUser(authorities = { AuthoritiesConstants.NOTIFICATION_USER })
+    @WithMockUser(authorities = {AuthoritiesConstants.NOTIFICATION_USER})
     void createBulkNotification() throws Exception {
         int databaseSizeBeforeCreate = notificationRepository.findAll().size();
         // Create multiple Notifications
@@ -243,7 +235,7 @@ class NotificationResourceIT {
 
     @Test
     @Transactional
-    @WithMockUser(authorities = { AuthoritiesConstants.NOTIFICATION_USER })
+    @WithMockUser(authorities = {AuthoritiesConstants.NOTIFICATION_USER})
     /**
      * Added for issue:
      * https://github.com/GLinBoy/MessageCentral/issues/42
@@ -284,7 +276,7 @@ class NotificationResourceIT {
 
     @Test
     @Transactional
-    @WithMockUser(authorities = { AuthoritiesConstants.NOTIFICATION_USER })
+    @WithMockUser(authorities = {AuthoritiesConstants.NOTIFICATION_USER})
     void createNotificationWithExistingId() throws Exception {
         // Create the Notification with an existing ID
         notification.setId(1L);
@@ -306,7 +298,7 @@ class NotificationResourceIT {
 
     @Test
     @Transactional
-    @WithMockUser(authorities = { AuthoritiesConstants.NOTIFICATION_USER })
+    @WithMockUser(authorities = {AuthoritiesConstants.NOTIFICATION_USER})
     void checkUsernameIsRequired() throws Exception {
         int databaseSizeBeforeTest = notificationRepository.findAll().size();
         // set the field null
@@ -327,7 +319,7 @@ class NotificationResourceIT {
 
     @Test
     @Transactional
-    @WithMockUser(authorities = { AuthoritiesConstants.NOTIFICATION_USER })
+    @WithMockUser(authorities = {AuthoritiesConstants.NOTIFICATION_USER})
     void checkTokenIsRequired() throws Exception {
         int databaseSizeBeforeTest = notificationRepository.findAll().size();
         // set the field null
@@ -348,7 +340,7 @@ class NotificationResourceIT {
 
     @Test
     @Transactional
-    @WithMockUser(authorities = { AuthoritiesConstants.NOTIFICATION_USER })
+    @WithMockUser(authorities = {AuthoritiesConstants.NOTIFICATION_USER})
     void checkSubjectIsRequired() throws Exception {
         int databaseSizeBeforeTest = notificationRepository.findAll().size();
         // set the field null
@@ -369,7 +361,7 @@ class NotificationResourceIT {
 
     @Test
     @Transactional
-    @WithMockUser(authorities = { AuthoritiesConstants.NOTIFICATION_USER })
+    @WithMockUser(authorities = {AuthoritiesConstants.NOTIFICATION_USER})
     void checkContentIsRequired() throws Exception {
         int databaseSizeBeforeTest = notificationRepository.findAll().size();
         // set the field null
@@ -390,7 +382,7 @@ class NotificationResourceIT {
 
     @Test
     @Transactional
-    @WithMockUser(authorities = { AuthoritiesConstants.NOTIFICATION_USER })
+    @WithMockUser(authorities = {AuthoritiesConstants.NOTIFICATION_USER})
     void getAllNotifications() throws Exception {
         // Initialize the database
         notificationRepository.saveAndFlush(notification);
@@ -410,7 +402,7 @@ class NotificationResourceIT {
 
     @Test
     @Transactional
-    @WithMockUser(authorities = { AuthoritiesConstants.NOTIFICATION_USER })
+    @WithMockUser(authorities = {AuthoritiesConstants.NOTIFICATION_USER})
     void getNotification() throws Exception {
         // Initialize the database
         notificationRepository.saveAndFlush(notification);
@@ -443,7 +435,7 @@ class NotificationResourceIT {
 
     @Test
     @Transactional
-    @WithMockUser(authorities = { AuthoritiesConstants.NOTIFICATION_USER })
+    @WithMockUser(authorities = {AuthoritiesConstants.NOTIFICATION_USER})
     void getNotificationsByIdFiltering() throws Exception {
         // Initialize the database
         notificationRepository.saveAndFlush(notification);
@@ -462,7 +454,7 @@ class NotificationResourceIT {
 
     @Test
     @Transactional
-    @WithMockUser(authorities = { AuthoritiesConstants.NOTIFICATION_USER })
+    @WithMockUser(authorities = {AuthoritiesConstants.NOTIFICATION_USER})
     void getAllNotificationsByUsernameIsEqualToSomething() throws Exception {
         // Initialize the database
         notificationRepository.saveAndFlush(notification);
@@ -476,7 +468,7 @@ class NotificationResourceIT {
 
     @Test
     @Transactional
-    @WithMockUser(authorities = { AuthoritiesConstants.NOTIFICATION_USER })
+    @WithMockUser(authorities = {AuthoritiesConstants.NOTIFICATION_USER})
     void getAllNotificationsByUsernameIsNotEqualToSomething() throws Exception {
         // Initialize the database
         notificationRepository.saveAndFlush(notification);
@@ -490,7 +482,7 @@ class NotificationResourceIT {
 
     @Test
     @Transactional
-    @WithMockUser(authorities = { AuthoritiesConstants.NOTIFICATION_USER })
+    @WithMockUser(authorities = {AuthoritiesConstants.NOTIFICATION_USER})
     void getAllNotificationsByUsernameIsInShouldWork() throws Exception {
         // Initialize the database
         notificationRepository.saveAndFlush(notification);
@@ -504,7 +496,7 @@ class NotificationResourceIT {
 
     @Test
     @Transactional
-    @WithMockUser(authorities = { AuthoritiesConstants.NOTIFICATION_USER })
+    @WithMockUser(authorities = {AuthoritiesConstants.NOTIFICATION_USER})
     void getAllNotificationsByUsernameIsNullOrNotNull() throws Exception {
         // Initialize the database
         notificationRepository.saveAndFlush(notification);
@@ -518,7 +510,7 @@ class NotificationResourceIT {
 
     @Test
     @Transactional
-    @WithMockUser(authorities = { AuthoritiesConstants.NOTIFICATION_USER })
+    @WithMockUser(authorities = {AuthoritiesConstants.NOTIFICATION_USER})
     void getAllNotificationsByUsernameContainsSomething() throws Exception {
         // Initialize the database
         notificationRepository.saveAndFlush(notification);
@@ -532,7 +524,7 @@ class NotificationResourceIT {
 
     @Test
     @Transactional
-    @WithMockUser(authorities = { AuthoritiesConstants.NOTIFICATION_USER })
+    @WithMockUser(authorities = {AuthoritiesConstants.NOTIFICATION_USER})
     void getAllNotificationsByUsernameNotContainsSomething() throws Exception {
         // Initialize the database
         notificationRepository.saveAndFlush(notification);
@@ -546,7 +538,7 @@ class NotificationResourceIT {
 
     @Test
     @Transactional
-    @WithMockUser(authorities = { AuthoritiesConstants.NOTIFICATION_USER })
+    @WithMockUser(authorities = {AuthoritiesConstants.NOTIFICATION_USER})
     void getAllNotificationsByTokenIsEqualToSomething() throws Exception {
         // Initialize the database
         notificationRepository.saveAndFlush(notification);
@@ -560,7 +552,7 @@ class NotificationResourceIT {
 
     @Test
     @Transactional
-    @WithMockUser(authorities = { AuthoritiesConstants.NOTIFICATION_USER })
+    @WithMockUser(authorities = {AuthoritiesConstants.NOTIFICATION_USER})
     void getAllNotificationsByTokenIsNotEqualToSomething() throws Exception {
         // Initialize the database
         notificationRepository.saveAndFlush(notification);
@@ -574,7 +566,7 @@ class NotificationResourceIT {
 
     @Test
     @Transactional
-    @WithMockUser(authorities = { AuthoritiesConstants.NOTIFICATION_USER })
+    @WithMockUser(authorities = {AuthoritiesConstants.NOTIFICATION_USER})
     void getAllNotificationsByTokenIsInShouldWork() throws Exception {
         // Initialize the database
         notificationRepository.saveAndFlush(notification);
@@ -588,7 +580,7 @@ class NotificationResourceIT {
 
     @Test
     @Transactional
-    @WithMockUser(authorities = { AuthoritiesConstants.NOTIFICATION_USER })
+    @WithMockUser(authorities = {AuthoritiesConstants.NOTIFICATION_USER})
     void getAllNotificationsByTokenIsNullOrNotNull() throws Exception {
         // Initialize the database
         notificationRepository.saveAndFlush(notification);
@@ -602,7 +594,7 @@ class NotificationResourceIT {
 
     @Test
     @Transactional
-    @WithMockUser(authorities = { AuthoritiesConstants.NOTIFICATION_USER })
+    @WithMockUser(authorities = {AuthoritiesConstants.NOTIFICATION_USER})
     void getAllNotificationsByTokenContainsSomething() throws Exception {
         // Initialize the database
         notificationRepository.saveAndFlush(notification);
@@ -616,7 +608,7 @@ class NotificationResourceIT {
 
     @Test
     @Transactional
-    @WithMockUser(authorities = { AuthoritiesConstants.NOTIFICATION_USER })
+    @WithMockUser(authorities = {AuthoritiesConstants.NOTIFICATION_USER})
     void getAllNotificationsByTokenNotContainsSomething() throws Exception {
         // Initialize the database
         notificationRepository.saveAndFlush(notification);
@@ -630,7 +622,7 @@ class NotificationResourceIT {
 
     @Test
     @Transactional
-    @WithMockUser(authorities = { AuthoritiesConstants.NOTIFICATION_USER })
+    @WithMockUser(authorities = {AuthoritiesConstants.NOTIFICATION_USER})
     void getAllNotificationsBySubjectIsEqualToSomething() throws Exception {
         // Initialize the database
         notificationRepository.saveAndFlush(notification);
@@ -644,7 +636,7 @@ class NotificationResourceIT {
 
     @Test
     @Transactional
-    @WithMockUser(authorities = { AuthoritiesConstants.NOTIFICATION_USER })
+    @WithMockUser(authorities = {AuthoritiesConstants.NOTIFICATION_USER})
     void getAllNotificationsBySubjectIsNotEqualToSomething() throws Exception {
         // Initialize the database
         notificationRepository.saveAndFlush(notification);
@@ -658,7 +650,7 @@ class NotificationResourceIT {
 
     @Test
     @Transactional
-    @WithMockUser(authorities = { AuthoritiesConstants.NOTIFICATION_USER })
+    @WithMockUser(authorities = {AuthoritiesConstants.NOTIFICATION_USER})
     void getAllNotificationsBySubjectIsInShouldWork() throws Exception {
         // Initialize the database
         notificationRepository.saveAndFlush(notification);
@@ -672,7 +664,7 @@ class NotificationResourceIT {
 
     @Test
     @Transactional
-    @WithMockUser(authorities = { AuthoritiesConstants.NOTIFICATION_USER })
+    @WithMockUser(authorities = {AuthoritiesConstants.NOTIFICATION_USER})
     void getAllNotificationsBySubjectIsNullOrNotNull() throws Exception {
         // Initialize the database
         notificationRepository.saveAndFlush(notification);
@@ -686,7 +678,7 @@ class NotificationResourceIT {
 
     @Test
     @Transactional
-    @WithMockUser(authorities = { AuthoritiesConstants.NOTIFICATION_USER })
+    @WithMockUser(authorities = {AuthoritiesConstants.NOTIFICATION_USER})
     void getAllNotificationsBySubjectContainsSomething() throws Exception {
         // Initialize the database
         notificationRepository.saveAndFlush(notification);
@@ -700,7 +692,7 @@ class NotificationResourceIT {
 
     @Test
     @Transactional
-    @WithMockUser(authorities = { AuthoritiesConstants.NOTIFICATION_USER })
+    @WithMockUser(authorities = {AuthoritiesConstants.NOTIFICATION_USER})
     void getAllNotificationsBySubjectNotContainsSomething() throws Exception {
         // Initialize the database
         notificationRepository.saveAndFlush(notification);
@@ -714,7 +706,7 @@ class NotificationResourceIT {
 
     @Test
     @Transactional
-    @WithMockUser(authorities = { AuthoritiesConstants.NOTIFICATION_USER })
+    @WithMockUser(authorities = {AuthoritiesConstants.NOTIFICATION_USER})
     void getAllNotificationsByContentIsEqualToSomething() throws Exception {
         // Initialize the database
         notificationRepository.saveAndFlush(notification);
@@ -728,7 +720,7 @@ class NotificationResourceIT {
 
     @Test
     @Transactional
-    @WithMockUser(authorities = { AuthoritiesConstants.NOTIFICATION_USER })
+    @WithMockUser(authorities = {AuthoritiesConstants.NOTIFICATION_USER})
     void getAllNotificationsByContentIsNotEqualToSomething() throws Exception {
         // Initialize the database
         notificationRepository.saveAndFlush(notification);
@@ -742,7 +734,7 @@ class NotificationResourceIT {
 
     @Test
     @Transactional
-    @WithMockUser(authorities = { AuthoritiesConstants.NOTIFICATION_USER })
+    @WithMockUser(authorities = {AuthoritiesConstants.NOTIFICATION_USER})
     void getAllNotificationsByContentIsInShouldWork() throws Exception {
         // Initialize the database
         notificationRepository.saveAndFlush(notification);
@@ -756,7 +748,7 @@ class NotificationResourceIT {
 
     @Test
     @Transactional
-    @WithMockUser(authorities = { AuthoritiesConstants.NOTIFICATION_USER })
+    @WithMockUser(authorities = {AuthoritiesConstants.NOTIFICATION_USER})
     void getAllNotificationsByContentIsNullOrNotNull() throws Exception {
         // Initialize the database
         notificationRepository.saveAndFlush(notification);
@@ -770,7 +762,7 @@ class NotificationResourceIT {
 
     @Test
     @Transactional
-    @WithMockUser(authorities = { AuthoritiesConstants.NOTIFICATION_USER })
+    @WithMockUser(authorities = {AuthoritiesConstants.NOTIFICATION_USER})
     void getAllNotificationsByContentContainsSomething() throws Exception {
         // Initialize the database
         notificationRepository.saveAndFlush(notification);
@@ -784,7 +776,7 @@ class NotificationResourceIT {
 
     @Test
     @Transactional
-    @WithMockUser(authorities = { AuthoritiesConstants.NOTIFICATION_USER })
+    @WithMockUser(authorities = {AuthoritiesConstants.NOTIFICATION_USER})
     void getAllNotificationsByContentNotContainsSomething() throws Exception {
         // Initialize the database
         notificationRepository.saveAndFlush(notification);
@@ -798,7 +790,7 @@ class NotificationResourceIT {
 
     @Test
     @Transactional
-    @WithMockUser(authorities = { AuthoritiesConstants.NOTIFICATION_USER })
+    @WithMockUser(authorities = {AuthoritiesConstants.NOTIFICATION_USER})
     void getAllNotificationsByImageIsEqualToSomething() throws Exception {
         // Initialize the database
         notificationRepository.saveAndFlush(notification);
@@ -812,7 +804,7 @@ class NotificationResourceIT {
 
     @Test
     @Transactional
-    @WithMockUser(authorities = { AuthoritiesConstants.NOTIFICATION_USER })
+    @WithMockUser(authorities = {AuthoritiesConstants.NOTIFICATION_USER})
     void getAllNotificationsByImageIsNotEqualToSomething() throws Exception {
         // Initialize the database
         notificationRepository.saveAndFlush(notification);
@@ -826,7 +818,7 @@ class NotificationResourceIT {
 
     @Test
     @Transactional
-    @WithMockUser(authorities = { AuthoritiesConstants.NOTIFICATION_USER })
+    @WithMockUser(authorities = {AuthoritiesConstants.NOTIFICATION_USER})
     void getAllNotificationsByImageIsInShouldWork() throws Exception {
         // Initialize the database
         notificationRepository.saveAndFlush(notification);
@@ -840,7 +832,7 @@ class NotificationResourceIT {
 
     @Test
     @Transactional
-    @WithMockUser(authorities = { AuthoritiesConstants.NOTIFICATION_USER })
+    @WithMockUser(authorities = {AuthoritiesConstants.NOTIFICATION_USER})
     void getAllNotificationsByImageIsNullOrNotNull() throws Exception {
         // Initialize the database
         notificationRepository.saveAndFlush(notification);
@@ -854,7 +846,7 @@ class NotificationResourceIT {
 
     @Test
     @Transactional
-    @WithMockUser(authorities = { AuthoritiesConstants.NOTIFICATION_USER })
+    @WithMockUser(authorities = {AuthoritiesConstants.NOTIFICATION_USER})
     void getAllNotificationsByImageContainsSomething() throws Exception {
         // Initialize the database
         notificationRepository.saveAndFlush(notification);
@@ -868,7 +860,7 @@ class NotificationResourceIT {
 
     @Test
     @Transactional
-    @WithMockUser(authorities = { AuthoritiesConstants.NOTIFICATION_USER })
+    @WithMockUser(authorities = {AuthoritiesConstants.NOTIFICATION_USER})
     void getAllNotificationsByImageNotContainsSomething() throws Exception {
         // Initialize the database
         notificationRepository.saveAndFlush(notification);
@@ -883,7 +875,7 @@ class NotificationResourceIT {
     @Disabled(value = "There is a bug to search by child properties")
     @Test
     @Transactional
-    @WithMockUser(authorities = { AuthoritiesConstants.NOTIFICATION_USER })
+    @WithMockUser(authorities = {AuthoritiesConstants.NOTIFICATION_USER})
     void getAllNotificationsByDataIsEqualToSomething() throws Exception {
         // Initialize the database
         notificationRepository.saveAndFlush(notification);
@@ -952,7 +944,7 @@ class NotificationResourceIT {
 
     @Test
     @Transactional
-    @WithMockUser(authorities = { AuthoritiesConstants.NOTIFICATION_USER })
+    @WithMockUser(authorities = {AuthoritiesConstants.NOTIFICATION_USER})
     void getNonExistingNotification() throws Exception {
         // Get the notification
         restNotificationMockMvc.perform(get(ENTITY_API_URL_ID, Long.MAX_VALUE)).andExpect(status().isNotFound());
@@ -960,7 +952,7 @@ class NotificationResourceIT {
 
     @Test
     @Transactional
-    @WithMockUser(authorities = { AuthoritiesConstants.NOTIFICATION_USER })
+    @WithMockUser(authorities = {AuthoritiesConstants.NOTIFICATION_USER})
     void putNewNotification() throws Exception {
         // Initialize the database
         notificationRepository.saveAndFlush(notification);
@@ -1027,7 +1019,7 @@ class NotificationResourceIT {
 
     @Test
     @Transactional
-    @WithMockUser(authorities = { AuthoritiesConstants.NOTIFICATION_USER })
+    @WithMockUser(authorities = {AuthoritiesConstants.NOTIFICATION_USER})
     void putNonExistingNotification() throws Exception {
         int databaseSizeBeforeUpdate = notificationRepository.findAll().size();
         notification.setId(count.incrementAndGet());
@@ -1051,7 +1043,7 @@ class NotificationResourceIT {
 
     @Test
     @Transactional
-    @WithMockUser(authorities = { AuthoritiesConstants.NOTIFICATION_USER })
+    @WithMockUser(authorities = {AuthoritiesConstants.NOTIFICATION_USER})
     void putWithIdMismatchNotification() throws Exception {
         int databaseSizeBeforeUpdate = notificationRepository.findAll().size();
         notification.setId(count.incrementAndGet());
@@ -1075,7 +1067,7 @@ class NotificationResourceIT {
 
     @Test
     @Transactional
-    @WithMockUser(authorities = { AuthoritiesConstants.NOTIFICATION_USER })
+    @WithMockUser(authorities = {AuthoritiesConstants.NOTIFICATION_USER})
     void putWithMissingIdPathParamNotification() throws Exception {
         int databaseSizeBeforeUpdate = notificationRepository.findAll().size();
         notification.setId(count.incrementAndGet());
@@ -1097,7 +1089,7 @@ class NotificationResourceIT {
 
     @Test
     @Transactional
-    @WithMockUser(authorities = { AuthoritiesConstants.NOTIFICATION_USER })
+    @WithMockUser(authorities = {AuthoritiesConstants.NOTIFICATION_USER})
     void partialUpdateNotificationWithPatch() throws Exception {
         // Initialize the database
         notificationRepository.saveAndFlush(notification);
@@ -1119,7 +1111,7 @@ class NotificationResourceIT {
 
     @Test
     @Transactional
-    @WithMockUser(authorities = { AuthoritiesConstants.NOTIFICATION_USER })
+    @WithMockUser(authorities = {AuthoritiesConstants.NOTIFICATION_USER})
     void fullUpdateNotificationWithPatch() throws Exception {
         // Initialize the database
         notificationRepository.saveAndFlush(notification);
@@ -1184,7 +1176,7 @@ class NotificationResourceIT {
 
     @Test
     @Transactional
-    @WithMockUser(authorities = { AuthoritiesConstants.NOTIFICATION_USER })
+    @WithMockUser(authorities = {AuthoritiesConstants.NOTIFICATION_USER})
     void patchNonExistingNotification() throws Exception {
         int databaseSizeBeforeUpdate = notificationRepository.findAll().size();
         notification.setId(count.incrementAndGet());
@@ -1208,7 +1200,7 @@ class NotificationResourceIT {
 
     @Test
     @Transactional
-    @WithMockUser(authorities = { AuthoritiesConstants.NOTIFICATION_USER })
+    @WithMockUser(authorities = {AuthoritiesConstants.NOTIFICATION_USER})
     void patchWithIdMismatchNotification() throws Exception {
         int databaseSizeBeforeUpdate = notificationRepository.findAll().size();
         notification.setId(count.incrementAndGet());
@@ -1232,7 +1224,7 @@ class NotificationResourceIT {
 
     @Test
     @Transactional
-    @WithMockUser(authorities = { AuthoritiesConstants.NOTIFICATION_USER })
+    @WithMockUser(authorities = {AuthoritiesConstants.NOTIFICATION_USER})
     void patchWithMissingIdPathParamNotification() throws Exception {
         int databaseSizeBeforeUpdate = notificationRepository.findAll().size();
         notification.setId(count.incrementAndGet());
@@ -1256,7 +1248,7 @@ class NotificationResourceIT {
 
     @Test
     @Transactional
-    @WithMockUser(authorities = { AuthoritiesConstants.NOTIFICATION_USER })
+    @WithMockUser(authorities = {AuthoritiesConstants.NOTIFICATION_USER})
     void deleteNotification() throws Exception {
         // Initialize the database
         notificationRepository.saveAndFlush(notification);
