@@ -11,7 +11,7 @@ public class CustomRsqlVisitor<T> implements RSQLVisitor<Specification<T>, Void>
     private GenericRsqlSpecBuilder<T> builder;
 
     public CustomRsqlVisitor() {
-        builder = new GenericRsqlSpecBuilder<T>();
+        builder = new GenericRsqlSpecBuilder<>();
     }
 
     @Override
