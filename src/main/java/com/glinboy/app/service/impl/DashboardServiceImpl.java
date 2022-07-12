@@ -20,6 +20,6 @@ public class DashboardServiceImpl implements DashboardService {
 
     @Override
     public List<MessagesStatics> getLast30DaysMessagesStatics() {
-        return List.of();
+        return repository.getLast30DaysMessagesStatics();
     }
 }
