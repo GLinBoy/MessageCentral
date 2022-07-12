@@ -18,6 +18,6 @@ public class DashboardRepositoryImpl implements DashboardRepository {
 
     @Override
     public List<MessagesStatics> getLast30DaysMessagesStatics() {
-        return null;
+        return List.of();
     }
 }
