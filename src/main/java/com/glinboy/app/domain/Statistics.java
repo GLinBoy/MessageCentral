@@ -2,8 +2,8 @@ package com.glinboy.app.domain;
 
 import java.util.Objects;
 
-public class Statics {
-    public Statics(Long successful, Long failed) {
+public class Statistics {
+    public Statistics(Long successful, Long failed) {
         this.successful = successful;
         this.failed = failed;
     }
@@ -31,8 +31,8 @@ public class Statics {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        Statics statics = (Statics) o;
-        return successful.equals(statics.successful) && failed.equals(statics.failed);
+        Statistics statistics = (Statistics) o;
+        return successful.equals(statistics.successful) && failed.equals(statistics.failed);
     }
 
     @Override
