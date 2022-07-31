@@ -3,8 +3,8 @@ package com.glinboy.app.domain;
 import java.time.Instant;
 import java.util.Objects;
 
-public class MessagesStatics {
-    public MessagesStatics(Instant date, Statics email, Statics sms, Statics notification) {
+public class MessagesStatistics {
+    public MessagesStatistics(Instant date, Statistics email, Statistics sms, Statistics notification) {
         this.date = date;
         this.email = email;
         this.sms = sms;
@@ -12,9 +12,9 @@ public class MessagesStatics {
     }
 
     private Instant date;
-    private Statics email;
-    private Statics sms;
-    private Statics notification;
+    private Statistics email;
+    private Statistics sms;
+    private Statistics notification;
 
     public Instant getDate() {
         return date;
@@ -24,27 +24,27 @@ public class MessagesStatics {
         this.date = date;
     }
 
-    public Statics getEmail() {
+    public Statistics getEmail() {
         return email;
     }
 
-    public void setEmail(Statics email) {
+    public void setEmail(Statistics email) {
         this.email = email;
     }
 
-    public Statics getSms() {
+    public Statistics getSms() {
         return sms;
     }
 
-    public void setSms(Statics sms) {
+    public void setSms(Statistics sms) {
         this.sms = sms;
     }
 
-    public Statics getNotification() {
+    public Statistics getNotification() {
         return notification;
     }
 
-    public void setNotification(Statics notification) {
+    public void setNotification(Statistics notification) {
         this.notification = notification;
     }
 
@@ -52,7 +52,7 @@ public class MessagesStatics {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        MessagesStatics that = (MessagesStatics) o;
+        MessagesStatistics that = (MessagesStatistics) o;
         return date.equals(that.date) && email.equals(that.email) && sms.equals(that.sms) && notification.equals(that.notification);
     }
 
