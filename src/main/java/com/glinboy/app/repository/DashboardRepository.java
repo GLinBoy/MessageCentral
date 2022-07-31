@@ -1,9 +1,9 @@
 package com.glinboy.app.repository;
 
-import com.glinboy.app.domain.MessagesStatics;
+import com.glinboy.app.domain.MessagesStatistics;
 
 import java.util.List;
 
 public interface DashboardRepository {
-    List<MessagesStatics> getLast30DaysMessagesStatics();
+    List<MessagesStatistics> getLast30DaysMessagesStatics();
 }
