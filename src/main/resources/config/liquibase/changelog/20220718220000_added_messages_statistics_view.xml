@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.6.xsd">
+
+    <!--
+        Added a materialized view for messages statistics on PostgreSQL DB.
+    -->
+    <changeSet id="20220718220000-1" author="glinboy" dbms="postgresql">
+        <preConditions>
+            <tableExists tableName="email"/>
+            <tableExists tableName="short_message"/>
+            <tableExists tableName="notification"/>
+        </preConditions>
+
+        <sqlFile dbms="postgresql"
+                 path="config/liquibase/sql/messages_statistics_materialized_view_postgresql.sql"/>
+    </changeSet>
+
+    <!--
+    Added view for messages statistics on any relational DB.
+    -->
+    <changeSet id="20220718220000-2" author="glinboy" dbms="!postgresql">
+        <preConditions>
+            <tableExists tableName="email"/>
+            <tableExists tableName="short_message"/>
+            <tableExists tableName="notification"/>
+        </preConditions>
+
+        <sqlFile dbms="!postgresql"
+                 path="config/liquibase/sql/messages_statistics_normal_view.sql"/>
+    </changeSet>
+</databaseChangeLog>
