@@ -9,7 +9,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 /**
- * Spring Data SQL repository for the Token entity.
+ * Spring Data JPA repository for the Token entity.
  */
 @SuppressWarnings("unused")
 @Repository

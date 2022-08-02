@@ -63,7 +63,7 @@ export default class ShortMessageUpdate extends Vue {
           this.isSaving = false;
           this.$router.go(-1);
           const message = this.$t('messageCentralApp.shortMessage.updated', { param: param.id });
-          return this.$root.$bvToast.toast(message.toString(), {
+          return (this.$root as any).$bvToast.toast(message.toString(), {
             toaster: 'b-toaster-top-center',
             title: 'Info',
             variant: 'info',
@@ -82,7 +82,7 @@ export default class ShortMessageUpdate extends Vue {
           this.isSaving = false;
           this.$router.go(-1);
           const message = this.$t('messageCentralApp.shortMessage.created', { param: param.id });
-          this.$root.$bvToast.toast(message.toString(), {
+          (this.$root as any).$bvToast.toast(message.toString(), {
             toaster: 'b-toaster-top-center',
             title: 'Success',
             variant: 'success',

@@ -104,7 +104,8 @@
       "save": "Save",
       "view": "View",
       "enable": "Enable",
-      "disable": "Disable"
+      "disable": "Disable",
+      "show": "Show {{otherEntity}}"
     },
     "detail": {
       "field": "Field",
@@ -125,6 +126,11 @@
       "number": "This field should be a number.",
       "datetimelocal": "This field should be a date and time.",
       "patternLogin": "This field can only contain letters, digits and e-mail addresses."
+    },
+    "filters": {
+      "set": "Following filters are set",
+      "clear": "Clear filter",
+      "clearAll": "Clear all filters"
     }
   },
   "error": {

@@ -6,7 +6,7 @@ import AccountService from '@/account/account.service';
   name: 'LoginForm',
   watch: {
     $route() {
-      this.$root.$emit('bv::hide::modal', 'login-page');
+      (this.$root as any).$emit('bv::hide::modal', 'login-page');
     },
   },
 })
@@ -35,7 +35,7 @@ export default class LoginForm extends Vue {
           }
         }
         this.authenticationError = false;
-        this.$root.$emit('bv::hide::modal', 'login-page');
+        (this.$root as any).$emit('bv::hide::modal', 'login-page');
         this.accountService().retrieveAccount();
         this.$root.$router.push({ name: 'Dashboard' });
       })

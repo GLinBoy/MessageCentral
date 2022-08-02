@@ -1,6 +1,18 @@
 package com.glinboy.app.config;
 
-import org.h2.server.web.WebServlet;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatCode;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.options;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
+import java.io.File;
+import java.util.*;
+import javax.servlet.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.web.embedded.undertow.UndertowServletWebServerFactory;
@@ -11,22 +23,6 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import tech.jhipster.config.JHipsterConstants;
 import tech.jhipster.config.JHipsterProperties;
-
-import javax.servlet.*;
-import java.io.File;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatCode;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.*;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.options;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 /**
  * Unit tests for the {@link WebConfigurer} class.
@@ -51,22 +47,6 @@ class WebConfigurerTest {
         props = new JHipsterProperties();
 
         webConfigurer = new WebConfigurer(env, props);
-    }
-
-    @Test
-    void shouldStartUpProdServletContext() throws ServletException {
-        env.setActiveProfiles(JHipsterConstants.SPRING_PROFILE_PRODUCTION);
-
-        assertThatCode(() -> webConfigurer.onStartup(servletContext)).doesNotThrowAnyException();
-        verify(servletContext, never()).addServlet(eq("H2Console"), any(WebServlet.class));
-    }
-
-    @Test
-    void shouldStartUpDevServletContext() throws ServletException {
-        env.setActiveProfiles(JHipsterConstants.SPRING_PROFILE_DEVELOPMENT);
-
-        assertThatCode(() -> webConfigurer.onStartup(servletContext)).doesNotThrowAnyException();
-        verify(servletContext).addServlet(eq("H2Console"), any(WebServlet.class));
     }
 
     @Test

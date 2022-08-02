@@ -1,25 +1,12 @@
 package com.glinboy.app.service;
 
+import static org.assertj.core.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.*;
+
 import com.glinboy.app.IntegrationTest;
 import com.glinboy.app.config.Constants;
 import com.glinboy.app.domain.User;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import org.mockito.ArgumentCaptor;
-import org.mockito.Captor;
-import org.mockito.MockitoAnnotations;
-import org.mockito.Spy;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.MessageSource;
-import org.springframework.mail.MailSendException;
-import org.springframework.mail.javamail.JavaMailSenderImpl;
-import org.thymeleaf.spring5.SpringTemplateEngine;
-import tech.jhipster.config.JHipsterProperties;
-
-import javax.mail.Multipart;
-import javax.mail.internet.MimeBodyPart;
-import javax.mail.internet.MimeMessage;
-import javax.mail.internet.MimeMultipart;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
@@ -30,11 +17,20 @@ import java.nio.charset.Charset;
 import java.util.Properties;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.fail;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.*;
+import javax.mail.Multipart;
+import javax.mail.Session;
+import javax.mail.internet.MimeBodyPart;
+import javax.mail.internet.MimeMessage;
+import javax.mail.internet.MimeMultipart;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.mockito.ArgumentCaptor;
+import org.mockito.Captor;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.mail.MailSendException;
+import org.springframework.mail.javamail.JavaMailSender;
+import tech.jhipster.config.JHipsterProperties;
 
 /**
  * Integration tests for {@link MailService}.
@@ -53,25 +49,19 @@ class MailServiceIT {
     @Autowired
     private JHipsterProperties jHipsterProperties;
 
-    @Autowired
-    private MessageSource messageSource;
-
-    @Autowired
-    private SpringTemplateEngine templateEngine;
-
-    @Spy
-    private JavaMailSenderImpl javaMailSender;
+    @MockBean
+    private JavaMailSender javaMailSender;
 
     @Captor
     private ArgumentCaptor<MimeMessage> messageCaptor;
 
+    @Autowired
     private MailService mailService;
 
     @BeforeEach
     public void setup() {
-        MockitoAnnotations.openMocks(this);
         doNothing().when(javaMailSender).send(any(MimeMessage.class));
-        mailService = new MailService(jHipsterProperties, javaMailSender, messageSource, templateEngine);
+        when(javaMailSender.createMimeMessage()).thenReturn(new MimeMessage((Session) null));
     }
 
     @Test

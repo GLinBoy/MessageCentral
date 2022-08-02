@@ -10,7 +10,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 /**
- * Spring Data SQL repository for the Email entity.
+ * Spring Data JPA repository for the Email entity.
  */
 @Repository
 public interface EmailRepository extends JpaRepository<Email, Long>, JpaSpecificationExecutor<Email> {

@@ -1,5 +1,6 @@
 package com.glinboy.app.security;
 
+import com.glinboy.app.domain.Authority;
 import com.glinboy.app.domain.User;
 import com.glinboy.app.repository.UserRepository;
 import org.hibernate.validator.internal.constraintvalidators.hv.EmailValidator;
@@ -32,7 +33,7 @@ public class DomainUserDetailsService implements UserDetailsService {
     }
 
     @Override
-    @Transactional
+    @Transactional(readOnly = true)
     public UserDetails loadUserByUsername(final String login) {
         log.debug("Authenticating {}", login);
 
@@ -57,7 +58,8 @@ public class DomainUserDetailsService implements UserDetailsService {
         List<GrantedAuthority> grantedAuthorities = user
             .getAuthorities()
             .stream()
-            .map(authority -> new SimpleGrantedAuthority(authority.getName()))
+            .map(Authority::getName)
+            .map(SimpleGrantedAuthority::new)
             .collect(Collectors.toList());
         return new org.springframework.security.core.userdetails.User(user.getLogin(), user.getPassword(), grantedAuthorities);
     }

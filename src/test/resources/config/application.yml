@@ -21,45 +21,17 @@ eureka:
     instanceId: MessageCentral:${spring.application.instance-id:${random.value}}
 
 spring:
-  profiles:
-    # Uncomment the following line to enable tests against production database type rather than H2, using Testcontainers
-    #active: testcontainers
   application:
     name: MessageCentral
   cloud:
     config:
       enabled: false
-
-  datasource:
-    type: com.zaxxer.hikari.HikariDataSource
-    url: jdbc:h2:mem:messagecentral;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
-    name:
-    username:
-    password:
-    hikari:
-      auto-commit: false
+  # Replace by 'prod, faker' to add the faker context and have sample data loaded in production
+  liquibase:
+    contexts: test
   jackson:
     serialization:
       write-durations-as-timestamps: false
-  jpa:
-    database-platform: tech.jhipster.domain.util.FixedH2Dialect
-    open-in-view: false
-    hibernate:
-      ddl-auto: none
-      naming:
-        physical-strategy: org.springframework.boot.orm.jpa.hibernate.SpringPhysicalNamingStrategy
-        implicit-strategy: org.springframework.boot.orm.jpa.hibernate.SpringImplicitNamingStrategy
-    properties:
-      hibernate.id.new_generator_mappings: true
-      hibernate.connection.provider_disables_autocommit: true
-      hibernate.cache.use_second_level_cache: false
-      hibernate.cache.use_query_cache: false
-      hibernate.generate_statistics: false
-      hibernate.hbm2ddl.auto: validate
-      hibernate.jdbc.time_zone: UTC
-      hibernate.query.fail_on_pagination_over_collection_fetch: true
-  liquibase:
-    contexts: test
   mail:
     host: localhost
     port: 2525
@@ -86,10 +58,6 @@ spring:
         size: 20
   thymeleaf:
     mode: HTML
-  artemis:
-    mode: embedded
-    host: localhost
-    port: 61616
 
 server:
   port: 10344
@@ -103,6 +71,9 @@ server:
 jhipster:
   clientApp:
     name: 'messageCentralApp'
+  mail:
+    from: MessageCentral@localhost.com
+    base-url: http://127.0.0.1:8080
   logging:
     # To test json console appender
     use-json-format: false
@@ -111,9 +82,6 @@ jhipster:
       host: localhost
       port: 5000
       queue-size: 512
-  mail:
-    from: test@localhost
-    base-url: http://127.0.0.1:8080
   security:
     authentication:
       jwt:
@@ -121,6 +89,7 @@ jhipster:
         base64-secret: MjM4NmU0MDA4ZWVmNDU5YWQ2ZDMzZDVjYWRjNDAxMWM3NGNhOTcxZWUwZTZjYmIwMDI2MzNhYTgwODRiMDNlZGQ2YjJmZjRjNjRjMTg3NjZhOWQwZjM2Zjg2NTA3MDY4Zjc1YThiMDBlMTZlODkyYjRlZDk5ZmI2YmJmZTY5OGU=
         # Token is valid 24 hours
         token-validity-in-seconds: 86400
+
 # ===================================================================
 # Application specific properties
 # Add your own application properties here, see the ApplicationProperties class
@@ -156,3 +125,8 @@ application:
       url: https://api.pushe.co/v2/messaging/notifications/
       token: XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
       app-id: XXXXXXXXXXXXXXXX
+
+management:
+  health:
+    mail:
+      enabled: false
