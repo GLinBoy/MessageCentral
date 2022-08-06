@@ -1,11 +1,19 @@
 package com.glinboy.app.web.rest;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.hamcrest.Matchers.hasItem;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+
 import com.glinboy.app.IntegrationTest;
 import com.glinboy.app.domain.Notification;
 import com.glinboy.app.domain.NotificationData;
 import com.glinboy.app.repository.NotificationDataRepository;
+import java.util.List;
+import java.util.Random;
+import java.util.concurrent.atomic.AtomicLong;
+import javax.persistence.EntityManager;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -14,30 +22,19 @@ import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.persistence.EntityManager;
-import java.util.List;
-import java.util.Random;
-import java.util.concurrent.atomic.AtomicLong;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.hamcrest.Matchers.hasItem;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
-
 /**
  * Integration tests for the {@link NotificationDataResource} REST controller.
  */
 @IntegrationTest
 @AutoConfigureMockMvc
 @WithMockUser
-@Disabled("We don't need this test class for now, probobly will be deleted in the future")
 class NotificationDataResourceIT {
 
-    private static final String DEFAULT_KEY = "AAAAAAAAAA";
-    private static final String UPDATED_KEY = "BBBBBBBBBB";
+    private static final String DEFAULT_DATA_KEY = "AAAAAAAAAA";
+    private static final String UPDATED_DATA_KEY = "BBBBBBBBBB";
 
-    private static final String DEFAULT_VALUE = "AAAAAAAAAA";
-    private static final String UPDATED_VALUE = "BBBBBBBBBB";
+    private static final String DEFAULT_DATA_VALUE = "AAAAAAAAAA";
+    private static final String UPDATED_DATA_VALUE = "BBBBBBBBBB";
 
     private static final String ENTITY_API_URL = "/api/notification-data";
     private static final String ENTITY_API_URL_ID = ENTITY_API_URL + "/{id}";
@@ -58,12 +55,12 @@ class NotificationDataResourceIT {
 
     /**
      * Create an entity for this test.
-     * <p>
+     *
      * This is a static method, as tests for other entities might also need it,
      * if they test an entity which requires the current entity.
      */
     public static NotificationData createEntity(EntityManager em) {
-        NotificationData notificationData = new NotificationData().key(DEFAULT_KEY).value(DEFAULT_VALUE);
+        NotificationData notificationData = new NotificationData().dataKey(DEFAULT_DATA_KEY).dataValue(DEFAULT_DATA_VALUE);
         // Add required entity
         Notification notification;
         if (TestUtil.findAll(em, Notification.class).isEmpty()) {
@@ -79,12 +76,12 @@ class NotificationDataResourceIT {
 
     /**
      * Create an updated entity for this test.
-     * <p>
+     *
      * This is a static method, as tests for other entities might also need it,
      * if they test an entity which requires the current entity.
      */
     public static NotificationData createUpdatedEntity(EntityManager em) {
-        NotificationData notificationData = new NotificationData().key(UPDATED_KEY).value(UPDATED_VALUE);
+        NotificationData notificationData = new NotificationData().dataKey(UPDATED_DATA_KEY).dataValue(UPDATED_DATA_VALUE);
         // Add required entity
         Notification notification;
         if (TestUtil.findAll(em, Notification.class).isEmpty()) {
@@ -118,8 +115,8 @@ class NotificationDataResourceIT {
         List<NotificationData> notificationDataList = notificationDataRepository.findAll();
         assertThat(notificationDataList).hasSize(databaseSizeBeforeCreate + 1);
         NotificationData testNotificationData = notificationDataList.get(notificationDataList.size() - 1);
-        assertThat(testNotificationData.getKey()).isEqualTo(DEFAULT_KEY);
-        assertThat(testNotificationData.getValue()).isEqualTo(DEFAULT_VALUE);
+        assertThat(testNotificationData.getDataKey()).isEqualTo(DEFAULT_DATA_KEY);
+        assertThat(testNotificationData.getDataValue()).isEqualTo(DEFAULT_DATA_VALUE);
     }
 
     @Test
@@ -144,10 +141,10 @@ class NotificationDataResourceIT {
 
     @Test
     @Transactional
-    void checkKeyIsRequired() throws Exception {
+    void checkDataKeyIsRequired() throws Exception {
         int databaseSizeBeforeTest = notificationDataRepository.findAll().size();
         // set the field null
-        notificationData.setKey(null);
+        notificationData.setDataKey(null);
 
         // Create the NotificationData, which fails.
 
@@ -163,10 +160,10 @@ class NotificationDataResourceIT {
 
     @Test
     @Transactional
-    void checkValueIsRequired() throws Exception {
+    void checkDataValueIsRequired() throws Exception {
         int databaseSizeBeforeTest = notificationDataRepository.findAll().size();
         // set the field null
-        notificationData.setValue(null);
+        notificationData.setDataValue(null);
 
         // Create the NotificationData, which fails.
 
@@ -192,8 +189,8 @@ class NotificationDataResourceIT {
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(jsonPath("$.[*].id").value(hasItem(notificationData.getId().intValue())))
-            .andExpect(jsonPath("$.[*].key").value(hasItem(DEFAULT_KEY)))
-            .andExpect(jsonPath("$.[*].value").value(hasItem(DEFAULT_VALUE)));
+            .andExpect(jsonPath("$.[*].dataKey").value(hasItem(DEFAULT_DATA_KEY)))
+            .andExpect(jsonPath("$.[*].dataValue").value(hasItem(DEFAULT_DATA_VALUE)));
     }
 
     @Test
@@ -208,8 +205,8 @@ class NotificationDataResourceIT {
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(jsonPath("$.id").value(notificationData.getId().intValue()))
-            .andExpect(jsonPath("$.key").value(DEFAULT_KEY))
-            .andExpect(jsonPath("$.value").value(DEFAULT_VALUE));
+            .andExpect(jsonPath("$.dataKey").value(DEFAULT_DATA_KEY))
+            .andExpect(jsonPath("$.dataValue").value(DEFAULT_DATA_VALUE));
     }
 
     @Test
@@ -231,7 +228,7 @@ class NotificationDataResourceIT {
         NotificationData updatedNotificationData = notificationDataRepository.findById(notificationData.getId()).get();
         // Disconnect from session so that the updates on updatedNotificationData are not directly saved in db
         em.detach(updatedNotificationData);
-        updatedNotificationData.key(UPDATED_KEY).value(UPDATED_VALUE);
+        updatedNotificationData.dataKey(UPDATED_DATA_KEY).dataValue(UPDATED_DATA_VALUE);
 
         restNotificationDataMockMvc
             .perform(
@@ -245,8 +242,8 @@ class NotificationDataResourceIT {
         List<NotificationData> notificationDataList = notificationDataRepository.findAll();
         assertThat(notificationDataList).hasSize(databaseSizeBeforeUpdate);
         NotificationData testNotificationData = notificationDataList.get(notificationDataList.size() - 1);
-        assertThat(testNotificationData.getKey()).isEqualTo(UPDATED_KEY);
-        assertThat(testNotificationData.getValue()).isEqualTo(UPDATED_VALUE);
+        assertThat(testNotificationData.getDataKey()).isEqualTo(UPDATED_DATA_KEY);
+        assertThat(testNotificationData.getDataValue()).isEqualTo(UPDATED_DATA_VALUE);
     }
 
     @Test
@@ -319,7 +316,7 @@ class NotificationDataResourceIT {
         NotificationData partialUpdatedNotificationData = new NotificationData();
         partialUpdatedNotificationData.setId(notificationData.getId());
 
-        partialUpdatedNotificationData.value(UPDATED_VALUE);
+        partialUpdatedNotificationData.dataValue(UPDATED_DATA_VALUE);
 
         restNotificationDataMockMvc
             .perform(
@@ -333,8 +330,8 @@ class NotificationDataResourceIT {
         List<NotificationData> notificationDataList = notificationDataRepository.findAll();
         assertThat(notificationDataList).hasSize(databaseSizeBeforeUpdate);
         NotificationData testNotificationData = notificationDataList.get(notificationDataList.size() - 1);
-        assertThat(testNotificationData.getKey()).isEqualTo(DEFAULT_KEY);
-        assertThat(testNotificationData.getValue()).isEqualTo(UPDATED_VALUE);
+        assertThat(testNotificationData.getDataKey()).isEqualTo(DEFAULT_DATA_KEY);
+        assertThat(testNotificationData.getDataValue()).isEqualTo(UPDATED_DATA_VALUE);
     }
 
     @Test
@@ -349,7 +346,7 @@ class NotificationDataResourceIT {
         NotificationData partialUpdatedNotificationData = new NotificationData();
         partialUpdatedNotificationData.setId(notificationData.getId());
 
-        partialUpdatedNotificationData.key(UPDATED_KEY).value(UPDATED_VALUE);
+        partialUpdatedNotificationData.dataKey(UPDATED_DATA_KEY).dataValue(UPDATED_DATA_VALUE);
 
         restNotificationDataMockMvc
             .perform(
@@ -363,8 +360,8 @@ class NotificationDataResourceIT {
         List<NotificationData> notificationDataList = notificationDataRepository.findAll();
         assertThat(notificationDataList).hasSize(databaseSizeBeforeUpdate);
         NotificationData testNotificationData = notificationDataList.get(notificationDataList.size() - 1);
-        assertThat(testNotificationData.getKey()).isEqualTo(UPDATED_KEY);
-        assertThat(testNotificationData.getValue()).isEqualTo(UPDATED_VALUE);
+        assertThat(testNotificationData.getDataKey()).isEqualTo(UPDATED_DATA_KEY);
+        assertThat(testNotificationData.getDataValue()).isEqualTo(UPDATED_DATA_VALUE);
     }
 
     @Test

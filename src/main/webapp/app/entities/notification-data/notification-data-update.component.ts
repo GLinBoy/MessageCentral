@@ -12,11 +12,11 @@ import NotificationDataService from './notification-data.service';
 
 const validations: any = {
   notificationData: {
-    key: {
+    dataKey: {
       required,
       maxLength: maxLength(128),
     },
-    value: {
+    dataValue: {
       required,
       maxLength: maxLength(256),
     },

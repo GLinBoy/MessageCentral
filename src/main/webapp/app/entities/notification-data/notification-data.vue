@@ -29,8 +29,8 @@
         <thead>
           <tr>
             <th scope="row"><span v-text="$t('global.field.id')">ID</span></th>
-            <th scope="row"><span v-text="$t('messageCentralApp.notificationData.key')">Key</span></th>
-            <th scope="row"><span v-text="$t('messageCentralApp.notificationData.value')">Value</span></th>
+            <th scope="row"><span v-text="$t('messageCentralApp.notificationData.dataKey')">Data Key</span></th>
+            <th scope="row"><span v-text="$t('messageCentralApp.notificationData.dataValue')">Data Value</span></th>
             <th scope="row"><span v-text="$t('messageCentralApp.notificationData.notification')">Notification</span></th>
             <th scope="row"></th>
           </tr>
@@ -42,8 +42,8 @@
                 notificationData.id
               }}</router-link>
             </td>
-            <td>{{ notificationData.key }}</td>
-            <td>{{ notificationData.value }}</td>
+            <td>{{ notificationData.dataKey }}</td>
+            <td>{{ notificationData.dataValue }}</td>
             <td>
               <div v-if="notificationData.notification">
                 <router-link :to="{ name: 'NotificationView', params: { notificationId: notificationData.notification.id } }">{{

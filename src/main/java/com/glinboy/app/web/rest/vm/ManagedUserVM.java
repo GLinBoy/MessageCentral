@@ -1,7 +1,6 @@
 package com.glinboy.app.web.rest.vm;
 
 import com.glinboy.app.service.dto.AdminUserDTO;
-
 import javax.validation.constraints.Size;
 
 /**

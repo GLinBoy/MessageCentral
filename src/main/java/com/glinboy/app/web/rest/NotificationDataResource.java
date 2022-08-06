@@ -3,6 +3,13 @@ package com.glinboy.app.web.rest;
 import com.glinboy.app.domain.NotificationData;
 import com.glinboy.app.repository.NotificationDataRepository;
 import com.glinboy.app.web.rest.errors.BadRequestAlertException;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -11,14 +18,6 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import tech.jhipster.web.util.HeaderUtil;
 import tech.jhipster.web.util.ResponseUtil;
-
-import javax.validation.Valid;
-import javax.validation.constraints.NotNull;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
 
 /**
  * REST controller for managing {@link com.glinboy.app.domain.NotificationData}.
@@ -31,6 +30,7 @@ public class NotificationDataResource {
     private static final String ENTITY_NAME = "notificationData";
     private final Logger log = LoggerFactory.getLogger(NotificationDataResource.class);
     private final NotificationDataRepository notificationDataRepository;
+
     @Value("${jhipster.clientApp.name}")
     private String applicationName;
 
@@ -104,7 +104,7 @@ public class NotificationDataResource {
      * or with status {@code 500 (Internal Server Error)} if the notificationData couldn't be updated.
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
-    @PatchMapping(value = "/notification-data/{id}", consumes = {"application/json", "application/merge-patch+json"})
+    @PatchMapping(value = "/notification-data/{id}", consumes = { "application/json", "application/merge-patch+json" })
     public ResponseEntity<NotificationData> partialUpdateNotificationData(
         @PathVariable(value = "id", required = false) final Long id,
         @NotNull @RequestBody NotificationData notificationData
@@ -124,11 +124,11 @@ public class NotificationDataResource {
         Optional<NotificationData> result = notificationDataRepository
             .findById(notificationData.getId())
             .map(existingNotificationData -> {
-                if (notificationData.getKey() != null) {
-                    existingNotificationData.setKey(notificationData.getKey());
+                if (notificationData.getDataKey() != null) {
+                    existingNotificationData.setDataKey(notificationData.getDataKey());
                 }
-                if (notificationData.getValue() != null) {
-                    existingNotificationData.setValue(notificationData.getValue());
+                if (notificationData.getDataValue() != null) {
+                    existingNotificationData.setDataValue(notificationData.getDataValue());
                 }
 
                 return existingNotificationData;

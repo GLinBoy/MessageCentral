@@ -1,22 +1,20 @@
 package com.glinboy.app.security;
 
+import java.util.Arrays;
+import java.util.Optional;
+import java.util.stream.Stream;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import java.util.Arrays;
-import java.util.Optional;
-import java.util.stream.Stream;
-
 /**
  * Utility class for Spring Security.
  */
 public final class SecurityUtils {
 
-    private SecurityUtils() {
-    }
+    private SecurityUtils() {}
 
     /**
      * Get the login of the current user.

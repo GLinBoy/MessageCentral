@@ -7,16 +7,16 @@
         </h2>
         <dl class="row jh-entity-details">
           <dt>
-            <span v-text="$t('messageCentralApp.notificationData.key')">Key</span>
+            <span v-text="$t('messageCentralApp.notificationData.dataKey')">Data Key</span>
           </dt>
           <dd>
-            <span>{{ notificationData.key }}</span>
+            <span>{{ notificationData.dataKey }}</span>
           </dd>
           <dt>
-            <span v-text="$t('messageCentralApp.notificationData.value')">Value</span>
+            <span v-text="$t('messageCentralApp.notificationData.dataValue')">Data Value</span>
           </dt>
           <dd>
-            <span>{{ notificationData.value }}</span>
+            <span>{{ notificationData.dataValue }}</span>
           </dd>
           <dt>
             <span v-text="$t('messageCentralApp.notificationData.notification')">Notification</span>

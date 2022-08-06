@@ -1,4 +1,4 @@
-id;key;value;notification_id
+id;data_key;data_value;notification_id
 1;SCSI;Cotton;1
 2;Bedfordshire Illinois;Metal whiteboard copying;2
 3;ivory;database;3

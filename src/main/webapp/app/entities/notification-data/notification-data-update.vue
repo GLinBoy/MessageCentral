@@ -15,24 +15,26 @@
             <input type="text" class="form-control" id="id" name="id" v-model="notificationData.id" readonly />
           </div>
           <div class="form-group">
-            <label class="form-control-label" v-text="$t('messageCentralApp.notificationData.key')" for="notification-data-key">Key</label>
+            <label class="form-control-label" v-text="$t('messageCentralApp.notificationData.dataKey')" for="notification-data-dataKey"
+              >Data Key</label
+            >
             <input
               type="text"
               class="form-control"
-              name="key"
-              id="notification-data-key"
-              data-cy="key"
-              :class="{ valid: !$v.notificationData.key.$invalid, invalid: $v.notificationData.key.$invalid }"
-              v-model="$v.notificationData.key.$model"
+              name="dataKey"
+              id="notification-data-dataKey"
+              data-cy="dataKey"
+              :class="{ valid: !$v.notificationData.dataKey.$invalid, invalid: $v.notificationData.dataKey.$invalid }"
+              v-model="$v.notificationData.dataKey.$model"
               required
             />
-            <div v-if="$v.notificationData.key.$anyDirty && $v.notificationData.key.$invalid">
-              <small class="form-text text-danger" v-if="!$v.notificationData.key.required" v-text="$t('entity.validation.required')">
+            <div v-if="$v.notificationData.dataKey.$anyDirty && $v.notificationData.dataKey.$invalid">
+              <small class="form-text text-danger" v-if="!$v.notificationData.dataKey.required" v-text="$t('entity.validation.required')">
                 This field is required.
               </small>
               <small
                 class="form-text text-danger"
-                v-if="!$v.notificationData.key.maxLength"
+                v-if="!$v.notificationData.dataKey.maxLength"
                 v-text="$t('entity.validation.maxlength', { max: 128 })"
               >
                 This field cannot be longer than 128 characters.
@@ -40,26 +42,26 @@
             </div>
           </div>
           <div class="form-group">
-            <label class="form-control-label" v-text="$t('messageCentralApp.notificationData.value')" for="notification-data-value"
-              >Value</label
+            <label class="form-control-label" v-text="$t('messageCentralApp.notificationData.dataValue')" for="notification-data-dataValue"
+              >Data Value</label
             >
             <input
               type="text"
               class="form-control"
-              name="value"
-              id="notification-data-value"
-              data-cy="value"
-              :class="{ valid: !$v.notificationData.value.$invalid, invalid: $v.notificationData.value.$invalid }"
-              v-model="$v.notificationData.value.$model"
+              name="dataValue"
+              id="notification-data-dataValue"
+              data-cy="dataValue"
+              :class="{ valid: !$v.notificationData.dataValue.$invalid, invalid: $v.notificationData.dataValue.$invalid }"
+              v-model="$v.notificationData.dataValue.$model"
               required
             />
-            <div v-if="$v.notificationData.value.$anyDirty && $v.notificationData.value.$invalid">
-              <small class="form-text text-danger" v-if="!$v.notificationData.value.required" v-text="$t('entity.validation.required')">
+            <div v-if="$v.notificationData.dataValue.$anyDirty && $v.notificationData.dataValue.$invalid">
+              <small class="form-text text-danger" v-if="!$v.notificationData.dataValue.required" v-text="$t('entity.validation.required')">
                 This field is required.
               </small>
               <small
                 class="form-text text-danger"
-                v-if="!$v.notificationData.value.maxLength"
+                v-if="!$v.notificationData.dataValue.maxLength"
                 v-text="$t('entity.validation.maxlength', { max: 256 })"
               >
                 This field cannot be longer than 256 characters.

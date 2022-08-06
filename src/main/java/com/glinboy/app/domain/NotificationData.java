@@ -1,13 +1,11 @@
 package com.glinboy.app.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import java.io.Serializable;
+import javax.persistence.*;
+import javax.validation.constraints.*;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
-
-import javax.persistence.*;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
-import java.io.Serializable;
 
 /**
  * A NotificationData.
@@ -27,17 +25,17 @@ public class NotificationData implements Serializable {
 
     @NotNull
     @Size(max = 128)
-    @Column(name = "key", length = 128, nullable = false)
-    private String key;
+    @Column(name = "data_key", length = 128, nullable = false)
+    private String dataKey;
 
     @NotNull
     @Size(max = 256)
-    @Column(name = "value", length = 256, nullable = false)
-    private String value;
+    @Column(name = "data_value", length = 256, nullable = false)
+    private String dataValue;
 
-    @ManyToOne(optional = false, cascade = CascadeType.ALL)
+    @ManyToOne(optional = false)
     @NotNull
-    @JsonIgnoreProperties(value = {"data"}, allowSetters = true)
+    @JsonIgnoreProperties(value = { "data" }, allowSetters = true)
     private Notification notification;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here
@@ -46,39 +44,39 @@ public class NotificationData implements Serializable {
         return this.id;
     }
 
-    public void setId(Long id) {
-        this.id = id;
-    }
-
     public NotificationData id(Long id) {
         this.setId(id);
         return this;
     }
 
-    public String getKey() {
-        return this.key;
+    public void setId(Long id) {
+        this.id = id;
     }
 
-    public void setKey(String key) {
-        this.key = key;
+    public String getDataKey() {
+        return this.dataKey;
     }
 
-    public NotificationData key(String key) {
-        this.setKey(key);
+    public NotificationData dataKey(String dataKey) {
+        this.setDataKey(dataKey);
         return this;
     }
 
-    public String getValue() {
-        return this.value;
+    public void setDataKey(String dataKey) {
+        this.dataKey = dataKey;
     }
 
-    public void setValue(String value) {
-        this.value = value;
+    public String getDataValue() {
+        return this.dataValue;
     }
 
-    public NotificationData value(String value) {
-        this.setValue(value);
+    public NotificationData dataValue(String dataValue) {
+        this.setDataValue(dataValue);
         return this;
+    }
+
+    public void setDataValue(String dataValue) {
+        this.dataValue = dataValue;
     }
 
     public Notification getNotification() {
@@ -118,8 +116,8 @@ public class NotificationData implements Serializable {
     public String toString() {
         return "NotificationData{" +
             "id=" + getId() +
-            ", key='" + getKey() + "'" +
-            ", value='" + getValue() + "'" +
+            ", dataKey='" + getDataKey() + "'" +
+            ", dataValue='" + getDataValue() + "'" +
             "}";
     }
 }

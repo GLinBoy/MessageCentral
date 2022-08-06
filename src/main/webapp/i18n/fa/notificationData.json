@@ -18,8 +18,8 @@
         "title": "Notification Data"
       },
       "id": "ID",
-      "key": "Key",
-      "value": "Value",
+      "dataKey": "Data Key",
+      "dataValue": "Data Value",
       "notification": "Notification"
     }
   }

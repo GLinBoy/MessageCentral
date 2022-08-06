@@ -6,13 +6,13 @@
   "entityTableName": "notification_data",
   "fields": [
     {
-      "fieldName": "key",
+      "fieldName": "dataKey",
       "fieldType": "String",
       "fieldValidateRules": ["required", "maxlength"],
       "fieldValidateRulesMaxlength": "128"
     },
     {
-      "fieldName": "value",
+      "fieldName": "dataValue",
       "fieldType": "String",
       "fieldValidateRules": ["required", "maxlength"],
       "fieldValidateRulesMaxlength": "256"

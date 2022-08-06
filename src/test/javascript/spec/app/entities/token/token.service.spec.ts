@@ -33,15 +33,15 @@ describe('Service Tests', () => {
     beforeEach(() => {
       service = new TokenService();
       currentDate = new Date();
-      elemDefault = new Token(123, 'AAAAAAA', 'AAAAAAA', false, currentDate, currentDate, 0, 'AAAAAAA', currentDate, 'AAAAAAA');
+      elemDefault = new Token(123, 'AAAAAAA', 'AAAAAAA', false, currentDate, 0, currentDate, 'AAAAAAA', currentDate, 'AAAAAAA');
     });
 
     describe('Service methods', () => {
       it('should find an element', async () => {
         const returnedFromService = Object.assign(
           {
-            createdAt: dayjs(currentDate).format(DATE_TIME_FORMAT),
             deprecateAt: dayjs(currentDate).format(DATE_TIME_FORMAT),
+            createdAt: dayjs(currentDate).format(DATE_TIME_FORMAT),
             updatedAt: dayjs(currentDate).format(DATE_TIME_FORMAT),
           },
           elemDefault
@@ -67,16 +67,16 @@ describe('Service Tests', () => {
         const returnedFromService = Object.assign(
           {
             id: 123,
-            createdAt: dayjs(currentDate).format(DATE_TIME_FORMAT),
             deprecateAt: dayjs(currentDate).format(DATE_TIME_FORMAT),
+            createdAt: dayjs(currentDate).format(DATE_TIME_FORMAT),
             updatedAt: dayjs(currentDate).format(DATE_TIME_FORMAT),
           },
           elemDefault
         );
         const expected = Object.assign(
           {
-            createdAt: currentDate,
             deprecateAt: currentDate,
+            createdAt: currentDate,
             updatedAt: currentDate,
           },
           returnedFromService
@@ -105,9 +105,9 @@ describe('Service Tests', () => {
             name: 'BBBBBB',
             token: 'BBBBBB',
             disable: true,
-            createdAt: dayjs(currentDate).format(DATE_TIME_FORMAT),
             deprecateAt: dayjs(currentDate).format(DATE_TIME_FORMAT),
             roles: 1,
+            createdAt: dayjs(currentDate).format(DATE_TIME_FORMAT),
             createdBy: 'BBBBBB',
             updatedAt: dayjs(currentDate).format(DATE_TIME_FORMAT),
             updatedBy: 'BBBBBB',
@@ -117,8 +117,8 @@ describe('Service Tests', () => {
 
         const expected = Object.assign(
           {
-            createdAt: currentDate,
             deprecateAt: currentDate,
+            createdAt: currentDate,
             updatedAt: currentDate,
           },
           returnedFromService
@@ -153,8 +153,8 @@ describe('Service Tests', () => {
 
         const expected = Object.assign(
           {
-            createdAt: currentDate,
             deprecateAt: currentDate,
+            createdAt: currentDate,
             updatedAt: currentDate,
           },
           returnedFromService
@@ -183,9 +183,9 @@ describe('Service Tests', () => {
             name: 'BBBBBB',
             token: 'BBBBBB',
             disable: true,
-            createdAt: dayjs(currentDate).format(DATE_TIME_FORMAT),
             deprecateAt: dayjs(currentDate).format(DATE_TIME_FORMAT),
             roles: 1,
+            createdAt: dayjs(currentDate).format(DATE_TIME_FORMAT),
             createdBy: 'BBBBBB',
             updatedAt: dayjs(currentDate).format(DATE_TIME_FORMAT),
             updatedBy: 'BBBBBB',
@@ -194,8 +194,8 @@ describe('Service Tests', () => {
         );
         const expected = Object.assign(
           {
-            createdAt: currentDate,
             deprecateAt: currentDate,
+            createdAt: currentDate,
             updatedAt: currentDate,
           },
           returnedFromService

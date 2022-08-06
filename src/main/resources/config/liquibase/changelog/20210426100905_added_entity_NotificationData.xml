@@ -14,10 +14,10 @@
             <column name="id" type="bigint">
                 <constraints primaryKey="true" nullable="false"/>
             </column>
-            <column name="key" type="varchar(128)">
+            <column name="data_key" type="varchar(128)">
                 <constraints nullable="false" />
             </column>
-            <column name="value" type="varchar(256)">
+            <column name="data_value" type="varchar(256)">
                 <constraints nullable="false" />
             </column>
             <column name="notification_id" type="bigint">
@@ -44,8 +44,8 @@
                   tableName="notification_data"
                   usePreparedStatements="true">
             <column name="id" type="numeric"/>
-            <column name="key" type="string"/>
-            <column name="value" type="string"/>
+            <column name="data_key" type="string"/>
+            <column name="data_value" type="string"/>
             <column name="notification_id" type="numeric"/>
             <!-- jhipster-needle-liquibase-add-loadcolumn - JHipster (and/or extensions) can add load columns here -->
         </loadData>

@@ -81,8 +81,8 @@ describe('Service Tests', () => {
       it('should update a NotificationData', async () => {
         const returnedFromService = Object.assign(
           {
-            key: 'BBBBBB',
-            value: 'BBBBBB',
+            dataKey: 'BBBBBB',
+            dataValue: 'BBBBBB',
           },
           elemDefault
         );
@@ -109,7 +109,7 @@ describe('Service Tests', () => {
       it('should partial update a NotificationData', async () => {
         const patchObject = Object.assign(
           {
-            key: 'BBBBBB',
+            dataKey: 'BBBBBB',
           },
           new NotificationData()
         );
@@ -137,8 +137,8 @@ describe('Service Tests', () => {
       it('should return a list of NotificationData', async () => {
         const returnedFromService = Object.assign(
           {
-            key: 'BBBBBB',
-            value: 'BBBBBB',
+            dataKey: 'BBBBBB',
+            dataValue: 'BBBBBB',
           },
           elemDefault
         );
