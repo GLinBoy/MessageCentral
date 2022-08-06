@@ -370,7 +370,7 @@ class AccountResourceIT {
 
         restAccountMockMvc
             .perform(post("/api/register").contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(validUser)))
-            .andExpect(status().isMethodNotAllowed());
+            .andExpect(status().isNotFound());
     }
 
     @Test
