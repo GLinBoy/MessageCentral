@@ -63,8 +63,8 @@ entity Notification {
 }
 
 entity NotificationData {
-  key String required maxlength(128)
-  value String required maxlength(256)
+  dataKey String required maxlength(128)
+  dataValue String required maxlength(256)
 }
 
 enum MessageStatus {
