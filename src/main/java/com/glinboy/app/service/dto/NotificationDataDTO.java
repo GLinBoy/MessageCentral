@@ -1,8 +1,8 @@
 package com.glinboy.app.service.dto;
 
+import java.io.Serializable;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
-import java.io.Serializable;
 
 /**
  * A NotificationDataDTO.
@@ -13,11 +13,11 @@ public class NotificationDataDTO implements Serializable {
 
     @NotNull
     @Size(max = 128)
-    private String key;
+    private String dataKey;
 
     @NotNull
     @Size(max = 256)
-    private String value;
+    private String dataValue;
 
     private Long notificationId;
 
@@ -34,29 +34,29 @@ public class NotificationDataDTO implements Serializable {
         return this;
     }
 
-    public String getKey() {
-        return this.key;
+    public String getDataKey() {
+        return this.dataKey;
     }
 
-    public void setKey(String key) {
-        this.key = key;
+    public void setDataKey(String dataKey) {
+        this.dataKey = dataKey;
     }
 
     public NotificationDataDTO key(String key) {
-        this.key = key;
+        this.dataKey = key;
         return this;
     }
 
-    public String getValue() {
-        return this.value;
+    public String getDataValue() {
+        return this.dataValue;
     }
 
-    public void setValue(String value) {
-        this.value = value;
+    public void setDataValue(String dataValue) {
+        this.dataValue = dataValue;
     }
 
     public NotificationDataDTO value(String value) {
-        this.value = value;
+        this.dataValue = value;
         return this;
     }
 
@@ -92,8 +92,8 @@ public class NotificationDataDTO implements Serializable {
     public String toString() {
         return "NotificationData{" +
             "id=" + getId() +
-            ", key='" + getKey() + "'" +
-            ", value='" + getValue() + "'" +
+            ", key='" + getDataKey() + "'" +
+            ", value='" + getDataValue() + "'" +
             ", notificationId='" + getNotificationId() + "'" +
             "}";
     }

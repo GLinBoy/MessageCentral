@@ -3,6 +3,9 @@ package com.glinboy.app.service.impl;
 import com.glinboy.app.config.ApplicationProperties;
 import com.glinboy.app.service.dto.NotificationDTO;
 import com.glinboy.app.service.dto.NotificationDataDTO;
+import java.nio.charset.StandardCharsets;
+import java.util.List;
+import java.util.stream.Collectors;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
@@ -13,16 +16,11 @@ import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
-import java.nio.charset.StandardCharsets;
-import java.util.List;
-import java.util.stream.Collectors;
-
 @Service
 @ConditionalOnProperty(value = "application.notification.provider", havingValue = "onesignal", matchIfMissing = true)
 public class OnesignalNotificationChannelServiceImpl extends AbstractNotificationChannelServiceImpl {
 
-    protected OnesignalNotificationChannelServiceImpl(ApplicationEventPublisher publisher,
-                                                      ApplicationProperties properties) {
+    protected OnesignalNotificationChannelServiceImpl(ApplicationEventPublisher publisher, ApplicationProperties properties) {
         super(publisher, properties);
     }
 
@@ -44,15 +42,18 @@ public class OnesignalNotificationChannelServiceImpl extends AbstractNotificatio
             contents.put("en", notificationDTO.getContent());
             requestBody.put("contents", contents);
             if (notificationDTO.getData() != null && !notificationDTO.getData().isEmpty()) {
-                requestBody.put("data", notificationDTO.getData().stream()
-                    .collect(Collectors.toMap(NotificationDataDTO::getKey, NotificationDataDTO::getValue)));
+                requestBody.put(
+                    "data",
+                    notificationDTO
+                        .getData()
+                        .stream()
+                        .collect(Collectors.toMap(NotificationDataDTO::getDataKey, NotificationDataDTO::getDataValue))
+                );
             }
             HttpEntity<String> request = new HttpEntity<>(requestBody.toString(), headers);
-            String result = restTemplate.postForObject(properties.getNotification().getOnesignal().getUrl(), request,
-                String.class);
+            String result = restTemplate.postForObject(properties.getNotification().getOnesignal().getUrl(), request, String.class);
             log.info("Notification sent! {}", notificationDTO);
             log.info("Notification Result {}", result);
         }
     }
-
 }
