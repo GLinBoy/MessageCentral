@@ -1,15 +1,27 @@
-import Component from 'vue-class-component';
-import { Inject, Vue } from 'vue-property-decorator';
+import { mixins } from 'vue-class-component';
+import { Component, Inject } from 'vue-property-decorator';
+
+import DashboardService from './dashboard.service';
+import JhiDataUtils from '@/shared/data/data-utils.service';
 
 @Component
-export default class Dashboard extends Vue {
+export default class Dashboard extends mixins(JhiDataUtils) {
   @Inject('dashboardService') private dashboardService: () => DashboardService;
 
-  public get authenticated(): boolean {
-    return this.$store.getters.authenticated;
+  public mounted(): void {
+    this.retrieveLast30DaysMessagesStatistic();
   }
 
-  public get username(): string {
-    return this.$store.getters.account ? this.$store.getters.account.login : '';
+  public retrieveLast30DaysMessagesStatistic(): void {
+    this.dashboardService()
+      .retrieveLast30DaysMessagesStatistic()
+      .then(
+        res => {
+          console.log(res);
+        },
+        err => {
+          console.error(err);
+        }
+      );
   }
 }
