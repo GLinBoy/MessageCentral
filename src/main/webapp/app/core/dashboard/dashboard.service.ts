@@ -3,7 +3,7 @@ import axios from 'axios';
 const baseApiUrl = 'api/dashboard';
 
 export default class DashboardService {
-  public retrieve30Days(): Promise<any> {
+  public retrieveLast30DaysMessagesStatistic(): Promise<any> {
     return new Promise<any>((resolve, reject) => {
       axios
         .get(baseApiUrl)
