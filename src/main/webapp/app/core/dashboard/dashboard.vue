@@ -9,4 +9,4 @@
   </div>
 </template>
 
-<script lang="ts" src="./Dashboard"></script>
+<script lang="ts" src="./dashboard.component.ts"></script>
