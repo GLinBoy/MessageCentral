@@ -31,6 +31,14 @@ import {
   BFormTags,
   BFormText,
   BFormSelect,
+  BCard,
+  BCardHeader,
+  BCardBody,
+  BCardText,
+  BCardFooter,
+  BCardImg,
+  BRow,
+  BCol,
 } from 'bootstrap-vue';
 
 export function initBootstrapVue(vue) {
@@ -67,4 +75,12 @@ export function initBootstrapVue(vue) {
   vue.component('b-form-text', BFormText);
   vue.directive('b-tooltip', VBTooltip);
   vue.component('b-form-select', BFormSelect);
+  vue.component('b-card', BCard);
+  vue.component('b-card-header', BCardHeader);
+  vue.component('b-card-text', BCardText);
+  vue.component('b-card-body', BCardBody);
+  vue.component('b-card-footer', BCardFooter);
+  vue.component('b-card-img', BCardImg);
+  vue.component('b-row', BRow);
+  vue.component('b-col', BCol);
 }
