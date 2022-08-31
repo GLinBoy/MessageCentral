@@ -6,7 +6,16 @@ import DashboardService from './dashboard.service';
 import JhiDataUtils from '@/shared/data/data-utils.service';
 import AlertService from '@/shared/alert/alert.service';
 
-@Component
+@Component({
+  computed: {
+    smsSuccessfulSent(): number {
+      return this.messagesStatistics.reduce((sum, current) => sum + current.sms.successful, 0);
+    },
+    smsFailedSent(): number {
+      return this.messagesStatistics.reduce((sum, current) => sum + current.sms.failed, 0);
+    },
+  },
+})
 export default class Dashboard extends mixins(JhiDataUtils) {
   @Inject('dashboardService') private dashboardService: () => DashboardService;
   @Inject('alertService') private alertService: () => AlertService;
