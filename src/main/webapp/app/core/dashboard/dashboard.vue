@@ -19,8 +19,8 @@
             align="center"
             class="mb-2"
           >
-            <b-card-text>Sent: 123,456</b-card-text>
-            <b-card-text>Failed: 789</b-card-text>
+            <b-card-text>Sent: {{ totalSuccessfulSent }}</b-card-text>
+            <b-card-text>Failed: {{ totalFailedSent }}</b-card-text>
           </b-card>
         </b-col>
         <b-col sm="12" md="3">
