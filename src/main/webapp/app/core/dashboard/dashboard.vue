@@ -58,8 +58,8 @@
             align="center"
             class="mb-2"
           >
-            <b-card-text>Sent: 123,456</b-card-text>
-            <b-card-text>Failed: 789</b-card-text>
+            <b-card-text>Sent: {{ notificationsSuccessfulSent }}</b-card-text>
+            <b-card-text>Failed: {{ notificationsFailedSent }}</b-card-text>
           </b-card>
         </b-col>
       </b-row>
