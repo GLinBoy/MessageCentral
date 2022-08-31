@@ -23,6 +23,9 @@ import AlertService from '@/shared/alert/alert.service';
     notificationsSuccessfulSent(): number {
       return this.messagesStatistics.reduce((sum, current) => sum + current.notification.successful, 0);
     },
+    notificationsFailedSent(): number {
+      return this.messagesStatistics.reduce((sum, current) => sum + current.notification.failed, 0);
+    },
   },
 })
 export default class Dashboard extends mixins(JhiDataUtils) {
