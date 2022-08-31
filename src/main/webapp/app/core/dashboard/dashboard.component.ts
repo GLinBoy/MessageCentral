@@ -17,6 +17,9 @@ import AlertService from '@/shared/alert/alert.service';
     emailsSuccessfulSent(): number {
       return this.messagesStatistics.reduce((sum, current) => sum + current.email.successful, 0);
     },
+    emailsFailedSent(): number {
+      return this.messagesStatistics.reduce((sum, current) => sum + current.email.failed, 0);
+    },
   },
 })
 export default class Dashboard extends mixins(JhiDataUtils) {
