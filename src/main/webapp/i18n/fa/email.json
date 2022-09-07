@@ -1,0 +1,29 @@
+{
+  "messageCentralApp": {
+    "email": {
+      "home": {
+        "title": "Emails",
+        "refreshListLabel": "Refresh list",
+        "createLabel": "Create a new Email",
+        "createOrEditLabel": "Create or edit a Email",
+        "notFound": "No Emails found"
+      },
+      "created": "A new Email is created with identifier {{ param }}",
+      "updated": "A Email is updated with identifier {{ param }}",
+      "deleted": "A Email is deleted with identifier {{ param }}",
+      "delete": {
+        "question": "Are you sure you want to delete Email {{ id }}?"
+      },
+      "detail": {
+        "title": "Email"
+      },
+      "id": "ID",
+      "receiver": "Receiver",
+      "subject": "Subject",
+      "content": "Content",
+      "status": "Status",
+      "createdAt": "Created At",
+      "createdBy": "Created By"
+    }
+  }
+}
