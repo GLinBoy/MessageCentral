@@ -9,6 +9,7 @@ import javax.validation.constraints.*;
 /**
  * A DTO for the {@link com.glinboy.app.domain.Notification} entity.
  */
+@SuppressWarnings("common-java:DuplicatedBlocks")
 public class NotificationDTO implements Serializable {
 
     private Long id;

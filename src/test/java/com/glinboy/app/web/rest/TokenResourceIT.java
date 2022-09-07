@@ -959,7 +959,7 @@ class TokenResourceIT {
 
     @Test
     @Transactional
-    void putNewToken() throws Exception {
+    void putExistingToken() throws Exception {
         // Initialize the database
         tokenRepository.saveAndFlush(token);
 

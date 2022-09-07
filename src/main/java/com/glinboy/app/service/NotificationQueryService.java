@@ -45,7 +45,7 @@ public class NotificationQueryService extends QueryService<Notification> {
      */
     @Transactional(readOnly = true)
     public List<NotificationDTO> findByCriteria(NotificationCriteria criteria) {
-        log.debug("find by criteria : {}", criteria.toString().replaceAll("[\n\r\t]", "_"));
+        log.debug("find by criteria : {}", criteria);
         final Specification<Notification> specification = createSpecification(criteria);
         return notificationMapper.toDto(notificationRepository.findAll(specification));
     }
@@ -58,7 +58,7 @@ public class NotificationQueryService extends QueryService<Notification> {
      */
     @Transactional(readOnly = true)
     public Page<NotificationDTO> findByCriteria(NotificationCriteria criteria, Pageable page) {
-        log.debug("find by criteria : {}, page: {}", criteria.toString().replaceAll("[\n\r\t]", "_"), page);
+        log.debug("find by criteria : {}, page: {}", criteria, page);
         final Specification<Notification> specification = createSpecification(criteria);
         return notificationRepository.findAll(specification, page).map(notificationMapper::toDto);
     }
@@ -70,7 +70,7 @@ public class NotificationQueryService extends QueryService<Notification> {
      */
     @Transactional(readOnly = true)
     public long countByCriteria(NotificationCriteria criteria) {
-        log.debug("count by criteria : {}", criteria.toString().replaceAll("[\n\r\t]", "_"));
+        log.debug("count by criteria : {}", criteria);
         final Specification<Notification> specification = createSpecification(criteria);
         return notificationRepository.count(specification);
     }

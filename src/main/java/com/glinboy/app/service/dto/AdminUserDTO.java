@@ -3,6 +3,7 @@ package com.glinboy.app.service.dto;
 import com.glinboy.app.config.Constants;
 import com.glinboy.app.domain.Authority;
 import com.glinboy.app.domain.User;
+import java.io.Serializable;
 import java.time.Instant;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -11,7 +12,9 @@ import javax.validation.constraints.*;
 /**
  * A DTO representing a user, with his authorities.
  */
-public class AdminUserDTO {
+public class AdminUserDTO implements Serializable {
+
+    private static final long serialVersionUID = 1L;
 
     private Long id;
 

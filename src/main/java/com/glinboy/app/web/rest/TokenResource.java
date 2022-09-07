@@ -154,7 +154,7 @@ public class TokenResource {
         TokenCriteria criteria,
         @org.springdoc.api.annotations.ParameterObject Pageable pageable
     ) {
-        log.debug("REST request to get Tokens by criteria: {}", criteria.toString().replaceAll("[\n\r\t]", "_"));
+        log.debug("REST request to get Tokens by criteria: {}", criteria);
         Page<TokenDTO> page = tokenQueryService.findByCriteria(criteria, pageable);
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
         return ResponseEntity.ok().headers(headers).body(page.getContent());
@@ -168,7 +168,7 @@ public class TokenResource {
      */
     @GetMapping("/tokens/count")
     public ResponseEntity<Long> countTokens(TokenCriteria criteria) {
-        log.debug("REST request to count Tokens by criteria: {}", criteria.toString().replaceAll("[\n\r\t]", "_"));
+        log.debug("REST request to count Tokens by criteria: {}", criteria);
         return ResponseEntity.ok().body(tokenQueryService.countByCriteria(criteria));
     }
 

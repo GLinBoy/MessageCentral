@@ -41,7 +41,7 @@ public class TokenServiceImpl implements TokenService {
 
     @Override
     public TokenDTO update(TokenDTO tokenDTO) {
-        log.debug("Request to save Token : {}", tokenDTO);
+        log.debug("Request to update Token : {}", tokenDTO);
         Token token = tokenMapper.toEntity(tokenDTO);
         token = tokenRepository.save(token);
         return tokenMapper.toDto(token);

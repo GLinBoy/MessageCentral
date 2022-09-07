@@ -897,7 +897,7 @@ class NotificationResourceIT {
 
     @Test
     @Transactional
-    void putNewNotification() throws Exception {
+    void putExistingNotification() throws Exception {
         // Initialize the database
         notificationRepository.saveAndFlush(notification);
 

@@ -45,7 +45,7 @@ public class EmailQueryService extends QueryService<Email> {
      */
     @Transactional(readOnly = true)
     public List<EmailDTO> findByCriteria(EmailCriteria criteria) {
-        log.debug("find by criteria : {}", criteria.toString().replaceAll("[\n\r\t]", "_"));
+        log.debug("find by criteria : {}", criteria);
         final Specification<Email> specification = createSpecification(criteria);
         return emailMapper.toDto(emailRepository.findAll(specification));
     }
@@ -58,7 +58,7 @@ public class EmailQueryService extends QueryService<Email> {
      */
     @Transactional(readOnly = true)
     public Page<EmailDTO> findByCriteria(EmailCriteria criteria, Pageable page) {
-        log.debug("find by criteria : {}, page: {}", criteria.toString().replaceAll("[\n\r\t]", "_"), page);
+        log.debug("find by criteria : {}, page: {}", criteria, page);
         final Specification<Email> specification = createSpecification(criteria);
         return emailRepository.findAll(specification, page).map(emailMapper::toDto);
     }
@@ -70,7 +70,7 @@ public class EmailQueryService extends QueryService<Email> {
      */
     @Transactional(readOnly = true)
     public long countByCriteria(EmailCriteria criteria) {
-        log.debug("count by criteria : {}", criteria.toString().replaceAll("[\n\r\t]", "_"));
+        log.debug("count by criteria : {}", criteria);
         final Specification<Email> specification = createSpecification(criteria);
         return emailRepository.count(specification);
     }

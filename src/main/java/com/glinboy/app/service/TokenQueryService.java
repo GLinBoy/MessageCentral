@@ -45,7 +45,7 @@ public class TokenQueryService extends QueryService<Token> {
      */
     @Transactional(readOnly = true)
     public List<TokenDTO> findByCriteria(TokenCriteria criteria) {
-        log.debug("find by criteria : {}", criteria.toString().replaceAll("[\n\r\t]", "_"));
+        log.debug("find by criteria : {}", criteria);
         final Specification<Token> specification = createSpecification(criteria);
         return tokenMapper.toDto(tokenRepository.findAll(specification));
     }
@@ -58,7 +58,7 @@ public class TokenQueryService extends QueryService<Token> {
      */
     @Transactional(readOnly = true)
     public Page<TokenDTO> findByCriteria(TokenCriteria criteria, Pageable page) {
-        log.debug("find by criteria : {}, page: {}", criteria.toString().replaceAll("[\n\r\t]", "_"), page);
+        log.debug("find by criteria : {}, page: {}", criteria, page);
         final Specification<Token> specification = createSpecification(criteria);
         return tokenRepository.findAll(specification, page).map(tokenMapper::toDto);
     }
@@ -70,7 +70,7 @@ public class TokenQueryService extends QueryService<Token> {
      */
     @Transactional(readOnly = true)
     public long countByCriteria(TokenCriteria criteria) {
-        log.debug("count by criteria : {}", criteria.toString().replaceAll("[\n\r\t]", "_"));
+        log.debug("count by criteria : {}", criteria);
         final Specification<Token> specification = createSpecification(criteria);
         return tokenRepository.count(specification);
     }

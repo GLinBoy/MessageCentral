@@ -611,7 +611,7 @@ class ShortMessageResourceIT {
 
     @Test
     @Transactional
-    void putNewShortMessage() throws Exception {
+    void putExistingShortMessage() throws Exception {
         // Initialize the database
         shortMessageRepository.saveAndFlush(shortMessage);
 

@@ -15,6 +15,7 @@ import org.hibernate.annotations.Type;
 @Entity
 @Table(name = "email")
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
+@SuppressWarnings("common-java:DuplicatedBlocks")
 public class Email implements Serializable {
 
     private static final long serialVersionUID = 1L;

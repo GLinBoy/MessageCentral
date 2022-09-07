@@ -159,7 +159,7 @@ public class NotificationResource {
         NotificationCriteria criteria,
         @org.springdoc.api.annotations.ParameterObject Pageable pageable
     ) {
-        log.debug("REST request to get Notifications by criteria: {}", criteria.toString().replaceAll("[\n\r\t]", "_"));
+        log.debug("REST request to get Notifications by criteria: {}", criteria);
         Page<NotificationDTO> page = notificationQueryService.findByCriteria(criteria, pageable);
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
         return ResponseEntity.ok().headers(headers).body(page.getContent());
@@ -173,7 +173,7 @@ public class NotificationResource {
      */
     @GetMapping("/notifications/count")
     public ResponseEntity<Long> countNotifications(NotificationCriteria criteria) {
-        log.debug("REST request to count Notifications by criteria: {}", criteria.toString().replaceAll("[\n\r\t]", "_"));
+        log.debug("REST request to count Notifications by criteria: {}", criteria);
         return ResponseEntity.ok().body(notificationQueryService.countByCriteria(criteria));
     }
 

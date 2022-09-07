@@ -8,6 +8,7 @@ import javax.validation.constraints.*;
 /**
  * A DTO for the {@link com.glinboy.app.domain.Token} entity.
  */
+@SuppressWarnings("common-java:DuplicatedBlocks")
 public class TokenDTO implements Serializable {
 
     private Long id;

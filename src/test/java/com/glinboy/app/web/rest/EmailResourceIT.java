@@ -609,7 +609,7 @@ class EmailResourceIT {
 
     @Test
     @Transactional
-    void putNewEmail() throws Exception {
+    void putExistingEmail() throws Exception {
         // Initialize the database
         emailRepository.saveAndFlush(email);
 

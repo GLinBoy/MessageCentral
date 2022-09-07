@@ -10,6 +10,7 @@ import javax.validation.constraints.*;
 /**
  * A DTO for the {@link com.glinboy.app.domain.Email} entity.
  */
+@SuppressWarnings("common-java:DuplicatedBlocks")
 public class EmailDTO implements Serializable {
 
     private Long id;

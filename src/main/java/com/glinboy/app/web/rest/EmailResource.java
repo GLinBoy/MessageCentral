@@ -154,7 +154,7 @@ public class EmailResource {
         EmailCriteria criteria,
         @org.springdoc.api.annotations.ParameterObject Pageable pageable
     ) {
-        log.debug("REST request to get Emails by criteria: {}", criteria.toString().replaceAll("[\n\r\t]", "_"));
+        log.debug("REST request to get Emails by criteria: {}", criteria);
         Page<EmailDTO> page = emailQueryService.findByCriteria(criteria, pageable);
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
         return ResponseEntity.ok().headers(headers).body(page.getContent());
@@ -168,7 +168,7 @@ public class EmailResource {
      */
     @GetMapping("/emails/count")
     public ResponseEntity<Long> countEmails(EmailCriteria criteria) {
-        log.debug("REST request to count Emails by criteria: {}", criteria.toString().replaceAll("[\n\r\t]", "_"));
+        log.debug("REST request to count Emails by criteria: {}", criteria);
         return ResponseEntity.ok().body(emailQueryService.countByCriteria(criteria));
     }
 
