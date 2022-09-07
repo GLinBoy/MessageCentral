@@ -6,6 +6,7 @@ import com.glinboy.app.repository.TokenRepository;
 import com.glinboy.app.service.criteria.TokenCriteria;
 import com.glinboy.app.service.dto.TokenDTO;
 import com.glinboy.app.service.mapper.TokenMapper;
+import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -14,8 +15,6 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import tech.jhipster.service.QueryService;
-
-import java.util.List;
 
 /**
  * Service for executing complex queries for {@link Token} entities in the database.
@@ -46,7 +45,7 @@ public class TokenQueryService extends QueryService<Token> {
      */
     @Transactional(readOnly = true)
     public List<TokenDTO> findByCriteria(TokenCriteria criteria) {
-        log.debug("find by criteria : {}", criteria.toString().replaceAll("[\n\r\t]", "_"));
+        log.debug("find by criteria : {}", criteria);
         final Specification<Token> specification = createSpecification(criteria);
         return tokenMapper.toDto(tokenRepository.findAll(specification));
     }
@@ -60,7 +59,7 @@ public class TokenQueryService extends QueryService<Token> {
      */
     @Transactional(readOnly = true)
     public Page<TokenDTO> findByCriteria(TokenCriteria criteria, Pageable page) {
-        log.debug("find by criteria : {}, page: {}", criteria.toString().replaceAll("[\n\r\t]", "_"), page);
+        log.debug("find by criteria : {}, page: {}", criteria, page);
         final Specification<Token> specification = createSpecification(criteria);
         return tokenRepository.findAll(specification, page).map(tokenMapper::toDto);
     }
@@ -73,7 +72,7 @@ public class TokenQueryService extends QueryService<Token> {
      */
     @Transactional(readOnly = true)
     public long countByCriteria(TokenCriteria criteria) {
-        log.debug("count by criteria : {}", criteria.toString().replaceAll("[\n\r\t]", "_"));
+        log.debug("count by criteria : {}", criteria);
         final Specification<Token> specification = createSpecification(criteria);
         return tokenRepository.count(specification);
     }

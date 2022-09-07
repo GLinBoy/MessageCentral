@@ -11,6 +11,10 @@ import com.glinboy.app.service.dto.ShortMessageDTO;
 import com.glinboy.app.service.dto.ShortMessagesDTO;
 import com.glinboy.app.service.mapper.ShortMessageMapper;
 import com.glinboy.app.util.Patterns;
+import java.util.List;
+import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.event.EventListener;
@@ -18,11 +22,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 /**
  * Service Implementation for managing {@link ShortMessage}.
@@ -90,7 +89,7 @@ public class ShortMessageServiceImpl implements ShortMessageService {
 
     @Override
     public ShortMessageDTO update(ShortMessageDTO shortMessageDTO) {
-        log.debug("Request to save ShortMessage : {}", shortMessageDTO);
+        log.debug("Request to update ShortMessage : {}", shortMessageDTO);
         ShortMessage shortMessage = shortMessageMapper.toEntity(shortMessageDTO);
         shortMessage = shortMessageRepository.save(shortMessage);
         return shortMessageMapper.toDto(shortMessage);

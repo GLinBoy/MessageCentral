@@ -8,6 +8,7 @@ import com.glinboy.app.repository.ShortMessageRepository;
 import com.glinboy.app.service.criteria.ShortMessageCriteria;
 import com.glinboy.app.service.dto.ShortMessageDTO;
 import com.glinboy.app.service.mapper.ShortMessageMapper;
+import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -16,8 +17,6 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import tech.jhipster.service.QueryService;
-
-import java.util.List;
 
 /**
  * Service for executing complex queries for {@link ShortMessage} entities in the database.
@@ -48,7 +47,7 @@ public class ShortMessageQueryService extends QueryService<ShortMessage> {
      */
     @Transactional(readOnly = true)
     public List<ShortMessageDTO> findByCriteria(ShortMessageCriteria criteria) {
-        log.debug("find by criteria : {}", criteria.toString().replaceAll("[\n\r\t]", "_"));
+        log.debug("find by criteria : {}", criteria);
         final Specification<ShortMessage> specification = createSpecification(criteria);
         return shortMessageMapper.toDto(shortMessageRepository.findAll(specification));
     }
@@ -62,7 +61,7 @@ public class ShortMessageQueryService extends QueryService<ShortMessage> {
      */
     @Transactional(readOnly = true)
     public Page<ShortMessageDTO> findByCriteria(ShortMessageCriteria criteria, Pageable page) {
-        log.debug("find by criteria : {}, page: {}", criteria.toString().replaceAll("[\n\r\t]", "_"), page);
+        log.debug("find by criteria : {}, page: {}", criteria, page);
         final Specification<ShortMessage> specification = createSpecification(criteria);
         return shortMessageRepository.findAll(specification, page).map(shortMessageMapper::toDto);
     }
@@ -75,7 +74,7 @@ public class ShortMessageQueryService extends QueryService<ShortMessage> {
      */
     @Transactional(readOnly = true)
     public long countByCriteria(ShortMessageCriteria criteria) {
-        log.debug("count by criteria : {}", criteria.toString().replaceAll("[\n\r\t]", "_"));
+        log.debug("count by criteria : {}", criteria);
         final Specification<ShortMessage> specification = createSpecification(criteria);
         return shortMessageRepository.count(specification);
     }

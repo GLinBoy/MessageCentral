@@ -2,19 +2,18 @@ package com.glinboy.app.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.glinboy.app.domain.enumeration.MessageStatus;
+import java.io.Serializable;
+import java.time.Instant;
+import java.util.HashSet;
+import java.util.Set;
+import javax.persistence.*;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
-
-import javax.persistence.*;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
-import java.io.Serializable;
-import java.time.Instant;
-import java.util.HashSet;
-import java.util.Set;
 
 /**
  * A Notification.
@@ -23,6 +22,7 @@ import java.util.Set;
 @Table(name = "notification")
 @EntityListeners(AuditingEntityListener.class)
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
+@SuppressWarnings("common-java:DuplicatedBlocks")
 public class Notification implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -73,7 +73,7 @@ public class Notification implements Serializable {
 
     @OneToMany(mappedBy = "notification", cascade = CascadeType.ALL)
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-    @JsonIgnoreProperties(value = {"notification"}, allowSetters = true)
+    @JsonIgnoreProperties(value = { "notification" }, allowSetters = true)
     private Set<NotificationData> data = new HashSet<>();
 
     // jhipster-needle-entity-add-field - JHipster will add fields here

@@ -8,6 +8,7 @@ import com.glinboy.app.repository.EmailRepository;
 import com.glinboy.app.service.criteria.EmailCriteria;
 import com.glinboy.app.service.dto.EmailDTO;
 import com.glinboy.app.service.mapper.EmailMapper;
+import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -16,8 +17,6 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import tech.jhipster.service.QueryService;
-
-import java.util.List;
 
 /**
  * Service for executing complex queries for {@link Email} entities in the database.
@@ -48,7 +47,7 @@ public class EmailQueryService extends QueryService<Email> {
      */
     @Transactional(readOnly = true)
     public List<EmailDTO> findByCriteria(EmailCriteria criteria) {
-        log.debug("find by criteria : {}", criteria.toString().replaceAll("[\n\r\t]", "_"));
+        log.debug("find by criteria : {}", criteria);
         final Specification<Email> specification = createSpecification(criteria);
         return emailMapper.toDto(emailRepository.findAll(specification));
     }
@@ -62,7 +61,7 @@ public class EmailQueryService extends QueryService<Email> {
      */
     @Transactional(readOnly = true)
     public Page<EmailDTO> findByCriteria(EmailCriteria criteria, Pageable page) {
-        log.debug("find by criteria : {}, page: {}", criteria.toString().replaceAll("[\n\r\t]", "_"), page);
+        log.debug("find by criteria : {}, page: {}", criteria, page);
         final Specification<Email> specification = createSpecification(criteria);
         return emailRepository.findAll(specification, page).map(emailMapper::toDto);
     }
@@ -75,7 +74,7 @@ public class EmailQueryService extends QueryService<Email> {
      */
     @Transactional(readOnly = true)
     public long countByCriteria(EmailCriteria criteria) {
-        log.debug("count by criteria : {}", criteria.toString().replaceAll("[\n\r\t]", "_"));
+        log.debug("count by criteria : {}", criteria);
         final Specification<Email> specification = createSpecification(criteria);
         return emailRepository.count(specification);
     }

@@ -1,15 +1,11 @@
 package com.glinboy.app.service.criteria;
 
 import com.glinboy.app.domain.enumeration.MessageStatus;
-import org.springdoc.api.annotations.ParameterObject;
-import tech.jhipster.service.Criteria;
-import tech.jhipster.service.filter.Filter;
-import tech.jhipster.service.filter.InstantFilter;
-import tech.jhipster.service.filter.LongFilter;
-import tech.jhipster.service.filter.StringFilter;
-
 import java.io.Serializable;
 import java.util.Objects;
+import org.springdoc.api.annotations.ParameterObject;
+import tech.jhipster.service.Criteria;
+import tech.jhipster.service.filter.*;
 
 /**
  * Criteria class for the {@link com.glinboy.app.domain.Email} entity. This class is used
@@ -21,19 +17,43 @@ import java.util.Objects;
  * fix type specific filters.
  */
 @ParameterObject
+@SuppressWarnings("common-java:DuplicatedBlocks")
 public class EmailCriteria implements Serializable, Criteria {
 
+    /**
+     * Class for filtering MessageStatus
+     */
+    public static class MessageStatusFilter extends Filter<MessageStatus> {
+
+        public MessageStatusFilter() {}
+
+        public MessageStatusFilter(MessageStatusFilter filter) {
+            super(filter);
+        }
+
+        @Override
+        public MessageStatusFilter copy() {
+            return new MessageStatusFilter(this);
+        }
+    }
+
     private static final long serialVersionUID = 1L;
+
     private LongFilter id;
+
     private StringFilter receiver;
+
     private StringFilter subject;
+
     private MessageStatusFilter status;
+
     private InstantFilter createdAt;
+
     private StringFilter createdBy;
+
     private Boolean distinct;
 
-    public EmailCriteria() {
-    }
+    public EmailCriteria() {}
 
     public EmailCriteria(EmailCriteria other) {
         this.id = other.id == null ? null : other.id.copy();
@@ -54,10 +74,6 @@ public class EmailCriteria implements Serializable, Criteria {
         return id;
     }
 
-    public void setId(LongFilter id) {
-        this.id = id;
-    }
-
     public LongFilter id() {
         if (id == null) {
             id = new LongFilter();
@@ -65,12 +81,12 @@ public class EmailCriteria implements Serializable, Criteria {
         return id;
     }
 
-    public StringFilter getReceiver() {
-        return receiver;
+    public void setId(LongFilter id) {
+        this.id = id;
     }
 
-    public void setReceiver(StringFilter receiver) {
-        this.receiver = receiver;
+    public StringFilter getReceiver() {
+        return receiver;
     }
 
     public StringFilter receiver() {
@@ -80,12 +96,12 @@ public class EmailCriteria implements Serializable, Criteria {
         return receiver;
     }
 
-    public StringFilter getSubject() {
-        return subject;
+    public void setReceiver(StringFilter receiver) {
+        this.receiver = receiver;
     }
 
-    public void setSubject(StringFilter subject) {
-        this.subject = subject;
+    public StringFilter getSubject() {
+        return subject;
     }
 
     public StringFilter subject() {
@@ -95,12 +111,12 @@ public class EmailCriteria implements Serializable, Criteria {
         return subject;
     }
 
-    public MessageStatusFilter getStatus() {
-        return status;
+    public void setSubject(StringFilter subject) {
+        this.subject = subject;
     }
 
-    public void setStatus(MessageStatusFilter status) {
-        this.status = status;
+    public MessageStatusFilter getStatus() {
+        return status;
     }
 
     public MessageStatusFilter status() {
@@ -110,12 +126,12 @@ public class EmailCriteria implements Serializable, Criteria {
         return status;
     }
 
-    public InstantFilter getCreatedAt() {
-        return createdAt;
+    public void setStatus(MessageStatusFilter status) {
+        this.status = status;
     }
 
-    public void setCreatedAt(InstantFilter createdAt) {
-        this.createdAt = createdAt;
+    public InstantFilter getCreatedAt() {
+        return createdAt;
     }
 
     public InstantFilter createdAt() {
@@ -125,12 +141,12 @@ public class EmailCriteria implements Serializable, Criteria {
         return createdAt;
     }
 
-    public StringFilter getCreatedBy() {
-        return createdBy;
+    public void setCreatedAt(InstantFilter createdAt) {
+        this.createdAt = createdAt;
     }
 
-    public void setCreatedBy(StringFilter createdBy) {
-        this.createdBy = createdBy;
+    public StringFilter getCreatedBy() {
+        return createdBy;
     }
 
     public StringFilter createdBy() {
@@ -138,6 +154,10 @@ public class EmailCriteria implements Serializable, Criteria {
             createdBy = new StringFilter();
         }
         return createdBy;
+    }
+
+    public void setCreatedBy(StringFilter createdBy) {
+        this.createdBy = createdBy;
     }
 
     public Boolean getDistinct() {
@@ -159,12 +179,12 @@ public class EmailCriteria implements Serializable, Criteria {
         final EmailCriteria that = (EmailCriteria) o;
         return (
             Objects.equals(id, that.id) &&
-                Objects.equals(receiver, that.receiver) &&
-                Objects.equals(subject, that.subject) &&
-                Objects.equals(status, that.status) &&
-                Objects.equals(createdAt, that.createdAt) &&
-                Objects.equals(createdBy, that.createdBy) &&
-                Objects.equals(distinct, that.distinct)
+            Objects.equals(receiver, that.receiver) &&
+            Objects.equals(subject, that.subject) &&
+            Objects.equals(status, that.status) &&
+            Objects.equals(createdAt, that.createdAt) &&
+            Objects.equals(createdBy, that.createdBy) &&
+            Objects.equals(distinct, that.distinct)
         );
     }
 
@@ -185,23 +205,5 @@ public class EmailCriteria implements Serializable, Criteria {
             (createdBy != null ? "createdBy=" + createdBy + ", " : "") +
             (distinct != null ? "distinct=" + distinct + ", " : "") +
             "}";
-    }
-
-    /**
-     * Class for filtering MessageStatus
-     */
-    public static class MessageStatusFilter extends Filter<MessageStatus> {
-
-        public MessageStatusFilter() {
-        }
-
-        public MessageStatusFilter(MessageStatusFilter filter) {
-            super(filter);
-        }
-
-        @Override
-        public MessageStatusFilter copy() {
-            return new MessageStatusFilter(this);
-        }
     }
 }

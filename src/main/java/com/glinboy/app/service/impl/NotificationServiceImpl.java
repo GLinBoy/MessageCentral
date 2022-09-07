@@ -12,6 +12,9 @@ import com.glinboy.app.service.dto.NotificationDTO;
 import com.glinboy.app.service.dto.NotificationsDTO;
 import com.glinboy.app.service.mapper.NotificationDataMapper;
 import com.glinboy.app.service.mapper.NotificationMapper;
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.event.EventListener;
@@ -19,10 +22,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
 
 /**
  * Service Implementation for managing {@link Notification}.
@@ -107,7 +106,7 @@ public class NotificationServiceImpl implements NotificationService {
 
     @Override
     public NotificationDTO update(NotificationDTO notificationDTO) {
-        log.debug("Request to save Notification : {}", notificationDTO);
+        log.debug("Request to update Notification : {}", notificationDTO);
         Notification notification = notificationMapper.toEntity(notificationDTO);
         notification = notificationRepository.save(notification);
         return notificationMapper.toDto(notification);
