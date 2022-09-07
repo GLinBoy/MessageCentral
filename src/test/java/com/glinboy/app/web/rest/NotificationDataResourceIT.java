@@ -220,7 +220,7 @@ class NotificationDataResourceIT {
 
     @Test
     @Transactional
-    void putNewNotificationData() throws Exception {
+    void putExistingNotificationData() throws Exception {
         // Initialize the database
         notificationDataRepository.saveAndFlush(notificationData);
 

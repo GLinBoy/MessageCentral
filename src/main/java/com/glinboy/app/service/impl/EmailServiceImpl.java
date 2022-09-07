@@ -11,6 +11,10 @@ import com.glinboy.app.service.dto.EmailDTO;
 import com.glinboy.app.service.dto.EmailsDTO;
 import com.glinboy.app.service.mapper.EmailMapper;
 import com.glinboy.app.util.Patterns;
+import java.util.List;
+import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.event.EventListener;
@@ -18,11 +22,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 /**
  * Service Implementation for managing {@link Email}.
@@ -39,8 +38,7 @@ public class EmailServiceImpl implements EmailService {
 
     private final MailChannelService<EmailDTO> mailProviderService;
 
-    public EmailServiceImpl(EmailRepository emailRepository, EmailMapper emailMapper,
-                            MailChannelService<EmailDTO> mailProviderService) {
+    public EmailServiceImpl(EmailRepository emailRepository, EmailMapper emailMapper, MailChannelService<EmailDTO> mailProviderService) {
         this.emailRepository = emailRepository;
         this.emailMapper = emailMapper;
         this.mailProviderService = mailProviderService;
@@ -62,15 +60,23 @@ public class EmailServiceImpl implements EmailService {
     @Override
     public List<EmailDTO> save(List<EmailsDTO> emailsDTO) {
         log.debug("Request to save Emails : {}", emailsDTO);
-        var emails = emailsDTO.stream().flatMap(
-            es -> Set.copyOf(es.getReceivers()).stream().filter(r -> r.matches(Patterns.EMAIL_PATTERN)).map(r -> {
-                var e = new Email();
-                e.setReceiver(r);
-                e.setSubject(es.getSubject());
-                e.setContent(es.getContent());
-                e.setStatus(MessageStatus.IN_QUEUE);
-                return e;
-            })).collect(Collectors.toList());
+        var emails = emailsDTO
+            .stream()
+            .flatMap(es ->
+                Set
+                    .copyOf(es.getReceivers())
+                    .stream()
+                    .filter(r -> r.matches(Patterns.EMAIL_PATTERN))
+                    .map(r -> {
+                        var e = new Email();
+                        e.setReceiver(r);
+                        e.setSubject(es.getSubject());
+                        e.setContent(es.getContent());
+                        e.setStatus(MessageStatus.IN_QUEUE);
+                        return e;
+                    })
+            )
+            .collect(Collectors.toList());
         log.info("List of {} Emails: {}", emails.size(), emails);
         emails = this.emailRepository.saveAll(emails);
         var dtoList = this.emailMapper.toDto(emails);
@@ -80,7 +86,7 @@ public class EmailServiceImpl implements EmailService {
 
     @Override
     public EmailDTO update(EmailDTO emailDTO) {
-        log.debug("Request to save Email : {}", emailDTO);
+        log.debug("Request to update Email : {}", emailDTO);
         Email email = emailMapper.toEntity(emailDTO);
         email = emailRepository.save(email);
         return emailMapper.toDto(email);
@@ -90,10 +96,14 @@ public class EmailServiceImpl implements EmailService {
     public Optional<EmailDTO> partialUpdate(EmailDTO emailDTO) {
         log.debug("Request to partially update Email : {}", emailDTO);
 
-        return emailRepository.findById(emailDTO.getId()).map(existingEmail -> {
-            emailMapper.partialUpdate(existingEmail, emailDTO);
-            return existingEmail;
-        }).map(emailRepository::save).map(emailMapper::toDto);
+        return emailRepository
+            .findById(emailDTO.getId())
+            .map(existingEmail -> {
+                emailMapper.partialUpdate(existingEmail, emailDTO);
+                return existingEmail;
+            })
+            .map(emailRepository::save)
+            .map(emailMapper::toDto);
     }
 
     @Override

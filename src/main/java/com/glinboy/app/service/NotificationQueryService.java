@@ -9,6 +9,8 @@ import com.glinboy.app.repository.NotificationRepository;
 import com.glinboy.app.service.criteria.NotificationCriteria;
 import com.glinboy.app.service.dto.NotificationDTO;
 import com.glinboy.app.service.mapper.NotificationMapper;
+import java.util.List;
+import javax.persistence.criteria.JoinType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -17,9 +19,6 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import tech.jhipster.service.QueryService;
-
-import javax.persistence.criteria.JoinType;
-import java.util.List;
 
 /**
  * Service for executing complex queries for {@link Notification} entities in the database.
@@ -50,7 +49,7 @@ public class NotificationQueryService extends QueryService<Notification> {
      */
     @Transactional(readOnly = true)
     public List<NotificationDTO> findByCriteria(NotificationCriteria criteria) {
-        log.debug("find by criteria : {}", criteria.toString().replaceAll("[\n\r\t]", "_"));
+        log.debug("find by criteria : {}", criteria);
         final Specification<Notification> specification = createSpecification(criteria);
         return notificationMapper.toDto(notificationRepository.findAll(specification));
     }
@@ -64,7 +63,7 @@ public class NotificationQueryService extends QueryService<Notification> {
      */
     @Transactional(readOnly = true)
     public Page<NotificationDTO> findByCriteria(NotificationCriteria criteria, Pageable page) {
-        log.debug("find by criteria : {}, page: {}", criteria.toString().replaceAll("[\n\r\t]", "_"), page);
+        log.debug("find by criteria : {}, page: {}", criteria, page);
         final Specification<Notification> specification = createSpecification(criteria);
         return notificationRepository.findAll(specification, page).map(notificationMapper::toDto);
     }
@@ -77,7 +76,7 @@ public class NotificationQueryService extends QueryService<Notification> {
      */
     @Transactional(readOnly = true)
     public long countByCriteria(NotificationCriteria criteria) {
-        log.debug("count by criteria : {}", criteria.toString().replaceAll("[\n\r\t]", "_"));
+        log.debug("count by criteria : {}", criteria);
         final Specification<Notification> specification = createSpecification(criteria);
         return notificationRepository.count(specification);
     }
