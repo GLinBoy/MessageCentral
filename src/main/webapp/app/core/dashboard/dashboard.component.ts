@@ -1,10 +1,16 @@
 import { mixins } from 'vue-class-component';
 import { Component, Inject } from 'vue-property-decorator';
 import { IMessagesStatistics } from '@/shared/model/messages-statistics.model';
-
+import { ChartData, IChartData } from '@/shared/model/chart-data.model';
+import { ChartOptions, IChartOptions } from '@/shared/model/chart-options.model';
+import { Dataset } from '@/shared/model/dataset.model';
+import { Bar } from 'vue-chartjs/legacy';
+import { BarElement, CategoryScale, Chart as ChartJS, Legend, LinearScale, Title, Tooltip } from 'chart.js';
 import DashboardService from './dashboard.service';
 import JhiDataUtils from '@/shared/data/data-utils.service';
 import AlertService from '@/shared/alert/alert.service';
+
+ChartJS.register(Title, Tooltip, Legend, BarElement, CategoryScale, LinearScale);
 
 @Component({
   computed: {
@@ -33,12 +39,52 @@ import AlertService from '@/shared/alert/alert.service';
       return this.smsFailedSent + this.emailsFailedSent + this.notificationsFailedSent;
     },
   },
+  components: {
+    Bar,
+  },
+  props: {
+    chartId: {
+      type: String,
+      default: 'bar-chart',
+    },
+    datasetIdKey: {
+      type: String,
+      default: 'label',
+    },
+    width: {
+      type: Number,
+      default: 400,
+    },
+    height: {
+      type: Number,
+      default: 400,
+    },
+    cssClasses: {
+      default: '',
+      type: String,
+    },
+    styles: {
+      type: Object,
+      default: () => {},
+    },
+    plugins: {
+      type: Object,
+      default: () => {},
+    },
+  },
 })
 export default class Dashboard extends mixins(JhiDataUtils) {
   @Inject('dashboardService') private dashboardService: () => DashboardService;
   @Inject('alertService') private alertService: () => AlertService;
 
   public messagesStatistics: IMessagesStatistics[] = [];
+
+  public chartData: IChartData = new ChartData(
+    ['January', 'February', 'March'],
+    [new Dataset('failed', '#ff6d71', [4, 2, 1]), new Dataset('successful', '#370018', [40, 20, 12])]
+  );
+
+  public chartOptions: IChartOptions = new ChartOptions(true);
 
   public isFetching = false;
 
@@ -53,7 +99,6 @@ export default class Dashboard extends mixins(JhiDataUtils) {
       .then(
         res => {
           this.messagesStatistics = res.data;
-          console.log(this.messagesStatistics);
           this.isFetching = false;
         },
         err => {
