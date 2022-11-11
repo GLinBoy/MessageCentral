@@ -26,7 +26,7 @@ module.exports = (env, options) => {
     new BrowserSyncPlugin(
       {
         host: 'localhost',
-        port: 9000,
+        port: 9090,
         proxy: {
           target: `http://localhost:${options.watch ? '8080' : '9060'}`,
           ws: true,
