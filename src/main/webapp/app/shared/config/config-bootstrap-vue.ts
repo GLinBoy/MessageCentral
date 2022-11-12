@@ -39,6 +39,7 @@ import {
   BCardImg,
   BRow,
   BCol,
+  BButtonGroup,
 } from 'bootstrap-vue';
 
 export function initBootstrapVue(vue) {
@@ -83,4 +84,5 @@ export function initBootstrapVue(vue) {
   vue.component('b-card-img', BCardImg);
   vue.component('b-row', BRow);
   vue.component('b-col', BCol);
+  vue.component('b-button-group', BButtonGroup);
 }
