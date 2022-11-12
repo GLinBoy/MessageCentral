@@ -69,10 +69,9 @@
             <div class="row">
               <div class="col-12 text-center">
                 <b-button-group size="sm">
-                  <b-button variant="primary">All</b-button>
-                  <b-button variant="primary">EMails</b-button>
-                  <b-button variant="primary">Notifications</b-button>
-                  <b-button variant="primary">SMS</b-button>
+                  <b-button v-for="t in ['ALL', 'EMAIL', 'SMS', 'NOTIFICATIONS']" :key="t" variant="primary" @click="loadChartData(t)">
+                    {{ t }}
+                  </b-button>
                 </b-button-group>
               </div>
               <div class="col-12">
