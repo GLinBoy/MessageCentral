@@ -10,7 +10,7 @@
         </div>
       </b-row>
       <b-row>
-        <b-col sm="3" md="3">
+        <b-col sm="12" md="3">
           <b-card
             border-variant="primary"
             header="Total Messages"
