@@ -1,6 +1,6 @@
 <template>
   <div class="home row">
-    <div class="col-md-3">
+    <div class="col-md-3 text-center">
       <span class="hipster img-fluid rounded"></span>
     </div>
     <div class="col-md-9">
