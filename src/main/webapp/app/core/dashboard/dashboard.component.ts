@@ -4,6 +4,7 @@ import { IMessagesStatistics } from '@/shared/model/messages-statistics.model';
 import { ChartData, IChartData } from '@/shared/model/chart-data.model';
 import { ChartOptions, IChartOptions } from '@/shared/model/chart-options.model';
 import { Dataset } from '@/shared/model/dataset.model';
+import { MessageType } from '@/shared/model/enumerations/message-type.model';
 import { Bar } from 'vue-chartjs/legacy';
 import { BarElement, CategoryScale, Chart as ChartJS, Legend, LinearScale, Title, Tooltip } from 'chart.js';
 import DashboardService from './dashboard.service';
@@ -88,6 +89,8 @@ export default class Dashboard extends mixins(JhiDataUtils) {
 
   public isFetching = false;
 
+  public chartDataSelected: MessageType = MessageType.ALL;
+
   public mounted(): void {
     this.retrieveLast30DaysMessagesStatistic();
   }
@@ -107,5 +110,12 @@ export default class Dashboard extends mixins(JhiDataUtils) {
           this.alertService().showHttpError(this, err.response);
         }
       );
+  }
+
+  public loadChartData(type: MessageType): void {
+    this.isFetching = true;
+    console.log('Type: ' + type);
+    this.chartDataSelected = type;
+    this.isFetching = false;
   }
 }
