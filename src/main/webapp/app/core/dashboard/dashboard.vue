@@ -66,17 +66,29 @@
       <div class="row">
         <div class="col-12">
           <b-card border-variant="primary">
-            <Bar
-              :chart-options="chartOptions"
-              :chart-data="chartData"
-              :chart-id="chartId"
-              :dataset-id-key="datasetIdKey"
-              :plugins="plugins"
-              :css-classes="cssClasses"
-              :styles="styles"
-              :width="width"
-              :height="height"
-            />
+            <div class="row">
+              <div class="col-12 text-center">
+                <b-button-group size="sm">
+                  <b-button variant="primary">All</b-button>
+                  <b-button variant="primary">EMails</b-button>
+                  <b-button variant="primary">Notifications</b-button>
+                  <b-button variant="primary">SMS</b-button>
+                </b-button-group>
+              </div>
+              <div class="col-12">
+                <Bar
+                  :chart-options="chartOptions"
+                  :chart-data="chartData"
+                  :chart-id="chartId"
+                  :dataset-id-key="datasetIdKey"
+                  :plugins="plugins"
+                  :css-classes="cssClasses"
+                  :styles="styles"
+                  :width="width"
+                  :height="height"
+                />
+              </div>
+            </div>
           </b-card>
         </div>
       </div>
