@@ -117,6 +117,22 @@ export default class Dashboard extends mixins(JhiDataUtils) {
       );
   }
 
+  loadChartDataOfAllMessages() {
+    console.log('Data loading for: ALL');
+  }
+
+  loadChartDataOfEmails() {
+    console.log('Data loading for: EMAIL');
+  }
+
+  loadChartDataOfNotifications() {
+    console.log('Data loading for: NOTIFICATION');
+  }
+
+  loadChartDataOfSms() {
+    console.log('Data loading for: SMS');
+  }
+
   public loadChartData(type: MessageType): void {
     this.isFetching = true;
     console.log('Type: ' + type);
