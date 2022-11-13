@@ -80,16 +80,21 @@ export default class Dashboard extends mixins(JhiDataUtils) {
 
   public messagesStatistics: IMessagesStatistics[] = [];
 
-  public chartData: IChartData = new ChartData(
-    ['January', 'February', 'March'],
-    [new Dataset('failed', '#ff6d71', [4, 2, 1]), new Dataset('successful', '#370018', [40, 20, 12])]
-  );
-
-  public chartOptions: IChartOptions = new ChartOptions(true);
-
   public isFetching = false;
 
   public chartDataSelected: MessageType = MessageType.ALL;
+
+  failedLabel = 'failed';
+  successfulLabel = 'successful';
+  failedColor = '#ff6d71';
+  successfulColor = '#370018';
+
+  public chartData: IChartData = new ChartData(
+    [],
+    [new Dataset(this.failedLabel, this.failedColor, []), new Dataset(this.successfulLabel, this.successfulColor, [])]
+  );
+
+  public chartOptions: IChartOptions = new ChartOptions(true);
 
   public mounted(): void {
     this.retrieveLast30DaysMessagesStatistic();
