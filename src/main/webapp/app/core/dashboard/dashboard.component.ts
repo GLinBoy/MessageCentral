@@ -136,6 +136,20 @@ export default class Dashboard extends mixins(JhiDataUtils) {
   public loadChartData(type: MessageType): void {
     this.isFetching = true;
     console.log('Type: ' + type);
+    switch (type) {
+      case MessageType.EMAIL:
+        this.loadChartDataOfEmails();
+        break;
+      case MessageType.NOTIFICATION:
+        this.loadChartDataOfNotifications();
+        break;
+      case MessageType.SMS:
+        this.loadChartDataOfSms();
+        break;
+      default:
+        this.loadChartDataOfAllMessages();
+        break;
+    }
     this.chartDataSelected = type;
     this.isFetching = false;
   }
