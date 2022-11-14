@@ -107,6 +107,7 @@ export default class Dashboard extends mixins(JhiDataUtils) {
       .then(
         res => {
           this.messagesStatistics = res.data;
+          this.loadChartDataOfAllMessages();
           this.isFetching = false;
         },
         err => {
