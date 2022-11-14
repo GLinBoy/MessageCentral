@@ -70,7 +70,7 @@
               <div class="col-12 text-center">
                 <b-button-group size="sm">
                   <b-button
-                    v-for="t in ['ALL', 'EMAIL', 'SMS', 'NOTIFICATIONS']"
+                    v-for="t in ['ALL', 'EMAIL', 'SMS', 'NOTIFICATION']"
                     :key="t"
                     variant="primary"
                     @click="loadChartData(t)"
