@@ -176,7 +176,6 @@ export default class Dashboard extends mixins(JhiDataUtils) {
 
   public loadChartData(type: MessageType): void {
     this.isFetching = true;
-    console.log('Type: ' + type);
     switch (type) {
       case MessageType.EMAIL:
         this.loadChartDataOfEmails();
