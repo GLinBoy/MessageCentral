@@ -119,10 +119,7 @@ export default class Dashboard extends mixins(JhiDataUtils) {
   }
 
   loadChartDataOfAllMessages() {
-    const dates: Array<string> = this.messagesStatistics.map(item => {
-      const d = new Date(item.date);
-      return `${d.toLocaleString('default', { day: 'numeric', month: 'short' })}`;
-    });
+    const dates: Array<string> = this.messagesStatistics.map(item => this.formatDateOfChart(item.date));
     const successfulArray: Array<number> = this.messagesStatistics.map(item => {
       return item.email.successful + item.sms.successful + item.notification.successful;
     });
@@ -133,33 +130,28 @@ export default class Dashboard extends mixins(JhiDataUtils) {
   }
 
   loadChartDataOfEmails() {
-    const dates: Array<string> = this.messagesStatistics.map(item => {
-      const d = new Date(item.date);
-      return `${d.toLocaleString('default', { day: 'numeric', month: 'short' })}`;
-    });
+    const dates: Array<string> = this.messagesStatistics.map(item => this.formatDateOfChart(item.date));
     const successfulArray: Array<number> = this.messagesStatistics.map(item => item.email.successful);
     const failedArray: Array<number> = this.messagesStatistics.map(item => item.email.failed);
     this.updateChartData(dates, successfulArray, failedArray);
   }
 
   loadChartDataOfNotifications() {
-    const dates: Array<string> = this.messagesStatistics.map(item => {
-      const d = new Date(item.date);
-      return `${d.toLocaleString('default', { day: 'numeric', month: 'short' })}`;
-    });
+    const dates: Array<string> = this.messagesStatistics.map(item => this.formatDateOfChart(item.date));
     const successfulArray: Array<number> = this.messagesStatistics.map(item => item.notification.successful);
     const failedArray: Array<number> = this.messagesStatistics.map(item => item.notification.failed);
     this.updateChartData(dates, successfulArray, failedArray);
   }
 
   loadChartDataOfSms() {
-    const dates: Array<string> = this.messagesStatistics.map(item => {
-      const d = new Date(item.date);
-      return `${d.toLocaleString('default', { day: 'numeric', month: 'short' })}`;
-    });
+    const dates: Array<string> = this.messagesStatistics.map(item => this.formatDateOfChart(item.date));
     const successfulArray: Array<number> = this.messagesStatistics.map(item => item.sms.successful);
     const failedArray: Array<number> = this.messagesStatistics.map(item => item.sms.failed);
     this.updateChartData(dates, successfulArray, failedArray);
+  }
+
+  formatDateOfChart(d: Date): string {
+    return `${d.toLocaleString('default', { day: 'numeric', month: 'short' })}`;
   }
 
   updateChartData(data: Array<string>, successfulCount: Array<number>, failedCount: Array<number>) {
