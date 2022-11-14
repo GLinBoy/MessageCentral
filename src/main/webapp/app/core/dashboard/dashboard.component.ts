@@ -123,16 +123,13 @@ export default class Dashboard extends mixins(JhiDataUtils) {
       const d = new Date(item.date);
       return `${d.toLocaleString('default', { day: 'numeric', month: 'short' })}`;
     });
-    const successfulCount: Array<number> = this.messagesStatistics.map(item => {
+    const successfulArray: Array<number> = this.messagesStatistics.map(item => {
       return item.email.successful + item.sms.successful + item.notification.successful;
     });
-    const failedCounter: Array<number> = this.messagesStatistics.map(item => {
+    const failedArray: Array<number> = this.messagesStatistics.map(item => {
       return item.email.failed + item.sms.failed + item.notification.failed;
     });
-    this.chartData = new ChartData(dates, [
-      new Dataset(this.failedLabel, this.failedColor, failedCounter),
-      new Dataset(this.successfulLabel, this.successfulColor, successfulCount),
-    ]);
+    this.updateChartData(dates, successfulArray, failedArray);
   }
 
   loadChartDataOfEmails() {
@@ -140,12 +137,9 @@ export default class Dashboard extends mixins(JhiDataUtils) {
       const d = new Date(item.date);
       return `${d.toLocaleString('default', { day: 'numeric', month: 'short' })}`;
     });
-    const successfulEmail: Array<number> = this.messagesStatistics.map(item => item.email.successful);
-    const failedEmail: Array<number> = this.messagesStatistics.map(item => item.email.failed);
-    this.chartData = new ChartData(dates, [
-      new Dataset(this.failedLabel, this.failedColor, failedEmail),
-      new Dataset(this.successfulLabel, this.successfulColor, successfulEmail),
-    ]);
+    const successfulArray: Array<number> = this.messagesStatistics.map(item => item.email.successful);
+    const failedArray: Array<number> = this.messagesStatistics.map(item => item.email.failed);
+    this.updateChartData(dates, successfulArray, failedArray);
   }
 
   loadChartDataOfNotifications() {
@@ -153,12 +147,9 @@ export default class Dashboard extends mixins(JhiDataUtils) {
       const d = new Date(item.date);
       return `${d.toLocaleString('default', { day: 'numeric', month: 'short' })}`;
     });
-    const successfulNotification: Array<number> = this.messagesStatistics.map(item => item.notification.successful);
-    const failedNotification: Array<number> = this.messagesStatistics.map(item => item.notification.failed);
-    this.chartData = new ChartData(dates, [
-      new Dataset(this.failedLabel, this.failedColor, failedNotification),
-      new Dataset(this.successfulLabel, this.successfulColor, successfulNotification),
-    ]);
+    const successfulArray: Array<number> = this.messagesStatistics.map(item => item.notification.successful);
+    const failedArray: Array<number> = this.messagesStatistics.map(item => item.notification.failed);
+    this.updateChartData(dates, successfulArray, failedArray);
   }
 
   loadChartDataOfSms() {
@@ -166,11 +157,15 @@ export default class Dashboard extends mixins(JhiDataUtils) {
       const d = new Date(item.date);
       return `${d.toLocaleString('default', { day: 'numeric', month: 'short' })}`;
     });
-    const successfulSms: Array<number> = this.messagesStatistics.map(item => item.sms.successful);
-    const failedSms: Array<number> = this.messagesStatistics.map(item => item.sms.failed);
-    this.chartData = new ChartData(dates, [
-      new Dataset(this.failedLabel, this.failedColor, failedSms),
-      new Dataset(this.successfulLabel, this.successfulColor, successfulSms),
+    const successfulArray: Array<number> = this.messagesStatistics.map(item => item.sms.successful);
+    const failedArray: Array<number> = this.messagesStatistics.map(item => item.sms.failed);
+    this.updateChartData(dates, successfulArray, failedArray);
+  }
+
+  updateChartData(data: Array<string>, successfulCount: Array<number>, failedCount: Array<number>) {
+    this.chartData = new ChartData(data, [
+      new Dataset(this.failedLabel, this.failedColor, failedCount),
+      new Dataset(this.successfulLabel, this.successfulColor, successfulCount),
     ]);
   }
 
