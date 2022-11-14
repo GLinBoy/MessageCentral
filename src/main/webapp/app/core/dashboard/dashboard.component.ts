@@ -126,7 +126,16 @@ export default class Dashboard extends mixins(JhiDataUtils) {
   }
 
   loadChartDataOfNotifications() {
-    console.log('Data loading for: NOTIFICATION');
+    const dates: Array<string> = this.messagesStatistics.map(item => {
+      const d = new Date(item.date);
+      return `${d.toLocaleString('default', { day: 'numeric', month: 'short' })}`;
+    });
+    const successfulNotification: Array<number> = this.messagesStatistics.map(item => item.notification.successful);
+    const failedNotification: Array<number> = this.messagesStatistics.map(item => item.notification.failed);
+    this.chartData = new ChartData(dates, [
+      new Dataset(this.failedLabel, this.failedColor, failedNotification),
+      new Dataset(this.successfulLabel, this.successfulColor, successfulNotification),
+    ]);
   }
 
   loadChartDataOfSms() {
