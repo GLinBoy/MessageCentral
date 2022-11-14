@@ -122,7 +122,16 @@ export default class Dashboard extends mixins(JhiDataUtils) {
   }
 
   loadChartDataOfEmails() {
-    console.log('Data loading for: EMAIL');
+    const dates: Array<string> = this.messagesStatistics.map(item => {
+      const d = new Date(item.date);
+      return `${d.toLocaleString('default', { day: 'numeric', month: 'short' })}`;
+    });
+    const successfulEmail: Array<number> = this.messagesStatistics.map(item => item.email.successful);
+    const failedEmail: Array<number> = this.messagesStatistics.map(item => item.email.failed);
+    this.chartData = new ChartData(dates, [
+      new Dataset(this.failedLabel, this.failedColor, failedEmail),
+      new Dataset(this.successfulLabel, this.successfulColor, successfulEmail),
+    ]);
   }
 
   loadChartDataOfNotifications() {
