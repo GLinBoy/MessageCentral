@@ -82,6 +82,8 @@ export default class Dashboard extends mixins(JhiDataUtils) {
 
   public isFetching = false;
 
+  public messageTypeKeys: string[] = Object.keys(MessageType);
+
   public chartDataSelected: MessageType = MessageType.ALL;
 
   failedLabel = 'failed';
