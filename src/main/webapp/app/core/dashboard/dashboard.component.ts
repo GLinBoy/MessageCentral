@@ -88,8 +88,8 @@ export default class Dashboard extends mixins(JhiDataUtils) {
 
   failedLabel = 'failed';
   successfulLabel = 'successful';
-  failedColor = '#ff6d71';
-  successfulColor = '#370018';
+  failedColor = '#C70039';
+  successfulColor = '#669933';
 
   public chartData: IChartData = new ChartData(
     [],
