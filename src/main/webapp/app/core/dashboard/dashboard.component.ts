@@ -171,21 +171,14 @@ export default class Dashboard extends mixins(JhiDataUtils) {
 
   public loadChartData(type: MessageType): void {
     this.isFetching = true;
-    switch (type) {
-      case MessageType.EMAIL:
-        this.loadChartDataOfEmails();
-        break;
-      case MessageType.NOTIFICATION:
-        this.loadChartDataOfNotifications();
-        break;
-      case MessageType.SMS:
-        this.loadChartDataOfSms();
-        break;
-      default:
-        this.loadChartDataOfAllMessages();
-        break;
+    if (this.entityMap.has(type)) {
+      this.entityMap.get(type).apply(null);
+      this.chartDataSelected = type;
+    } else {
+      console.error(`the "${type}" type doesn't exist!`);
+      this.loadChartDataOfAllMessages();
+      this.chartDataSelected = MessageType.ALL;
     }
-    this.chartDataSelected = type;
     this.isFetching = false;
   }
 }
