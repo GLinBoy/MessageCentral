@@ -58,7 +58,7 @@ ChartJS.register(Title, Tooltip, Legend, BarElement, CategoryScale, LinearScale)
     },
     height: {
       type: Number,
-      default: 400,
+      default: 150,
     },
     cssClasses: {
       default: '',

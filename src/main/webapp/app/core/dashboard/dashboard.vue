@@ -82,9 +82,10 @@
               </div>
               <div class="col-12">
                 <Bar
-                  :chart-options="chartOptions"
-                  :chart-data="chartData"
+                  style="height: 100%"
                   :chart-id="chartId"
+                  :chart-data="chartData"
+                  :chart-options="chartOptions"
                   :dataset-id-key="datasetIdKey"
                   :plugins="plugins"
                   :css-classes="cssClasses"
