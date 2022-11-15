@@ -162,6 +162,13 @@ export default class Dashboard extends mixins(JhiDataUtils) {
     ]);
   }
 
+  entityMap: Map<MessageType, Function> = new Map([
+    [MessageType.ALL, this.loadChartDataOfAllMessages],
+    [MessageType.EMAIL, this.loadChartDataOfEmails],
+    [MessageType.SMS, this.loadChartDataOfSms],
+    [MessageType.NOTIFICATION, this.loadChartDataOfNotifications],
+  ]);
+
   public loadChartData(type: MessageType): void {
     this.isFetching = true;
     switch (type) {
