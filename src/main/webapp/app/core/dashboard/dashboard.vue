@@ -74,7 +74,7 @@
                     :key="t"
                     variant="primary"
                     @click="loadChartData(t)"
-                    :disabled="t == chartDataSelected"
+                    :disabled="t === chartDataSelected"
                   >
                     {{ t }}
                   </b-button>
