@@ -96,7 +96,7 @@ export default class Dashboard extends mixins(JhiDataUtils) {
     [new Dataset(this.failedLabel, this.failedColor, []), new Dataset(this.successfulLabel, this.successfulColor, [])]
   );
 
-  public chartOptions: IChartOptions = new ChartOptions(true);
+  public chartOptions: IChartOptions = new ChartOptions();
 
   public mounted(): void {
     this.retrieveLast30DaysMessagesStatistic();
