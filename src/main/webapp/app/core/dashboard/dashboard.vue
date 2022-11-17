@@ -19,8 +19,18 @@
             align="center"
             class="mb-2"
           >
-            <b-card-text>Sent: {{ totalSuccessfulSent }}</b-card-text>
-            <b-card-text>Failed: {{ totalFailedSent }}</b-card-text>
+            <b-card-text>
+              <b-row class="text-center">
+                <b-col lg="4">
+                  <font-awesome-icon class="fa-3x" icon="comments" />
+                </b-col>
+                <b-col lg="8">
+                  <span class="font-weight-bolder text-uppercase">Sent: {{ totalSuccessfulSent }}</span>
+                  <br />
+                  <span class="font-weight-lighter">Failed: {{ totalFailedSent }}</span>
+                </b-col>
+              </b-row>
+            </b-card-text>
           </b-card>
         </b-col>
         <b-col sm="12" md="3">
