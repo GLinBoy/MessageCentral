@@ -59,14 +59,24 @@
         <b-col sm="12" md="3">
           <b-card
             border-variant="primary"
-            header="SMSs"
+            header="Notifications"
             header-bg-variant="primary"
             header-text-variant="white"
             align="center"
             class="mb-2"
           >
-            <b-card-text>Sent: {{ smsSuccessfulSent }}</b-card-text>
-            <b-card-text>Failed: {{ smsFailedSent }}</b-card-text>
+            <b-card-text>
+              <b-row class="text-center">
+                <b-col lg="4">
+                  <font-awesome-icon class="fa-3x" icon="bell" />
+                </b-col>
+                <b-col lg="8">
+                  <span class="font-weight-bolder text-uppercase">Sent: {{ notificationsSuccessfulSent }}</span>
+                  <br />
+                  <span class="font-weight-lighter">Failed: {{ notificationsFailedSent }}</span>
+                </b-col>
+              </b-row>
+            </b-card-text>
           </b-card>
         </b-col>
         <b-col sm="12" md="3">
