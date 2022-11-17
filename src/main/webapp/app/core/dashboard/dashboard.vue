@@ -42,8 +42,18 @@
             align="center"
             class="mb-2"
           >
-            <b-card-text>Sent: {{ emailsSuccessfulSent }}</b-card-text>
-            <b-card-text>Failed: {{ emailsFailedSent }}</b-card-text>
+            <b-card-text>
+              <b-row class="text-center">
+                <b-col lg="4">
+                  <font-awesome-icon class="fa-3x" icon="at" />
+                </b-col>
+                <b-col lg="8">
+                  <span class="font-weight-bolder text-uppercase">Sent: {{ emailsSuccessfulSent }}</span>
+                  <br />
+                  <span class="font-weight-lighter">Failed: {{ emailsFailedSent }}</span>
+                </b-col>
+              </b-row>
+            </b-card-text>
           </b-card>
         </b-col>
         <b-col sm="12" md="3">
