@@ -1,5 +1,5 @@
 <template>
-  <div id="footer" class="footer row">
+  <div id="footer" class="footer row" style="padding-top: 5px; margin-top: 5px">
     <div class="col-md-6">
       <h5 v-text="$t('footer[\'message-central.title.link\']')">MessageCentral Links:</h5>
       <ul>
