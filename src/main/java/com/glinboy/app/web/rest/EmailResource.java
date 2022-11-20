@@ -10,6 +10,14 @@ import com.glinboy.app.service.dto.EmailsDTO;
 import com.glinboy.app.web.rest.errors.BadRequestAlertException;
 import cz.jirutka.rsql.parser.RSQLParser;
 import cz.jirutka.rsql.parser.ast.Node;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.stream.Collectors;
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,20 +33,15 @@ import tech.jhipster.web.util.HeaderUtil;
 import tech.jhipster.web.util.PaginationUtil;
 import tech.jhipster.web.util.ResponseUtil;
 
-import javax.validation.Valid;
-import javax.validation.constraints.NotNull;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.stream.Collectors;
-
 /**
  * REST controller for managing {@link com.glinboy.app.domain.Email}.
+ *
+ * I couldn't find a way like that I used in the service layer,
+ * so I just commented annotations for now
+ *
  */
-@RestController
-@RequestMapping("/api")
+//@RestController
+//@RequestMapping("/api")
 public class EmailResource {
 
     private static final String ENTITY_NAME = "email";
@@ -46,6 +49,7 @@ public class EmailResource {
     private final EmailService emailService;
     private final EmailRepository emailRepository;
     private final EmailQueryService emailQueryService;
+
     @Value("${jhipster.clientApp.name}")
     private String applicationName;
 
