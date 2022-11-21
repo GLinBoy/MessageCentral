@@ -12,15 +12,12 @@ import com.glinboy.app.service.dto.EmailsDTO;
 import com.glinboy.app.service.mapper.EmailMapper;
 import com.glinboy.app.util.Patterns;
 import java.util.List;
-import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Primary;
 import org.springframework.context.event.EventListener;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -86,48 +83,6 @@ public class EmailPrincipalServiceImpl extends EmailServiceImpl {
         var dtoList = this.emailMapper.toDto(emails);
         this.mailProviderService.sendMessage(dtoList.toArray(new EmailDTO[dtoList.size()]));
         return dtoList;
-    }
-
-    @Override
-    public EmailDTO update(EmailDTO emailDTO) {
-        log.debug("Request to update Email : {}", emailDTO);
-        Email email = emailMapper.toEntity(emailDTO);
-        email = emailRepository.save(email);
-        return emailMapper.toDto(email);
-    }
-
-    @Override
-    public Optional<EmailDTO> partialUpdate(EmailDTO emailDTO) {
-        log.debug("Request to partially update Email : {}", emailDTO);
-
-        return emailRepository
-            .findById(emailDTO.getId())
-            .map(existingEmail -> {
-                emailMapper.partialUpdate(existingEmail, emailDTO);
-                return existingEmail;
-            })
-            .map(emailRepository::save)
-            .map(emailMapper::toDto);
-    }
-
-    @Override
-    @Transactional(readOnly = true)
-    public Page<EmailDTO> findAll(Pageable pageable) {
-        log.debug("Request to get all Emails");
-        return emailRepository.findAll(pageable).map(emailMapper::toDto);
-    }
-
-    @Override
-    @Transactional(readOnly = true)
-    public Optional<EmailDTO> findOne(Long id) {
-        log.debug("Request to get Email : {}", id);
-        return emailRepository.findById(id).map(emailMapper::toDto);
-    }
-
-    @Override
-    public void delete(Long id) {
-        log.debug("Request to delete Email : {}", id);
-        emailRepository.deleteById(id);
     }
 
     @Transactional
