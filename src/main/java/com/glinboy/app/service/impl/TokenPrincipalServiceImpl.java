@@ -7,14 +7,11 @@ import com.glinboy.app.security.jwt.TokenProvider;
 import com.glinboy.app.service.dto.TokenDTO;
 import com.glinboy.app.service.mapper.TokenMapper;
 import java.time.Instant;
-import java.util.Optional;
 import java.util.Set;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Primary;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -53,35 +50,6 @@ public class TokenPrincipalServiceImpl extends TokenServiceImpl {
         }
         token = tokenRepository.save(token);
         return tokenMapper.toDto(token);
-    }
-
-    @Override
-    public Optional<TokenDTO> partialUpdate(TokenDTO tokenDTO) {
-        log.debug("Request to partially update Token : {}", tokenDTO);
-
-        return tokenRepository
-            .findById(tokenDTO.getId())
-            .map(existingToken -> {
-                tokenMapper.partialUpdate(existingToken, tokenDTO);
-
-                return existingToken;
-            })
-            .map(tokenRepository::save)
-            .map(tokenMapper::toDto);
-    }
-
-    @Override
-    @Transactional(readOnly = true)
-    public Page<TokenDTO> findAll(Pageable pageable) {
-        log.debug("Request to get all Tokens");
-        return tokenRepository.findAll(pageable).map(tokenMapper::toDto);
-    }
-
-    @Override
-    @Transactional(readOnly = true)
-    public Optional<TokenDTO> findOne(Long id) {
-        log.debug("Request to get Token : {}", id);
-        return tokenRepository.findById(id).map(tokenMapper::toDto);
     }
 
     @Override
