@@ -13,14 +13,11 @@ import com.glinboy.app.service.dto.NotificationsDTO;
 import com.glinboy.app.service.mapper.NotificationDataMapper;
 import com.glinboy.app.service.mapper.NotificationMapper;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Primary;
 import org.springframework.context.event.EventListener;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -102,49 +99,6 @@ public class NotificationPrincipalServiceImpl extends NotificationServiceImpl {
         List<NotificationDTO> dtoList = this.notificationMapper.toDto(notifications);
         this.notificationProviderService.sendMessage(dtoList.toArray(new NotificationDTO[dtoList.size()]));
         return dtoList;
-    }
-
-    @Override
-    public NotificationDTO update(NotificationDTO notificationDTO) {
-        log.debug("Request to update Notification : {}", notificationDTO);
-        Notification notification = notificationMapper.toEntity(notificationDTO);
-        notification = notificationRepository.save(notification);
-        return notificationMapper.toDto(notification);
-    }
-
-    @Override
-    public Optional<NotificationDTO> partialUpdate(NotificationDTO notificationDTO) {
-        log.debug("Request to partially update Notification : {}", notificationDTO);
-
-        return notificationRepository
-            .findById(notificationDTO.getId())
-            .map(existingNotification -> {
-                notificationMapper.partialUpdate(existingNotification, notificationDTO);
-
-                return existingNotification;
-            })
-            .map(notificationRepository::save)
-            .map(notificationMapper::toDto);
-    }
-
-    @Override
-    @Transactional(readOnly = true)
-    public Page<NotificationDTO> findAll(Pageable pageable) {
-        log.debug("Request to get all Notifications");
-        return notificationRepository.findAll(pageable).map(notificationMapper::toDto);
-    }
-
-    @Override
-    @Transactional(readOnly = true)
-    public Optional<NotificationDTO> findOne(Long id) {
-        log.debug("Request to get Notification : {}", id);
-        return notificationRepository.findById(id).map(notificationMapper::toDto);
-    }
-
-    @Override
-    public void delete(Long id) {
-        log.debug("Request to delete Notification : {}", id);
-        notificationRepository.deleteById(id);
     }
 
     @Transactional
