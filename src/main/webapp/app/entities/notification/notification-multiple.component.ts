@@ -60,7 +60,7 @@ export default class NotificationMultiple extends Vue {
         this.isSaving = false;
         this.$router.go(-1);
         const message = this.$t('messageCentralApp.notification.created', { param: param.id });
-        this.$root.$bvToast.toast(message.toString(), {
+        return (this.$root as any).$bvToast.toast(message.toString(), {
           toaster: 'b-toaster-top-center',
           title: 'Success',
           variant: 'success',
