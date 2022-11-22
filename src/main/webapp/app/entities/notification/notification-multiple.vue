@@ -192,22 +192,22 @@
             <div class="row justify-content-center">
               <div class="col-sm-12 col-md-5">
                 <div class="form-group">
-                  <label for="dataKey" v-text="$t('messageCentralApp.notificationData.key')">Key</label>
-                  <input type="text" class="form-control" id="dataKey" placeholder="Enter key" v-model="data.key" />
+                  <label for="dataKey" v-text="$t('messageCentralApp.notificationData.dataKey')">Key</label>
+                  <input type="text" class="form-control" id="dataKey" placeholder="Enter key" v-model="data.dataKey" />
                 </div>
               </div>
               <div class="col-sm-12 col-md-5 align-self-end">
                 <div class="form-group">
-                  <label for="dataValue" v-text="$t('messageCentralApp.notificationData.value')">Value</label>
-                  <input type="text" class="form-control" id="dataValue" placeholder="Enter value" v-model="data.value" />
+                  <label for="dataValue" v-text="$t('messageCentralApp.notificationData.dataValue')">Value</label>
+                  <input type="text" class="form-control" id="dataValue" placeholder="Enter value" v-model="data.dataValue" />
                 </div>
               </div>
               <div class="col-sm-12 col-md-2 align-self-end">
                 <div class="form-group">
-                  <button type="button" id="add-data" class="btn btn-primary" v-on:click="addData()" :disabled="!data.key">
+                  <button type="button" id="add-data" class="btn btn-primary" v-on:click="addData()" :disabled="!data.dataKey">
                     <font-awesome-icon icon="plus"></font-awesome-icon>
                   </button>
-                  <button type="button" id="reset-data" class="btn btn-secondary" v-on:click="resetData()" :disabled="!data.key">
+                  <button type="button" id="reset-data" class="btn btn-secondary" v-on:click="resetData()" :disabled="!data.dataKey">
                     <font-awesome-icon icon="sync"></font-awesome-icon>
                   </button>
                 </div>
@@ -221,15 +221,15 @@
                 <table class="table table-striped" aria-describedby="notificationData">
                   <thead>
                     <tr>
-                      <th scope="row"><span v-text="$t('messageCentralApp.notificationData.key')">Key</span></th>
-                      <th scope="row"><span v-text="$t('messageCentralApp.notificationData.value')">Value</span></th>
+                      <th scope="row"><span v-text="$t('messageCentralApp.notificationData.dataKey')">Key</span></th>
+                      <th scope="row"><span v-text="$t('messageCentralApp.notificationData.dataValue')">Value</span></th>
                       <th scope="row"></th>
                     </tr>
                   </thead>
                   <tbody>
                     <tr v-for="notificationData in notifications.data" :key="notificationData.key" data-cy="entityTable">
-                      <td>{{ notificationData.key }}</td>
-                      <td>{{ notificationData.value }}</td>
+                      <td>{{ notificationData.dataKey }}</td>
+                      <td>{{ notificationData.dataValue }}</td>
                       <td class="text-right">
                         <div class="btn-group">
                           <b-button
