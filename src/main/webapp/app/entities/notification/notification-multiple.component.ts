@@ -54,8 +54,6 @@ export default class NotificationMultiple extends Vue {
 
   public save(): void {
     this.isSaving = true;
-    console.log(this.receivers);
-    console.log(this.notifications.receivers);
     this.notificationService()
       .createMultiple([this.notifications])
       .then(param => {
