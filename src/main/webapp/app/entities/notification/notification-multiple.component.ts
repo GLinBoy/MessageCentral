@@ -120,9 +120,9 @@ export default class NotificationMultiple extends Vue {
     this.receiver = receiver;
   }
 
-  public prepareReceiverRemove(reciver) {
+  public prepareReceiverRemove(receiver) {
     this.notifications.receivers = this.notifications.receivers.filter(
-      obj => obj.username !== reciver.username && obj.token !== reciver.token
+      obj => obj.username !== receiver.username && obj.token !== receiver.token
     );
   }
 }
