@@ -68,14 +68,14 @@
                 <table class="table table-striped" aria-describedby="notificationData">
                   <thead>
                     <tr>
-                      <th scope="row"><span v-text="$t('messageCentralApp.notificationData.key')">Key</span></th>
-                      <th scope="row"><span v-text="$t('messageCentralApp.notificationData.value')">Value</span></th>
+                      <th scope="row"><span v-text="$t('messageCentralApp.notificationData.dataKey')">Key</span></th>
+                      <th scope="row"><span v-text="$t('messageCentralApp.notificationData.dataValue')">Value</span></th>
                     </tr>
                   </thead>
                   <tbody>
-                    <tr v-for="notificationData in notification.data" :key="notificationData.key" data-cy="entityTable">
-                      <td>{{ notificationData.key }}</td>
-                      <td>{{ notificationData.value }}</td>
+                    <tr v-for="notificationData in notification.data" :key="notificationData.dataKey" data-cy="entityTable">
+                      <td>{{ notificationData.dataKey }}</td>
+                      <td>{{ notificationData.dataValue }}</td>
                     </tr>
                   </tbody>
                 </table>
