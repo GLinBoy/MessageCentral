@@ -82,7 +82,7 @@ export default class NotificationMultiple extends Vue {
 
   public addData(): void {
     if (this.notifications.data) {
-      this.notifications.data = this.notifications.data.filter(obj => obj.key !== this.data.key);
+      this.notifications.data = this.notifications.data.filter(obj => obj.dataKey !== this.data.dataKey);
       this.notifications.data.push(this.data);
     } else {
       this.notifications.data = [this.data];
@@ -99,7 +99,7 @@ export default class NotificationMultiple extends Vue {
   }
 
   public prepareDataRemove(data) {
-    this.notifications.data = this.notifications.data.filter(obj => obj.key !== data.key);
+    this.notifications.data = this.notifications.data.filter(obj => obj.dataKey !== data.dataKey);
   }
 
   public addReceiver(): void {

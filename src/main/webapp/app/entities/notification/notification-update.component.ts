@@ -140,7 +140,7 @@ export default class NotificationUpdate extends Vue {
 
   public addData(): void {
     if (this.notification.data) {
-      this.notification.data = this.notification.data.filter(obj => obj.key !== this.data.key);
+      this.notification.data = this.notification.data.filter(obj => obj.dataKey !== this.data.dataKey);
       this.notification.data.push(this.data);
     } else {
       this.notification.data = [this.data];
@@ -157,6 +157,6 @@ export default class NotificationUpdate extends Vue {
   }
 
   public prepareDataRemove(data) {
-    this.notification.data = this.notification.data.filter(obj => obj.key !== data.key);
+    this.notification.data = this.notification.data.filter(obj => obj.dataKey !== data.dataKey);
   }
 }
