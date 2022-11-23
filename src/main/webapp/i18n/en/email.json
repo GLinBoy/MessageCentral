@@ -10,6 +10,7 @@
         "searchPlaceholder": "Search Emails..."
       },
       "created": "A new Email is created with identifier {{ param }}",
+      "createdMultiple": "Emails have been added to the queue.",
       "updated": "A Email is updated with identifier {{ param }}",
       "deleted": "A Email is deleted with identifier {{ param }}",
       "delete": {
