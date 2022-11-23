@@ -10,6 +10,7 @@
         "searchPlaceholder": "Search Short Messages..."
       },
       "created": "A new Short Message is created with identifier {{ param }}",
+      "createdMultiple": "SMSs have been added to the queue.",
       "updated": "A Short Message is updated with identifier {{ param }}",
       "deleted": "A Short Message is deleted with identifier {{ param }}",
       "delete": {

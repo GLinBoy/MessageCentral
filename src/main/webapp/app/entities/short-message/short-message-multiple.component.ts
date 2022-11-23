@@ -54,10 +54,10 @@ export default class ShortMessageMultiple extends Vue {
     this.isSaving = true;
     this.shortMessageService()
       .createMultiple([this.shortMessages])
-      .then(param => {
+      .then(() => {
         this.isSaving = false;
         this.$router.go(-1);
-        const message = this.$t('messageCentralApp.shortMessage.created', { param: param.id });
+        const message = this.$t('messageCentralApp.shortMessage.createdMultiple');
         return (this.$root as any).$bvToast.toast(message.toString(), {
           toaster: 'b-toaster-top-center',
           title: 'Success',
