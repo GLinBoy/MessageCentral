@@ -55,8 +55,8 @@ export default class EmailMultiple extends mixins(JhiDataUtils) {
       .then(() => {
         this.isSaving = false;
         this.$router.go(-1);
-        const message = this.$t('messageCentralApp.email.created', -1);
-        this.$root.$bvToast.toast(message.toString(), {
+        const message = this.$t('messageCentralApp.email.created', { param: -1 });
+        return (this.$root as any).$bvToast.toast(message.toString(), {
           toaster: 'b-toaster-top-center',
           title: 'Success',
           variant: 'success',
