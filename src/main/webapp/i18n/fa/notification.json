@@ -10,6 +10,7 @@
         "searchPlaceholder": "Search Notifications..."
       },
       "created": "A new Notification is created with identifier {{ param }}",
+      "createdMultiple": "Notifications have been added to the queue.",
       "updated": "A Notification is updated with identifier {{ param }}",
       "deleted": "A Notification is deleted with identifier {{ param }}",
       "delete": {
