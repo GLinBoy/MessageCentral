@@ -23,7 +23,7 @@
         "newEmail": "new email"
       },
       "hint": {
-        "newEmail": "💡 Seprate by <kbd>Space</kbd> or <kbd>,</kbd> or <kbd>;</kbd>"
+        "newEmail": "💡 Separate by <kbd>Space</kbd> or <kbd>,</kbd> or <kbd>;</kbd>"
       },
       "id": "ID",
       "receiver": "Receiver",
