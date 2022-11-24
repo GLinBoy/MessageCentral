@@ -27,14 +27,14 @@
               required
               v-model="$v.emails.receivers.$model"
               :class="{ valid: !$v.emails.receivers.$invalid, invalid: $v.emails.receivers.$invalid }"
-              :input-attrs="{ 'aria-describedby': 'emails-seprate-by-help' }"
+              :input-attrs="{ 'aria-describedby': 'emails-separate-by-help' }"
             />
             <b-form-text
-              id="emails-seprate-by-help"
+              id="emails-separate-by-help"
               class="mt-2 form-text text-muted font-weight-lighter"
               v-text="$t('messageCentralApp.emails.hint.newEmail')"
             >
-              💡 Seprate by <kbd>Space</kbd> or <kbd>,</kbd> or <kbd>;</kbd>
+              💡 separate by <kbd>Space</kbd> or <kbd>,</kbd> or <kbd>;</kbd>
             </b-form-text>
           </div>
           <div class="form-group">

@@ -29,15 +29,15 @@
               required
               v-model="$v.shortMessages.phoneNumbers.$model"
               :class="{ valid: !$v.shortMessages.phoneNumbers.$invalid, invalid: $v.shortMessages.phoneNumbers.$invalid }"
-              :input-attrs="{ 'aria-describedby': 'numbers-seprate-by-help' }"
+              :input-attrs="{ 'aria-describedby': 'numbers-separate-by-help' }"
             />
             <b-form-text
-              name="numbers-seprate-by-help"
-              id="numbers-seprate-by-help"
+              name="numbers-separate-by-help"
+              id="numbers-separate-by-help"
               class="mt-2 form-text text-muted font-weight-lighter"
               v-text="$t('messageCentralApp.shortMessages.hint.newNumber')"
             >
-              💡 Seprate by <kbd>Space</kbd> or <kbd>,</kbd> or <kbd>;</kbd>
+              💡 separate by <kbd>Space</kbd> or <kbd>,</kbd> or <kbd>;</kbd>
             </b-form-text>
           </div>
           <div class="form-group">
