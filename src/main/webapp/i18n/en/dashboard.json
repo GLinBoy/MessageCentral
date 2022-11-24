@@ -1,1 +1,19 @@
-{}
+{
+  "dashboard": {
+    "title": "Dashboard",
+    "cards": {
+      "cardsTitle": {
+        "totalMessages": "Total Messages",
+        "emails": "Emails",
+        "notifications": "Notifications",
+        "shortMessages": "SMSs"
+      },
+      "sent": "Sent",
+      "failed": "Failed"
+    },
+    "chart": {
+      "failed": "failed",
+      "successful": "successful"
+    }
+  }
+}
