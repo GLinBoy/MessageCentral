@@ -86,8 +86,8 @@ export default class Dashboard extends mixins(JhiDataUtils) {
 
   public chartDataSelected: MessageType = MessageType.ALL;
 
-  failedLabel = 'failed';
-  successfulLabel = 'successful';
+  failedLabel = this.$tc('dashboard.chart.failed');
+  successfulLabel = this.$tc('dashboard.chart.successful');
   failedColor = '#C70039';
   successfulColor = '#669933';
 
