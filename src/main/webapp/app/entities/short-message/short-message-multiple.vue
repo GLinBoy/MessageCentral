@@ -35,9 +35,9 @@
               name="numbers-separate-by-help"
               id="numbers-separate-by-help"
               class="mt-2 form-text text-muted font-weight-lighter"
-              v-text="$t('messageCentralApp.shortMessages.hint.newNumber')"
+              v-html="$t('messageCentralApp.shortMessages.hint.newNumber')"
             >
-              💡 separate by <kbd>Space</kbd> or <kbd>,</kbd> or <kbd>;</kbd>
+              💡 Separate by <kbd>Space</kbd> or <kbd>,</kbd> or <kbd>;</kbd>
             </b-form-text>
           </div>
           <div class="form-group">

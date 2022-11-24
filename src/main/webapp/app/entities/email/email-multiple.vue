@@ -32,9 +32,9 @@
             <b-form-text
               id="emails-separate-by-help"
               class="mt-2 form-text text-muted font-weight-lighter"
-              v-text="$t('messageCentralApp.emails.hint.newEmail')"
+              v-html="$t('messageCentralApp.emails.hint.newEmail')"
             >
-              💡 separate by <kbd>Space</kbd> or <kbd>,</kbd> or <kbd>;</kbd>
+              💡 Separate by <kbd>Space</kbd> or <kbd>,</kbd> or <kbd>;</kbd>
             </b-form-text>
           </div>
           <div class="form-group">
