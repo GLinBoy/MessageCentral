@@ -69,6 +69,7 @@ class DateUpdater implements Callable<Integer> {
                     } catch (IOException | CsvException ex) {
                         logger.error(ex);
                     }
+                    logger.info(path.getFileName() + " has been updated.");
                 });
         } catch (IOException ex) {
             logger.error(ex);
