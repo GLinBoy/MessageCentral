@@ -1,4 +1,5 @@
 ///usr/bin/env jbang "$0" "$@" ; exit $?
+//JAVA 17+
 //DEPS info.picocli:picocli:4.6.3
 //DEPS ch.qos.reload4j:reload4j:1.2.24
 //DEPS com.opencsv:opencsv:5.7.1
