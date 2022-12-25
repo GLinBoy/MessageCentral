@@ -20,15 +20,32 @@ import org.apache.log4j.BasicConfigurator;
 import org.apache.log4j.Logger;
 import picocli.CommandLine;
 import picocli.CommandLine.Command;
-import picocli.CommandLine.Parameters;
+import picocli.CommandLine.Model.CommandSpec;
+import picocli.CommandLine.Option;
+import picocli.CommandLine.ParameterException;
+import picocli.CommandLine.Spec;
 
 @Command(name = "DateUpdater", mixinStandardHelpOptions = true, version = "DateUpdater 0.1", description = "DateUpdater made with jbang")
 class DateUpdater implements Callable<Integer> {
 
     static final Logger logger = Logger.getLogger(DateUpdater.class);
 
-    @Parameters(index = "0", description = "The greeting to print", defaultValue = "World!")
-    private String greeting;
+    @Spec
+    CommandSpec spec;
+
+    private int month = LocalDateTime.now().getMonthValue();
+
+    @Option(names = { "--month", "-m" }, description = "The month of records (between 1-12)")
+    public void setMonth(int value) {
+        if (value <= 0 || value > 12) {
+            throw new ParameterException(
+                spec.commandLine(),
+                //The value '13' for option '-m or --month' is invalid: the value should be between 1 and 12.
+                String.format("The value '%s' for option '-m or --month' is invalid: " + "the value should be between 1 and 12.", value)
+            );
+        }
+        month = value;
+    }
 
     public static void main(String... args) {
         BasicConfigurator.configure();
@@ -52,7 +69,7 @@ class DateUpdater implements Callable<Integer> {
                                 .forEach(line -> {
                                     LocalDateTime today = LocalDateTime.now();
                                     LocalDateTime date = LocalDateTime.parse(line[line.length - 1]);
-                                    LocalDateTime adjustedDate = date.withYear(today.getYear()).withMonth(today.getMonthValue());
+                                    LocalDateTime adjustedDate = date.withYear(today.getYear()).withMonth(month);
                                     line[line.length - 1] = adjustedDate.toString();
                                 });
                         }
