@@ -35,12 +35,14 @@ class DateUpdater implements Callable<Integer> {
 
     private int month = LocalDateTime.now().getMonthValue();
 
-    @Option(names = { "--month", "-m" }, description = "The month of records (between 1-12)")
+    @Option(names = { "--path", "-p" }, paramLabel = "PATH", description = "The path of files")
+    private String pathStr = ".";
+
+    @Option(names = { "--month", "-m" }, paramLabel = "MONTH", description = "The month of records (between 1-12)")
     public void setMonth(int value) {
         if (value <= 0 || value > 12) {
             throw new ParameterException(
                 spec.commandLine(),
-                //The value '13' for option '-m or --month' is invalid: the value should be between 1 and 12.
                 String.format("The value '%s' for option '-m or --month' is invalid: " + "the value should be between 1 and 12.", value)
             );
         }
@@ -55,7 +57,7 @@ class DateUpdater implements Callable<Integer> {
 
     @Override
     public Integer call() throws Exception {
-        try (Stream<Path> stream = Files.walk(Paths.get("."), 1)) {
+        try (Stream<Path> stream = Files.walk(Paths.get(pathStr), 1)) {
             stream
                 .filter(file -> !Files.isDirectory(file) && file.getFileName().toString().endsWith("csv"))
                 .forEach(path -> {
