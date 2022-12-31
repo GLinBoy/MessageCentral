@@ -16,11 +16,11 @@
             <div class="row justify-content-center">
               <div class="col-sm-12 col-md-5">
                 <div class="form-group">
-                  <label for="dataKey" v-text="$t('messageCentralApp.notification.username')">Username</label>
+                  <label for="username" v-text="$t('messageCentralApp.notification.username')">Username</label>
                   <input
                     type="text"
                     class="form-control"
-                    id="dataKey"
+                    id="username"
                     :placeholder="$t('messageCentralApp.notifications.placeholder.enterUsername')"
                     v-model="receiver.username"
                   />
