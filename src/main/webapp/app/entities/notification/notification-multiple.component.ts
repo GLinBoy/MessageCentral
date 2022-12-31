@@ -1,6 +1,6 @@
 import { Component, Vue, Inject } from 'vue-property-decorator';
 
-import { required, maxLength } from 'vuelidate/lib/validators';
+import { required, maxLength, minLength } from 'vuelidate/lib/validators';
 
 import NotificationDataService from '@/entities/notification-data/notification-data.service';
 
@@ -13,6 +13,13 @@ import NotificationService from './notification.service';
 
 const validations: any = {
   notifications: {
+    receivers: {
+      required,
+      minLength: minLength(1),
+      $each: {
+        required,
+      },
+    },
     subject: {
       required,
       maxLength: maxLength(128),
