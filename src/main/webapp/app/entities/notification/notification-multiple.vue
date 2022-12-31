@@ -20,7 +20,7 @@
                   <input
                     type="text"
                     class="form-control"
-                    id="username"
+                    id="receiver-username"
                     :placeholder="$t('messageCentralApp.notifications.placeholder.enterUsername')"
                     v-model="receiver.username"
                   />
@@ -28,7 +28,7 @@
               </div>
               <div class="col-sm-12 col-md-5 align-self-end">
                 <div class="form-group">
-                  <label for="token" v-text="$t('messageCentralApp.notification.token')">Token</label>
+                  <label for="receiver-token" v-text="$t('messageCentralApp.notification.token')">Token</label>
                   <input
                     type="text"
                     class="form-control"
