@@ -51,7 +51,7 @@
                   </button>
                   <button
                     type="button"
-                    id="reset-data"
+                    id="reset-receiver"
                     class="btn btn-secondary"
                     v-on:click="resetReceiver()"
                     :disabled="!receiver.username && !receiver.token"
