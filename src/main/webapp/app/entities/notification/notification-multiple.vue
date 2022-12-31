@@ -42,7 +42,7 @@
                 <div class="form-group">
                   <button
                     type="button"
-                    id="add-data"
+                    id="add-receiver"
                     class="btn btn-primary"
                     v-on:click="addReceiver()"
                     :disabled="!receiver.username && !receiver.token"
