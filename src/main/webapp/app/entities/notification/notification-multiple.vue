@@ -28,11 +28,11 @@
               </div>
               <div class="col-sm-12 col-md-5 align-self-end">
                 <div class="form-group">
-                  <label for="dataValue" v-text="$t('messageCentralApp.notification.token')">Token</label>
+                  <label for="token" v-text="$t('messageCentralApp.notification.token')">Token</label>
                   <input
                     type="text"
                     class="form-control"
-                    id="dataValue"
+                    id="token"
                     :placeholder="$t('messageCentralApp.notifications.placeholder.enterToken')"
                     v-model="receiver.token"
                   />
