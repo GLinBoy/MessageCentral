@@ -85,23 +85,26 @@
             v-for="shortMessage in shortMessages"
             :key="shortMessage.id"
             :to="{ name: 'ShortMessageView', params: { shortMessageId: shortMessage.id } }"
-            tag="tr"
             data-cy="entityTable"
+            custom
+            v-slot="{ navigate }"
           >
-            <td>
-              <router-link :to="{ name: 'ShortMessageView', params: { shortMessageId: shortMessage.id } }">{{
-                shortMessage.id
-              }}</router-link>
-            </td>
-            <td>{{ shortMessage.phoneNumber }}</td>
-            <td>{{ shortMessage.content }}</td>
-            <td>{{ shortMessage.createdAt ? $d(Date.parse(shortMessage.createdAt), 'short') : '' }}</td>
-            <td>{{ shortMessage.createdBy }}</td>
-            <td>
-              <b-badge :variant="getVariant(shortMessage.status)">
-                {{ shortMessage.status.replace('_', ' ') }}
-              </b-badge>
-            </td>
+            <tr @click="navigate" @keypress.enter="navigate">
+              <td>
+                <router-link :to="{ name: 'ShortMessageView', params: { shortMessageId: shortMessage.id } }">{{
+                  shortMessage.id
+                }}</router-link>
+              </td>
+              <td>{{ shortMessage.phoneNumber }}</td>
+              <td>{{ shortMessage.content }}</td>
+              <td>{{ shortMessage.createdAt ? $d(Date.parse(shortMessage.createdAt), 'short') : '' }}</td>
+              <td>{{ shortMessage.createdBy }}</td>
+              <td>
+                <b-badge :variant="getVariant(shortMessage.status)">
+                  {{ shortMessage.status.replace('_', ' ') }}
+                </b-badge>
+              </td>
+            </tr>
           </router-link>
         </tbody>
       </table>
