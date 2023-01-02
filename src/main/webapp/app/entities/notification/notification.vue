@@ -97,26 +97,29 @@
             v-for="notification in notifications"
             :key="notification.id"
             :to="{ name: 'NotificationView', params: { notificationId: notification.id } }"
-            tag="tr"
             data-cy="entityTable"
+            custom
+            v-slot="{ navigate }"
           >
-            <td>
-              <router-link :to="{ name: 'NotificationView', params: { notificationId: notification.id } }">{{
-                notification.id
-              }}</router-link>
-            </td>
-            <td>{{ notification.username }}</td>
-            <td>{{ notification.token }}</td>
-            <td>{{ notification.subject }}</td>
-            <td>{{ notification.content }}</td>
-            <td>{{ notification.image }}</td>
-            <td>{{ notification.createdAt ? $d(Date.parse(notification.createdAt), 'short') : '' }}</td>
-            <td>{{ notification.createdBy }}</td>
-            <td>
-              <b-badge :variant="getVariant(notification.status)">
-                {{ notification.status.replace('_', ' ') }}
-              </b-badge>
-            </td>
+            <tr @click="navigate" @keypress.enter="navigate">
+              <td>
+                <router-link :to="{ name: 'NotificationView', params: { notificationId: notification.id } }">{{
+                  notification.id
+                }}</router-link>
+              </td>
+              <td>{{ notification.username }}</td>
+              <td>{{ notification.token }}</td>
+              <td>{{ notification.subject }}</td>
+              <td>{{ notification.content }}</td>
+              <td>{{ notification.image }}</td>
+              <td>{{ notification.createdAt ? $d(Date.parse(notification.createdAt), 'short') : '' }}</td>
+              <td>{{ notification.createdBy }}</td>
+              <td>
+                <b-badge :variant="getVariant(notification.status)">
+                  {{ notification.status.replace('_', ' ') }}
+                </b-badge>
+              </td>
+            </tr>
           </router-link>
         </tbody>
       </table>
