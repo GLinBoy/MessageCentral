@@ -89,22 +89,25 @@
             v-for="email in emails"
             :key="email.id"
             :to="{ name: 'EmailView', params: { emailId: email.id } }"
-            tag="tr"
             data-cy="entityTable"
+            custom
+            v-slot="{ navigate }"
           >
-            <td>
-              <router-link :to="{ name: 'EmailView', params: { emailId: email.id } }">{{ email.id }}</router-link>
-            </td>
-            <td>{{ email.receiver }}</td>
-            <td>{{ email.subject }}</td>
-            <td>{{ email.content }}</td>
-            <td>{{ email.createdAt ? $d(Date.parse(email.createdAt), 'short') : '' }}</td>
-            <td>{{ email.createdBy }}</td>
-            <td>
-              <b-badge :variant="getVariant(email.status)">
-                {{ email.status.replace('_', ' ') }}
-              </b-badge>
-            </td>
+            <tr @click="navigate" @keypress.enter="navigate">
+              <td>
+                <router-link :to="{ name: 'EmailView', params: { emailId: email.id } }">{{ email.id }}</router-link>
+              </td>
+              <td>{{ email.receiver }}</td>
+              <td>{{ email.subject }}</td>
+              <td>{{ email.content }}</td>
+              <td>{{ email.createdAt ? $d(Date.parse(email.createdAt), 'short') : '' }}</td>
+              <td>{{ email.createdBy }}</td>
+              <td>
+                <b-badge :variant="getVariant(email.status)">
+                  {{ email.status.replace('_', ' ') }}
+                </b-badge>
+              </td>
+            </tr>
           </router-link>
         </tbody>
       </table>
