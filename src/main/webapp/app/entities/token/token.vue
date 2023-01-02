@@ -95,74 +95,77 @@
             :key="token.id"
             data-cy="entityTable"
             :to="{ name: 'TokenView', params: { tokenId: token.id } }"
-            tag="tr"
+            custom
+            v-slot="{ navigate }"
           >
-            <td>
-              <router-link :to="{ name: 'TokenView', params: { tokenId: token.id } }">{{ token.id }}</router-link>
-            </td>
-            <td>{{ token.name }}</td>
-            <td>{{ token.token }}</td>
-            <td>
-              <b-badge :variant="token.disable ? 'danger' : 'success'">
-                {{ token.disable ? $t('entity.action.disable') : $t('entity.action.enable') }}
-              </b-badge>
-            </td>
-            <td>{{ token.deprecateAt ? $d(Date.parse(token.deprecateAt), 'short') : '' }}</td>
-            <td>{{ token.createdAt ? $d(Date.parse(token.createdAt), 'short') : '' }}</td>
-            <td>{{ token.createdBy }}</td>
-            <td>{{ token.updatedAt ? $d(Date.parse(token.updatedAt), 'short') : '' }}</td>
-            <td>{{ token.updatedBy }}</td>
-            <td>
-              <font-awesome-icon
-                icon="at"
-                :style="[1, 3, 5, 7].includes(token.roles) ? { color: 'var(--primary)' } : { color: 'var(--gray)' }"
-              />
-              <font-awesome-icon
-                icon="sms"
-                :style="[2, 3, 6, 7].includes(token.roles) ? { color: 'var(--primary)' } : { color: 'var(--gray)' }"
-              />
-              <font-awesome-icon
-                icon="bell"
-                :style="[4, 5, 6, 7].includes(token.roles) ? { color: 'var(--primary)' } : { color: 'var(--gray)' }"
-              />
-            </td>
-            <td class="text-right" @click.stop>
-              <div class="btn-group">
-                <b-button
-                  v-show="token.disable"
-                  v-on:click="enableToken(token)"
-                  variant="info"
-                  class="btn btn-sm"
-                  data-cy="entityEnableButton"
-                  v-b-tooltip.hover
-                  :title="$t('entity.action.enable')"
-                >
-                  <font-awesome-icon icon="toggle-off"></font-awesome-icon>
-                </b-button>
-                <b-button
-                  v-show="!token.disable"
-                  v-on:click="disableToken(token)"
-                  variant="info"
-                  class="btn btn-sm"
-                  data-cy="entityDisableButton"
-                  v-b-tooltip.hover
-                  :title="$t('entity.action.disable')"
-                >
-                  <font-awesome-icon icon="toggle-on"></font-awesome-icon>
-                </b-button>
-                <b-button
-                  v-on:click="prepareRemove(token)"
-                  variant="danger"
-                  class="btn btn-sm"
-                  data-cy="entityDeleteButton"
-                  v-b-modal.removeEntity
-                  v-b-tooltip.hover
-                  :title="$t('entity.action.delete')"
-                >
-                  <font-awesome-icon icon="trash"></font-awesome-icon>
-                </b-button>
-              </div>
-            </td>
+            <tr @click="navigate" @keypress.enter="navigate">
+              <td>
+                <router-link :to="{ name: 'TokenView', params: { tokenId: token.id } }">{{ token.id }}</router-link>
+              </td>
+              <td>{{ token.name }}</td>
+              <td>{{ token.token }}</td>
+              <td>
+                <b-badge :variant="token.disable ? 'danger' : 'success'">
+                  {{ token.disable ? $t('entity.action.disable') : $t('entity.action.enable') }}
+                </b-badge>
+              </td>
+              <td>{{ token.deprecateAt ? $d(Date.parse(token.deprecateAt), 'short') : '' }}</td>
+              <td>{{ token.createdAt ? $d(Date.parse(token.createdAt), 'short') : '' }}</td>
+              <td>{{ token.createdBy }}</td>
+              <td>{{ token.updatedAt ? $d(Date.parse(token.updatedAt), 'short') : '' }}</td>
+              <td>{{ token.updatedBy }}</td>
+              <td>
+                <font-awesome-icon
+                  icon="at"
+                  :style="[1, 3, 5, 7].includes(token.roles) ? { color: 'var(--primary)' } : { color: 'var(--gray)' }"
+                />
+                <font-awesome-icon
+                  icon="sms"
+                  :style="[2, 3, 6, 7].includes(token.roles) ? { color: 'var(--primary)' } : { color: 'var(--gray)' }"
+                />
+                <font-awesome-icon
+                  icon="bell"
+                  :style="[4, 5, 6, 7].includes(token.roles) ? { color: 'var(--primary)' } : { color: 'var(--gray)' }"
+                />
+              </td>
+              <td class="text-right" @click.stop>
+                <div class="btn-group">
+                  <b-button
+                    v-show="token.disable"
+                    v-on:click="enableToken(token)"
+                    variant="info"
+                    class="btn btn-sm"
+                    data-cy="entityEnableButton"
+                    v-b-tooltip.hover
+                    :title="$t('entity.action.enable')"
+                  >
+                    <font-awesome-icon icon="toggle-off"></font-awesome-icon>
+                  </b-button>
+                  <b-button
+                    v-show="!token.disable"
+                    v-on:click="disableToken(token)"
+                    variant="info"
+                    class="btn btn-sm"
+                    data-cy="entityDisableButton"
+                    v-b-tooltip.hover
+                    :title="$t('entity.action.disable')"
+                  >
+                    <font-awesome-icon icon="toggle-on"></font-awesome-icon>
+                  </b-button>
+                  <b-button
+                    v-on:click="prepareRemove(token)"
+                    variant="danger"
+                    class="btn btn-sm"
+                    data-cy="entityDeleteButton"
+                    v-b-modal.removeEntity
+                    v-b-tooltip.hover
+                    :title="$t('entity.action.delete')"
+                  >
+                    <font-awesome-icon icon="trash"></font-awesome-icon>
+                  </b-button>
+                </div>
+              </td>
+            </tr>
           </router-link>
         </tbody>
       </table>
