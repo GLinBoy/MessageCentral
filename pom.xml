@@ -97,7 +97,7 @@
 
         <!-- jhipster-needle-maven-property -->
         <greenmail.version>1.6.14</greenmail.version>
-        <twilio-version>8.29.1</twilio-version>
+        <twilio-version>9.4.0</twilio-version>
         <kavenegar.version>2.0.3</kavenegar.version>
         <firebase-admin.version>8.1.0</firebase-admin.version>
         <rsql-parser.version>2.2.1</rsql-parser.version>
