@@ -1,14 +1,13 @@
 package com.glinboy.app.service;
 
-// for static metamodels
-
+import com.glinboy.app.domain.*; // for static metamodels
 import com.glinboy.app.domain.Email;
-import com.glinboy.app.domain.Email_;
 import com.glinboy.app.repository.EmailRepository;
 import com.glinboy.app.service.criteria.EmailCriteria;
 import com.glinboy.app.service.dto.EmailDTO;
 import com.glinboy.app.service.mapper.EmailMapper;
 import java.util.List;
+import javax.persistence.criteria.JoinType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -41,7 +40,6 @@ public class EmailQueryService extends QueryService<Email> {
 
     /**
      * Return a {@link List} of {@link EmailDTO} which matches the criteria from the database.
-     *
      * @param criteria The object which holds all the filters, which the entities should match.
      * @return the matching entities.
      */
@@ -54,9 +52,8 @@ public class EmailQueryService extends QueryService<Email> {
 
     /**
      * Return a {@link Page} of {@link EmailDTO} which matches the criteria from the database.
-     *
      * @param criteria The object which holds all the filters, which the entities should match.
-     * @param page     The page, which should be returned.
+     * @param page The page, which should be returned.
      * @return the matching entities.
      */
     @Transactional(readOnly = true)
@@ -68,7 +65,6 @@ public class EmailQueryService extends QueryService<Email> {
 
     /**
      * Return the number of matching entities in the database.
-     *
      * @param criteria The object which holds all the filters, which the entities should match.
      * @return the number of matching entities.
      */
@@ -93,7 +89,6 @@ public class EmailQueryService extends QueryService<Email> {
 
     /**
      * Function to convert {@link EmailCriteria} to a {@link Specification}
-     *
      * @param criteria The object which holds all the filters, which the entities should match.
      * @return the matching {@link Specification} of the entity.
      */
@@ -115,6 +110,15 @@ public class EmailQueryService extends QueryService<Email> {
             }
             if (criteria.getStatus() != null) {
                 specification = specification.and(buildSpecification(criteria.getStatus(), Email_.status));
+            }
+            if (criteria.getEmailType() != null) {
+                specification = specification.and(buildSpecification(criteria.getEmailType(), Email_.emailType));
+            }
+            if (criteria.getCreatedAt() != null) {
+                specification = specification.and(buildRangeSpecification(criteria.getCreatedAt(), Email_.createdAt));
+            }
+            if (criteria.getCreatedBy() != null) {
+                specification = specification.and(buildStringSpecification(criteria.getCreatedBy(), Email_.createdBy));
             }
         }
         return specification;
