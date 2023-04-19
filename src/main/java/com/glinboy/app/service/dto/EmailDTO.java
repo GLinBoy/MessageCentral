@@ -1,5 +1,6 @@
 package com.glinboy.app.service.dto;
 
+import com.glinboy.app.domain.enumeration.EmailType;
 import com.glinboy.app.domain.enumeration.MessageStatus;
 import java.io.Serializable;
 import java.time.Instant;
@@ -30,6 +31,8 @@ public class EmailDTO implements Serializable {
     private String content;
 
     private MessageStatus status;
+
+    private EmailType emailType;
 
     private Instant createdAt;
 
@@ -73,6 +76,14 @@ public class EmailDTO implements Serializable {
 
     public void setStatus(MessageStatus status) {
         this.status = status;
+    }
+
+    public EmailType getEmailType() {
+        return emailType;
+    }
+
+    public void setEmailType(EmailType emailType) {
+        this.emailType = emailType;
     }
 
     public Instant getCreatedAt() {
@@ -121,6 +132,7 @@ public class EmailDTO implements Serializable {
             ", subject='" + getSubject() + "'" +
             ", content='" + getContent() + "'" +
             ", status='" + getStatus() + "'" +
+            ", emailType='" + getEmailType() + "'" +
             ", createdAt='" + getCreatedAt() + "'" +
             ", createdBy='" + getCreatedBy() + "'" +
             "}";
