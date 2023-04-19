@@ -1,5 +1,6 @@
 package com.glinboy.app.domain;
 
+import com.glinboy.app.domain.enumeration.EmailType;
 import com.glinboy.app.domain.enumeration.MessageStatus;
 import java.io.Serializable;
 import java.time.Instant;
@@ -52,6 +53,10 @@ public class Email implements Serializable {
     @Column(name = "status")
     private MessageStatus status;
 
+    @Enumerated(EnumType.STRING)
+    @Column(name = "email_type")
+    private EmailType emailType;
+
     @NotNull
     @CreatedDate
     @Column(name = "created_at", nullable = false)
@@ -68,21 +73,17 @@ public class Email implements Serializable {
         return this.id;
     }
 
-    public void setId(Long id) {
-        this.id = id;
-    }
-
     public Email id(Long id) {
         this.setId(id);
         return this;
     }
 
-    public String getReceiver() {
-        return this.receiver;
+    public void setId(Long id) {
+        this.id = id;
     }
 
-    public void setReceiver(String receiver) {
-        this.receiver = receiver;
+    public String getReceiver() {
+        return this.receiver;
     }
 
     public Email receiver(String receiver) {
@@ -90,12 +91,12 @@ public class Email implements Serializable {
         return this;
     }
 
-    public String getSubject() {
-        return this.subject;
+    public void setReceiver(String receiver) {
+        this.receiver = receiver;
     }
 
-    public void setSubject(String subject) {
-        this.subject = subject;
+    public String getSubject() {
+        return this.subject;
     }
 
     public Email subject(String subject) {
@@ -103,12 +104,12 @@ public class Email implements Serializable {
         return this;
     }
 
-    public String getContent() {
-        return this.content;
+    public void setSubject(String subject) {
+        this.subject = subject;
     }
 
-    public void setContent(String content) {
-        this.content = content;
+    public String getContent() {
+        return this.content;
     }
 
     public Email content(String content) {
@@ -116,12 +117,12 @@ public class Email implements Serializable {
         return this;
     }
 
-    public MessageStatus getStatus() {
-        return this.status;
+    public void setContent(String content) {
+        this.content = content;
     }
 
-    public void setStatus(MessageStatus status) {
-        this.status = status;
+    public MessageStatus getStatus() {
+        return this.status;
     }
 
     public Email status(MessageStatus status) {
@@ -129,12 +130,25 @@ public class Email implements Serializable {
         return this;
     }
 
-    public Instant getCreatedAt() {
-        return this.createdAt;
+    public void setStatus(MessageStatus status) {
+        this.status = status;
     }
 
-    public void setCreatedAt(Instant createdAt) {
-        this.createdAt = createdAt;
+    public EmailType getEmailType() {
+        return this.emailType;
+    }
+
+    public Email emailType(EmailType emailType) {
+        this.setEmailType(emailType);
+        return this;
+    }
+
+    public void setEmailType(EmailType emailType) {
+        this.emailType = emailType;
+    }
+
+    public Instant getCreatedAt() {
+        return this.createdAt;
     }
 
     public Email createdAt(Instant createdAt) {
@@ -142,17 +156,21 @@ public class Email implements Serializable {
         return this;
     }
 
-    public String getCreatedBy() {
-        return this.createdBy;
+    public void setCreatedAt(Instant createdAt) {
+        this.createdAt = createdAt;
     }
 
-    public void setCreatedBy(String createdBy) {
-        this.createdBy = createdBy;
+    public String getCreatedBy() {
+        return this.createdBy;
     }
 
     public Email createdBy(String createdBy) {
         this.setCreatedBy(createdBy);
         return this;
+    }
+
+    public void setCreatedBy(String createdBy) {
+        this.createdBy = createdBy;
     }
 
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here
@@ -183,6 +201,7 @@ public class Email implements Serializable {
             ", subject='" + getSubject() + "'" +
             ", content='" + getContent() + "'" +
             ", status='" + getStatus() + "'" +
+            ", emailType='" + getEmailType() + "'" +
             ", createdAt='" + getCreatedAt() + "'" +
             ", createdBy='" + getCreatedBy() + "'" +
             "}";
