@@ -1,5 +1,6 @@
 package com.glinboy.app.service.criteria;
 
+import com.glinboy.app.domain.enumeration.EmailType;
 import com.glinboy.app.domain.enumeration.MessageStatus;
 import java.io.Serializable;
 import java.util.Objects;
@@ -37,6 +38,23 @@ public class EmailCriteria implements Serializable, Criteria {
         }
     }
 
+    /**
+     * Class for filtering EmailType
+     */
+    public static class EmailTypeFilter extends Filter<EmailType> {
+
+        public EmailTypeFilter() {}
+
+        public EmailTypeFilter(EmailTypeFilter filter) {
+            super(filter);
+        }
+
+        @Override
+        public EmailTypeFilter copy() {
+            return new EmailTypeFilter(this);
+        }
+    }
+
     private static final long serialVersionUID = 1L;
 
     private LongFilter id;
@@ -46,6 +64,8 @@ public class EmailCriteria implements Serializable, Criteria {
     private StringFilter subject;
 
     private MessageStatusFilter status;
+
+    private EmailTypeFilter emailType;
 
     private InstantFilter createdAt;
 
@@ -60,6 +80,7 @@ public class EmailCriteria implements Serializable, Criteria {
         this.receiver = other.receiver == null ? null : other.receiver.copy();
         this.subject = other.subject == null ? null : other.subject.copy();
         this.status = other.status == null ? null : other.status.copy();
+        this.emailType = other.emailType == null ? null : other.emailType.copy();
         this.createdAt = other.createdAt == null ? null : other.createdAt.copy();
         this.createdBy = other.createdBy == null ? null : other.createdBy.copy();
         this.distinct = other.distinct;
@@ -130,6 +151,21 @@ public class EmailCriteria implements Serializable, Criteria {
         this.status = status;
     }
 
+    public EmailTypeFilter getEmailType() {
+        return emailType;
+    }
+
+    public EmailTypeFilter emailType() {
+        if (emailType == null) {
+            emailType = new EmailTypeFilter();
+        }
+        return emailType;
+    }
+
+    public void setEmailType(EmailTypeFilter emailType) {
+        this.emailType = emailType;
+    }
+
     public InstantFilter getCreatedAt() {
         return createdAt;
     }
@@ -182,6 +218,7 @@ public class EmailCriteria implements Serializable, Criteria {
             Objects.equals(receiver, that.receiver) &&
             Objects.equals(subject, that.subject) &&
             Objects.equals(status, that.status) &&
+            Objects.equals(emailType, that.emailType) &&
             Objects.equals(createdAt, that.createdAt) &&
             Objects.equals(createdBy, that.createdBy) &&
             Objects.equals(distinct, that.distinct)
@@ -190,7 +227,7 @@ public class EmailCriteria implements Serializable, Criteria {
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, receiver, subject, status, createdAt, createdBy, distinct);
+        return Objects.hash(id, receiver, subject, status, emailType, createdAt, createdBy, distinct);
     }
 
     // prettier-ignore
@@ -201,6 +238,7 @@ public class EmailCriteria implements Serializable, Criteria {
             (receiver != null ? "receiver=" + receiver + ", " : "") +
             (subject != null ? "subject=" + subject + ", " : "") +
             (status != null ? "status=" + status + ", " : "") +
+            (emailType != null ? "emailType=" + emailType + ", " : "") +
             (createdAt != null ? "createdAt=" + createdAt + ", " : "") +
             (createdBy != null ? "createdBy=" + createdBy + ", " : "") +
             (distinct != null ? "distinct=" + distinct + ", " : "") +
