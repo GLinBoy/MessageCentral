@@ -32,6 +32,11 @@
       "fieldValues": "IN_QUEUE,SENT,FAILED"
     },
     {
+      "fieldName": "emailType",
+      "fieldType": "EmailType",
+      "fieldValues": "TEXT,HTML"
+    },
+    {
       "fieldName": "createdAt",
       "fieldType": "Instant",
       "fieldValidateRules": ["required"]
