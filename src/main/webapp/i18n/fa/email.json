@@ -30,6 +30,7 @@
       "subject": "Subject",
       "content": "Content",
       "status": "Status",
+      "emailType": "Email Type",
       "createdAt": "Created At",
       "createdBy": "Created By"
     },
