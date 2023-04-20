@@ -7,6 +7,7 @@ import { DATE_TIME_FORMAT } from '@/shared/date/filters';
 import EmailService from '@/entities/email/email.service';
 import { Email } from '@/shared/model/email.model';
 import { MessageStatus } from '@/shared/model/enumerations/message-status.model';
+import { EmailType } from '@/shared/model/enumerations/email-type.model';
 
 const error = {
   response: {
@@ -34,7 +35,7 @@ describe('Service Tests', () => {
     beforeEach(() => {
       service = new EmailService();
       currentDate = new Date();
-      elemDefault = new Email(123, 'AAAAAAA', 'AAAAAAA', 'AAAAAAA', MessageStatus.IN_QUEUE, currentDate, 'AAAAAAA');
+      elemDefault = new Email(123, 'AAAAAAA', 'AAAAAAA', 'AAAAAAA', MessageStatus.IN_QUEUE, EmailType.TEXT, currentDate, 'AAAAAAA');
     });
 
     describe('Service methods', () => {
@@ -101,6 +102,7 @@ describe('Service Tests', () => {
             subject: 'BBBBBB',
             content: 'BBBBBB',
             status: 'BBBBBB',
+            emailType: EmailType.TEXT,
             createdAt: dayjs(currentDate).format(DATE_TIME_FORMAT),
             createdBy: 'BBBBBB',
           },
@@ -136,7 +138,8 @@ describe('Service Tests', () => {
           {
             content: 'BBBBBB',
             status: 'BBBBBB',
-            createdAt: dayjs(currentDate).format(DATE_TIME_FORMAT),
+            emailType: EmailType.TEXT,
+            createdBy: 'BBBBBB',
           },
           new Email()
         );
@@ -173,6 +176,7 @@ describe('Service Tests', () => {
             subject: 'BBBBBB',
             content: 'BBBBBB',
             status: 'BBBBBB',
+            emailType: EmailType.TEXT,
             createdAt: dayjs(currentDate).format(DATE_TIME_FORMAT),
             createdBy: 'BBBBBB',
           },
