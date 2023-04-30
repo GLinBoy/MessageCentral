@@ -1,14 +1,15 @@
 package com.glinboy.app.service.dto;
 
-import javax.persistence.Lob;
-import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
+import com.glinboy.app.domain.enumeration.EmailType;
 import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
+import javax.persistence.Lob;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 /**
  * A DTO for the {@link com.glinboy.app.domain.Email} entity.
@@ -25,6 +26,8 @@ public class EmailsDTO implements Serializable {
     @Lob
     @NotNull
     private String content;
+
+    private EmailType emailType = EmailType.HTML;
 
     public Set<String> getReceivers() {
         return receivers;
@@ -50,6 +53,14 @@ public class EmailsDTO implements Serializable {
         this.content = content;
     }
 
+    public EmailType getEmailType() {
+        return emailType;
+    }
+
+    public void setEmailType(EmailType emailType) {
+        this.emailType = emailType;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -60,11 +71,15 @@ public class EmailsDTO implements Serializable {
         }
 
         EmailsDTO emailsDTO = (EmailsDTO) o;
-        return this.receivers != null && !this.receivers.isEmpty() &&
+        return (
+            this.receivers != null &&
+            !this.receivers.isEmpty() &&
             this.receivers.size() == emailsDTO.receivers.size() &&
             this.receivers.containsAll(emailsDTO.receivers) &&
             (this.subject == null ? emailsDTO.subject == null : this.subject.equals(emailsDTO.subject)) &&
-            (this.content == null ? emailsDTO.content == null : this.content.equals(emailsDTO.content));
+            (this.content == null ? emailsDTO.content == null : this.content.equals(emailsDTO.content)) &&
+            this.emailType.equals(emailsDTO.emailType)
+        );
     }
 
     @Override
@@ -79,6 +94,7 @@ public class EmailsDTO implements Serializable {
             "receivers='" + getReceivers().stream().collect(Collectors.joining(", ")) + "'" +
             ", subject='" + getSubject() + "'" +
             ", content='" + getContent() + "'" +
+            ", emailType='" + getEmailType() + "'" +
             "}";
     }
 }
