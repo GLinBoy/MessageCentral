@@ -40,7 +40,8 @@
       },
       "receivers": "Receiver",
       "subject": "Subject",
-      "content": "Content"
+      "content": "Content",
+      "emailType": "Email Type"
     }
   }
 }
