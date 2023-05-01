@@ -70,6 +70,10 @@
               <span v-text="$t('messageCentralApp.email.content')">Content</span>
               <jhi-sort-indicator :current-order="propOrder" :reverse="reverse" :field-name="'content'"></jhi-sort-indicator>
             </th>
+            <th scope="row" v-on:click="changeOrder('emailType')">
+              <span v-text="$t('messageCentralApp.email.emailType')">EmailType</span>
+              <jhi-sort-indicator :current-order="propOrder" :reverse="reverse" :field-name="'emailType'"></jhi-sort-indicator>
+            </th>
             <th scope="row" v-on:click="changeOrder('createdAt')">
               <span v-text="$t('messageCentralApp.email.createdAt')">createdAt</span>
               <jhi-sort-indicator :current-order="propOrder" :reverse="reverse" :field-name="'createdAt'"></jhi-sort-indicator>
@@ -100,6 +104,11 @@
               <td>{{ email.receiver }}</td>
               <td>{{ email.subject }}</td>
               <td>{{ email.content }}</td>
+              <td>
+                <b-badge variant="info">
+                  {{ email.emailType }}
+                </b-badge>
+              </td>
               <td>{{ email.createdAt ? $d(Date.parse(email.createdAt), 'short') : '' }}</td>
               <td>{{ email.createdBy }}</td>
               <td>
