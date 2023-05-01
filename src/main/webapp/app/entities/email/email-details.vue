@@ -25,6 +25,14 @@
             <span>{{ email.content }}</span>
           </dd>
           <dt>
+            <span v-text="$t('messageCentralApp.email.emailType')">Email Type</span>
+          </dt>
+          <dd>
+            <b-badge variant="info">
+              {{ email.emailType }}
+            </b-badge>
+          </dd>
+          <dt>
             <span v-text="$t('messageCentralApp.email.status')">Status</span>
           </dt>
           <dd>
