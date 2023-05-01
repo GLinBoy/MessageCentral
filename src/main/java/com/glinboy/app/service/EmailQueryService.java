@@ -1,13 +1,12 @@
 package com.glinboy.app.service;
 
-import com.glinboy.app.domain.*; // for static metamodels
 import com.glinboy.app.domain.Email;
+import com.glinboy.app.domain.Email_;
 import com.glinboy.app.repository.EmailRepository;
 import com.glinboy.app.service.criteria.EmailCriteria;
 import com.glinboy.app.service.dto.EmailDTO;
 import com.glinboy.app.service.mapper.EmailMapper;
 import java.util.List;
-import javax.persistence.criteria.JoinType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
