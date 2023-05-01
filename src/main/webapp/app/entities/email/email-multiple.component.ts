@@ -8,6 +8,7 @@ import { required, minLength, maxLength } from 'vuelidate/lib/validators';
 import AlertService from '@/shared/alert/alert.service';
 
 import { IEmails, Emails } from '@/shared/model/email.model';
+import { EmailType } from '@/shared/model/enumerations/email-type.model';
 import EmailService from './email.service';
 
 const validations: any = {
@@ -23,6 +24,7 @@ const validations: any = {
     content: {
       required,
     },
+    emailType: {},
     status: {},
   },
 };
@@ -37,6 +39,10 @@ export default class EmailMultiple extends mixins(JhiDataUtils) {
   public emails: IEmails = new Emails();
   public isSaving = false;
   public currentLanguage = '';
+  public emailTypes = [
+    { value: EmailType.TEXT, text: EmailType.TEXT },
+    { value: EmailType.HTML, text: EmailType.HTML },
+  ];
 
   created(): void {
     this.currentLanguage = this.$store.getters.currentLanguage;
