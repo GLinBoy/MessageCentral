@@ -86,6 +86,10 @@
               </small>
             </div>
           </div>
+          <div class="form-group">
+            <label class="form-control-label" v-text="$t('messageCentralApp.emails.emailType')" for="email-type">Email Type</label>
+            <b-form-select v-model="$v.emails.emailType.$model" :options="emailTypes"></b-form-select>
+          </div>
         </div>
         <div>
           <button type="button" id="cancel-save" data-cy="entityCreateCancelButton" class="btn btn-secondary" v-on:click="previousState()">
