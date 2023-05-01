@@ -74,6 +74,7 @@ public class EmailPrincipalServiceImpl extends EmailServiceImpl {
                         e.setSubject(es.getSubject());
                         e.setContent(es.getContent());
                         e.setStatus(MessageStatus.IN_QUEUE);
+                        e.setEmailType(es.getEmailType());
                         return e;
                     })
             )
