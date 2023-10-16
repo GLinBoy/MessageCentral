@@ -191,6 +191,9 @@ springdoc:
 info:
   # Comma separated list of profiles that will trigger the ribbon to show
   display-ribbon-on-profiles: 'dev'
+  name: 'MessageCentral'
+  version: '0.0.1-SNAPSHOT'
+  description: 'A service to handle messages (email, SMS, notification) for microservice environment'
 
 # ===================================================================
 # JHipster specific properties
