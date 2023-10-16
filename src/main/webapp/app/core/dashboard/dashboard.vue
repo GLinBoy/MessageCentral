@@ -45,7 +45,9 @@
             <b-card-text>
               <b-row class="text-center">
                 <b-col lg="4">
-                  <font-awesome-icon class="fa-3x" icon="at" />
+                  <router-link to="/email">
+                    <font-awesome-icon class="fa-3x" icon="at" />
+                  </router-link>
                 </b-col>
                 <b-col lg="8">
                   <span class="font-weight-bolder text-uppercase">Sent: {{ emailsSuccessfulSent }}</span>
