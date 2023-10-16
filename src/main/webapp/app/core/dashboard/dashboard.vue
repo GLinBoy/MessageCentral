@@ -95,7 +95,9 @@
             <b-card-text>
               <b-row class="text-center">
                 <b-col lg="4">
-                  <font-awesome-icon class="fa-3x" icon="sms" />
+                  <router-link to="/short-message">
+                    <font-awesome-icon class="fa-3x" icon="sms" />
+                  </router-link>
                 </b-col>
                 <b-col lg="8">
                   <span class="font-weight-bolder text-uppercase">Sent: {{ smsSuccessfulSent }}</span>
