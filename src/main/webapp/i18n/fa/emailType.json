@@ -1,0 +1,9 @@
+{
+  "messageCentralApp": {
+    "EmailType": {
+      "null": "",
+      "TEXT": "TEXT",
+      "HTML": "HTML"
+    }
+  }
+}
