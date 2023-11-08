@@ -1,0 +1,10 @@
+{
+  "messageCentralApp": {
+    "MessageStatus": {
+      "null": "",
+      "IN_QUEUE": "IN_QUEUE",
+      "SENT": "SENT",
+      "FAILED": "FAILED"
+    }
+  }
+}
