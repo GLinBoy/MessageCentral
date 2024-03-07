@@ -1,7 +1,7 @@
 package com.glinboy.app.repository;
 
 import com.glinboy.app.domain.NotificationData;
-import org.springframework.data.jpa.repository.*;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 /**

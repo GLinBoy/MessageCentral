@@ -6,30 +6,20 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 import com.glinboy.app.IntegrationTest;
-import com.glinboy.app.config.ApplicationProperties;
 import com.glinboy.app.domain.Email;
 import com.glinboy.app.domain.enumeration.EmailType;
 import com.glinboy.app.domain.enumeration.MessageStatus;
 import com.glinboy.app.repository.EmailRepository;
-import com.glinboy.app.security.AuthoritiesConstants;
 import com.glinboy.app.service.dto.EmailDTO;
-import com.glinboy.app.service.dto.EmailsDTO;
 import com.glinboy.app.service.mapper.EmailMapper;
-import com.icegreen.greenmail.store.FolderException;
-import com.icegreen.greenmail.util.GreenMail;
-import com.icegreen.greenmail.util.ServerSetup;
+import jakarta.persistence.EntityManager;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.Random;
-import java.util.Set;
 import java.util.concurrent.atomic.AtomicLong;
-import java.util.stream.Collectors;
-import java.util.stream.IntStream;
-import javax.mail.Message.RecipientType;
-import javax.mail.internet.MimeMessage;
-import javax.persistence.EntityManager;
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.http.MediaType;
@@ -45,8 +35,8 @@ import org.springframework.transaction.annotation.Transactional;
 @WithMockUser
 class EmailResourceIT {
 
-    private static final String DEFAULT_RECEIVER = "test@test.com";
-    private static final String UPDATED_RECEIVER = "test.update@test.com";
+    private static final String DEFAULT_RECEIVER = "Qad.CmuPsD.Vm+.ZLo@L.4PXW.YQPotM";
+    private static final String UPDATED_RECEIVER = "Nb&.OdPePH.*zl.ypDVP.jG.y-mm@rp4nrn.EumiN.vdf.Ea";
 
     private static final String DEFAULT_SUBJECT = "AAAAAAAAAA";
     private static final String UPDATED_SUBJECT = "BBBBBBBBBB";
@@ -68,13 +58,9 @@ class EmailResourceIT {
 
     private static final String ENTITY_API_URL = "/api/emails";
     private static final String ENTITY_API_URL_ID = ENTITY_API_URL + "/{id}";
-    private static final String ENTITY_API_URL_MULTIPLE = "/api/emails/multiple";
-    private static final Integer port = 2525;
-    private static final String host = "localhost";
+
     private static Random random = new Random();
-    private static AtomicLong count = new AtomicLong(random.nextInt() + (2 * Integer.MAX_VALUE));
-    private static String protocol = "smtp";
-    private static GreenMail greenMail;
+    private static AtomicLong longCount = new AtomicLong(random.nextInt() + (2 * Integer.MAX_VALUE));
 
     @Autowired
     private EmailRepository emailRepository;
@@ -88,21 +74,7 @@ class EmailResourceIT {
     @Autowired
     private MockMvc restEmailMockMvc;
 
-    @Autowired
-    private ApplicationProperties properties;
-
     private Email email;
-
-    @BeforeAll
-    public static void setupSMTP() {
-        greenMail = new GreenMail(new ServerSetup(port, host, protocol));
-        greenMail.start();
-    }
-
-    @AfterAll
-    public static void tearDownSMTP() {
-        greenMail.stop();
-    }
 
     /**
      * Create an entity for this test.
@@ -123,32 +95,6 @@ class EmailResourceIT {
     }
 
     /**
-     * Create multiple entities for this test.
-     * <p>
-     * This is a static method, as tests for other entities might also need it, if
-     * they test an entity which requires the current entity.
-     */
-    public static List<EmailsDTO> createEmailsDTO(int emailsDTOCount, int reciversCount) {
-        List<EmailsDTO> emailsDTO = IntStream
-            .range(0, emailsDTOCount)
-            .mapToObj(i -> {
-                Set<String> rs = IntStream
-                    .range(0, reciversCount)
-                    .mapToObj(j -> String.format("test_%d_%d@localhost.com", i, j))
-                    .collect(Collectors.toSet());
-                EmailsDTO e = new EmailsDTO();
-                e.setReceivers(rs);
-                e.setSubject(String.format("SUBJECT_%d", i));
-                e.setContent(String.format("CONETNT_%d", i));
-                return e;
-            })
-            .collect(Collectors.toList());
-        assertThat(emailsDTO.size()).isEqualTo(emailsDTOCount);
-        emailsDTO.forEach(es -> assertThat(es.getReceivers().size()).isEqualTo(reciversCount));
-        return emailsDTO;
-    }
-
-    /**
      * Create an updated entity for this test.
      *
      * This is a static method, as tests for other entities might also need it,
@@ -166,24 +112,13 @@ class EmailResourceIT {
         return email;
     }
 
-    @AfterEach
-    public void cleanup() throws FolderException {
-        greenMail.purgeEmailFromAllMailboxes();
-    }
-
     @BeforeEach
     public void initTest() {
         email = createEntity(em);
     }
 
     @Test
-    void checkMailServer() {
-        assertThat(EmailResourceIT.greenMail.isRunning()).isEqualTo(Boolean.TRUE);
-    }
-
-    @Test
     @Transactional
-    @WithMockUser(authorities = { AuthoritiesConstants.EMAIL_USER })
     void createEmail() throws Exception {
         int databaseSizeBeforeCreate = emailRepository.findAll().size();
         // Create the Email
@@ -199,79 +134,14 @@ class EmailResourceIT {
         assertThat(testEmail.getReceiver()).isEqualTo(DEFAULT_RECEIVER);
         assertThat(testEmail.getSubject()).isEqualTo(DEFAULT_SUBJECT);
         assertThat(testEmail.getContent()).isEqualTo(DEFAULT_CONTENT);
-        assertThat(testEmail.getStatus()).isEqualTo(MessageStatus.IN_QUEUE);
-
-        boolean ok = greenMail.waitForIncomingEmail(10_000, 1);
-
-        if (ok) {
-            MimeMessage testMessage = greenMail.getReceivedMessages()[0];
-            assertThat(testMessage.getSubject()).isEqualTo(emailDTO.getSubject());
-            assertThat(testMessage.getRecipients(RecipientType.TO)[0].toString()).hasToString(emailDTO.getReceiver());
-            assertThat(testMessage.getFrom()[0].toString()).hasToString(properties.getEmail().getFrom());
-
-            String emailContent = (String) testMessage.getContent();
-            assertThat(emailContent.replaceAll("\\r\\n|\\r|\\n", "")).isEqualTo(emailDTO.getContent());
-        } else {
-            Assertions.fail("email not sent");
-        }
+        assertThat(testEmail.getStatus()).isEqualTo(DEFAULT_STATUS);
+        assertThat(testEmail.getEmailType()).isEqualTo(DEFAULT_EMAIL_TYPE);
+        assertThat(testEmail.getCreatedAt()).isEqualTo(DEFAULT_CREATED_AT);
+        assertThat(testEmail.getCreatedBy()).isEqualTo(DEFAULT_CREATED_BY);
     }
 
     @Test
     @Transactional
-    void failedCreateEmailWithoutRole() throws Exception {
-        // Create the Email
-        EmailDTO emailDTO = emailMapper.toDto(email);
-        restEmailMockMvc
-            .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(emailDTO)))
-            .andExpect(status().isForbidden());
-    }
-
-    @Test
-    @Transactional
-    @WithMockUser(authorities = { AuthoritiesConstants.EMAIL_USER })
-    void createBulkEmail() throws Exception {
-        int databaseSizeBeforeCreate = emailRepository.findAll().size();
-        // Create multiple Email
-        int emailsCount = 2;
-        int reciverCount = 5;
-        List<EmailsDTO> emailsDTO = createEmailsDTO(emailsCount, reciverCount);
-        restEmailMockMvc
-            .perform(
-                post(ENTITY_API_URL_MULTIPLE).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(emailsDTO))
-            )
-            .andExpect(status().isOk());
-
-        // Validate the Email in the database
-        List<Email> emailList = emailRepository.findAll();
-        assertThat(emailList).hasSize(databaseSizeBeforeCreate + (emailsCount * reciverCount));
-
-        boolean ok = greenMail.waitForIncomingEmail(10_000, 10);
-
-        if (ok) {
-            MimeMessage[] testMessages = greenMail.getReceivedMessages();
-            assertThat(testMessages).hasSize(emailsCount * reciverCount);
-        } else {
-            Assertions.fail("email not sent");
-        }
-    }
-
-    @Test
-    @Transactional
-    void failedCreateBulkEmail() throws Exception {
-        // Create multiple Email
-        int emailsCount = 2;
-        int reciverCount = 5;
-        List<EmailsDTO> emailsDTO = createEmailsDTO(emailsCount, reciverCount);
-        restEmailMockMvc
-            .perform(
-                post(ENTITY_API_URL_MULTIPLE).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(emailsDTO))
-            )
-            .andExpect(status().isForbidden());
-    }
-
-    @Test
-    @Transactional
-    @WithMockUser(authorities = { AuthoritiesConstants.EMAIL_USER })
     void createEmailWithExistingId() throws Exception {
         // Create the Email with an existing ID
         email.setId(1L);
@@ -291,7 +161,6 @@ class EmailResourceIT {
 
     @Test
     @Transactional
-    @WithMockUser(authorities = { AuthoritiesConstants.EMAIL_USER })
     void checkReceiverIsRequired() throws Exception {
         int databaseSizeBeforeTest = emailRepository.findAll().size();
         // set the field null
@@ -310,7 +179,6 @@ class EmailResourceIT {
 
     @Test
     @Transactional
-    @WithMockUser(authorities = { AuthoritiesConstants.EMAIL_USER })
     void checkSubjectIsRequired() throws Exception {
         int databaseSizeBeforeTest = emailRepository.findAll().size();
         // set the field null
@@ -329,7 +197,42 @@ class EmailResourceIT {
 
     @Test
     @Transactional
-    @WithMockUser(authorities = { AuthoritiesConstants.EMAIL_USER })
+    void checkCreatedAtIsRequired() throws Exception {
+        int databaseSizeBeforeTest = emailRepository.findAll().size();
+        // set the field null
+        email.setCreatedAt(null);
+
+        // Create the Email, which fails.
+        EmailDTO emailDTO = emailMapper.toDto(email);
+
+        restEmailMockMvc
+            .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(emailDTO)))
+            .andExpect(status().isBadRequest());
+
+        List<Email> emailList = emailRepository.findAll();
+        assertThat(emailList).hasSize(databaseSizeBeforeTest);
+    }
+
+    @Test
+    @Transactional
+    void checkCreatedByIsRequired() throws Exception {
+        int databaseSizeBeforeTest = emailRepository.findAll().size();
+        // set the field null
+        email.setCreatedBy(null);
+
+        // Create the Email, which fails.
+        EmailDTO emailDTO = emailMapper.toDto(email);
+
+        restEmailMockMvc
+            .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(emailDTO)))
+            .andExpect(status().isBadRequest());
+
+        List<Email> emailList = emailRepository.findAll();
+        assertThat(emailList).hasSize(databaseSizeBeforeTest);
+    }
+
+    @Test
+    @Transactional
     void getAllEmails() throws Exception {
         // Initialize the database
         emailRepository.saveAndFlush(email);
@@ -342,25 +245,15 @@ class EmailResourceIT {
             .andExpect(jsonPath("$.[*].id").value(hasItem(email.getId().intValue())))
             .andExpect(jsonPath("$.[*].receiver").value(hasItem(DEFAULT_RECEIVER)))
             .andExpect(jsonPath("$.[*].subject").value(hasItem(DEFAULT_SUBJECT)))
-            .andExpect(jsonPath("$.[*].content").value(hasItem(DEFAULT_CONTENT.toString())));
+            .andExpect(jsonPath("$.[*].content").value(hasItem(DEFAULT_CONTENT.toString())))
+            .andExpect(jsonPath("$.[*].status").value(hasItem(DEFAULT_STATUS.toString())))
+            .andExpect(jsonPath("$.[*].emailType").value(hasItem(DEFAULT_EMAIL_TYPE.toString())))
+            .andExpect(jsonPath("$.[*].createdAt").value(hasItem(DEFAULT_CREATED_AT.toString())))
+            .andExpect(jsonPath("$.[*].createdBy").value(hasItem(DEFAULT_CREATED_BY)));
     }
 
     @Test
     @Transactional
-    void failedGetEmail() throws Exception {
-        // Initialize the database
-        emailRepository.saveAndFlush(email);
-
-        // Get all the emailList
-        restEmailMockMvc.perform(get(ENTITY_API_URL + "?sort=id,desc")).andExpect(status().isForbidden());
-
-        // Get the email
-        restEmailMockMvc.perform(get(ENTITY_API_URL_ID, email.getId())).andExpect(status().isForbidden());
-    }
-
-    @Test
-    @Transactional
-    @WithMockUser(authorities = { AuthoritiesConstants.EMAIL_USER })
     void getEmail() throws Exception {
         // Initialize the database
         emailRepository.saveAndFlush(email);
@@ -373,216 +266,176 @@ class EmailResourceIT {
             .andExpect(jsonPath("$.id").value(email.getId().intValue()))
             .andExpect(jsonPath("$.receiver").value(DEFAULT_RECEIVER))
             .andExpect(jsonPath("$.subject").value(DEFAULT_SUBJECT))
-            .andExpect(jsonPath("$.content").value(DEFAULT_CONTENT.toString()));
+            .andExpect(jsonPath("$.content").value(DEFAULT_CONTENT.toString()))
+            .andExpect(jsonPath("$.status").value(DEFAULT_STATUS.toString()))
+            .andExpect(jsonPath("$.emailType").value(DEFAULT_EMAIL_TYPE.toString()))
+            .andExpect(jsonPath("$.createdAt").value(DEFAULT_CREATED_AT.toString()))
+            .andExpect(jsonPath("$.createdBy").value(DEFAULT_CREATED_BY));
     }
 
     @Test
     @Transactional
-    @WithMockUser(authorities = { AuthoritiesConstants.EMAIL_USER })
     void getEmailsByIdFiltering() throws Exception {
         // Initialize the database
         emailRepository.saveAndFlush(email);
 
         Long id = email.getId();
 
-        defaultEmailShouldBeFound("query=id==" + id);
-        defaultEmailShouldNotBeFound("query=id!=" + id);
+        defaultEmailShouldBeFound("id.equals=" + id);
+        defaultEmailShouldNotBeFound("id.notEquals=" + id);
 
-        defaultEmailShouldBeFound(String.format("query=id>=%d", id));
-        defaultEmailShouldNotBeFound("query=id>" + id);
+        defaultEmailShouldBeFound("id.greaterThanOrEqual=" + id);
+        defaultEmailShouldNotBeFound("id.greaterThan=" + id);
 
-        defaultEmailShouldBeFound(String.format("query=id<=%d", id));
-        defaultEmailShouldNotBeFound("query=id<" + id);
+        defaultEmailShouldBeFound("id.lessThanOrEqual=" + id);
+        defaultEmailShouldNotBeFound("id.lessThan=" + id);
     }
 
     @Test
     @Transactional
-    @WithMockUser(authorities = { AuthoritiesConstants.EMAIL_USER })
     void getAllEmailsByReceiverIsEqualToSomething() throws Exception {
         // Initialize the database
         emailRepository.saveAndFlush(email);
 
         // Get all the emailList where receiver equals to DEFAULT_RECEIVER
-        defaultEmailShouldBeFound("query=receiver==" + DEFAULT_RECEIVER);
+        defaultEmailShouldBeFound("receiver.equals=" + DEFAULT_RECEIVER);
 
         // Get all the emailList where receiver equals to UPDATED_RECEIVER
-        defaultEmailShouldNotBeFound("query=receiver==" + UPDATED_RECEIVER);
+        defaultEmailShouldNotBeFound("receiver.equals=" + UPDATED_RECEIVER);
     }
 
     @Test
     @Transactional
-    @WithMockUser(authorities = { AuthoritiesConstants.EMAIL_USER })
-    void getAllEmailsByReceiverIsNotEqualToSomething() throws Exception {
-        // Initialize the database
-        emailRepository.saveAndFlush(email);
-
-        // Get all the emailList where receiver not equals to DEFAULT_RECEIVER
-        defaultEmailShouldNotBeFound("query=receiver!=" + DEFAULT_RECEIVER);
-
-        // Get all the emailList where receiver not equals to UPDATED_RECEIVER
-        defaultEmailShouldBeFound("query=receiver!=" + UPDATED_RECEIVER);
-    }
-
-    @Test
-    @Transactional
-    @WithMockUser(authorities = { AuthoritiesConstants.EMAIL_USER })
     void getAllEmailsByReceiverIsInShouldWork() throws Exception {
-        // FIXME spring-search:0.2.0 doesn't support in at this moment
         // Initialize the database
         emailRepository.saveAndFlush(email);
 
         // Get all the emailList where receiver in DEFAULT_RECEIVER or UPDATED_RECEIVER
-        defaultEmailShouldBeFound(String.format("query=receiver=in=(%s, %s)", DEFAULT_RECEIVER, UPDATED_RECEIVER));
+        defaultEmailShouldBeFound("receiver.in=" + DEFAULT_RECEIVER + "," + UPDATED_RECEIVER);
+
         // Get all the emailList where receiver equals to UPDATED_RECEIVER
-        defaultEmailShouldNotBeFound("query=receiver==" + UPDATED_RECEIVER);
+        defaultEmailShouldNotBeFound("receiver.in=" + UPDATED_RECEIVER);
     }
 
     @Test
     @Transactional
-    @WithMockUser(authorities = { AuthoritiesConstants.EMAIL_USER })
     void getAllEmailsByReceiverIsNullOrNotNull() throws Exception {
         // Initialize the database
         emailRepository.saveAndFlush(email);
 
         // Get all the emailList where receiver is not null
-        defaultEmailShouldBeFound("query=receiver!=null");
+        defaultEmailShouldBeFound("receiver.specified=true");
 
         // Get all the emailList where receiver is null
-        defaultEmailShouldNotBeFound("query=receiver==null");
+        defaultEmailShouldNotBeFound("receiver.specified=false");
     }
 
     @Test
     @Transactional
-    @WithMockUser(authorities = { AuthoritiesConstants.EMAIL_USER })
     void getAllEmailsByReceiverContainsSomething() throws Exception {
         // Initialize the database
         emailRepository.saveAndFlush(email);
 
         // Get all the emailList where receiver contains DEFAULT_RECEIVER
-        defaultEmailShouldBeFound("query=receiver==*" + DEFAULT_RECEIVER + "*");
+        defaultEmailShouldBeFound("receiver.contains=" + DEFAULT_RECEIVER);
 
         // Get all the emailList where receiver contains UPDATED_RECEIVER
-        defaultEmailShouldNotBeFound("query=receiver==*" + UPDATED_RECEIVER + "*");
+        defaultEmailShouldNotBeFound("receiver.contains=" + UPDATED_RECEIVER);
     }
 
     @Test
     @Transactional
-    @WithMockUser(authorities = { AuthoritiesConstants.EMAIL_USER })
     void getAllEmailsByReceiverNotContainsSomething() throws Exception {
         // Initialize the database
         emailRepository.saveAndFlush(email);
 
         // Get all the emailList where receiver does not contain DEFAULT_RECEIVER
-        defaultEmailShouldNotBeFound("query=receiver!=*" + DEFAULT_RECEIVER + "*");
+        defaultEmailShouldNotBeFound("receiver.doesNotContain=" + DEFAULT_RECEIVER);
 
         // Get all the emailList where receiver does not contain UPDATED_RECEIVER
-        defaultEmailShouldBeFound("query=receiver!=*" + UPDATED_RECEIVER + "*");
+        defaultEmailShouldBeFound("receiver.doesNotContain=" + UPDATED_RECEIVER);
     }
 
     @Test
     @Transactional
-    @WithMockUser(authorities = { AuthoritiesConstants.EMAIL_USER })
     void getAllEmailsBySubjectIsEqualToSomething() throws Exception {
         // Initialize the database
         emailRepository.saveAndFlush(email);
 
         // Get all the emailList where subject equals to DEFAULT_SUBJECT
-        defaultEmailShouldBeFound("query=subject==" + DEFAULT_SUBJECT);
+        defaultEmailShouldBeFound("subject.equals=" + DEFAULT_SUBJECT);
 
         // Get all the emailList where subject equals to UPDATED_SUBJECT
-        defaultEmailShouldNotBeFound("query=subject==" + UPDATED_SUBJECT);
+        defaultEmailShouldNotBeFound("subject.equals=" + UPDATED_SUBJECT);
     }
 
     @Test
     @Transactional
-    @WithMockUser(authorities = { AuthoritiesConstants.EMAIL_USER })
-    void getAllEmailsBySubjectIsNotEqualToSomething() throws Exception {
-        // Initialize the database
-        emailRepository.saveAndFlush(email);
-
-        // Get all the emailList where subject not equals to DEFAULT_SUBJECT
-        defaultEmailShouldNotBeFound("query=subject!=" + DEFAULT_SUBJECT);
-
-        // Get all the emailList where subject not equals to UPDATED_SUBJECT
-        defaultEmailShouldBeFound("query=subject!=" + UPDATED_SUBJECT);
-    }
-
-    @Test
-    @Transactional
-    @WithMockUser(authorities = { AuthoritiesConstants.EMAIL_USER })
     void getAllEmailsBySubjectIsInShouldWork() throws Exception {
-        // FIXME spring-search:0.2.0 doesn't support in at this moment
         // Initialize the database
         emailRepository.saveAndFlush(email);
 
         // Get all the emailList where subject in DEFAULT_SUBJECT or UPDATED_SUBJECT
-        defaultEmailShouldBeFound(String.format("query=subject=in=(%s, %s)", DEFAULT_SUBJECT, UPDATED_SUBJECT));
+        defaultEmailShouldBeFound("subject.in=" + DEFAULT_SUBJECT + "," + UPDATED_SUBJECT);
 
         // Get all the emailList where subject equals to UPDATED_SUBJECT
-        defaultEmailShouldNotBeFound("query=subject==" + UPDATED_SUBJECT);
+        defaultEmailShouldNotBeFound("subject.in=" + UPDATED_SUBJECT);
     }
 
     @Test
     @Transactional
-    @WithMockUser(authorities = { AuthoritiesConstants.EMAIL_USER })
     void getAllEmailsBySubjectIsNullOrNotNull() throws Exception {
         // Initialize the database
         emailRepository.saveAndFlush(email);
 
         // Get all the emailList where subject is not null
-        defaultEmailShouldBeFound("query=subject!=null");
+        defaultEmailShouldBeFound("subject.specified=true");
 
         // Get all the emailList where subject is null
-        defaultEmailShouldNotBeFound("query=subject==null");
+        defaultEmailShouldNotBeFound("subject.specified=false");
     }
 
     @Test
     @Transactional
-    @WithMockUser(authorities = { AuthoritiesConstants.EMAIL_USER })
     void getAllEmailsBySubjectContainsSomething() throws Exception {
         // Initialize the database
         emailRepository.saveAndFlush(email);
 
         // Get all the emailList where subject contains DEFAULT_SUBJECT
-        defaultEmailShouldBeFound("query=subject==*" + DEFAULT_SUBJECT + "*");
+        defaultEmailShouldBeFound("subject.contains=" + DEFAULT_SUBJECT);
 
         // Get all the emailList where subject contains UPDATED_SUBJECT
-        defaultEmailShouldNotBeFound("query=subject==*" + UPDATED_SUBJECT + "*");
+        defaultEmailShouldNotBeFound("subject.contains=" + UPDATED_SUBJECT);
     }
 
     @Test
     @Transactional
-    @WithMockUser(authorities = { AuthoritiesConstants.EMAIL_USER })
     void getAllEmailsBySubjectNotContainsSomething() throws Exception {
         // Initialize the database
         emailRepository.saveAndFlush(email);
 
         // Get all the emailList where subject does not contain DEFAULT_SUBJECT
-        defaultEmailShouldNotBeFound("query=subject!=*" + DEFAULT_SUBJECT + "*");
+        defaultEmailShouldNotBeFound("subject.doesNotContain=" + DEFAULT_SUBJECT);
 
         // Get all the emailList where subject does not contain UPDATED_SUBJECT
-        defaultEmailShouldBeFound("query=subject!=*" + UPDATED_SUBJECT + "*");
+        defaultEmailShouldBeFound("subject.doesNotContain=" + UPDATED_SUBJECT);
     }
 
-    @Disabled(value = "There is a problem in Specification to query base on Enum value")
     @Test
     @Transactional
-    @WithMockUser(authorities = { AuthoritiesConstants.EMAIL_USER })
     void getAllEmailsByStatusIsEqualToSomething() throws Exception {
         // Initialize the database
         emailRepository.saveAndFlush(email);
 
         // Get all the emailList where status equals to DEFAULT_STATUS
-        defaultEmailShouldBeFound("query=status==" + DEFAULT_STATUS);
+        defaultEmailShouldBeFound("status.equals=" + DEFAULT_STATUS);
 
         // Get all the emailList where status equals to UPDATED_STATUS
-        defaultEmailShouldNotBeFound("query=status==" + UPDATED_STATUS);
+        defaultEmailShouldNotBeFound("status.equals=" + UPDATED_STATUS);
     }
 
-    @Disabled(value = "There is a problem in Specification to query base on Enum value")
     @Test
     @Transactional
-    @WithMockUser(authorities = { AuthoritiesConstants.EMAIL_USER })
     void getAllEmailsByStatusIsInShouldWork() throws Exception {
         // Initialize the database
         emailRepository.saveAndFlush(email);
@@ -594,10 +447,8 @@ class EmailResourceIT {
         defaultEmailShouldNotBeFound("status.in=" + UPDATED_STATUS);
     }
 
-    @Disabled(value = "There is a problem in Specification to query base on Enum value")
     @Test
     @Transactional
-    @WithMockUser(authorities = { AuthoritiesConstants.EMAIL_USER })
     void getAllEmailsByStatusIsNullOrNotNull() throws Exception {
         // Initialize the database
         emailRepository.saveAndFlush(email);
@@ -609,10 +460,8 @@ class EmailResourceIT {
         defaultEmailShouldNotBeFound("status.specified=false");
     }
 
-    @Disabled(value = "There is a problem in Specification to query base on Enum value")
     @Test
     @Transactional
-    @WithMockUser(authorities = { AuthoritiesConstants.EMAIL_USER })
     void getAllEmailsByEmailTypeIsEqualToSomething() throws Exception {
         // Initialize the database
         emailRepository.saveAndFlush(email);
@@ -624,10 +473,8 @@ class EmailResourceIT {
         defaultEmailShouldNotBeFound("emailType.equals=" + UPDATED_EMAIL_TYPE);
     }
 
-    @Disabled(value = "There is a problem in Specification to query base on Enum value")
     @Test
     @Transactional
-    @WithMockUser(authorities = { AuthoritiesConstants.EMAIL_USER })
     void getAllEmailsByEmailTypeIsInShouldWork() throws Exception {
         // Initialize the database
         emailRepository.saveAndFlush(email);
@@ -639,10 +486,8 @@ class EmailResourceIT {
         defaultEmailShouldNotBeFound("emailType.in=" + UPDATED_EMAIL_TYPE);
     }
 
-    @Disabled(value = "There is a problem in Specification to query base on Enum value")
     @Test
     @Transactional
-    @WithMockUser(authorities = { AuthoritiesConstants.EMAIL_USER })
     void getAllEmailsByEmailTypeIsNullOrNotNull() throws Exception {
         // Initialize the database
         emailRepository.saveAndFlush(email);
@@ -654,10 +499,8 @@ class EmailResourceIT {
         defaultEmailShouldNotBeFound("emailType.specified=false");
     }
 
-    @Disabled(value = "There is a problem in Specification to query base on Enum value")
     @Test
     @Transactional
-    @WithMockUser(authorities = { AuthoritiesConstants.EMAIL_USER })
     void getAllEmailsByCreatedAtIsEqualToSomething() throws Exception {
         // Initialize the database
         emailRepository.saveAndFlush(email);
@@ -669,10 +512,8 @@ class EmailResourceIT {
         defaultEmailShouldNotBeFound("createdAt.equals=" + UPDATED_CREATED_AT);
     }
 
-    @Disabled(value = "There is a problem in Specification to query base on Enum value")
     @Test
     @Transactional
-    @WithMockUser(authorities = { AuthoritiesConstants.EMAIL_USER })
     void getAllEmailsByCreatedAtIsInShouldWork() throws Exception {
         // Initialize the database
         emailRepository.saveAndFlush(email);
@@ -684,10 +525,8 @@ class EmailResourceIT {
         defaultEmailShouldNotBeFound("createdAt.in=" + UPDATED_CREATED_AT);
     }
 
-    @Disabled(value = "There is a problem in Specification to query base on Enum value")
     @Test
     @Transactional
-    @WithMockUser(authorities = { AuthoritiesConstants.EMAIL_USER })
     void getAllEmailsByCreatedAtIsNullOrNotNull() throws Exception {
         // Initialize the database
         emailRepository.saveAndFlush(email);
@@ -699,10 +538,8 @@ class EmailResourceIT {
         defaultEmailShouldNotBeFound("createdAt.specified=false");
     }
 
-    @Disabled(value = "There is a problem in Specification to query base on Enum value")
     @Test
     @Transactional
-    @WithMockUser(authorities = { AuthoritiesConstants.EMAIL_USER })
     void getAllEmailsByCreatedByIsEqualToSomething() throws Exception {
         // Initialize the database
         emailRepository.saveAndFlush(email);
@@ -714,10 +551,8 @@ class EmailResourceIT {
         defaultEmailShouldNotBeFound("createdBy.equals=" + UPDATED_CREATED_BY);
     }
 
-    @Disabled(value = "There is a problem in Specification to query base on Enum value")
     @Test
     @Transactional
-    @WithMockUser(authorities = { AuthoritiesConstants.EMAIL_USER })
     void getAllEmailsByCreatedByIsInShouldWork() throws Exception {
         // Initialize the database
         emailRepository.saveAndFlush(email);
@@ -729,10 +564,8 @@ class EmailResourceIT {
         defaultEmailShouldNotBeFound("createdBy.in=" + UPDATED_CREATED_BY);
     }
 
-    @Disabled(value = "There is a problem in Specification to query base on Enum value")
     @Test
     @Transactional
-    @WithMockUser(authorities = { AuthoritiesConstants.EMAIL_USER })
     void getAllEmailsByCreatedByIsNullOrNotNull() throws Exception {
         // Initialize the database
         emailRepository.saveAndFlush(email);
@@ -744,10 +577,8 @@ class EmailResourceIT {
         defaultEmailShouldNotBeFound("createdBy.specified=false");
     }
 
-    @Disabled(value = "There is a problem in Specification to query base on Enum value")
     @Test
     @Transactional
-    @WithMockUser(authorities = { AuthoritiesConstants.EMAIL_USER })
     void getAllEmailsByCreatedByContainsSomething() throws Exception {
         // Initialize the database
         emailRepository.saveAndFlush(email);
@@ -759,10 +590,8 @@ class EmailResourceIT {
         defaultEmailShouldNotBeFound("createdBy.contains=" + UPDATED_CREATED_BY);
     }
 
-    @Disabled(value = "There is a problem in Specification to query base on Enum value")
     @Test
     @Transactional
-    @WithMockUser(authorities = { AuthoritiesConstants.EMAIL_USER })
     void getAllEmailsByCreatedByNotContainsSomething() throws Exception {
         // Initialize the database
         emailRepository.saveAndFlush(email);
@@ -785,7 +614,11 @@ class EmailResourceIT {
             .andExpect(jsonPath("$.[*].id").value(hasItem(email.getId().intValue())))
             .andExpect(jsonPath("$.[*].receiver").value(hasItem(DEFAULT_RECEIVER)))
             .andExpect(jsonPath("$.[*].subject").value(hasItem(DEFAULT_SUBJECT)))
-            .andExpect(jsonPath("$.[*].content").value(hasItem(DEFAULT_CONTENT.toString())));
+            .andExpect(jsonPath("$.[*].content").value(hasItem(DEFAULT_CONTENT.toString())))
+            .andExpect(jsonPath("$.[*].status").value(hasItem(DEFAULT_STATUS.toString())))
+            .andExpect(jsonPath("$.[*].emailType").value(hasItem(DEFAULT_EMAIL_TYPE.toString())))
+            .andExpect(jsonPath("$.[*].createdAt").value(hasItem(DEFAULT_CREATED_AT.toString())))
+            .andExpect(jsonPath("$.[*].createdBy").value(hasItem(DEFAULT_CREATED_BY)));
 
         // Check, that the count call also returns 1
         restEmailMockMvc
@@ -816,7 +649,6 @@ class EmailResourceIT {
 
     @Test
     @Transactional
-    @WithMockUser(authorities = { AuthoritiesConstants.EMAIL_USER })
     void getNonExistingEmail() throws Exception {
         // Get the email
         restEmailMockMvc.perform(get(ENTITY_API_URL_ID, Long.MAX_VALUE)).andExpect(status().isNotFound());
@@ -824,19 +656,24 @@ class EmailResourceIT {
 
     @Test
     @Transactional
-    @WithMockUser(authorities = { AuthoritiesConstants.EMAIL_USER })
-    void putNewEmail() throws Exception {
+    void putExistingEmail() throws Exception {
         // Initialize the database
         emailRepository.saveAndFlush(email);
 
         int databaseSizeBeforeUpdate = emailRepository.findAll().size();
 
         // Update the email
-        Email updatedEmail = emailRepository.findById(email.getId()).get();
-        // Disconnect from session so that the updates on updatedEmail are not directly
-        // saved in db
+        Email updatedEmail = emailRepository.findById(email.getId()).orElseThrow();
+        // Disconnect from session so that the updates on updatedEmail are not directly saved in db
         em.detach(updatedEmail);
-        updatedEmail.receiver(UPDATED_RECEIVER).subject(UPDATED_SUBJECT).content(UPDATED_CONTENT);
+        updatedEmail
+            .receiver(UPDATED_RECEIVER)
+            .subject(UPDATED_SUBJECT)
+            .content(UPDATED_CONTENT)
+            .status(UPDATED_STATUS)
+            .emailType(UPDATED_EMAIL_TYPE)
+            .createdAt(UPDATED_CREATED_AT)
+            .createdBy(UPDATED_CREATED_BY);
         EmailDTO emailDTO = emailMapper.toDto(updatedEmail);
 
         restEmailMockMvc
@@ -845,46 +682,26 @@ class EmailResourceIT {
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(TestUtil.convertObjectToJsonBytes(emailDTO))
             )
-            .andExpect(status().isMethodNotAllowed());
+            .andExpect(status().isOk());
 
         // Validate the Email in the database
         List<Email> emailList = emailRepository.findAll();
         assertThat(emailList).hasSize(databaseSizeBeforeUpdate);
         Email testEmail = emailList.get(emailList.size() - 1);
-        assertThat(testEmail.getReceiver()).isEqualTo(DEFAULT_RECEIVER);
-        assertThat(testEmail.getSubject()).isEqualTo(DEFAULT_SUBJECT);
-        assertThat(testEmail.getContent()).isEqualTo(DEFAULT_CONTENT);
+        assertThat(testEmail.getReceiver()).isEqualTo(UPDATED_RECEIVER);
+        assertThat(testEmail.getSubject()).isEqualTo(UPDATED_SUBJECT);
+        assertThat(testEmail.getContent()).isEqualTo(UPDATED_CONTENT);
+        assertThat(testEmail.getStatus()).isEqualTo(UPDATED_STATUS);
+        assertThat(testEmail.getEmailType()).isEqualTo(UPDATED_EMAIL_TYPE);
+        assertThat(testEmail.getCreatedAt()).isEqualTo(UPDATED_CREATED_AT);
+        assertThat(testEmail.getCreatedBy()).isEqualTo(UPDATED_CREATED_BY);
     }
 
     @Test
     @Transactional
-    void failedPutNewEmail() throws Exception {
-        // Initialize the database
-        emailRepository.saveAndFlush(email);
-
-        // Update the email
-        Email updatedEmail = emailRepository.findById(email.getId()).get();
-        // Disconnect from session so that the updates on updatedEmail are not directly
-        // saved in db
-        em.detach(updatedEmail);
-        updatedEmail.receiver(UPDATED_RECEIVER).subject(UPDATED_SUBJECT).content(UPDATED_CONTENT);
-        EmailDTO emailDTO = emailMapper.toDto(updatedEmail);
-
-        restEmailMockMvc
-            .perform(
-                put(ENTITY_API_URL_ID, emailDTO.getId())
-                    .contentType(MediaType.APPLICATION_JSON)
-                    .content(TestUtil.convertObjectToJsonBytes(emailDTO))
-            )
-            .andExpect(status().isForbidden());
-    }
-
-    @Test
-    @Transactional
-    @WithMockUser(authorities = { AuthoritiesConstants.EMAIL_USER })
     void putNonExistingEmail() throws Exception {
         int databaseSizeBeforeUpdate = emailRepository.findAll().size();
-        email.setId(count.incrementAndGet());
+        email.setId(longCount.incrementAndGet());
 
         // Create the Email
         EmailDTO emailDTO = emailMapper.toDto(email);
@@ -896,7 +713,7 @@ class EmailResourceIT {
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(TestUtil.convertObjectToJsonBytes(emailDTO))
             )
-            .andExpect(status().isMethodNotAllowed());
+            .andExpect(status().isBadRequest());
 
         // Validate the Email in the database
         List<Email> emailList = emailRepository.findAll();
@@ -905,10 +722,9 @@ class EmailResourceIT {
 
     @Test
     @Transactional
-    @WithMockUser(authorities = { AuthoritiesConstants.EMAIL_USER })
     void putWithIdMismatchEmail() throws Exception {
         int databaseSizeBeforeUpdate = emailRepository.findAll().size();
-        email.setId(count.incrementAndGet());
+        email.setId(longCount.incrementAndGet());
 
         // Create the Email
         EmailDTO emailDTO = emailMapper.toDto(email);
@@ -916,11 +732,11 @@ class EmailResourceIT {
         // If url ID doesn't match entity ID, it will throw BadRequestAlertException
         restEmailMockMvc
             .perform(
-                put(ENTITY_API_URL_ID, count.incrementAndGet())
+                put(ENTITY_API_URL_ID, longCount.incrementAndGet())
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(TestUtil.convertObjectToJsonBytes(emailDTO))
             )
-            .andExpect(status().isMethodNotAllowed());
+            .andExpect(status().isBadRequest());
 
         // Validate the Email in the database
         List<Email> emailList = emailRepository.findAll();
@@ -929,10 +745,9 @@ class EmailResourceIT {
 
     @Test
     @Transactional
-    @WithMockUser(authorities = { AuthoritiesConstants.EMAIL_USER })
     void putWithMissingIdPathParamEmail() throws Exception {
         int databaseSizeBeforeUpdate = emailRepository.findAll().size();
-        email.setId(count.incrementAndGet());
+        email.setId(longCount.incrementAndGet());
 
         // Create the Email
         EmailDTO emailDTO = emailMapper.toDto(email);
@@ -949,7 +764,6 @@ class EmailResourceIT {
 
     @Test
     @Transactional
-    @WithMockUser(authorities = { AuthoritiesConstants.EMAIL_USER })
     void partialUpdateEmailWithPatch() throws Exception {
         // Initialize the database
         emailRepository.saveAndFlush(email);
@@ -960,7 +774,7 @@ class EmailResourceIT {
         Email partialUpdatedEmail = new Email();
         partialUpdatedEmail.setId(email.getId());
 
-        partialUpdatedEmail.receiver(UPDATED_RECEIVER).subject(UPDATED_SUBJECT);
+        partialUpdatedEmail.subject(UPDATED_SUBJECT).content(UPDATED_CONTENT).status(UPDATED_STATUS);
 
         restEmailMockMvc
             .perform(
@@ -968,41 +782,23 @@ class EmailResourceIT {
                     .contentType("application/merge-patch+json")
                     .content(TestUtil.convertObjectToJsonBytes(partialUpdatedEmail))
             )
-            .andExpect(status().isMethodNotAllowed());
+            .andExpect(status().isOk());
 
         // Validate the Email in the database
         List<Email> emailList = emailRepository.findAll();
         assertThat(emailList).hasSize(databaseSizeBeforeUpdate);
         Email testEmail = emailList.get(emailList.size() - 1);
         assertThat(testEmail.getReceiver()).isEqualTo(DEFAULT_RECEIVER);
-        assertThat(testEmail.getSubject()).isEqualTo(DEFAULT_SUBJECT);
-        assertThat(testEmail.getContent()).isEqualTo(DEFAULT_CONTENT);
+        assertThat(testEmail.getSubject()).isEqualTo(UPDATED_SUBJECT);
+        assertThat(testEmail.getContent()).isEqualTo(UPDATED_CONTENT);
+        assertThat(testEmail.getStatus()).isEqualTo(UPDATED_STATUS);
+        assertThat(testEmail.getEmailType()).isEqualTo(DEFAULT_EMAIL_TYPE);
+        assertThat(testEmail.getCreatedAt()).isEqualTo(DEFAULT_CREATED_AT);
+        assertThat(testEmail.getCreatedBy()).isEqualTo(DEFAULT_CREATED_BY);
     }
 
     @Test
     @Transactional
-    void failedPartialUpdateEmailWithPatch() throws Exception {
-        // Initialize the database
-        emailRepository.saveAndFlush(email);
-
-        // Update the email using partial update
-        Email partialUpdatedEmail = new Email();
-        partialUpdatedEmail.setId(email.getId());
-
-        partialUpdatedEmail.receiver(UPDATED_RECEIVER).subject(UPDATED_SUBJECT);
-
-        restEmailMockMvc
-            .perform(
-                patch(ENTITY_API_URL_ID, partialUpdatedEmail.getId())
-                    .contentType("application/merge-patch+json")
-                    .content(TestUtil.convertObjectToJsonBytes(partialUpdatedEmail))
-            )
-            .andExpect(status().isForbidden());
-    }
-
-    @Test
-    @Transactional
-    @WithMockUser(authorities = { AuthoritiesConstants.EMAIL_USER })
     void fullUpdateEmailWithPatch() throws Exception {
         // Initialize the database
         emailRepository.saveAndFlush(email);
@@ -1013,7 +809,14 @@ class EmailResourceIT {
         Email partialUpdatedEmail = new Email();
         partialUpdatedEmail.setId(email.getId());
 
-        partialUpdatedEmail.receiver(UPDATED_RECEIVER).subject(UPDATED_SUBJECT).content(UPDATED_CONTENT);
+        partialUpdatedEmail
+            .receiver(UPDATED_RECEIVER)
+            .subject(UPDATED_SUBJECT)
+            .content(UPDATED_CONTENT)
+            .status(UPDATED_STATUS)
+            .emailType(UPDATED_EMAIL_TYPE)
+            .createdAt(UPDATED_CREATED_AT)
+            .createdBy(UPDATED_CREATED_BY);
 
         restEmailMockMvc
             .perform(
@@ -1021,23 +824,26 @@ class EmailResourceIT {
                     .contentType("application/merge-patch+json")
                     .content(TestUtil.convertObjectToJsonBytes(partialUpdatedEmail))
             )
-            .andExpect(status().isMethodNotAllowed());
+            .andExpect(status().isOk());
 
         // Validate the Email in the database
         List<Email> emailList = emailRepository.findAll();
         assertThat(emailList).hasSize(databaseSizeBeforeUpdate);
         Email testEmail = emailList.get(emailList.size() - 1);
-        assertThat(testEmail.getReceiver()).isEqualTo(DEFAULT_RECEIVER);
-        assertThat(testEmail.getSubject()).isEqualTo(DEFAULT_SUBJECT);
-        assertThat(testEmail.getContent()).isEqualTo(DEFAULT_CONTENT);
+        assertThat(testEmail.getReceiver()).isEqualTo(UPDATED_RECEIVER);
+        assertThat(testEmail.getSubject()).isEqualTo(UPDATED_SUBJECT);
+        assertThat(testEmail.getContent()).isEqualTo(UPDATED_CONTENT);
+        assertThat(testEmail.getStatus()).isEqualTo(UPDATED_STATUS);
+        assertThat(testEmail.getEmailType()).isEqualTo(UPDATED_EMAIL_TYPE);
+        assertThat(testEmail.getCreatedAt()).isEqualTo(UPDATED_CREATED_AT);
+        assertThat(testEmail.getCreatedBy()).isEqualTo(UPDATED_CREATED_BY);
     }
 
     @Test
     @Transactional
-    @WithMockUser(authorities = { AuthoritiesConstants.EMAIL_USER })
     void patchNonExistingEmail() throws Exception {
         int databaseSizeBeforeUpdate = emailRepository.findAll().size();
-        email.setId(count.incrementAndGet());
+        email.setId(longCount.incrementAndGet());
 
         // Create the Email
         EmailDTO emailDTO = emailMapper.toDto(email);
@@ -1049,7 +855,7 @@ class EmailResourceIT {
                     .contentType("application/merge-patch+json")
                     .content(TestUtil.convertObjectToJsonBytes(emailDTO))
             )
-            .andExpect(status().isMethodNotAllowed());
+            .andExpect(status().isBadRequest());
 
         // Validate the Email in the database
         List<Email> emailList = emailRepository.findAll();
@@ -1058,10 +864,9 @@ class EmailResourceIT {
 
     @Test
     @Transactional
-    @WithMockUser(authorities = { AuthoritiesConstants.EMAIL_USER })
     void patchWithIdMismatchEmail() throws Exception {
         int databaseSizeBeforeUpdate = emailRepository.findAll().size();
-        email.setId(count.incrementAndGet());
+        email.setId(longCount.incrementAndGet());
 
         // Create the Email
         EmailDTO emailDTO = emailMapper.toDto(email);
@@ -1069,11 +874,11 @@ class EmailResourceIT {
         // If url ID doesn't match entity ID, it will throw BadRequestAlertException
         restEmailMockMvc
             .perform(
-                patch(ENTITY_API_URL_ID, count.incrementAndGet())
+                patch(ENTITY_API_URL_ID, longCount.incrementAndGet())
                     .contentType("application/merge-patch+json")
                     .content(TestUtil.convertObjectToJsonBytes(emailDTO))
             )
-            .andExpect(status().isMethodNotAllowed());
+            .andExpect(status().isBadRequest());
 
         // Validate the Email in the database
         List<Email> emailList = emailRepository.findAll();
@@ -1082,10 +887,9 @@ class EmailResourceIT {
 
     @Test
     @Transactional
-    @WithMockUser(authorities = { AuthoritiesConstants.EMAIL_USER })
     void patchWithMissingIdPathParamEmail() throws Exception {
         int databaseSizeBeforeUpdate = emailRepository.findAll().size();
-        email.setId(count.incrementAndGet());
+        email.setId(longCount.incrementAndGet());
 
         // Create the Email
         EmailDTO emailDTO = emailMapper.toDto(email);
@@ -1102,7 +906,6 @@ class EmailResourceIT {
 
     @Test
     @Transactional
-    @WithMockUser(authorities = { AuthoritiesConstants.EMAIL_USER })
     void deleteEmail() throws Exception {
         // Initialize the database
         emailRepository.saveAndFlush(email);
@@ -1112,28 +915,10 @@ class EmailResourceIT {
         // Delete the email
         restEmailMockMvc
             .perform(delete(ENTITY_API_URL_ID, email.getId()).accept(MediaType.APPLICATION_JSON))
-            .andExpect(status().isMethodNotAllowed());
+            .andExpect(status().isNoContent());
 
         // Validate the database contains one less item
         List<Email> emailList = emailRepository.findAll();
-        assertThat(emailList).hasSize(databaseSizeBeforeDelete);
-    }
-
-    @Test
-    @Transactional
-    void failedDeleteEmail() throws Exception {
-        // Initialize the database
-        emailRepository.saveAndFlush(email);
-
-        int databaseSizeBeforeDelete = emailRepository.findAll().size();
-
-        // Delete the email
-        restEmailMockMvc
-            .perform(delete(ENTITY_API_URL_ID, email.getId()).accept(MediaType.APPLICATION_JSON))
-            .andExpect(status().isForbidden());
-
-        // Validate the database contains one less item
-        List<Email> emailList = emailRepository.findAll();
-        assertThat(emailList).hasSize(databaseSizeBeforeDelete);
+        assertThat(emailList).hasSize(databaseSizeBeforeDelete - 1);
     }
 }

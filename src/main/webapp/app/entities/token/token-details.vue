@@ -3,11 +3,11 @@
     <div class="col-8">
       <div v-if="token">
         <h2 class="jh-entity-heading" data-cy="tokenDetailsHeading">
-          <span v-text="$t('messageCentralApp.token.detail.title')">Token</span> {{ token.id }}
+          <span v-text="t$('messageCentralApp.token.detail.title')"></span> {{ token.id }}
         </h2>
         <dl class="row jh-entity-details">
           <dt>
-            <span v-text="$t('messageCentralApp.token.name')">Name</span>
+            <span v-text="t$('messageCentralApp.token.name')"></span>
           </dt>
           <dd>
             <span>{{ token.name }}&nbsp;</span>
@@ -16,7 +16,7 @@
             </b-badge>
           </dd>
           <dt>
-            <span v-text="$t('messageCentralApp.token.token')">Token</span>
+            <span v-text="t$('messageCentralApp.token.token')"></span>
           </dt>
           <dd>
             <div class="input-group">
@@ -27,13 +27,13 @@
             </div>
           </dd>
           <dt>
-            <span v-text="$t('messageCentralApp.token.deprecateAt')">Deprecate At</span>
+            <span v-text="t$('messageCentralApp.token.deprecateAt')"></span>
           </dt>
           <dd>
-            <span v-if="token.deprecateAt">{{ $d(Date.parse(token.deprecateAt), 'long') }}</span>
+            <span v-if="token.deprecateAt">{{ formatDateLong(token.deprecateAt) }}</span>
           </dd>
           <dt>
-            <span v-text="$t('messageCentralApp.token.roles')">Roles</span>
+            <span v-text="t$('messageCentralApp.token.roles')"></span>
           </dt>
           <dd>
             <p class="h4">
@@ -52,32 +52,32 @@
             </p>
           </dd>
           <dt>
-            <span v-text="$t('messageCentralApp.token.createdAt')">Created At</span>
+            <span v-text="t$('messageCentralApp.token.createdAt')"></span>
           </dt>
           <dd>
-            <span v-if="token.createdAt">{{ $d(Date.parse(token.createdAt), 'short') }}</span>
+            <span v-if="token.createdAt">{{ formatDateLong(token.createdAt) }}</span>
           </dd>
           <dt>
-            <span v-text="$t('messageCentralApp.token.createdBy')">Created By</span>
+            <span v-text="t$('messageCentralApp.token.createdBy')"></span>
           </dt>
           <dd>
-            <span v-if="token.createdBy">{{ token.createdBy }}</span>
+            <span>{{ token.createdBy }}</span>
           </dd>
           <dt>
-            <span v-text="$t('messageCentralApp.token.updatedAt')">Updated At</span>
+            <span v-text="t$('messageCentralApp.token.updatedAt')"></span>
           </dt>
           <dd>
-            <span v-if="token.updatedAt">{{ $d(Date.parse(token.updatedAt), 'short') }}</span>
+            <span v-if="token.updatedAt">{{ formatDateLong(token.updatedAt) }}</span>
           </dd>
           <dt>
-            <span v-text="$t('messageCentralApp.token.updatedBy')">Updated By</span>
+            <span v-text="t$('messageCentralApp.token.updatedBy')"></span>
           </dt>
           <dd>
-            <span v-if="token.updatedBy">{{ token.updatedBy }}</span>
+            <span>{{ token.updatedBy }}</span>
           </dd>
         </dl>
-        <button type="submit" v-on:click.prevent="previousState()" class="btn btn-info" data-cy="entityDetailsBackButton">
-          <font-awesome-icon icon="arrow-left"></font-awesome-icon>&nbsp;<span v-text="$t('entity.action.back')"> Back</span>
+        <button type="submit" @click.prevent="$router.push({ name: 'Token' })" class="btn btn-info" data-cy="entityDetailsBackButton">
+          <font-awesome-icon icon="arrow-left"></font-awesome-icon>&nbsp;<span v-text="t$('entity.action.back')"></span>
         </button>
         <button
           v-show="token.disable"
@@ -87,7 +87,7 @@
           data-cy="entityDetailsBackButton"
           ariant="info"
         >
-          <font-awesome-icon icon="toggle-off"></font-awesome-icon>&nbsp;<span v-text="$t('entity.action.enable')"> Enable</span>
+          <font-awesome-icon icon="toggle-off"></font-awesome-icon>&nbsp;<span v-text="t$('entity.action.enable')" />
         </button>
         <button
           v-show="!token.disable"
@@ -97,7 +97,7 @@
           data-cy="entityDetailsBackButton"
           ariant="info"
         >
-          <font-awesome-icon icon="toggle-on"></font-awesome-icon>&nbsp;<span v-text="$t('entity.action.disable')"> Disable</span>
+          <font-awesome-icon icon="toggle-on"></font-awesome-icon>&nbsp;<span v-text="t$('entity.action.disable')" />
         </button>
       </div>
     </div>

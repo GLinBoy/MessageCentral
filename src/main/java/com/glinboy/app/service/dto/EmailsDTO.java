@@ -1,15 +1,15 @@
 package com.glinboy.app.service.dto;
 
 import com.glinboy.app.domain.enumeration.EmailType;
+import jakarta.persistence.Lob;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
-import javax.persistence.Lob;
-import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
 
 /**
  * A DTO for the {@link com.glinboy.app.domain.Email} entity.

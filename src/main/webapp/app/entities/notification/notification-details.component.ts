@@ -1,49 +1,60 @@
-import { Component, Vue, Inject } from 'vue-property-decorator';
+import { defineComponent, inject, ref, type Ref } from 'vue';
+import { useI18n } from 'vue-i18n';
+import { useRoute, useRouter } from 'vue-router';
 
-import { INotification } from '@/shared/model/notification.model';
-import { MessageStatus } from '@/shared/model/enumerations/message-status.model';
 import NotificationService from './notification.service';
-import AlertService from '@/shared/alert/alert.service';
+import { useDateFormat } from '@/shared/composables';
+import { type INotification } from '@/shared/model/notification.model';
+import { useAlertService } from '@/shared/alert/alert.service';
+import { MessageStatus } from '@/shared/model/enumerations/message-status.model';
 
-@Component
-export default class NotificationDetails extends Vue {
-  @Inject('notificationService') private notificationService: () => NotificationService;
-  @Inject('alertService') private alertService: () => AlertService;
+export default defineComponent({
+  compatConfig: { MODE: 3 },
+  name: 'NotificationDetails',
+  setup() {
+    const dateFormat = useDateFormat();
+    const notificationService = inject('notificationService', () => new NotificationService());
+    const alertService = inject('alertService', () => useAlertService(), true);
 
-  public notification: INotification = {};
+    const route = useRoute();
+    const router = useRouter();
 
-  beforeRouteEnter(to, from, next) {
-    next(vm => {
-      if (to.params.notificationId) {
-        vm.retrieveNotification(to.params.notificationId);
+    const previousState = () => router.go(-1);
+    const notification: Ref<INotification> = ref({});
+
+    const retrieveNotification = async notificationId => {
+      try {
+        const res = await notificationService().find(notificationId);
+        notification.value = res;
+      } catch (error) {
+        alertService.showHttpError(error.response);
       }
-    });
-  }
+    };
 
-  public retrieveNotification(notificationId) {
-    this.notificationService()
-      .find(notificationId)
-      .then(res => {
-        this.notification = res;
-      })
-      .catch(error => {
-        this.alertService().showHttpError(this, error.response);
-      });
-  }
-
-  public previousState() {
-    this.$router.go(-1);
-  }
-
-  public getVariant(status) {
-    if (MessageStatus.IN_QUEUE === status) {
-      return 'info';
-    } else if (MessageStatus.SENT === status) {
-      return 'success';
-    } else if (MessageStatus.FAILED === status) {
-      return 'danger';
-    } else {
-      return 'secondary';
+    if (route.params?.notificationId) {
+      retrieveNotification(route.params.notificationId);
     }
-  }
-}
+
+    const getVariant = (status: MessageStatus) => {
+      if (MessageStatus.IN_QUEUE === status) {
+        return 'info';
+      } else if (MessageStatus.SENT === status) {
+        return 'success';
+      } else if (MessageStatus.FAILED === status) {
+        return 'danger';
+      } else {
+        return 'secondary';
+      }
+    };
+
+    return {
+      ...dateFormat,
+      alertService,
+      notification,
+
+      previousState,
+      t$: useI18n().t,
+      getVariant,
+    };
+  },
+});

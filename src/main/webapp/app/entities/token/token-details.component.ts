@@ -1,79 +1,81 @@
-import { Component, Vue, Inject } from 'vue-property-decorator';
+import { defineComponent, inject, ref, type Ref } from 'vue';
+import { useI18n } from 'vue-i18n';
+import { useRoute, useRouter } from 'vue-router';
 
-import { IToken } from '@/shared/model/token.model';
 import TokenService from './token.service';
-import AlertService from '@/shared/alert/alert.service';
+import { useDateFormat } from '@/shared/composables';
+import { type IToken } from '@/shared/model/token.model';
+import { useAlertService } from '@/shared/alert/alert.service';
 
-@Component
-export default class TokenDetails extends Vue {
-  @Inject('tokenService') private tokenService: () => TokenService;
-  @Inject('alertService') private alertService: () => AlertService;
+export default defineComponent({
+  compatConfig: { MODE: 3 },
+  name: 'TokenDetails',
+  setup() {
+    const { t: t$ } = useI18n();
+    const dateFormat = useDateFormat();
+    const tokenService = inject('tokenService', () => new TokenService());
+    const alertService = inject('alertService', () => useAlertService(), true);
 
-  public token: IToken = {};
+    const route = useRoute();
+    const router = useRouter();
 
-  beforeRouteEnter(to, from, next) {
-    next(vm => {
-      if (to.params.tokenId) {
-        vm.retrieveToken(to.params.tokenId);
+    const previousState = () => router.go(-1);
+    const token: Ref<IToken> = ref({});
+
+    const retrieveToken = async tokenId => {
+      try {
+        const res = await tokenService().find(tokenId);
+        token.value = res;
+      } catch (error) {
+        alertService.showHttpError(error.response);
       }
-    });
-  }
+    };
 
-  public retrieveToken(tokenId) {
-    this.tokenService()
-      .find(tokenId)
-      .then(res => {
-        this.token = res;
-      })
-      .catch(error => {
-        this.alertService().showHttpError(this, error.response);
-      });
-  }
+    if (route.params?.tokenId) {
+      retrieveToken(route.params.tokenId);
+    }
 
-  public previousState() {
-    this.$router.push({ name: 'Token' });
-  }
-
-  public enableToken(): void {
-    this.tokenService()
-      .enableToken(this.token.id)
-      .then(() => {
-        const message = this.$t('messageCentralApp.token.enabled', { param: this.token.id });
-        this.$bvToast.toast(message.toString(), {
-          toaster: 'b-toaster-top-center',
-          title: 'Info',
-          variant: 'info',
-          solid: true,
-          autoHideDelay: 5000,
+    const enableToken = () => {
+      tokenService()
+        .enableToken(token.value.id)
+        .then(() => {
+          const message = t$('messageCentralApp.token.enabled', { param: token.value.id });
+          alertService.showInfo(message, { variant: 'info' });
+          token.value.disable = false;
+        })
+        .catch(error => {
+          alertService().showHttpError(this, error.response);
         });
-        this.token.disable = false;
-      })
-      .catch(error => {
-        this.alertService().showHttpError(this, error.response);
-      });
-  }
+    };
 
-  public disableToken(): void {
-    this.tokenService()
-      .disableToken(this.token.id)
-      .then(() => {
-        const message = this.$t('messageCentralApp.token.disabled', { param: this.token.id });
-        this.$bvToast.toast(message.toString(), {
-          toaster: 'b-toaster-top-center',
-          title: 'Info',
-          variant: 'info',
-          solid: true,
-          autoHideDelay: 5000,
+    const disableToken = () => {
+      tokenService()
+        .disableToken(token.value.id)
+        .then(() => {
+          const message = t$('messageCentralApp.token.disabled', { param: token.value.id });
+          alertService.showInfo(message, { variant: 'info' });
+          token.value.disable = true;
+        })
+        .catch(error => {
+          alertService().showHttpError(this, error.response);
         });
-        this.token.disable = true;
-      })
-      .catch(error => {
-        this.alertService().showHttpError(this, error.response);
-      });
-  }
+    };
 
-  copy() {
-    this.$refs.clone.focus();
-    document.execCommand('copy');
-  }
-}
+    return {
+      ...dateFormat,
+      alertService,
+      token,
+
+      previousState,
+      t$,
+      enableToken,
+      disableToken,
+    };
+  },
+  methods: {
+    copy(): void {
+      this.$refs.clone.focus();
+      document.execCommand('copy');
+    },
+  },
+});

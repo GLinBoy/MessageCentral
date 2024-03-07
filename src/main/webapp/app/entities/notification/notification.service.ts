@@ -1,9 +1,8 @@
 import axios from 'axios';
 
 import buildPaginationQueryOpts from '@/shared/sort/sorts';
-import buildSearchQueryOpts from '@/shared/search/searchs';
 
-import { INotification, INotifications } from '@/shared/model/notification.model';
+import { type INotification, type INotifications } from '@/shared/model/notification.model';
 
 const baseApiUrl = 'api/notifications';
 
@@ -24,7 +23,7 @@ export default class NotificationService {
   public retrieve(paginationQuery?: any): Promise<any> {
     return new Promise<any>((resolve, reject) => {
       axios
-        .get(baseApiUrl + `?${buildPaginationQueryOpts(paginationQuery)}` + `${buildSearchQueryOpts(paginationQuery)}`)
+        .get(baseApiUrl + `?${buildPaginationQueryOpts(paginationQuery)}`)
         .then(res => {
           resolve(res);
         })
@@ -86,10 +85,7 @@ export default class NotificationService {
     });
   }
 
-  /**
-   * Create multiple Notifications at once
-   */
-  public createMultiple(entity: INotifications[]): Promise {
+  public createMultiple(entity: INotifications[]): Promise<any> {
     return new Promise((resolve, reject) => {
       axios
         .post(`${baseApiUrl}/multiple`, entity)

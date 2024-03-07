@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-import { INotificationData } from '@/shared/model/notification-data.model';
+import { type INotificationData } from '@/shared/model/notification-data.model';
 
 const baseApiUrl = 'api/notification-data';
 

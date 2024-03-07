@@ -1,4 +1,7 @@
 {
+  "annotations": {
+    "changelogDate": "20210424123846"
+  },
   "applications": ["MessageCentral"],
   "changelogDate": "20210424123846",
   "dto": "mapstruct",
@@ -61,8 +64,10 @@
       "otherEntityName": "notificationData",
       "otherEntityRelationshipName": "notification",
       "relationshipName": "data",
+      "relationshipSide": "left",
       "relationshipType": "one-to-many"
     }
   ],
+  "searchEngine": "no",
   "service": "serviceImpl"
 }

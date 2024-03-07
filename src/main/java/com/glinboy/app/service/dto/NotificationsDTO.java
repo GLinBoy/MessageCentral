@@ -1,7 +1,7 @@
 package com.glinboy.app.service.dto;
 
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 import java.io.Serializable;
 import java.util.HashSet;
 import java.util.List;
@@ -80,20 +80,21 @@ public class NotificationsDTO implements Serializable {
 
         NotificationsDTO notificationsDTO = (NotificationsDTO) o;
 
-        return this.receivers != null && this.receivers.isEmpty()
-            && this.receivers.size() == notificationsDTO.receivers.size()
-            && this.receivers.containsAll(notificationsDTO.receivers)
-            && (this.subject == null ? notificationsDTO.subject == null
-            : this.subject.equals(notificationsDTO.subject))
-            && (this.content == null ? notificationsDTO.content == null
-            : this.content.equals(notificationsDTO.content));
+        return (
+            this.receivers != null &&
+            this.receivers.isEmpty() &&
+            this.receivers.size() == notificationsDTO.receivers.size() &&
+            this.receivers.containsAll(notificationsDTO.receivers) &&
+            (this.subject == null ? notificationsDTO.subject == null : this.subject.equals(notificationsDTO.subject)) &&
+            (this.content == null ? notificationsDTO.content == null : this.content.equals(notificationsDTO.content))
+        );
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(this.receivers.stream()
-            .map(r -> String.join(r.getUsername(), r.getToken(), ":"))
-            .collect(Collectors.joining(", ", "{", "}")));
+        return Objects.hash(
+            this.receivers.stream().map(r -> String.join(r.getUsername(), r.getToken(), ":")).collect(Collectors.joining(", ", "{", "}"))
+        );
     }
 
     // prettier-ignore

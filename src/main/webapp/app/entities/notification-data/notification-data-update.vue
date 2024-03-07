@@ -5,76 +5,59 @@
         <h2
           id="messageCentralApp.notificationData.home.createOrEditLabel"
           data-cy="NotificationDataCreateUpdateHeading"
-          v-text="$t('messageCentralApp.notificationData.home.createOrEditLabel')"
-        >
-          Create or edit a NotificationData
-        </h2>
+          v-text="t$('messageCentralApp.notificationData.home.createOrEditLabel')"
+        ></h2>
         <div>
           <div class="form-group" v-if="notificationData.id">
-            <label for="id" v-text="$t('global.field.id')">ID</label>
+            <label for="id" v-text="t$('global.field.id')"></label>
             <input type="text" class="form-control" id="id" name="id" v-model="notificationData.id" readonly />
           </div>
           <div class="form-group">
-            <label class="form-control-label" v-text="$t('messageCentralApp.notificationData.dataKey')" for="notification-data-dataKey"
-              >Data Key</label
-            >
+            <label
+              class="form-control-label"
+              v-text="t$('messageCentralApp.notificationData.dataKey')"
+              for="notification-data-dataKey"
+            ></label>
             <input
               type="text"
               class="form-control"
               name="dataKey"
               id="notification-data-dataKey"
               data-cy="dataKey"
-              :class="{ valid: !$v.notificationData.dataKey.$invalid, invalid: $v.notificationData.dataKey.$invalid }"
-              v-model="$v.notificationData.dataKey.$model"
+              :class="{ valid: !v$.dataKey.$invalid, invalid: v$.dataKey.$invalid }"
+              v-model="v$.dataKey.$model"
               required
             />
-            <div v-if="$v.notificationData.dataKey.$anyDirty && $v.notificationData.dataKey.$invalid">
-              <small class="form-text text-danger" v-if="!$v.notificationData.dataKey.required" v-text="$t('entity.validation.required')">
-                This field is required.
-              </small>
-              <small
-                class="form-text text-danger"
-                v-if="!$v.notificationData.dataKey.maxLength"
-                v-text="$t('entity.validation.maxlength', { max: 128 })"
-              >
-                This field cannot be longer than 128 characters.
-              </small>
+            <div v-if="v$.dataKey.$anyDirty && v$.dataKey.$invalid">
+              <small class="form-text text-danger" v-for="error of v$.dataKey.$errors" :key="error.$uid">{{ error.$message }}</small>
             </div>
           </div>
           <div class="form-group">
-            <label class="form-control-label" v-text="$t('messageCentralApp.notificationData.dataValue')" for="notification-data-dataValue"
-              >Data Value</label
-            >
+            <label
+              class="form-control-label"
+              v-text="t$('messageCentralApp.notificationData.dataValue')"
+              for="notification-data-dataValue"
+            ></label>
             <input
               type="text"
               class="form-control"
               name="dataValue"
               id="notification-data-dataValue"
               data-cy="dataValue"
-              :class="{ valid: !$v.notificationData.dataValue.$invalid, invalid: $v.notificationData.dataValue.$invalid }"
-              v-model="$v.notificationData.dataValue.$model"
+              :class="{ valid: !v$.dataValue.$invalid, invalid: v$.dataValue.$invalid }"
+              v-model="v$.dataValue.$model"
               required
             />
-            <div v-if="$v.notificationData.dataValue.$anyDirty && $v.notificationData.dataValue.$invalid">
-              <small class="form-text text-danger" v-if="!$v.notificationData.dataValue.required" v-text="$t('entity.validation.required')">
-                This field is required.
-              </small>
-              <small
-                class="form-text text-danger"
-                v-if="!$v.notificationData.dataValue.maxLength"
-                v-text="$t('entity.validation.maxlength', { max: 256 })"
-              >
-                This field cannot be longer than 256 characters.
-              </small>
+            <div v-if="v$.dataValue.$anyDirty && v$.dataValue.$invalid">
+              <small class="form-text text-danger" v-for="error of v$.dataValue.$errors" :key="error.$uid">{{ error.$message }}</small>
             </div>
           </div>
           <div class="form-group">
             <label
               class="form-control-label"
-              v-text="$t('messageCentralApp.notificationData.notification')"
+              v-text="t$('messageCentralApp.notificationData.notification')"
               for="notification-data-notification"
-              >Notification</label
-            >
+            ></label>
             <select
               class="form-control"
               id="notification-data-notification"
@@ -97,28 +80,22 @@
               </option>
             </select>
           </div>
-          <div v-if="$v.notificationData.notification.$anyDirty && $v.notificationData.notification.$invalid">
-            <small
-              class="form-text text-danger"
-              v-if="!$v.notificationData.notification.required"
-              v-text="$t('entity.validation.required')"
-            >
-              This field is required.
-            </small>
+          <div v-if="v$.notification.$anyDirty && v$.notification.$invalid">
+            <small class="form-text text-danger" v-for="error of v$.notification.$errors" :key="error.$uid">{{ error.$message }}</small>
           </div>
         </div>
         <div>
           <button type="button" id="cancel-save" data-cy="entityCreateCancelButton" class="btn btn-secondary" v-on:click="previousState()">
-            <font-awesome-icon icon="ban"></font-awesome-icon>&nbsp;<span v-text="$t('entity.action.cancel')">Cancel</span>
+            <font-awesome-icon icon="ban"></font-awesome-icon>&nbsp;<span v-text="t$('entity.action.cancel')"></span>
           </button>
           <button
             type="submit"
             id="save-entity"
             data-cy="entityCreateSaveButton"
-            :disabled="$v.notificationData.$invalid || isSaving"
+            :disabled="v$.$invalid || isSaving"
             class="btn btn-primary"
           >
-            <font-awesome-icon icon="save"></font-awesome-icon>&nbsp;<span v-text="$t('entity.action.save')">Save</span>
+            <font-awesome-icon icon="save"></font-awesome-icon>&nbsp;<span v-text="t$('entity.action.save')"></span>
           </button>
         </div>
       </form>

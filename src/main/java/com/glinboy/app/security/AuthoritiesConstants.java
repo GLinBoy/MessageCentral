@@ -17,6 +17,5 @@ public final class AuthoritiesConstants {
 
     public static final String NOTIFICATION_USER = "ROLE_NOTIFICATION_USER";
 
-    private AuthoritiesConstants() {
-    }
+    private AuthoritiesConstants() {}
 }

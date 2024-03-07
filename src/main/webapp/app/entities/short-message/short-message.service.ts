@@ -1,9 +1,8 @@
 import axios from 'axios';
 
 import buildPaginationQueryOpts from '@/shared/sort/sorts';
-import buildSearchQueryOpts from '@/shared/search/searchs';
 
-import { IShortMessage } from '@/shared/model/short-message.model';
+import { type IShortMessage, type IShortMessages } from '@/shared/model/short-message.model';
 
 const baseApiUrl = 'api/short-messages';
 
@@ -24,7 +23,7 @@ export default class ShortMessageService {
   public retrieve(paginationQuery?: any): Promise<any> {
     return new Promise<any>((resolve, reject) => {
       axios
-        .get(baseApiUrl + `?${buildPaginationQueryOpts(paginationQuery)}` + `${buildSearchQueryOpts(paginationQuery)}`)
+        .get(baseApiUrl + `?${buildPaginationQueryOpts(paginationQuery)}`)
         .then(res => {
           resolve(res);
         })
@@ -86,8 +85,8 @@ export default class ShortMessageService {
     });
   }
 
-  public createMultiple(entity: IShortMessage[]): Promise<IShortMessage> {
-    return new Promise<IShortMessage>((resolve, reject) => {
+  public createMultiple(entity: IShortMessages[]): Promise<any> {
+    return new Promise((resolve, reject) => {
       axios
         .post(`${baseApiUrl}/multiple`, entity)
         .then(res => {

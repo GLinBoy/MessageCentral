@@ -34,15 +34,8 @@ spring:
       write-durations-as-timestamps: false
   mail:
     host: localhost
-    port: 2525
-    protocol: smtp
-    username:
-    password:
   main:
     allow-bean-definition-overriding: true
-  mvc:
-    pathmatch:
-      matching-strategy: ant_path_matcher
   messages:
     basename: i18n/messages
   task:
@@ -81,7 +74,7 @@ jhipster:
       enabled: false
       host: localhost
       port: 5000
-      queue-size: 512
+      ring-buffer-size: 512
   security:
     authentication:
       jwt:
@@ -89,6 +82,7 @@ jhipster:
         base64-secret: MjM4NmU0MDA4ZWVmNDU5YWQ2ZDMzZDVjYWRjNDAxMWM3NGNhOTcxZWUwZTZjYmIwMDI2MzNhYTgwODRiMDNlZGQ2YjJmZjRjNjRjMTg3NjZhOWQwZjM2Zjg2NTA3MDY4Zjc1YThiMDBlMTZlODkyYjRlZDk5ZmI2YmJmZTY5OGU=
         # Token is valid 24 hours
         token-validity-in-seconds: 86400
+        token-validity-in-seconds-for-remember-me: 86400
 
 # ===================================================================
 # Application specific properties
@@ -99,33 +93,7 @@ jhipster:
 # https://www.jhipster.tech/common-application-properties/
 # ===================================================================
 
-application:
-  credential:
-    # For dev env, you can get Test credential from your account
-    # Check https://www.twilio.com/docs/iam/test-credentials for more information
-    twilio:
-      accountSid: TWILIO_ACCOUNT_SID
-      token: TWILIO_AUTH_TOKEN
-    kavenegar:
-      token: KAVENEGAR_AUTH_TOKEN
-  email:
-    provider: mail-server
-    from: noreply@localhost
-  sms:
-    provider: twilio
-    from: +XXXXXXXXXXX
-  notification:
-    provider: onesignal
-    firebase:
-      file-path: firebase-service-account.json
-    onesignal:
-      url: https://onesignal.com/api/v1/notifications
-      app-id: XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX
-    pushe:
-      url: https://api.pushe.co/v2/messaging/notifications/
-      token: XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
-      app-id: XXXXXXXXXXXXXXXX
-
+# application:
 management:
   health:
     mail:

@@ -1,9 +1,7 @@
 package com.glinboy.app.web.rest;
 
-import static com.glinboy.app.web.rest.AccountResourceIT.TEST_USER_LOGIN;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 import com.glinboy.app.IntegrationTest;
@@ -18,12 +16,8 @@ import com.glinboy.app.service.dto.PasswordChangeDTO;
 import com.glinboy.app.web.rest.vm.KeyAndPasswordVM;
 import com.glinboy.app.web.rest.vm.ManagedUserVM;
 import java.time.Instant;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 import org.apache.commons.lang3.RandomStringUtils;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -37,7 +31,6 @@ import org.springframework.transaction.annotation.Transactional;
  * Integration tests for the {@link AccountResource} REST controller.
  */
 @AutoConfigureMockMvc
-@WithMockUser(value = TEST_USER_LOGIN)
 @IntegrationTest
 class AccountResourceIT {
 
@@ -68,21 +61,16 @@ class AccountResourceIT {
     }
 
     @Test
+    @WithMockUser(TEST_USER_LOGIN)
     void testAuthenticatedUser() throws Exception {
         restAccountMockMvc
-            .perform(
-                get("/api/authenticate")
-                    .with(request -> {
-                        request.setRemoteUser(TEST_USER_LOGIN);
-                        return request;
-                    })
-                    .accept(MediaType.APPLICATION_JSON)
-            )
+            .perform(get("/api/authenticate").with(request -> request).accept(MediaType.APPLICATION_JSON))
             .andExpect(status().isOk())
             .andExpect(content().string(TEST_USER_LOGIN));
     }
 
     @Test
+    @WithMockUser(TEST_USER_LOGIN)
     void testGetExistingAccount() throws Exception {
         Set<String> authorities = new HashSet<>();
         authorities.add(AuthoritiesConstants.ADMIN);
@@ -112,9 +100,7 @@ class AccountResourceIT {
 
     @Test
     void testGetUnknownAccount() throws Exception {
-        restAccountMockMvc
-            .perform(get("/api/account").accept(MediaType.APPLICATION_PROBLEM_JSON))
-            .andExpect(status().isInternalServerError());
+        restAccountMockMvc.perform(get("/api/account").accept(MediaType.APPLICATION_PROBLEM_JSON)).andExpect(status().isUnauthorized());
     }
 
     @Test
@@ -133,7 +119,9 @@ class AccountResourceIT {
 
         restAccountMockMvc
             .perform(post("/api/register").contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(validUser)))
-            .andExpect(status().isMethodNotAllowed());
+            .andExpect(status().isCreated());
+
+        assertThat(userRepository.findOneByLogin("test-register-valid")).isPresent();
     }
 
     @Test
@@ -152,7 +140,7 @@ class AccountResourceIT {
 
         restAccountMockMvc
             .perform(post("/api/register").contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(invalidUser)))
-            .andExpect(status().isMethodNotAllowed());
+            .andExpect(status().isBadRequest());
 
         Optional<User> user = userRepository.findOneByEmailIgnoreCase("funky@example.com");
         assertThat(user).isEmpty();
@@ -174,7 +162,7 @@ class AccountResourceIT {
 
         restAccountMockMvc
             .perform(post("/api/register").contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(invalidUser)))
-            .andExpect(status().isMethodNotAllowed());
+            .andExpect(status().isBadRequest());
 
         Optional<User> user = userRepository.findOneByLogin("bob");
         assertThat(user).isEmpty();
@@ -196,7 +184,7 @@ class AccountResourceIT {
 
         restAccountMockMvc
             .perform(post("/api/register").contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(invalidUser)))
-            .andExpect(status().isMethodNotAllowed());
+            .andExpect(status().isBadRequest());
 
         Optional<User> user = userRepository.findOneByLogin("bob");
         assertThat(user).isEmpty();
@@ -218,7 +206,7 @@ class AccountResourceIT {
 
         restAccountMockMvc
             .perform(post("/api/register").contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(invalidUser)))
-            .andExpect(status().isMethodNotAllowed());
+            .andExpect(status().isBadRequest());
 
         Optional<User> user = userRepository.findOneByLogin("bob");
         assertThat(user).isEmpty();
@@ -226,7 +214,6 @@ class AccountResourceIT {
 
     @Test
     @Transactional
-    @Disabled("This APP hasn't public registration")
     void testRegisterDuplicateLogin() throws Exception {
         // First registration
         ManagedUserVM firstUser = new ManagedUserVM();
@@ -257,17 +244,17 @@ class AccountResourceIT {
         // First user
         restAccountMockMvc
             .perform(post("/api/register").contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(firstUser)))
-            .andExpect(status().isMethodNotAllowed());
+            .andExpect(status().isCreated());
 
         // Second (non activated) user
         restAccountMockMvc
             .perform(post("/api/register").contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(secondUser)))
-            .andExpect(status().isMethodNotAllowed());
+            .andExpect(status().isCreated());
 
         Optional<User> testUser = userRepository.findOneByEmailIgnoreCase("alice2@example.com");
         assertThat(testUser).isPresent();
-        testUser.get().setActivated(true);
-        userRepository.save(testUser.get());
+        testUser.orElseThrow().setActivated(true);
+        userRepository.save(testUser.orElseThrow());
 
         // Second (already activated) user
         restAccountMockMvc
@@ -277,7 +264,6 @@ class AccountResourceIT {
 
     @Test
     @Transactional
-    @Disabled("This APP hasn't public registration")
     void testRegisterDuplicateEmail() throws Exception {
         // First user
         ManagedUserVM firstUser = new ManagedUserVM();
@@ -293,7 +279,7 @@ class AccountResourceIT {
         // Register first user
         restAccountMockMvc
             .perform(post("/api/register").contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(firstUser)))
-            .andExpect(status().isMethodNotAllowed());
+            .andExpect(status().isCreated());
 
         Optional<User> testUser1 = userRepository.findOneByLogin("test-register-duplicate-email");
         assertThat(testUser1).isPresent();
@@ -343,10 +329,10 @@ class AccountResourceIT {
 
         Optional<User> testUser4 = userRepository.findOneByLogin("test-register-duplicate-email-3");
         assertThat(testUser4).isPresent();
-        assertThat(testUser4.get().getEmail()).isEqualTo("test-register-duplicate-email@example.com");
+        assertThat(testUser4.orElseThrow().getEmail()).isEqualTo("test-register-duplicate-email@example.com");
 
-        testUser4.get().setActivated(true);
-        userService.updateUser((new AdminUserDTO(testUser4.get())));
+        testUser4.orElseThrow().setActivated(true);
+        userService.updateUser((new AdminUserDTO(testUser4.orElseThrow())));
 
         // Register 4th (already activated) user
         restAccountMockMvc
@@ -370,7 +356,13 @@ class AccountResourceIT {
 
         restAccountMockMvc
             .perform(post("/api/register").contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(validUser)))
-            .andExpect(status().isMethodNotAllowed());
+            .andExpect(status().isCreated());
+
+        Optional<User> userDup = userRepository.findOneWithAuthoritiesByLogin("badguy");
+        assertThat(userDup).isPresent();
+        assertThat(userDup.orElseThrow().getAuthorities())
+            .hasSize(1)
+            .containsExactly(authorityRepository.findById(AuthoritiesConstants.USER).orElseThrow());
     }
 
     @Test

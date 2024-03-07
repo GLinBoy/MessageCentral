@@ -3,23 +3,23 @@
     <div class="col-8">
       <div v-if="notificationData">
         <h2 class="jh-entity-heading" data-cy="notificationDataDetailsHeading">
-          <span v-text="$t('messageCentralApp.notificationData.detail.title')">NotificationData</span> {{ notificationData.id }}
+          <span v-text="t$('messageCentralApp.notificationData.detail.title')"></span> {{ notificationData.id }}
         </h2>
         <dl class="row jh-entity-details">
           <dt>
-            <span v-text="$t('messageCentralApp.notificationData.dataKey')">Data Key</span>
+            <span v-text="t$('messageCentralApp.notificationData.dataKey')"></span>
           </dt>
           <dd>
             <span>{{ notificationData.dataKey }}</span>
           </dd>
           <dt>
-            <span v-text="$t('messageCentralApp.notificationData.dataValue')">Data Value</span>
+            <span v-text="t$('messageCentralApp.notificationData.dataValue')"></span>
           </dt>
           <dd>
             <span>{{ notificationData.dataValue }}</span>
           </dd>
           <dt>
-            <span v-text="$t('messageCentralApp.notificationData.notification')">Notification</span>
+            <span v-text="t$('messageCentralApp.notificationData.notification')"></span>
           </dt>
           <dd>
             <div v-if="notificationData.notification">
@@ -30,7 +30,7 @@
           </dd>
         </dl>
         <button type="submit" v-on:click.prevent="previousState()" class="btn btn-info" data-cy="entityDetailsBackButton">
-          <font-awesome-icon icon="arrow-left"></font-awesome-icon>&nbsp;<span v-text="$t('entity.action.back')"> Back</span>
+          <font-awesome-icon icon="arrow-left"></font-awesome-icon>&nbsp;<span v-text="t$('entity.action.back')"></span>
         </button>
         <router-link
           v-if="notificationData.id"
@@ -39,7 +39,7 @@
           v-slot="{ navigate }"
         >
           <button @click="navigate" class="btn btn-primary">
-            <font-awesome-icon icon="pencil-alt"></font-awesome-icon>&nbsp;<span v-text="$t('entity.action.edit')"> Edit</span>
+            <font-awesome-icon icon="pencil-alt"></font-awesome-icon>&nbsp;<span v-text="t$('entity.action.edit')"></span>
           </button>
         </router-link>
       </div>

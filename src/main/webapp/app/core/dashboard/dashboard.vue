@@ -6,14 +6,14 @@
     <div class="col-md-9">
       <b-row class="row">
         <div class="col-12">
-          <h1 v-text="$t('dashboard.title')" />
+          <h1 v-text="t$('dashboard.title')" />
         </div>
       </b-row>
       <b-row>
         <b-col sm="12" md="3">
           <b-card
             border-variant="primary"
-            :header="$t('dashboard.cards.cardsTitle.totalMessages')"
+            :header="t$('dashboard.cards.cardsTitle.totalMessages')"
             header-bg-variant="primary"
             header-text-variant="white"
             align="center"
@@ -36,7 +36,7 @@
         <b-col sm="12" md="3">
           <b-card
             border-variant="primary"
-            :header="$t('dashboard.cards.cardsTitle.emails')"
+            :header="t$('dashboard.cards.cardsTitle.emails')"
             header-bg-variant="primary"
             header-text-variant="white"
             align="center"
@@ -61,7 +61,7 @@
         <b-col sm="12" md="3">
           <b-card
             border-variant="primary"
-            :header="$t('dashboard.cards.cardsTitle.shortMessages')"
+            :header="t$('dashboard.cards.cardsTitle.shortMessages')"
             header-bg-variant="primary"
             header-text-variant="white"
             align="center"
@@ -86,7 +86,7 @@
         <b-col sm="12" md="3">
           <b-card
             border-variant="primary"
-            :header="$t('dashboard.cards.cardsTitle.notifications')"
+            :header="t$('dashboard.cards.cardsTitle.notifications')"
             header-bg-variant="primary"
             header-text-variant="white"
             align="center"
@@ -128,10 +128,9 @@
               </div>
               <div class="col-12">
                 <Bar
-                  style="height: 100%"
                   :chart-id="chartId"
-                  :chart-data="chartData"
-                  :chart-options="chartOptions"
+                  :data="chartData"
+                  :options="chartOptions"
                   :dataset-id-key="datasetIdKey"
                   :plugins="plugins"
                   :css-classes="cssClasses"

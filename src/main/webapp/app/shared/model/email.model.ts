@@ -1,12 +1,12 @@
-import { MessageStatus } from '@/shared/model/enumerations/message-status.model';
+import { type MessageStatus } from '@/shared/model/enumerations/message-status.model';
 import { EmailType } from '@/shared/model/enumerations/email-type.model';
 export interface IEmail {
   id?: number;
   receiver?: string;
   subject?: string;
   content?: string;
-  status?: MessageStatus | null;
-  emailType?: EmailType;
+  status?: keyof typeof MessageStatus | null;
+  emailType?: keyof typeof EmailType | null;
   createdAt?: Date;
   createdBy?: string;
 }
@@ -17,10 +17,10 @@ export class Email implements IEmail {
     public receiver?: string,
     public subject?: string,
     public content?: string,
-    public status?: MessageStatus | null,
-    public emailType = EmailType.HTML,
+    public status?: keyof typeof MessageStatus | null,
+    public emailType?: keyof typeof EmailType | null,
     public createdAt?: Date,
-    public createdBy?: string
+    public createdBy?: string,
   ) {}
 }
 
@@ -28,8 +28,8 @@ export interface IEmails {
   receivers?: string[];
   subject?: string;
   content?: string;
-  emailType?: EmailType;
-  status?: MessageStatus | null;
+  emailType?: keyof typeof EmailType | null;
+  status?: keyof typeof MessageStatus | null;
 }
 
 export class Emails implements IEmails {
@@ -37,7 +37,7 @@ export class Emails implements IEmails {
     public receivers?: string[],
     public subject?: string,
     public content?: string,
-    public emailType = EmailType.HTML,
-    public status?: MessageStatus | null
+    public status?: keyof typeof MessageStatus | null,
+    public emailType?: keyof typeof EmailType | null,
   ) {}
 }

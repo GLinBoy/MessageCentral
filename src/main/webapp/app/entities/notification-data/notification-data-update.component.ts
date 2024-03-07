@@ -1,128 +1,118 @@
-import { Component, Vue, Inject } from 'vue-property-decorator';
+import { computed, defineComponent, inject, ref, type Ref } from 'vue';
+import { useI18n } from 'vue-i18n';
+import { useRoute, useRouter } from 'vue-router';
+import { useVuelidate } from '@vuelidate/core';
 
-import { required, maxLength } from 'vuelidate/lib/validators';
-
-import AlertService from '@/shared/alert/alert.service';
+import NotificationDataService from './notification-data.service';
+import { useValidation } from '@/shared/composables';
+import { useAlertService } from '@/shared/alert/alert.service';
 
 import NotificationService from '@/entities/notification/notification.service';
-import { INotification } from '@/shared/model/notification.model';
+import { type INotification } from '@/shared/model/notification.model';
+import { type INotificationData, NotificationData } from '@/shared/model/notification-data.model';
 
-import { INotificationData, NotificationData } from '@/shared/model/notification-data.model';
-import NotificationDataService from './notification-data.service';
+export default defineComponent({
+  compatConfig: { MODE: 3 },
+  name: 'NotificationDataUpdate',
+  setup() {
+    const notificationDataService = inject('notificationDataService', () => new NotificationDataService());
+    const alertService = inject('alertService', () => useAlertService(), true);
 
-const validations: any = {
-  notificationData: {
-    dataKey: {
-      required,
-      maxLength: maxLength(128),
-    },
-    dataValue: {
-      required,
-      maxLength: maxLength(256),
-    },
-    notification: {
-      required,
+    const notificationData: Ref<INotificationData> = ref(new NotificationData());
+
+    const notificationService = inject('notificationService', () => new NotificationService());
+
+    const notifications: Ref<INotification[]> = ref([]);
+    const isSaving = ref(false);
+    const currentLanguage = inject('currentLanguage', () => computed(() => navigator.language ?? 'en'), true);
+
+    const route = useRoute();
+    const router = useRouter();
+
+    const previousState = () => router.go(-1);
+
+    const retrieveNotificationData = async notificationDataId => {
+      try {
+        const res = await notificationDataService().find(notificationDataId);
+        notificationData.value = res;
+      } catch (error) {
+        alertService.showHttpError(error.response);
+      }
+    };
+
+    if (route.params?.notificationDataId) {
+      retrieveNotificationData(route.params.notificationDataId);
+    }
+
+    const initRelationships = () => {
+      notificationService()
+        .retrieve()
+        .then(res => {
+          notifications.value = res.data;
+        });
+    };
+
+    initRelationships();
+
+    const { t: t$ } = useI18n();
+    const validations = useValidation();
+    const validationRules = {
+      dataKey: {
+        required: validations.required(t$('entity.validation.required').toString()),
+        maxLength: validations.maxLength(t$('entity.validation.maxlength', { max: 128 }).toString(), 128),
+      },
+      dataValue: {
+        required: validations.required(t$('entity.validation.required').toString()),
+        maxLength: validations.maxLength(t$('entity.validation.maxlength', { max: 256 }).toString(), 256),
+      },
+      notification: {
+        required: validations.required(t$('entity.validation.required').toString()),
+      },
+    };
+    const v$ = useVuelidate(validationRules, notificationData as any);
+    v$.value.$validate();
+
+    return {
+      notificationDataService,
+      alertService,
+      notificationData,
+      previousState,
+      isSaving,
+      currentLanguage,
+      notifications,
+      v$,
+      t$,
+    };
+  },
+  created(): void {},
+  methods: {
+    save(): void {
+      this.isSaving = true;
+      if (this.notificationData.id) {
+        this.notificationDataService()
+          .update(this.notificationData)
+          .then(param => {
+            this.isSaving = false;
+            this.previousState();
+            this.alertService.showInfo(this.t$('messageCentralApp.notificationData.updated', { param: param.id }));
+          })
+          .catch(error => {
+            this.isSaving = false;
+            this.alertService.showHttpError(error.response);
+          });
+      } else {
+        this.notificationDataService()
+          .create(this.notificationData)
+          .then(param => {
+            this.isSaving = false;
+            this.previousState();
+            this.alertService.showSuccess(this.t$('messageCentralApp.notificationData.created', { param: param.id }).toString());
+          })
+          .catch(error => {
+            this.isSaving = false;
+            this.alertService.showHttpError(error.response);
+          });
+      }
     },
   },
-};
-
-@Component({
-  validations,
-})
-export default class NotificationDataUpdate extends Vue {
-  @Inject('notificationDataService') private notificationDataService: () => NotificationDataService;
-  @Inject('alertService') private alertService: () => AlertService;
-
-  public notificationData: INotificationData = new NotificationData();
-
-  @Inject('notificationService') private notificationService: () => NotificationService;
-
-  public notifications: INotification[] = [];
-  public isSaving = false;
-  public currentLanguage = '';
-
-  beforeRouteEnter(to, from, next) {
-    next(vm => {
-      if (to.params.notificationDataId) {
-        vm.retrieveNotificationData(to.params.notificationDataId);
-      }
-      vm.initRelationships();
-    });
-  }
-
-  created(): void {
-    this.currentLanguage = this.$store.getters.currentLanguage;
-    this.$store.watch(
-      () => this.$store.getters.currentLanguage,
-      () => {
-        this.currentLanguage = this.$store.getters.currentLanguage;
-      }
-    );
-  }
-
-  public save(): void {
-    this.isSaving = true;
-    if (this.notificationData.id) {
-      this.notificationDataService()
-        .update(this.notificationData)
-        .then(param => {
-          this.isSaving = false;
-          this.$router.go(-1);
-          const message = this.$t('messageCentralApp.notificationData.updated', { param: param.id });
-          return (this.$root as any).$bvToast.toast(message.toString(), {
-            toaster: 'b-toaster-top-center',
-            title: 'Info',
-            variant: 'info',
-            solid: true,
-            autoHideDelay: 5000,
-          });
-        })
-        .catch(error => {
-          this.isSaving = false;
-          this.alertService().showHttpError(this, error.response);
-        });
-    } else {
-      this.notificationDataService()
-        .create(this.notificationData)
-        .then(param => {
-          this.isSaving = false;
-          this.$router.go(-1);
-          const message = this.$t('messageCentralApp.notificationData.created', { param: param.id });
-          (this.$root as any).$bvToast.toast(message.toString(), {
-            toaster: 'b-toaster-top-center',
-            title: 'Success',
-            variant: 'success',
-            solid: true,
-            autoHideDelay: 5000,
-          });
-        })
-        .catch(error => {
-          this.isSaving = false;
-          this.alertService().showHttpError(this, error.response);
-        });
-    }
-  }
-
-  public retrieveNotificationData(notificationDataId): void {
-    this.notificationDataService()
-      .find(notificationDataId)
-      .then(res => {
-        this.notificationData = res;
-      })
-      .catch(error => {
-        this.alertService().showHttpError(this, error.response);
-      });
-  }
-
-  public previousState(): void {
-    this.$router.go(-1);
-  }
-
-  public initRelationships(): void {
-    this.notificationService()
-      .retrieve()
-      .then(res => {
-        this.notifications = res.data;
-      });
-  }
-}
+});

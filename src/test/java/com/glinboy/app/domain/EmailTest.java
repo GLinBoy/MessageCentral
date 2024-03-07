@@ -1,5 +1,6 @@
 package com.glinboy.app.domain;
 
+import static com.glinboy.app.domain.EmailTestSamples.*;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.glinboy.app.web.rest.TestUtil;
@@ -10,14 +11,14 @@ class EmailTest {
     @Test
     void equalsVerifier() throws Exception {
         TestUtil.equalsVerifier(Email.class);
-        Email email1 = new Email();
-        email1.setId(1L);
+        Email email1 = getEmailSample1();
         Email email2 = new Email();
+        assertThat(email1).isNotEqualTo(email2);
+
         email2.setId(email1.getId());
         assertThat(email1).isEqualTo(email2);
-        email2.setId(2L);
-        assertThat(email1).isNotEqualTo(email2);
-        email1.setId(null);
+
+        email2 = getEmailSample2();
         assertThat(email1).isNotEqualTo(email2);
     }
 }

@@ -9,12 +9,12 @@
         "notFound": "No Short Messages found",
         "searchPlaceholder": "Search Short Messages..."
       },
-      "created": "A new Short Message is created with identifier {{ param }}",
+      "created": "A new Short Message is created with identifier { param }",
       "createdMultiple": "SMSs have been added to the queue.",
-      "updated": "A Short Message is updated with identifier {{ param }}",
-      "deleted": "A Short Message is deleted with identifier {{ param }}",
+      "updated": "A Short Message is updated with identifier { param }",
+      "deleted": "A Short Message is deleted with identifier { param }",
       "delete": {
-        "question": "Are you sure you want to delete Short Message {{ id }}?"
+        "question": "Are you sure you want to delete Short Message { id }?"
       },
       "detail": {
         "title": "Short Message"

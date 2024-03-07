@@ -1,6 +1,6 @@
-import { INotificationData } from '@/shared/model/notification-data.model';
+import { type INotificationData } from '@/shared/model/notification-data.model';
 
-import { MessageStatus } from '@/shared/model/enumerations/message-status.model';
+import { type MessageStatus } from '@/shared/model/enumerations/message-status.model';
 export interface INotification {
   id?: number;
   username?: string;
@@ -8,7 +8,7 @@ export interface INotification {
   subject?: string;
   content?: string;
   image?: string | null;
-  status?: MessageStatus | null;
+  status?: keyof typeof MessageStatus | null;
   createdAt?: Date;
   createdBy?: string;
   data?: INotificationData[] | null;
@@ -22,7 +22,10 @@ export class Notification implements INotification {
     public subject?: string,
     public content?: string,
     public image?: string | null,
-    public data?: INotificationData[] | null
+    public status?: keyof typeof MessageStatus | null,
+    public createdAt?: Date,
+    public createdBy?: string,
+    public data?: INotificationData[] | null,
   ) {}
 }
 
@@ -32,7 +35,10 @@ export interface IReceiver {
 }
 
 export class Receiver implements IReceiver {
-  constructor(public username?: string, public token?: string) {}
+  constructor(
+    public username?: string,
+    public token?: string,
+  ) {}
 }
 
 export interface INotifications {
@@ -49,9 +55,6 @@ export class Notifications implements INotifications {
     public subject?: string,
     public content?: string,
     public image?: string | null,
-    public status?: MessageStatus | null,
-    public createdAt?: Date,
-    public createdBy?: string,
-    public data?: INotificationData[] | null
+    public data?: INotificationData[] | null,
   ) {}
 }

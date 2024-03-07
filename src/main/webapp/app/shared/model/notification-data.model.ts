@@ -1,4 +1,4 @@
-import { INotification } from '@/shared/model/notification.model';
+import { type INotification } from '@/shared/model/notification.model';
 
 export interface INotificationData {
   id?: number;
@@ -8,5 +8,10 @@ export interface INotificationData {
 }
 
 export class NotificationData implements INotificationData {
-  constructor(public id?: number, public dataKey?: string, public dataValue?: string, public notification?: INotification) {}
+  constructor(
+    public id?: number,
+    public dataKey?: string,
+    public dataValue?: string,
+    public notification?: INotification,
+  ) {}
 }

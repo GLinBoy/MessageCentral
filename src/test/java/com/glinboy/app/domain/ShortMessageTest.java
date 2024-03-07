@@ -1,5 +1,6 @@
 package com.glinboy.app.domain;
 
+import static com.glinboy.app.domain.ShortMessageTestSamples.*;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.glinboy.app.web.rest.TestUtil;
@@ -10,14 +11,14 @@ class ShortMessageTest {
     @Test
     void equalsVerifier() throws Exception {
         TestUtil.equalsVerifier(ShortMessage.class);
-        ShortMessage shortMessage1 = new ShortMessage();
-        shortMessage1.setId(1L);
+        ShortMessage shortMessage1 = getShortMessageSample1();
         ShortMessage shortMessage2 = new ShortMessage();
+        assertThat(shortMessage1).isNotEqualTo(shortMessage2);
+
         shortMessage2.setId(shortMessage1.getId());
         assertThat(shortMessage1).isEqualTo(shortMessage2);
-        shortMessage2.setId(2L);
-        assertThat(shortMessage1).isNotEqualTo(shortMessage2);
-        shortMessage1.setId(null);
+
+        shortMessage2 = getShortMessageSample2();
         assertThat(shortMessage1).isNotEqualTo(shortMessage2);
     }
 }

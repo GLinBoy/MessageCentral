@@ -1,9 +1,8 @@
 import axios from 'axios';
 
 import buildPaginationQueryOpts from '@/shared/sort/sorts';
-import buildSearchQueryOpts from '@/shared/search/searchs';
 
-import { IEmail, IEmails } from '@/shared/model/email.model';
+import { type IEmail, type IEmails } from '@/shared/model/email.model';
 
 const baseApiUrl = 'api/emails';
 
@@ -24,7 +23,7 @@ export default class EmailService {
   public retrieve(paginationQuery?: any): Promise<any> {
     return new Promise<any>((resolve, reject) => {
       axios
-        .get(baseApiUrl + `?${buildPaginationQueryOpts(paginationQuery)}` + `${buildSearchQueryOpts(paginationQuery)}`)
+        .get(baseApiUrl + `?${buildPaginationQueryOpts(paginationQuery)}`)
         .then(res => {
           resolve(res);
         })
@@ -86,15 +85,12 @@ export default class EmailService {
     });
   }
 
-  /**
-   * Create multiple Emails at once
-   */
-  public createMultiple(entity: IEmails[]): Promise {
+  public createMultiple(entity: IEmails[]): Promise<any> {
     return new Promise((resolve, reject) => {
       axios
         .post(`${baseApiUrl}/multiple`, entity)
         .then(res => {
-          resolve();
+          resolve(res.data);
         })
         .catch(err => {
           reject(err);

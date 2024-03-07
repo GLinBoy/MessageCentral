@@ -4,9 +4,12 @@ import com.glinboy.app.domain.enumeration.EmailType;
 import com.glinboy.app.domain.enumeration.MessageStatus;
 import java.io.Serializable;
 import java.util.Objects;
-import org.springdoc.api.annotations.ParameterObject;
+import org.springdoc.core.annotations.ParameterObject;
 import tech.jhipster.service.Criteria;
-import tech.jhipster.service.filter.*;
+import tech.jhipster.service.filter.Filter;
+import tech.jhipster.service.filter.InstantFilter;
+import tech.jhipster.service.filter.LongFilter;
+import tech.jhipster.service.filter.StringFilter;
 
 /**
  * Criteria class for the {@link com.glinboy.app.domain.Email} entity. This class is used

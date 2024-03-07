@@ -1,36 +1,43 @@
-import { Component, Vue, Inject } from 'vue-property-decorator';
+import { defineComponent, inject, ref, type Ref } from 'vue';
+import { useI18n } from 'vue-i18n';
+import { useRoute, useRouter } from 'vue-router';
 
-import { INotificationData } from '@/shared/model/notification-data.model';
 import NotificationDataService from './notification-data.service';
-import AlertService from '@/shared/alert/alert.service';
+import { type INotificationData } from '@/shared/model/notification-data.model';
+import { useAlertService } from '@/shared/alert/alert.service';
 
-@Component
-export default class NotificationDataDetails extends Vue {
-  @Inject('notificationDataService') private notificationDataService: () => NotificationDataService;
-  @Inject('alertService') private alertService: () => AlertService;
+export default defineComponent({
+  compatConfig: { MODE: 3 },
+  name: 'NotificationDataDetails',
+  setup() {
+    const notificationDataService = inject('notificationDataService', () => new NotificationDataService());
+    const alertService = inject('alertService', () => useAlertService(), true);
 
-  public notificationData: INotificationData = {};
+    const route = useRoute();
+    const router = useRouter();
 
-  beforeRouteEnter(to, from, next) {
-    next(vm => {
-      if (to.params.notificationDataId) {
-        vm.retrieveNotificationData(to.params.notificationDataId);
+    const previousState = () => router.go(-1);
+    const notificationData: Ref<INotificationData> = ref({});
+
+    const retrieveNotificationData = async notificationDataId => {
+      try {
+        const res = await notificationDataService().find(notificationDataId);
+        notificationData.value = res;
+      } catch (error) {
+        alertService.showHttpError(error.response);
       }
-    });
-  }
+    };
 
-  public retrieveNotificationData(notificationDataId) {
-    this.notificationDataService()
-      .find(notificationDataId)
-      .then(res => {
-        this.notificationData = res;
-      })
-      .catch(error => {
-        this.alertService().showHttpError(this, error.response);
-      });
-  }
+    if (route.params?.notificationDataId) {
+      retrieveNotificationData(route.params.notificationDataId);
+    }
 
-  public previousState() {
-    this.$router.go(-1);
-  }
-}
+    return {
+      alertService,
+      notificationData,
+
+      previousState,
+      t$: useI18n().t,
+    };
+  },
+});
