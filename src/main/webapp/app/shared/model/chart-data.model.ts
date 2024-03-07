@@ -1,4 +1,4 @@
-import { IDataset } from '@/shared/model/dataset.model';
+import { type IDataset } from '@/shared/model/dataset.model';
 
 export interface IChartData {
   labels?: Array<string>;
@@ -6,5 +6,8 @@ export interface IChartData {
 }
 
 export class ChartData implements IChartData {
-  constructor(public labels?: Array<string>, public datasets?: Array<IDataset>) {}
+  constructor(
+    public labels?: Array<string>,
+    public datasets?: Array<IDataset>,
+  ) {}
 }

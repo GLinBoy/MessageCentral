@@ -1,37 +1,30 @@
 package com.glinboy.app.web.rest;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.hamcrest.Matchers.hasItem;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+
 import com.glinboy.app.IntegrationTest;
 import com.glinboy.app.domain.ShortMessage;
 import com.glinboy.app.domain.enumeration.MessageStatus;
 import com.glinboy.app.repository.ShortMessageRepository;
-import com.glinboy.app.security.AuthoritiesConstants;
-import com.glinboy.app.service.ShortMessageChannelService;
 import com.glinboy.app.service.dto.ShortMessageDTO;
-import com.glinboy.app.service.dto.ShortMessagesDTO;
 import com.glinboy.app.service.mapper.ShortMessageMapper;
+import jakarta.persistence.EntityManager;
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
+import java.util.List;
+import java.util.Random;
+import java.util.concurrent.atomic.AtomicLong;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
-
-import javax.persistence.EntityManager;
-import java.util.List;
-import java.util.Random;
-import java.util.Set;
-import java.util.concurrent.atomic.AtomicLong;
-import java.util.stream.Collectors;
-import java.util.stream.IntStream;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.hamcrest.Matchers.hasItem;
-import static org.mockito.Mockito.doNothing;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 /**
  * Integration tests for the {@link ShortMessageResource} REST controller.
@@ -41,18 +34,26 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @WithMockUser
 class ShortMessageResourceIT {
 
-    private static final String DEFAULT_PHONE_NUMBER = "+12025550179";
-    private static final String UPDATED_PHONE_NUMBER = "+989129876543";
+    private static final String DEFAULT_PHONE_NUMBER = "+6112770●1";
+    private static final String UPDATED_PHONE_NUMBER = "+6●44●3283";
 
     private static final String DEFAULT_CONTENT = "AAAAAAAAAA";
     private static final String UPDATED_CONTENT = "BBBBBBBBBB";
 
+    private static final MessageStatus DEFAULT_STATUS = MessageStatus.IN_QUEUE;
+    private static final MessageStatus UPDATED_STATUS = MessageStatus.SENT;
+
+    private static final Instant DEFAULT_CREATED_AT = Instant.ofEpochMilli(0L);
+    private static final Instant UPDATED_CREATED_AT = Instant.now().truncatedTo(ChronoUnit.MILLIS);
+
+    private static final String DEFAULT_CREATED_BY = "AAAAAAAAAA";
+    private static final String UPDATED_CREATED_BY = "BBBBBBBBBB";
+
     private static final String ENTITY_API_URL = "/api/short-messages";
     private static final String ENTITY_API_URL_ID = ENTITY_API_URL + "/{id}";
-    private static final String ENTITY_API_URL_MULTIPLE = "/api/short-messages/multiple";
 
     private static Random random = new Random();
-    private static AtomicLong count = new AtomicLong(random.nextInt() + (2 * Integer.MAX_VALUE));
+    private static AtomicLong longCount = new AtomicLong(random.nextInt() + (2 * Integer.MAX_VALUE));
 
     @Autowired
     private ShortMessageRepository shortMessageRepository;
@@ -66,55 +67,37 @@ class ShortMessageResourceIT {
     @Autowired
     private MockMvc restShortMessageMockMvc;
 
-    @Mock
-    private ShortMessageChannelService<ShortMessageDTO> smsProvider;
-
     private ShortMessage shortMessage;
 
     /**
      * Create an entity for this test.
-     * <p>
-     * This is a static method, as tests for other entities might also need it, if
-     * they test an entity which requires the current entity.
+     *
+     * This is a static method, as tests for other entities might also need it,
+     * if they test an entity which requires the current entity.
      */
     public static ShortMessage createEntity(EntityManager em) {
-        ShortMessage shortMessage = new ShortMessage().phoneNumber(DEFAULT_PHONE_NUMBER).content(DEFAULT_CONTENT);
+        ShortMessage shortMessage = new ShortMessage()
+            .phoneNumber(DEFAULT_PHONE_NUMBER)
+            .content(DEFAULT_CONTENT)
+            .status(DEFAULT_STATUS)
+            .createdAt(DEFAULT_CREATED_AT)
+            .createdBy(DEFAULT_CREATED_BY);
         return shortMessage;
     }
 
     /**
-     * Create multiple entity for this test.
-     * <p>
-     * This is a static method, as tests for other entities might also need it, if
-     * they test an entity which requires the current entity.
-     */
-    public static List<ShortMessagesDTO> createEmailsDTO(int smsDTOCount, int numbersCount) {
-        List<ShortMessagesDTO> shortMessagesDTO = IntStream
-            .range(0, smsDTOCount)
-            .mapToObj(i -> {
-                Set<String> rs = IntStream
-                    .range(0, numbersCount)
-                    .mapToObj(j -> String.format("+98912989287%d", j))
-                    .collect(Collectors.toSet());
-                ShortMessagesDTO s = new ShortMessagesDTO();
-                s.setPhoneNumber(rs);
-                s.setContent(String.format("CONETNT_%d", i));
-                return s;
-            })
-            .collect(Collectors.toList());
-        assertThat(shortMessagesDTO.size()).isEqualTo(smsDTOCount);
-        shortMessagesDTO.forEach(es -> assertThat(es.getPhoneNumbers().size()).isEqualTo(numbersCount));
-        return shortMessagesDTO;
-    }
-
-    /**
      * Create an updated entity for this test.
-     * <p>
-     * This is a static method, as tests for other entities might also need it, if
-     * they test an entity which requires the current entity.
+     *
+     * This is a static method, as tests for other entities might also need it,
+     * if they test an entity which requires the current entity.
      */
     public static ShortMessage createUpdatedEntity(EntityManager em) {
-        ShortMessage shortMessage = new ShortMessage().phoneNumber(UPDATED_PHONE_NUMBER).content(UPDATED_CONTENT);
+        ShortMessage shortMessage = new ShortMessage()
+            .phoneNumber(UPDATED_PHONE_NUMBER)
+            .content(UPDATED_CONTENT)
+            .status(UPDATED_STATUS)
+            .createdAt(UPDATED_CREATED_AT)
+            .createdBy(UPDATED_CREATED_BY);
         return shortMessage;
     }
 
@@ -125,12 +108,10 @@ class ShortMessageResourceIT {
 
     @Test
     @Transactional
-    @WithMockUser(authorities = {AuthoritiesConstants.SMS_USER})
     void createShortMessage() throws Exception {
         int databaseSizeBeforeCreate = shortMessageRepository.findAll().size();
         // Create the ShortMessage
         ShortMessageDTO shortMessageDTO = shortMessageMapper.toDto(shortMessage);
-        doNothing().when(smsProvider).sendMessage(shortMessageDTO);
         restShortMessageMockMvc
             .perform(
                 post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(shortMessageDTO))
@@ -143,65 +124,13 @@ class ShortMessageResourceIT {
         ShortMessage testShortMessage = shortMessageList.get(shortMessageList.size() - 1);
         assertThat(testShortMessage.getPhoneNumber()).isEqualTo(DEFAULT_PHONE_NUMBER);
         assertThat(testShortMessage.getContent()).isEqualTo(DEFAULT_CONTENT);
-        assertThat(testShortMessage.getStatus()).isEqualTo(MessageStatus.IN_QUEUE);
+        assertThat(testShortMessage.getStatus()).isEqualTo(DEFAULT_STATUS);
+        assertThat(testShortMessage.getCreatedAt()).isEqualTo(DEFAULT_CREATED_AT);
+        assertThat(testShortMessage.getCreatedBy()).isEqualTo(DEFAULT_CREATED_BY);
     }
 
     @Test
     @Transactional
-    void failedCreateShortMessage() throws Exception {
-        // Create the ShortMessage
-        ShortMessageDTO shortMessageDTO = shortMessageMapper.toDto(shortMessage);
-        doNothing().when(smsProvider).sendMessage(shortMessageDTO);
-        restShortMessageMockMvc
-            .perform(
-                post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(shortMessageDTO))
-            )
-            .andExpect(status().isForbidden());
-    }
-
-    @Test
-    @Transactional
-    @WithMockUser(authorities = {AuthoritiesConstants.SMS_USER})
-    void createBulkShortMessage() throws Exception {
-        int databaseSizeBeforeCreate = shortMessageRepository.findAll().size();
-        // Create Multiple ShortMessage
-        int smsCount = 2;
-        int numbersCount = 5;
-        List<ShortMessagesDTO> shortMessagesDTOs = createEmailsDTO(smsCount, numbersCount);
-        doNothing().when(smsProvider).sendMessage(new ShortMessageDTO[0]);
-        restShortMessageMockMvc
-            .perform(
-                post(ENTITY_API_URL_MULTIPLE)
-                    .contentType(MediaType.APPLICATION_JSON)
-                    .content(TestUtil.convertObjectToJsonBytes(shortMessagesDTOs))
-            )
-            .andExpect(status().isOk());
-
-        // Validate the ShortMessage in the database
-        List<ShortMessage> shortMessageList = shortMessageRepository.findAll();
-        assertThat(shortMessageList).hasSize(databaseSizeBeforeCreate + (smsCount * numbersCount));
-    }
-
-    @Test
-    @Transactional
-    void failedCreateBulkShortMessage() throws Exception {
-        // Create Multiple ShortMessage
-        int smsCount = 2;
-        int numbersCount = 5;
-        List<ShortMessagesDTO> shortMessagesDTOs = createEmailsDTO(smsCount, numbersCount);
-        doNothing().when(smsProvider).sendMessage(new ShortMessageDTO[0]);
-        restShortMessageMockMvc
-            .perform(
-                post(ENTITY_API_URL_MULTIPLE)
-                    .contentType(MediaType.APPLICATION_JSON)
-                    .content(TestUtil.convertObjectToJsonBytes(shortMessagesDTOs))
-            )
-            .andExpect(status().isForbidden());
-    }
-
-    @Test
-    @Transactional
-    @WithMockUser(authorities = {AuthoritiesConstants.SMS_USER})
     void createShortMessageWithExistingId() throws Exception {
         // Create the ShortMessage with an existing ID
         shortMessage.setId(1L);
@@ -223,7 +152,6 @@ class ShortMessageResourceIT {
 
     @Test
     @Transactional
-    @WithMockUser(authorities = {AuthoritiesConstants.SMS_USER})
     void checkPhoneNumberIsRequired() throws Exception {
         int databaseSizeBeforeTest = shortMessageRepository.findAll().size();
         // set the field null
@@ -244,7 +172,6 @@ class ShortMessageResourceIT {
 
     @Test
     @Transactional
-    @WithMockUser(authorities = {AuthoritiesConstants.SMS_USER})
     void checkContentIsRequired() throws Exception {
         int databaseSizeBeforeTest = shortMessageRepository.findAll().size();
         // set the field null
@@ -265,7 +192,46 @@ class ShortMessageResourceIT {
 
     @Test
     @Transactional
-    @WithMockUser(authorities = {AuthoritiesConstants.SMS_USER})
+    void checkCreatedAtIsRequired() throws Exception {
+        int databaseSizeBeforeTest = shortMessageRepository.findAll().size();
+        // set the field null
+        shortMessage.setCreatedAt(null);
+
+        // Create the ShortMessage, which fails.
+        ShortMessageDTO shortMessageDTO = shortMessageMapper.toDto(shortMessage);
+
+        restShortMessageMockMvc
+            .perform(
+                post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(shortMessageDTO))
+            )
+            .andExpect(status().isBadRequest());
+
+        List<ShortMessage> shortMessageList = shortMessageRepository.findAll();
+        assertThat(shortMessageList).hasSize(databaseSizeBeforeTest);
+    }
+
+    @Test
+    @Transactional
+    void checkCreatedByIsRequired() throws Exception {
+        int databaseSizeBeforeTest = shortMessageRepository.findAll().size();
+        // set the field null
+        shortMessage.setCreatedBy(null);
+
+        // Create the ShortMessage, which fails.
+        ShortMessageDTO shortMessageDTO = shortMessageMapper.toDto(shortMessage);
+
+        restShortMessageMockMvc
+            .perform(
+                post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(shortMessageDTO))
+            )
+            .andExpect(status().isBadRequest());
+
+        List<ShortMessage> shortMessageList = shortMessageRepository.findAll();
+        assertThat(shortMessageList).hasSize(databaseSizeBeforeTest);
+    }
+
+    @Test
+    @Transactional
     void getAllShortMessages() throws Exception {
         // Initialize the database
         shortMessageRepository.saveAndFlush(shortMessage);
@@ -277,12 +243,14 @@ class ShortMessageResourceIT {
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(jsonPath("$.[*].id").value(hasItem(shortMessage.getId().intValue())))
             .andExpect(jsonPath("$.[*].phoneNumber").value(hasItem(DEFAULT_PHONE_NUMBER)))
-            .andExpect(jsonPath("$.[*].content").value(hasItem(DEFAULT_CONTENT)));
+            .andExpect(jsonPath("$.[*].content").value(hasItem(DEFAULT_CONTENT)))
+            .andExpect(jsonPath("$.[*].status").value(hasItem(DEFAULT_STATUS.toString())))
+            .andExpect(jsonPath("$.[*].createdAt").value(hasItem(DEFAULT_CREATED_AT.toString())))
+            .andExpect(jsonPath("$.[*].createdBy").value(hasItem(DEFAULT_CREATED_BY)));
     }
 
     @Test
     @Transactional
-    @WithMockUser(authorities = {AuthoritiesConstants.SMS_USER})
     void getShortMessage() throws Exception {
         // Initialize the database
         shortMessageRepository.saveAndFlush(shortMessage);
@@ -294,215 +262,301 @@ class ShortMessageResourceIT {
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(jsonPath("$.id").value(shortMessage.getId().intValue()))
             .andExpect(jsonPath("$.phoneNumber").value(DEFAULT_PHONE_NUMBER))
-            .andExpect(jsonPath("$.content").value(DEFAULT_CONTENT));
+            .andExpect(jsonPath("$.content").value(DEFAULT_CONTENT))
+            .andExpect(jsonPath("$.status").value(DEFAULT_STATUS.toString()))
+            .andExpect(jsonPath("$.createdAt").value(DEFAULT_CREATED_AT.toString()))
+            .andExpect(jsonPath("$.createdBy").value(DEFAULT_CREATED_BY));
     }
 
     @Test
     @Transactional
-    void failedGetShortMessage() throws Exception {
-        // Initialize the database
-        shortMessageRepository.saveAndFlush(shortMessage);
-
-        // Get all the shortMessageList
-        restShortMessageMockMvc.perform(get(ENTITY_API_URL + "?sort=id,desc")).andExpect(status().isForbidden());
-
-        // Get the shortMessage
-        restShortMessageMockMvc.perform(get(ENTITY_API_URL_ID, shortMessage.getId())).andExpect(status().isForbidden());
-    }
-
-    @Test
-    @Transactional
-    @WithMockUser(authorities = {AuthoritiesConstants.SMS_USER})
     void getShortMessagesByIdFiltering() throws Exception {
         // Initialize the database
         shortMessageRepository.saveAndFlush(shortMessage);
 
         Long id = shortMessage.getId();
 
-        defaultShortMessageShouldBeFound("query=id==" + id);
-        defaultShortMessageShouldNotBeFound("query=id!=" + id);
+        defaultShortMessageShouldBeFound("id.equals=" + id);
+        defaultShortMessageShouldNotBeFound("id.notEquals=" + id);
 
-        defaultShortMessageShouldBeFound(String.format("query=id>=%d", id));
-        defaultShortMessageShouldNotBeFound("query=id>" + id);
+        defaultShortMessageShouldBeFound("id.greaterThanOrEqual=" + id);
+        defaultShortMessageShouldNotBeFound("id.greaterThan=" + id);
 
-        defaultShortMessageShouldBeFound(String.format("query=id<=%d", id));
-        defaultShortMessageShouldNotBeFound("query=id<" + id);
+        defaultShortMessageShouldBeFound("id.lessThanOrEqual=" + id);
+        defaultShortMessageShouldNotBeFound("id.lessThan=" + id);
     }
 
     @Test
     @Transactional
-    @WithMockUser(authorities = {AuthoritiesConstants.SMS_USER})
     void getAllShortMessagesByPhoneNumberIsEqualToSomething() throws Exception {
         // Initialize the database
         shortMessageRepository.saveAndFlush(shortMessage);
 
         // Get all the shortMessageList where phoneNumber equals to DEFAULT_PHONE_NUMBER
-        defaultShortMessageShouldBeFound("query=phoneNumber==" + DEFAULT_PHONE_NUMBER);
+        defaultShortMessageShouldBeFound("phoneNumber.equals=" + DEFAULT_PHONE_NUMBER);
 
         // Get all the shortMessageList where phoneNumber equals to UPDATED_PHONE_NUMBER
-        defaultShortMessageShouldNotBeFound("query=phoneNumber==" + UPDATED_PHONE_NUMBER);
+        defaultShortMessageShouldNotBeFound("phoneNumber.equals=" + UPDATED_PHONE_NUMBER);
     }
 
     @Test
     @Transactional
-    @WithMockUser(authorities = {AuthoritiesConstants.SMS_USER})
-    void getAllShortMessagesByPhoneNumberIsNotEqualToSomething() throws Exception {
-        // Initialize the database
-        shortMessageRepository.saveAndFlush(shortMessage);
-
-        // Get all the shortMessageList where phoneNumber not equals to
-        // DEFAULT_PHONE_NUMBER
-        defaultShortMessageShouldNotBeFound("query=phoneNumber!=" + DEFAULT_PHONE_NUMBER);
-
-        // Get all the shortMessageList where phoneNumber not equals to
-        // UPDATED_PHONE_NUMBER
-        defaultShortMessageShouldBeFound("query=phoneNumber!=" + UPDATED_PHONE_NUMBER);
-    }
-
-    @Test
-    @Transactional
-    @WithMockUser(authorities = {AuthoritiesConstants.SMS_USER})
     void getAllShortMessagesByPhoneNumberIsInShouldWork() throws Exception {
         // Initialize the database
         shortMessageRepository.saveAndFlush(shortMessage);
 
-        // Get all the shortMessageList where phoneNumber in DEFAULT_PHONE_NUMBER or
-        // UPDATED_PHONE_NUMBER
-        defaultShortMessageShouldBeFound(
-            String.format("query=phoneNumber=in=(%s, %s)", DEFAULT_PHONE_NUMBER, UPDATED_PHONE_NUMBER)
-        );
+        // Get all the shortMessageList where phoneNumber in DEFAULT_PHONE_NUMBER or UPDATED_PHONE_NUMBER
+        defaultShortMessageShouldBeFound("phoneNumber.in=" + DEFAULT_PHONE_NUMBER + "," + UPDATED_PHONE_NUMBER);
 
         // Get all the shortMessageList where phoneNumber equals to UPDATED_PHONE_NUMBER
-        defaultShortMessageShouldNotBeFound("query=phoneNumber==" + UPDATED_PHONE_NUMBER);
+        defaultShortMessageShouldNotBeFound("phoneNumber.in=" + UPDATED_PHONE_NUMBER);
     }
 
     @Test
     @Transactional
-    @WithMockUser(authorities = {AuthoritiesConstants.SMS_USER})
     void getAllShortMessagesByPhoneNumberIsNullOrNotNull() throws Exception {
         // Initialize the database
         shortMessageRepository.saveAndFlush(shortMessage);
 
         // Get all the shortMessageList where phoneNumber is not null
-        defaultShortMessageShouldBeFound("query=phoneNumber!=null");
+        defaultShortMessageShouldBeFound("phoneNumber.specified=true");
 
         // Get all the shortMessageList where phoneNumber is null
-        defaultShortMessageShouldNotBeFound("query=phoneNumber==null");
+        defaultShortMessageShouldNotBeFound("phoneNumber.specified=false");
     }
 
     @Test
     @Transactional
-    @WithMockUser(authorities = {AuthoritiesConstants.SMS_USER})
     void getAllShortMessagesByPhoneNumberContainsSomething() throws Exception {
         // Initialize the database
         shortMessageRepository.saveAndFlush(shortMessage);
 
         // Get all the shortMessageList where phoneNumber contains DEFAULT_PHONE_NUMBER
-        defaultShortMessageShouldBeFound("query=phoneNumber==*" + DEFAULT_PHONE_NUMBER + "*");
+        defaultShortMessageShouldBeFound("phoneNumber.contains=" + DEFAULT_PHONE_NUMBER);
 
         // Get all the shortMessageList where phoneNumber contains UPDATED_PHONE_NUMBER
-        defaultShortMessageShouldNotBeFound("query=phoneNumber==*" + UPDATED_PHONE_NUMBER + "*");
+        defaultShortMessageShouldNotBeFound("phoneNumber.contains=" + UPDATED_PHONE_NUMBER);
     }
 
     @Test
     @Transactional
-    @WithMockUser(authorities = {AuthoritiesConstants.SMS_USER})
     void getAllShortMessagesByPhoneNumberNotContainsSomething() throws Exception {
         // Initialize the database
         shortMessageRepository.saveAndFlush(shortMessage);
 
-        // Get all the shortMessageList where phoneNumber does not contain
-        // DEFAULT_PHONE_NUMBER
-        defaultShortMessageShouldNotBeFound("query=phoneNumber!=*" + DEFAULT_PHONE_NUMBER + "*");
+        // Get all the shortMessageList where phoneNumber does not contain DEFAULT_PHONE_NUMBER
+        defaultShortMessageShouldNotBeFound("phoneNumber.doesNotContain=" + DEFAULT_PHONE_NUMBER);
 
-        // Get all the shortMessageList where phoneNumber does not contain
-        // UPDATED_PHONE_NUMBER
-        defaultShortMessageShouldBeFound("query=phoneNumber!=*" + UPDATED_PHONE_NUMBER + "*");
+        // Get all the shortMessageList where phoneNumber does not contain UPDATED_PHONE_NUMBER
+        defaultShortMessageShouldBeFound("phoneNumber.doesNotContain=" + UPDATED_PHONE_NUMBER);
     }
 
     @Test
     @Transactional
-    @WithMockUser(authorities = {AuthoritiesConstants.SMS_USER})
     void getAllShortMessagesByContentIsEqualToSomething() throws Exception {
         // Initialize the database
         shortMessageRepository.saveAndFlush(shortMessage);
 
         // Get all the shortMessageList where content equals to DEFAULT_CONTENT
-        defaultShortMessageShouldBeFound("query=content==" + DEFAULT_CONTENT);
+        defaultShortMessageShouldBeFound("content.equals=" + DEFAULT_CONTENT);
 
         // Get all the shortMessageList where content equals to UPDATED_CONTENT
-        defaultShortMessageShouldNotBeFound("query=content==" + UPDATED_CONTENT);
+        defaultShortMessageShouldNotBeFound("content.equals=" + UPDATED_CONTENT);
     }
 
     @Test
     @Transactional
-    @WithMockUser(authorities = {AuthoritiesConstants.SMS_USER})
-    void getAllShortMessagesByContentIsNotEqualToSomething() throws Exception {
-        // Initialize the database
-        shortMessageRepository.saveAndFlush(shortMessage);
-
-        // Get all the shortMessageList where content not equals to DEFAULT_CONTENT
-        defaultShortMessageShouldNotBeFound("query=content!=" + DEFAULT_CONTENT);
-
-        // Get all the shortMessageList where content not equals to UPDATED_CONTENT
-        defaultShortMessageShouldBeFound("query=content!=" + UPDATED_CONTENT);
-    }
-
-    @Test
-    @Transactional
-    @WithMockUser(authorities = {AuthoritiesConstants.SMS_USER})
     void getAllShortMessagesByContentIsInShouldWork() throws Exception {
         // Initialize the database
         shortMessageRepository.saveAndFlush(shortMessage);
 
-        // Get all the shortMessageList where content in DEFAULT_CONTENT or
-        // UPDATED_CONTENT
-        defaultShortMessageShouldBeFound(String.format("query=content=in=(%s, %s)", DEFAULT_CONTENT, UPDATED_CONTENT));
+        // Get all the shortMessageList where content in DEFAULT_CONTENT or UPDATED_CONTENT
+        defaultShortMessageShouldBeFound("content.in=" + DEFAULT_CONTENT + "," + UPDATED_CONTENT);
 
         // Get all the shortMessageList where content equals to UPDATED_CONTENT
-        defaultShortMessageShouldNotBeFound("query=content==" + UPDATED_CONTENT);
+        defaultShortMessageShouldNotBeFound("content.in=" + UPDATED_CONTENT);
     }
 
     @Test
     @Transactional
-    @WithMockUser(authorities = {AuthoritiesConstants.SMS_USER})
     void getAllShortMessagesByContentIsNullOrNotNull() throws Exception {
         // Initialize the database
         shortMessageRepository.saveAndFlush(shortMessage);
 
         // Get all the shortMessageList where content is not null
-        defaultShortMessageShouldBeFound("query=content!=null");
+        defaultShortMessageShouldBeFound("content.specified=true");
 
         // Get all the shortMessageList where content is null
-        defaultShortMessageShouldNotBeFound("query=content==null");
+        defaultShortMessageShouldNotBeFound("content.specified=false");
     }
 
     @Test
     @Transactional
-    @WithMockUser(authorities = {AuthoritiesConstants.SMS_USER})
     void getAllShortMessagesByContentContainsSomething() throws Exception {
         // Initialize the database
         shortMessageRepository.saveAndFlush(shortMessage);
 
         // Get all the shortMessageList where content contains DEFAULT_CONTENT
-        defaultShortMessageShouldBeFound("query=content==*" + DEFAULT_CONTENT + "*");
+        defaultShortMessageShouldBeFound("content.contains=" + DEFAULT_CONTENT);
 
         // Get all the shortMessageList where content contains UPDATED_CONTENT
-        defaultShortMessageShouldNotBeFound("query=content==*" + UPDATED_CONTENT + "*");
+        defaultShortMessageShouldNotBeFound("content.contains=" + UPDATED_CONTENT);
     }
 
     @Test
     @Transactional
-    @WithMockUser(authorities = {AuthoritiesConstants.SMS_USER})
     void getAllShortMessagesByContentNotContainsSomething() throws Exception {
         // Initialize the database
         shortMessageRepository.saveAndFlush(shortMessage);
 
         // Get all the shortMessageList where content does not contain DEFAULT_CONTENT
-        defaultShortMessageShouldNotBeFound("query=content!=*" + DEFAULT_CONTENT + "*");
+        defaultShortMessageShouldNotBeFound("content.doesNotContain=" + DEFAULT_CONTENT);
 
         // Get all the shortMessageList where content does not contain UPDATED_CONTENT
-        defaultShortMessageShouldBeFound("query=content!=*" + UPDATED_CONTENT + "*");
+        defaultShortMessageShouldBeFound("content.doesNotContain=" + UPDATED_CONTENT);
+    }
+
+    @Test
+    @Transactional
+    void getAllShortMessagesByStatusIsEqualToSomething() throws Exception {
+        // Initialize the database
+        shortMessageRepository.saveAndFlush(shortMessage);
+
+        // Get all the shortMessageList where status equals to DEFAULT_STATUS
+        defaultShortMessageShouldBeFound("status.equals=" + DEFAULT_STATUS);
+
+        // Get all the shortMessageList where status equals to UPDATED_STATUS
+        defaultShortMessageShouldNotBeFound("status.equals=" + UPDATED_STATUS);
+    }
+
+    @Test
+    @Transactional
+    void getAllShortMessagesByStatusIsInShouldWork() throws Exception {
+        // Initialize the database
+        shortMessageRepository.saveAndFlush(shortMessage);
+
+        // Get all the shortMessageList where status in DEFAULT_STATUS or UPDATED_STATUS
+        defaultShortMessageShouldBeFound("status.in=" + DEFAULT_STATUS + "," + UPDATED_STATUS);
+
+        // Get all the shortMessageList where status equals to UPDATED_STATUS
+        defaultShortMessageShouldNotBeFound("status.in=" + UPDATED_STATUS);
+    }
+
+    @Test
+    @Transactional
+    void getAllShortMessagesByStatusIsNullOrNotNull() throws Exception {
+        // Initialize the database
+        shortMessageRepository.saveAndFlush(shortMessage);
+
+        // Get all the shortMessageList where status is not null
+        defaultShortMessageShouldBeFound("status.specified=true");
+
+        // Get all the shortMessageList where status is null
+        defaultShortMessageShouldNotBeFound("status.specified=false");
+    }
+
+    @Test
+    @Transactional
+    void getAllShortMessagesByCreatedAtIsEqualToSomething() throws Exception {
+        // Initialize the database
+        shortMessageRepository.saveAndFlush(shortMessage);
+
+        // Get all the shortMessageList where createdAt equals to DEFAULT_CREATED_AT
+        defaultShortMessageShouldBeFound("createdAt.equals=" + DEFAULT_CREATED_AT);
+
+        // Get all the shortMessageList where createdAt equals to UPDATED_CREATED_AT
+        defaultShortMessageShouldNotBeFound("createdAt.equals=" + UPDATED_CREATED_AT);
+    }
+
+    @Test
+    @Transactional
+    void getAllShortMessagesByCreatedAtIsInShouldWork() throws Exception {
+        // Initialize the database
+        shortMessageRepository.saveAndFlush(shortMessage);
+
+        // Get all the shortMessageList where createdAt in DEFAULT_CREATED_AT or UPDATED_CREATED_AT
+        defaultShortMessageShouldBeFound("createdAt.in=" + DEFAULT_CREATED_AT + "," + UPDATED_CREATED_AT);
+
+        // Get all the shortMessageList where createdAt equals to UPDATED_CREATED_AT
+        defaultShortMessageShouldNotBeFound("createdAt.in=" + UPDATED_CREATED_AT);
+    }
+
+    @Test
+    @Transactional
+    void getAllShortMessagesByCreatedAtIsNullOrNotNull() throws Exception {
+        // Initialize the database
+        shortMessageRepository.saveAndFlush(shortMessage);
+
+        // Get all the shortMessageList where createdAt is not null
+        defaultShortMessageShouldBeFound("createdAt.specified=true");
+
+        // Get all the shortMessageList where createdAt is null
+        defaultShortMessageShouldNotBeFound("createdAt.specified=false");
+    }
+
+    @Test
+    @Transactional
+    void getAllShortMessagesByCreatedByIsEqualToSomething() throws Exception {
+        // Initialize the database
+        shortMessageRepository.saveAndFlush(shortMessage);
+
+        // Get all the shortMessageList where createdBy equals to DEFAULT_CREATED_BY
+        defaultShortMessageShouldBeFound("createdBy.equals=" + DEFAULT_CREATED_BY);
+
+        // Get all the shortMessageList where createdBy equals to UPDATED_CREATED_BY
+        defaultShortMessageShouldNotBeFound("createdBy.equals=" + UPDATED_CREATED_BY);
+    }
+
+    @Test
+    @Transactional
+    void getAllShortMessagesByCreatedByIsInShouldWork() throws Exception {
+        // Initialize the database
+        shortMessageRepository.saveAndFlush(shortMessage);
+
+        // Get all the shortMessageList where createdBy in DEFAULT_CREATED_BY or UPDATED_CREATED_BY
+        defaultShortMessageShouldBeFound("createdBy.in=" + DEFAULT_CREATED_BY + "," + UPDATED_CREATED_BY);
+
+        // Get all the shortMessageList where createdBy equals to UPDATED_CREATED_BY
+        defaultShortMessageShouldNotBeFound("createdBy.in=" + UPDATED_CREATED_BY);
+    }
+
+    @Test
+    @Transactional
+    void getAllShortMessagesByCreatedByIsNullOrNotNull() throws Exception {
+        // Initialize the database
+        shortMessageRepository.saveAndFlush(shortMessage);
+
+        // Get all the shortMessageList where createdBy is not null
+        defaultShortMessageShouldBeFound("createdBy.specified=true");
+
+        // Get all the shortMessageList where createdBy is null
+        defaultShortMessageShouldNotBeFound("createdBy.specified=false");
+    }
+
+    @Test
+    @Transactional
+    void getAllShortMessagesByCreatedByContainsSomething() throws Exception {
+        // Initialize the database
+        shortMessageRepository.saveAndFlush(shortMessage);
+
+        // Get all the shortMessageList where createdBy contains DEFAULT_CREATED_BY
+        defaultShortMessageShouldBeFound("createdBy.contains=" + DEFAULT_CREATED_BY);
+
+        // Get all the shortMessageList where createdBy contains UPDATED_CREATED_BY
+        defaultShortMessageShouldNotBeFound("createdBy.contains=" + UPDATED_CREATED_BY);
+    }
+
+    @Test
+    @Transactional
+    void getAllShortMessagesByCreatedByNotContainsSomething() throws Exception {
+        // Initialize the database
+        shortMessageRepository.saveAndFlush(shortMessage);
+
+        // Get all the shortMessageList where createdBy does not contain DEFAULT_CREATED_BY
+        defaultShortMessageShouldNotBeFound("createdBy.doesNotContain=" + DEFAULT_CREATED_BY);
+
+        // Get all the shortMessageList where createdBy does not contain UPDATED_CREATED_BY
+        defaultShortMessageShouldBeFound("createdBy.doesNotContain=" + UPDATED_CREATED_BY);
     }
 
     /**
@@ -515,7 +569,10 @@ class ShortMessageResourceIT {
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(jsonPath("$.[*].id").value(hasItem(shortMessage.getId().intValue())))
             .andExpect(jsonPath("$.[*].phoneNumber").value(hasItem(DEFAULT_PHONE_NUMBER)))
-            .andExpect(jsonPath("$.[*].content").value(hasItem(DEFAULT_CONTENT)));
+            .andExpect(jsonPath("$.[*].content").value(hasItem(DEFAULT_CONTENT)))
+            .andExpect(jsonPath("$.[*].status").value(hasItem(DEFAULT_STATUS.toString())))
+            .andExpect(jsonPath("$.[*].createdAt").value(hasItem(DEFAULT_CREATED_AT.toString())))
+            .andExpect(jsonPath("$.[*].createdBy").value(hasItem(DEFAULT_CREATED_BY)));
 
         // Check, that the count call also returns 1
         restShortMessageMockMvc
@@ -546,7 +603,6 @@ class ShortMessageResourceIT {
 
     @Test
     @Transactional
-    @WithMockUser(authorities = {AuthoritiesConstants.SMS_USER})
     void getNonExistingShortMessage() throws Exception {
         // Get the shortMessage
         restShortMessageMockMvc.perform(get(ENTITY_API_URL_ID, Long.MAX_VALUE)).andExpect(status().isNotFound());
@@ -554,19 +610,22 @@ class ShortMessageResourceIT {
 
     @Test
     @Transactional
-    @WithMockUser(authorities = {AuthoritiesConstants.SMS_USER})
-    void putNewShortMessage() throws Exception {
+    void putExistingShortMessage() throws Exception {
         // Initialize the database
         shortMessageRepository.saveAndFlush(shortMessage);
 
         int databaseSizeBeforeUpdate = shortMessageRepository.findAll().size();
 
         // Update the shortMessage
-        ShortMessage updatedShortMessage = shortMessageRepository.findById(shortMessage.getId()).get();
-        // Disconnect from session so that the updates on updatedShortMessage are not
-        // directly saved in db
+        ShortMessage updatedShortMessage = shortMessageRepository.findById(shortMessage.getId()).orElseThrow();
+        // Disconnect from session so that the updates on updatedShortMessage are not directly saved in db
         em.detach(updatedShortMessage);
-        updatedShortMessage.phoneNumber(UPDATED_PHONE_NUMBER).content(UPDATED_CONTENT);
+        updatedShortMessage
+            .phoneNumber(UPDATED_PHONE_NUMBER)
+            .content(UPDATED_CONTENT)
+            .status(UPDATED_STATUS)
+            .createdAt(UPDATED_CREATED_AT)
+            .createdBy(UPDATED_CREATED_BY);
         ShortMessageDTO shortMessageDTO = shortMessageMapper.toDto(updatedShortMessage);
 
         restShortMessageMockMvc
@@ -575,45 +634,24 @@ class ShortMessageResourceIT {
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(TestUtil.convertObjectToJsonBytes(shortMessageDTO))
             )
-            .andExpect(status().isMethodNotAllowed());
+            .andExpect(status().isOk());
 
         // Validate the ShortMessage in the database
         List<ShortMessage> shortMessageList = shortMessageRepository.findAll();
         assertThat(shortMessageList).hasSize(databaseSizeBeforeUpdate);
         ShortMessage testShortMessage = shortMessageList.get(shortMessageList.size() - 1);
-        assertThat(testShortMessage.getPhoneNumber()).isEqualTo(DEFAULT_PHONE_NUMBER);
-        assertThat(testShortMessage.getContent()).isEqualTo(DEFAULT_CONTENT);
+        assertThat(testShortMessage.getPhoneNumber()).isEqualTo(UPDATED_PHONE_NUMBER);
+        assertThat(testShortMessage.getContent()).isEqualTo(UPDATED_CONTENT);
+        assertThat(testShortMessage.getStatus()).isEqualTo(UPDATED_STATUS);
+        assertThat(testShortMessage.getCreatedAt()).isEqualTo(UPDATED_CREATED_AT);
+        assertThat(testShortMessage.getCreatedBy()).isEqualTo(UPDATED_CREATED_BY);
     }
 
     @Test
     @Transactional
-    void failedPutNewShortMessage() throws Exception {
-        // Initialize the database
-        shortMessageRepository.saveAndFlush(shortMessage);
-
-        // Update the shortMessage
-        ShortMessage updatedShortMessage = shortMessageRepository.findById(shortMessage.getId()).get();
-        // Disconnect from session so that the updates on updatedShortMessage are not
-        // directly saved in db
-        em.detach(updatedShortMessage);
-        updatedShortMessage.phoneNumber(UPDATED_PHONE_NUMBER).content(UPDATED_CONTENT);
-        ShortMessageDTO shortMessageDTO = shortMessageMapper.toDto(updatedShortMessage);
-
-        restShortMessageMockMvc
-            .perform(
-                put(ENTITY_API_URL_ID, shortMessageDTO.getId())
-                    .contentType(MediaType.APPLICATION_JSON)
-                    .content(TestUtil.convertObjectToJsonBytes(shortMessageDTO))
-            )
-            .andExpect(status().isForbidden());
-    }
-
-    @Test
-    @Transactional
-    @WithMockUser(authorities = {AuthoritiesConstants.SMS_USER})
     void putNonExistingShortMessage() throws Exception {
         int databaseSizeBeforeUpdate = shortMessageRepository.findAll().size();
-        shortMessage.setId(count.incrementAndGet());
+        shortMessage.setId(longCount.incrementAndGet());
 
         // Create the ShortMessage
         ShortMessageDTO shortMessageDTO = shortMessageMapper.toDto(shortMessage);
@@ -625,7 +663,7 @@ class ShortMessageResourceIT {
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(TestUtil.convertObjectToJsonBytes(shortMessageDTO))
             )
-            .andExpect(status().isMethodNotAllowed());
+            .andExpect(status().isBadRequest());
 
         // Validate the ShortMessage in the database
         List<ShortMessage> shortMessageList = shortMessageRepository.findAll();
@@ -634,10 +672,9 @@ class ShortMessageResourceIT {
 
     @Test
     @Transactional
-    @WithMockUser(authorities = {AuthoritiesConstants.SMS_USER})
     void putWithIdMismatchShortMessage() throws Exception {
         int databaseSizeBeforeUpdate = shortMessageRepository.findAll().size();
-        shortMessage.setId(count.incrementAndGet());
+        shortMessage.setId(longCount.incrementAndGet());
 
         // Create the ShortMessage
         ShortMessageDTO shortMessageDTO = shortMessageMapper.toDto(shortMessage);
@@ -645,11 +682,11 @@ class ShortMessageResourceIT {
         // If url ID doesn't match entity ID, it will throw BadRequestAlertException
         restShortMessageMockMvc
             .perform(
-                put(ENTITY_API_URL_ID, count.incrementAndGet())
+                put(ENTITY_API_URL_ID, longCount.incrementAndGet())
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(TestUtil.convertObjectToJsonBytes(shortMessageDTO))
             )
-            .andExpect(status().isMethodNotAllowed());
+            .andExpect(status().isBadRequest());
 
         // Validate the ShortMessage in the database
         List<ShortMessage> shortMessageList = shortMessageRepository.findAll();
@@ -658,10 +695,9 @@ class ShortMessageResourceIT {
 
     @Test
     @Transactional
-    @WithMockUser(authorities = {AuthoritiesConstants.SMS_USER})
     void putWithMissingIdPathParamShortMessage() throws Exception {
         int databaseSizeBeforeUpdate = shortMessageRepository.findAll().size();
-        shortMessage.setId(count.incrementAndGet());
+        shortMessage.setId(longCount.incrementAndGet());
 
         // Create the ShortMessage
         ShortMessageDTO shortMessageDTO = shortMessageMapper.toDto(shortMessage);
@@ -680,7 +716,6 @@ class ShortMessageResourceIT {
 
     @Test
     @Transactional
-    @WithMockUser(authorities = {AuthoritiesConstants.SMS_USER})
     void partialUpdateShortMessageWithPatch() throws Exception {
         // Initialize the database
         shortMessageRepository.saveAndFlush(shortMessage);
@@ -691,13 +726,15 @@ class ShortMessageResourceIT {
         ShortMessage partialUpdatedShortMessage = new ShortMessage();
         partialUpdatedShortMessage.setId(shortMessage.getId());
 
+        partialUpdatedShortMessage.status(UPDATED_STATUS);
+
         restShortMessageMockMvc
             .perform(
                 patch(ENTITY_API_URL_ID, partialUpdatedShortMessage.getId())
                     .contentType("application/merge-patch+json")
                     .content(TestUtil.convertObjectToJsonBytes(partialUpdatedShortMessage))
             )
-            .andExpect(status().isMethodNotAllowed());
+            .andExpect(status().isOk());
 
         // Validate the ShortMessage in the database
         List<ShortMessage> shortMessageList = shortMessageRepository.findAll();
@@ -705,30 +742,13 @@ class ShortMessageResourceIT {
         ShortMessage testShortMessage = shortMessageList.get(shortMessageList.size() - 1);
         assertThat(testShortMessage.getPhoneNumber()).isEqualTo(DEFAULT_PHONE_NUMBER);
         assertThat(testShortMessage.getContent()).isEqualTo(DEFAULT_CONTENT);
+        assertThat(testShortMessage.getStatus()).isEqualTo(UPDATED_STATUS);
+        assertThat(testShortMessage.getCreatedAt()).isEqualTo(DEFAULT_CREATED_AT);
+        assertThat(testShortMessage.getCreatedBy()).isEqualTo(DEFAULT_CREATED_BY);
     }
 
     @Test
     @Transactional
-    void failedPartialUpdateShortMessageWithPatch() throws Exception {
-        // Initialize the database
-        shortMessageRepository.saveAndFlush(shortMessage);
-
-        // Update the shortMessage using partial update
-        ShortMessage partialUpdatedShortMessage = new ShortMessage();
-        partialUpdatedShortMessage.setId(shortMessage.getId());
-
-        restShortMessageMockMvc
-            .perform(
-                patch(ENTITY_API_URL_ID, partialUpdatedShortMessage.getId())
-                    .contentType("application/merge-patch+json")
-                    .content(TestUtil.convertObjectToJsonBytes(partialUpdatedShortMessage))
-            )
-            .andExpect(status().isForbidden());
-    }
-
-    @Test
-    @Transactional
-    @WithMockUser(authorities = {AuthoritiesConstants.SMS_USER})
     void fullUpdateShortMessageWithPatch() throws Exception {
         // Initialize the database
         shortMessageRepository.saveAndFlush(shortMessage);
@@ -739,7 +759,12 @@ class ShortMessageResourceIT {
         ShortMessage partialUpdatedShortMessage = new ShortMessage();
         partialUpdatedShortMessage.setId(shortMessage.getId());
 
-        partialUpdatedShortMessage.phoneNumber(UPDATED_PHONE_NUMBER).content(UPDATED_CONTENT);
+        partialUpdatedShortMessage
+            .phoneNumber(UPDATED_PHONE_NUMBER)
+            .content(UPDATED_CONTENT)
+            .status(UPDATED_STATUS)
+            .createdAt(UPDATED_CREATED_AT)
+            .createdBy(UPDATED_CREATED_BY);
 
         restShortMessageMockMvc
             .perform(
@@ -747,22 +772,24 @@ class ShortMessageResourceIT {
                     .contentType("application/merge-patch+json")
                     .content(TestUtil.convertObjectToJsonBytes(partialUpdatedShortMessage))
             )
-            .andExpect(status().isMethodNotAllowed());
+            .andExpect(status().isOk());
 
         // Validate the ShortMessage in the database
         List<ShortMessage> shortMessageList = shortMessageRepository.findAll();
         assertThat(shortMessageList).hasSize(databaseSizeBeforeUpdate);
         ShortMessage testShortMessage = shortMessageList.get(shortMessageList.size() - 1);
-        assertThat(testShortMessage.getPhoneNumber()).isEqualTo(DEFAULT_PHONE_NUMBER);
-        assertThat(testShortMessage.getContent()).isEqualTo(DEFAULT_CONTENT);
+        assertThat(testShortMessage.getPhoneNumber()).isEqualTo(UPDATED_PHONE_NUMBER);
+        assertThat(testShortMessage.getContent()).isEqualTo(UPDATED_CONTENT);
+        assertThat(testShortMessage.getStatus()).isEqualTo(UPDATED_STATUS);
+        assertThat(testShortMessage.getCreatedAt()).isEqualTo(UPDATED_CREATED_AT);
+        assertThat(testShortMessage.getCreatedBy()).isEqualTo(UPDATED_CREATED_BY);
     }
 
     @Test
     @Transactional
-    @WithMockUser(authorities = {AuthoritiesConstants.SMS_USER})
     void patchNonExistingShortMessage() throws Exception {
         int databaseSizeBeforeUpdate = shortMessageRepository.findAll().size();
-        shortMessage.setId(count.incrementAndGet());
+        shortMessage.setId(longCount.incrementAndGet());
 
         // Create the ShortMessage
         ShortMessageDTO shortMessageDTO = shortMessageMapper.toDto(shortMessage);
@@ -774,7 +801,7 @@ class ShortMessageResourceIT {
                     .contentType("application/merge-patch+json")
                     .content(TestUtil.convertObjectToJsonBytes(shortMessageDTO))
             )
-            .andExpect(status().isMethodNotAllowed());
+            .andExpect(status().isBadRequest());
 
         // Validate the ShortMessage in the database
         List<ShortMessage> shortMessageList = shortMessageRepository.findAll();
@@ -783,10 +810,9 @@ class ShortMessageResourceIT {
 
     @Test
     @Transactional
-    @WithMockUser(authorities = {AuthoritiesConstants.SMS_USER})
     void patchWithIdMismatchShortMessage() throws Exception {
         int databaseSizeBeforeUpdate = shortMessageRepository.findAll().size();
-        shortMessage.setId(count.incrementAndGet());
+        shortMessage.setId(longCount.incrementAndGet());
 
         // Create the ShortMessage
         ShortMessageDTO shortMessageDTO = shortMessageMapper.toDto(shortMessage);
@@ -794,11 +820,11 @@ class ShortMessageResourceIT {
         // If url ID doesn't match entity ID, it will throw BadRequestAlertException
         restShortMessageMockMvc
             .perform(
-                patch(ENTITY_API_URL_ID, count.incrementAndGet())
+                patch(ENTITY_API_URL_ID, longCount.incrementAndGet())
                     .contentType("application/merge-patch+json")
                     .content(TestUtil.convertObjectToJsonBytes(shortMessageDTO))
             )
-            .andExpect(status().isMethodNotAllowed());
+            .andExpect(status().isBadRequest());
 
         // Validate the ShortMessage in the database
         List<ShortMessage> shortMessageList = shortMessageRepository.findAll();
@@ -807,10 +833,9 @@ class ShortMessageResourceIT {
 
     @Test
     @Transactional
-    @WithMockUser(authorities = {AuthoritiesConstants.SMS_USER})
     void patchWithMissingIdPathParamShortMessage() throws Exception {
         int databaseSizeBeforeUpdate = shortMessageRepository.findAll().size();
-        shortMessage.setId(count.incrementAndGet());
+        shortMessage.setId(longCount.incrementAndGet());
 
         // Create the ShortMessage
         ShortMessageDTO shortMessageDTO = shortMessageMapper.toDto(shortMessage);
@@ -831,7 +856,6 @@ class ShortMessageResourceIT {
 
     @Test
     @Transactional
-    @WithMockUser(authorities = {AuthoritiesConstants.SMS_USER})
     void deleteShortMessage() throws Exception {
         // Initialize the database
         shortMessageRepository.saveAndFlush(shortMessage);
@@ -841,28 +865,10 @@ class ShortMessageResourceIT {
         // Delete the shortMessage
         restShortMessageMockMvc
             .perform(delete(ENTITY_API_URL_ID, shortMessage.getId()).accept(MediaType.APPLICATION_JSON))
-            .andExpect(status().isMethodNotAllowed());
+            .andExpect(status().isNoContent());
 
         // Validate the database contains one less item
         List<ShortMessage> shortMessageList = shortMessageRepository.findAll();
-        assertThat(shortMessageList).hasSize(databaseSizeBeforeDelete);
-    }
-
-    @Test
-    @Transactional
-    void failedDeleteShortMessage() throws Exception {
-        // Initialize the database
-        shortMessageRepository.saveAndFlush(shortMessage);
-
-        int databaseSizeBeforeDelete = shortMessageRepository.findAll().size();
-
-        // Delete the shortMessage
-        restShortMessageMockMvc
-            .perform(delete(ENTITY_API_URL_ID, shortMessage.getId()).accept(MediaType.APPLICATION_JSON))
-            .andExpect(status().isForbidden());
-
-        // Validate the database contains one less item
-        List<ShortMessage> shortMessageList = shortMessageRepository.findAll();
-        assertThat(shortMessageList).hasSize(databaseSizeBeforeDelete);
+        assertThat(shortMessageList).hasSize(databaseSizeBeforeDelete - 1);
     }
 }

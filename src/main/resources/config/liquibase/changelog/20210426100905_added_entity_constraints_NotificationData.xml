@@ -12,6 +12,7 @@
                                  baseTableName="notification_data"
                                  constraintName="fk_notification_data__notification_id"
                                  referencedColumnNames="id"
-                                 referencedTableName="notification"/>
+                                 referencedTableName="notification"
+                                 />
     </changeSet>
 </databaseChangeLog>

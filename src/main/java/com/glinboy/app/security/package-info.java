@@ -1,4 +1,4 @@
 /**
- * Spring Security configuration.
+ * Application security utilities.
  */
 package com.glinboy.app.security;

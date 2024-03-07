@@ -1,90 +1,103 @@
-import { Component, Inject } from 'vue-property-decorator';
+import { computed, defineComponent, inject, onMounted, ref, type Ref } from 'vue';
+import { useI18n } from 'vue-i18n';
+import { useRoute, useRouter } from 'vue-router';
+import { useVuelidate } from '@vuelidate/core';
 
-import { mixins } from 'vue-class-component';
-import JhiDataUtils from '@/shared/data/data-utils.service';
-
-import { required, minLength, maxLength } from 'vuelidate/lib/validators';
-
-import AlertService from '@/shared/alert/alert.service';
-
-import { IEmails, Emails } from '@/shared/model/email.model';
-import { EmailType } from '@/shared/model/enumerations/email-type.model';
 import EmailService from './email.service';
+import useDataUtils from '@/shared/data/data-utils.service';
+import { useDateFormat, useValidation } from '@/shared/composables';
+import { useAlertService } from '@/shared/alert/alert.service';
 
-const validations: any = {
-  emails: {
-    receivers: {
-      required,
-    },
-    subject: {
-      required,
-      minLength: minLength(4),
-      maxLength: maxLength(128),
-    },
-    content: {
-      required,
-    },
-    emailType: {},
-    status: {},
+import { Emails, type IEmails } from '@/shared/model/email.model';
+import { EmailType } from '@/shared/model/enumerations/email-type.model';
+
+import Vue3TagsInput from 'vue3-tags-input';
+
+export default defineComponent({
+  compatConfig: { MODE: 3 },
+  name: 'EmailMultiple',
+  components: {
+    Vue3TagsInput,
   },
-};
+  setup() {
+    const emailService = inject('emailService', () => new EmailService());
+    const alertService = inject('alertService', () => useAlertService(), true);
 
-@Component({
-  validations,
-})
-export default class EmailMultiple extends mixins(JhiDataUtils) {
-  @Inject('emailService') private emailService: () => EmailService;
-  @Inject('alertService') private alertService: () => AlertService;
+    const emails: Ref<IEmails> = ref(new Emails());
+    emails.value.emailType = EmailType.TEXT;
+    emails.value.receivers = [];
+    const emailTypeValues: Ref<string[]> = ref(Object.keys(EmailType));
+    const isSaving = ref(false);
+    const currentLanguage = inject('currentLanguage', () => computed(() => navigator.language ?? 'en'), true);
 
-  public emails: IEmails = new Emails();
-  public isSaving = false;
-  public currentLanguage = '';
-  public emailTypes = [
-    { value: EmailType.TEXT, text: EmailType.TEXT },
-    { value: EmailType.HTML, text: EmailType.HTML },
-  ];
+    const route = useRoute();
+    const router = useRouter();
 
-  created(): void {
-    this.currentLanguage = this.$store.getters.currentLanguage;
-    this.$store.watch(
-      () => this.$store.getters.currentLanguage,
-      () => {
-        this.currentLanguage = this.$store.getters.currentLanguage;
-      }
-    );
-  }
+    const previousState = () => router.go(-1);
 
-  public save(): void {
-    this.isSaving = true;
-    this.emailService()
-      .createMultiple([this.emails])
-      .then(() => {
-        this.isSaving = false;
-        this.$router.go(-1);
-        const message = this.$t('messageCentralApp.email.createdMultiple');
-        return (this.$root as any).$bvToast.toast(message.toString(), {
-          toaster: 'b-toaster-top-center',
-          title: 'Success',
-          variant: 'success',
-          solid: true,
-          autoHideDelay: 5000,
+    const dataUtils = useDataUtils();
+
+    const { t: t$ } = useI18n();
+    const validations = useValidation();
+    const validationRules = {
+      receivers: {},
+      subject: {
+        required: validations.required(t$('entity.validation.required').toString()),
+        minLength: validations.minLength(t$('entity.validation.minlength', { min: 4 }).toString(), 4),
+        maxLength: validations.maxLength(t$('entity.validation.maxlength', { max: 128 }).toString(), 128),
+      },
+      content: {
+        required: validations.required(t$('entity.validation.required').toString()),
+      },
+      status: {},
+      emailType: {
+        required: validations.required(t$('entity.validation.required').toString()),
+      },
+    };
+    const v$ = useVuelidate(validationRules, emails as any);
+    v$.value.$validate();
+
+    const emailValidator = (email: string) => {
+      const re =
+        /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+      return re.test(String(email).toLowerCase());
+    };
+
+    const handleChangeTag = (tags: string[]) => {
+      emails.value.receivers = tags;
+    };
+
+    return {
+      emailService,
+      alertService,
+      emails,
+      previousState,
+      emailTypeValues,
+      isSaving,
+      currentLanguage,
+      ...dataUtils,
+      v$,
+      ...useDateFormat({ entityRef: emails }),
+      t$,
+      emailValidator,
+      handleChangeTag,
+    };
+  },
+  created(): void {},
+  methods: {
+    save(): void {
+      this.isSaving = true;
+      this.emailService()
+        .createMultiple([this.emails])
+        .then(() => {
+          this.isSaving = false;
+          this.previousState();
+          this.alertService.showSuccess(this.t$('messageCentralApp.email.createdMultiple'));
+        })
+        .catch(error => {
+          this.isSaving = false;
+          this.alertService.showHttpError(error.response);
         });
-      })
-      .catch(error => {
-        this.isSaving = false;
-        this.alertService().showHttpError(this, error.response);
-      });
-  }
-
-  public previousState(): void {
-    this.$router.go(-1);
-  }
-
-  public initRelationships(): void {}
-
-  public emailValidator(email) {
-    const re =
-      /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-    return re.test(String(email).toLowerCase());
-  }
-}
+    },
+  },
+});

@@ -78,7 +78,7 @@ public class EmailPrincipalServiceImpl extends EmailServiceImpl {
                         return e;
                     })
             )
-            .collect(Collectors.toList());
+            .toList();
         log.info("List of {} Emails: {}", emails.size(), emails);
         emails = this.emailRepository.saveAll(emails);
         var dtoList = this.emailMapper.toDto(emails);

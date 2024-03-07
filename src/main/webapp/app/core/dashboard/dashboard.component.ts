@@ -1,19 +1,28 @@
-import { mixins } from 'vue-class-component';
-import { Component, Inject } from 'vue-property-decorator';
-import { IMessagesStatistics } from '@/shared/model/messages-statistics.model';
-import { ChartData, IChartData } from '@/shared/model/chart-data.model';
-import { ChartOptions, IChartOptions } from '@/shared/model/chart-options.model';
-import { Dataset } from '@/shared/model/dataset.model';
-import { MessageType } from '@/shared/model/enumerations/message-type.model';
-import { Bar } from 'vue-chartjs/legacy';
-import { BarElement, CategoryScale, Chart as ChartJS, Legend, LinearScale, Title, Tooltip } from 'chart.js';
+import { defineComponent, inject, onMounted, ref, type Ref } from 'vue';
+import { useI18n } from 'vue-i18n';
+
+import useDataUtils from '@/shared/data/data-utils.service';
+import { useDateFormat } from '@/shared/composables';
+import { useAlertService } from '@/shared/alert/alert.service';
 import DashboardService from './dashboard.service';
-import JhiDataUtils from '@/shared/data/data-utils.service';
-import AlertService from '@/shared/alert/alert.service';
+
+import { Bar } from 'vue-chartjs';
+import { BarElement, CategoryScale, Chart as ChartJS, Legend, LinearScale, Title, Tooltip } from 'chart.js';
+
+import { type IMessagesStatistics } from '@/shared/model/messages-statistics.model';
+import { MessageType } from '@/shared/model/enumerations/message-type.model';
+import { ChartData, type IChartData } from '@/shared/model/chart-data.model';
+import { Dataset } from '@/shared/model/dataset.model';
+import { ChartOptions, type IChartOptions } from '@/shared/model/chart-options.model';
 
 ChartJS.register(Title, Tooltip, Legend, BarElement, CategoryScale, LinearScale);
 
-@Component({
+export default defineComponent({
+  compatConfig: { MODE: 3 },
+  name: 'Dashboard',
+  components: {
+    Bar,
+  },
   computed: {
     smsSuccessfulSent(): number {
       return this.messagesStatistics.reduce((sum, current) => sum + current.sms.successful, 0);
@@ -39,9 +48,6 @@ ChartJS.register(Title, Tooltip, Legend, BarElement, CategoryScale, LinearScale)
     totalFailedSent(): number {
       return this.smsFailedSent + this.emailsFailedSent + this.notificationsFailedSent;
     },
-  },
-  components: {
-    Bar,
   },
   props: {
     chartId: {
@@ -73,114 +79,132 @@ ChartJS.register(Title, Tooltip, Legend, BarElement, CategoryScale, LinearScale)
       default: () => {},
     },
   },
-})
-export default class Dashboard extends mixins(JhiDataUtils) {
-  @Inject('dashboardService') private dashboardService: () => DashboardService;
-  @Inject('alertService') private alertService: () => AlertService;
+  setup(props, ctx) {
+    const dateFormat = useDateFormat();
+    const dashboardService = inject('dashboardService', () => new DashboardService());
+    const alertService = inject('alertService', () => useAlertService(), true);
 
-  public messagesStatistics: IMessagesStatistics[] = [];
+    const dataUtils = useDataUtils();
 
-  public isFetching = false;
+    const messagesStatistics: Ref<IMessagesStatistics[]> = ref([]);
 
-  public messageTypeKeys: string[] = Object.keys(MessageType);
+    const isFetching: Ref<boolean> = ref(false);
 
-  public chartDataSelected: MessageType = MessageType.ALL;
+    const messageTypeKeys: Ref<string[]> = ref(Object.keys(MessageType));
 
-  failedLabel = this.$tc('dashboard.chart.failed');
-  successfulLabel = this.$tc('dashboard.chart.successful');
-  failedColor = '#C70039';
-  successfulColor = '#669933';
+    const chartDataSelected: Ref<MessageType> = ref(MessageType.ALL);
 
-  public chartData: IChartData = new ChartData(
-    [],
-    [new Dataset(this.failedLabel, this.failedColor, []), new Dataset(this.successfulLabel, this.successfulColor, [])]
-  );
+    const failedLabel: Ref<string> = ref(useI18n().t('dashboard.chart.failed'));
+    const successfulLabel: Ref<string> = ref(useI18n().t('dashboard.chart.successful'));
+    const failedColor: Ref<string> = ref('#C70039');
+    const successfulColor: Ref<string> = ref('#669933');
 
-  public chartOptions: IChartOptions = new ChartOptions();
+    const chartData: Ref<IChartData> = ref(
+      new ChartData([], [new Dataset(failedLabel, failedColor, []), new Dataset(successfulLabel, successfulColor, [])]),
+    );
 
-  public mounted(): void {
-    this.retrieveLast30DaysMessagesStatistic();
-  }
+    const chartOptions: Ref<IChartOptions> = ref(new ChartOptions());
 
-  public retrieveLast30DaysMessagesStatistic(): void {
-    this.isFetching = true;
-    this.dashboardService()
-      .retrieveLast30DaysMessagesStatistic()
-      .then(
-        res => {
-          this.messagesStatistics = res.data;
-          this.loadChartDataOfAllMessages();
-          this.isFetching = false;
-        },
-        err => {
-          this.isFetching = false;
-          console.error(err);
-          this.alertService().showHttpError(this, err.response);
-        }
-      );
-  }
+    const retrieveLast30DaysMessagesStatistic = async () => {
+      isFetching.value = true;
+      try {
+        const res = await dashboardService().retrieveLast30DaysMessagesStatistic();
+        messagesStatistics.value = res.data;
+        loadChartDataOfAllMessages();
+      } catch (err) {
+        alertService.showHttpError(err.response);
+      } finally {
+        isFetching.value = false;
+      }
+    };
 
-  loadChartDataOfAllMessages() {
-    const dates: Array<string> = this.messagesStatistics.map(item => this.formatDateOfChart(item.date.toString()));
-    const successfulArray: Array<number> = this.messagesStatistics.map(item => {
-      return item.email.successful + item.sms.successful + item.notification.successful;
-    });
-    const failedArray: Array<number> = this.messagesStatistics.map(item => {
-      return item.email.failed + item.sms.failed + item.notification.failed;
-    });
-    this.updateChartData(dates, successfulArray, failedArray);
-  }
+    const loadChartDataOfAllMessages = () => {
+      const dates: Array<string> = messagesStatistics.value.map(item => formatDateOfChart(item.date.toString()));
+      const successfulArray: Array<number> = messagesStatistics.value.map(item => {
+        return item.email.successful + item.sms.successful + item.notification.successful;
+      });
+      const failedArray: Array<number> = messagesStatistics.value.map(item => {
+        return item.email.failed + item.sms.failed + item.notification.failed;
+      });
+      updateChartData(dates, successfulArray, failedArray);
+    };
 
-  loadChartDataOfEmails() {
-    const dates: Array<string> = this.messagesStatistics.map(item => this.formatDateOfChart(item.date.toString()));
-    const successfulArray: Array<number> = this.messagesStatistics.map(item => item.email.successful);
-    const failedArray: Array<number> = this.messagesStatistics.map(item => item.email.failed);
-    this.updateChartData(dates, successfulArray, failedArray);
-  }
+    const loadChartDataOfEmails = () => {
+      const dates: Array<string> = messagesStatistics.value.map(item => formatDateOfChart(item.date.toString()));
+      const successfulArray: Array<number> = messagesStatistics.value.map(item => item.email.successful);
+      const failedArray: Array<number> = messagesStatistics.value.map(item => item.email.failed);
+      updateChartData(dates, successfulArray, failedArray);
+    };
 
-  loadChartDataOfNotifications() {
-    const dates: Array<string> = this.messagesStatistics.map(item => this.formatDateOfChart(item.date.toString()));
-    const successfulArray: Array<number> = this.messagesStatistics.map(item => item.notification.successful);
-    const failedArray: Array<number> = this.messagesStatistics.map(item => item.notification.failed);
-    this.updateChartData(dates, successfulArray, failedArray);
-  }
+    const loadChartDataOfNotifications = () => {
+      const dates: Array<string> = messagesStatistics.value.map(item => formatDateOfChart(item.date.toString()));
+      const successfulArray: Array<number> = messagesStatistics.value.map(item => item.notification.successful);
+      const failedArray: Array<number> = messagesStatistics.value.map(item => item.notification.failed);
+      updateChartData(dates, successfulArray, failedArray);
+    };
 
-  loadChartDataOfSms() {
-    const dates: Array<string> = this.messagesStatistics.map(item => this.formatDateOfChart(item.date.toString()));
-    const successfulArray: Array<number> = this.messagesStatistics.map(item => item.sms.successful);
-    const failedArray: Array<number> = this.messagesStatistics.map(item => item.sms.failed);
-    this.updateChartData(dates, successfulArray, failedArray);
-  }
+    const loadChartDataOfSms = () => {
+      const dates: Array<string> = messagesStatistics.value.map(item => formatDateOfChart(item.date.toString()));
+      const successfulArray: Array<number> = messagesStatistics.value.map(item => item.sms.successful);
+      const failedArray: Array<number> = messagesStatistics.value.map(item => item.sms.failed);
+      updateChartData(dates, successfulArray, failedArray);
+    };
 
-  formatDateOfChart(dateStr: string): string {
-    const d = new Date(dateStr);
-    return `${d.toLocaleString('default', { day: 'numeric', month: 'short' })}`;
-  }
+    const formatDateOfChart = (dateStr: string): string => {
+      const d = new Date(dateStr);
+      return `${d.toLocaleString('default', { day: 'numeric', month: 'short' })}`;
+    };
 
-  updateChartData(data: Array<string>, successfulCount: Array<number>, failedCount: Array<number>) {
-    this.chartData = new ChartData(data, [
-      new Dataset(this.failedLabel, this.failedColor, failedCount),
-      new Dataset(this.successfulLabel, this.successfulColor, successfulCount),
+    const updateChartData = (data: Array<string>, successfulCount: Array<number>, failedCount: Array<number>) => {
+      chartData.value = new ChartData(data, [
+        new Dataset(failedLabel.value, failedColor.value, failedCount),
+        new Dataset(successfulLabel.value, successfulColor.value, successfulCount),
+      ]);
+    };
+
+    const entityMap: Map<MessageType, Function> = new Map([
+      [MessageType.ALL, loadChartDataOfAllMessages],
+      [MessageType.EMAIL, loadChartDataOfEmails],
+      [MessageType.SMS, loadChartDataOfSms],
+      [MessageType.NOTIFICATION, loadChartDataOfNotifications],
     ]);
-  }
 
-  entityMap: Map<MessageType, Function> = new Map([
-    [MessageType.ALL, this.loadChartDataOfAllMessages],
-    [MessageType.EMAIL, this.loadChartDataOfEmails],
-    [MessageType.SMS, this.loadChartDataOfSms],
-    [MessageType.NOTIFICATION, this.loadChartDataOfNotifications],
-  ]);
+    const loadChartData = (type: MessageType): void => {
+      isFetching.value = true;
+      if (entityMap.has(type)) {
+        entityMap.get(type).apply(null);
+        chartDataSelected.value = type;
+      } else {
+        console.error(`the "${type}" type doesn't exist!`);
+        loadChartDataOfAllMessages();
+        chartDataSelected.value = MessageType.ALL;
+      }
+      isFetching.value = false;
+    };
 
-  public loadChartData(type: MessageType): void {
-    this.isFetching = true;
-    if (this.entityMap.has(type)) {
-      this.entityMap.get(type).apply(null);
-      this.chartDataSelected = type;
-    } else {
-      console.error(`the "${type}" type doesn't exist!`);
-      this.loadChartDataOfAllMessages();
-      this.chartDataSelected = MessageType.ALL;
-    }
-    this.isFetching = false;
-  }
-}
+    onMounted(async () => {
+      await retrieveLast30DaysMessagesStatistic();
+    });
+
+    return {
+      ...dateFormat,
+      alertService,
+
+      ...dataUtils,
+
+      t$: useI18n().t,
+
+      isFetching,
+      messagesStatistics,
+      messageTypeKeys,
+      chartDataSelected,
+      failedLabel,
+      successfulLabel,
+      failedColor,
+      successfulColor,
+      chartData,
+      chartOptions,
+      loadChartData,
+    };
+  },
+});

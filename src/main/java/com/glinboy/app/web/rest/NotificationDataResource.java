@@ -3,13 +3,13 @@ package com.glinboy.app.web.rest;
 import com.glinboy.app.domain.NotificationData;
 import com.glinboy.app.repository.NotificationDataRepository;
 import com.glinboy.app.web.rest.errors.BadRequestAlertException;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
-import javax.validation.Valid;
-import javax.validation.constraints.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -20,7 +20,7 @@ import tech.jhipster.web.util.HeaderUtil;
 import tech.jhipster.web.util.ResponseUtil;
 
 /**
- * REST controller for managing {@link com.glinboy.app.domain.NotificationData}.
+ * REST controller for managing {@link NotificationData}.
  */
 //@RestController
 //@RequestMapping("/api")

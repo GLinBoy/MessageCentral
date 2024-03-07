@@ -9,16 +9,17 @@ import com.glinboy.app.service.dto.TokenDTO;
 import com.glinboy.app.web.rest.errors.BadRequestAlertException;
 import cz.jirutka.rsql.parser.RSQLParser;
 import cz.jirutka.rsql.parser.ast.Node;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
-import javax.validation.Valid;
-import javax.validation.constraints.NotNull;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -157,7 +158,7 @@ public class TokenPrincipalResource extends TokenResource {
      */
     @GetMapping("/tokens")
     public ResponseEntity<List<TokenDTO>> getAllTokens(
-        @org.springdoc.api.annotations.ParameterObject Pageable pageable,
+        @ParameterObject Pageable pageable,
         @RequestParam(value = "query", required = false, defaultValue = "") String query
     ) {
         Specification<Token> specs = Specification.where(null);

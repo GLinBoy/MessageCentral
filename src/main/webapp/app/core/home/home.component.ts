@@ -1,26 +1,30 @@
-import Component from 'vue-class-component';
-import { Inject, Vue } from 'vue-property-decorator';
-import LoginService from '@/account/login.service';
+import { type ComputedRef, defineComponent, inject } from 'vue';
+import { useI18n } from 'vue-i18n';
+
+import type LoginService from '@/account/login.service';
+
 import LoginForm from '@/account/login-form/login-form.vue';
 
-@Component({
+export default defineComponent({
+  compatConfig: { MODE: 3 },
   components: {
     'login-form': LoginForm,
   },
-})
-export default class Home extends Vue {
-  @Inject('loginService')
-  private loginService: () => LoginService;
+  setup() {
+    const loginService = inject<LoginService>('loginService');
 
-  public openLogin(): void {
-    this.loginService().openLogin((<any>this).$root);
-  }
+    const authenticated = inject<ComputedRef<boolean>>('authenticated');
+    const username = inject<ComputedRef<string>>('currentUsername');
 
-  public get authenticated(): boolean {
-    return this.$store.getters.authenticated;
-  }
+    const openLogin = () => {
+      loginService.openLogin();
+    };
 
-  public get username(): string {
-    return this.$store.getters.account?.login ?? '';
-  }
-}
+    return {
+      authenticated,
+      username,
+      openLogin,
+      t$: useI18n().t,
+    };
+  },
+});

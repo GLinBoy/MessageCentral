@@ -1,48 +1,44 @@
 import axios from 'axios';
-import VueI18n from 'vue-i18n';
-import { Store } from 'vuex';
+import { type Composer } from 'vue-i18n';
 import dayjs from 'dayjs';
+import languages from '@/shared/config/languages';
 
 export default class TranslationService {
-  private store: Store<unknown>;
-  private i18n: VueI18n;
+  private i18n: Composer;
+  private languages = languages();
 
-  constructor(store: Store<unknown>, i18n: VueI18n) {
-    this.store = store;
+  constructor(i18n: Composer) {
     this.i18n = i18n;
   }
 
-  public refreshTranslation(newLanguage: string) {
-    let currentLanguage = this.store.getters.currentLanguage;
-    currentLanguage = newLanguage ? newLanguage : 'en';
-    if (this.i18n && !this.i18n.messages[currentLanguage]) {
-      this.i18n.setLocaleMessage(currentLanguage, {});
-      axios.get(`i18n/${currentLanguage}.json?_=${I18N_HASH}`).then((res: any) => {
-        if (res.data) {
-          this.i18n.setLocaleMessage(currentLanguage, res.data);
-          this.setLocale(currentLanguage);
-        }
-      });
-    } else if (this.i18n) {
-      this.setLocale(currentLanguage);
+  public async refreshTranslation(newLanguage: string) {
+    if (this.i18n && !this.i18n.messages[newLanguage]) {
+      const translations = (await import(`../../i18n/${newLanguage}/${newLanguage}.js`)).default;
+      this.i18n.setLocaleMessage(newLanguage, translations);
     }
   }
 
-  private setLocale(lang: string) {
+  public setLocale(lang: string) {
     dayjs.locale(lang);
-    this.i18n.locale = lang;
-    this.store.commit('currentLanguage', lang);
+    this.i18n.locale.value = lang;
     axios.defaults.headers.common['Accept-Language'] = lang;
     document.querySelector('html').setAttribute('lang', lang);
     this.updatePageDirection(lang);
   }
 
   private isRTL(lang: string): boolean {
-    const languages = this.store.getters.languages;
-    return languages[lang] && languages[lang].rtl;
+    return this.languages[lang]?.rtl;
   }
 
   private updatePageDirection(currentLanguage: string): void {
     document.querySelector('html').setAttribute('dir', this.isRTL(currentLanguage) ? 'rtl' : 'ltr');
+  }
+
+  public isLanguageSupported(lang: string) {
+    return Boolean(this.languages[lang]);
+  }
+
+  public getLocalStoreLanguage(): string | null {
+    return localStorage.getItem('currentLanguage');
   }
 }

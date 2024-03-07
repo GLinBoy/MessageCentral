@@ -1,0 +1,21 @@
+.notification-receiver-table th:not(:last-child),
+.notification-receiver-table td:not(:last-child) {
+  flex: 1;
+}
+
+.notification-receiver-table th:last-child,
+.notification-receiver-table td:last-child {
+  flex: none;
+  width: 5em;
+}
+
+.notification-data-table th:not(:last-child),
+.notification-data-table td:not(:last-child) {
+  flex: 1;
+}
+
+.notification-data-table th:last-child,
+.notification-data-table td:last-child {
+  flex: none;
+  width: 5em;
+}

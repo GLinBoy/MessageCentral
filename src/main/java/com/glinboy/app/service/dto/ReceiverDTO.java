@@ -1,7 +1,7 @@
 package com.glinboy.app.service.dto;
 
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 import java.io.Serializable;
 import java.util.Objects;
 
@@ -48,12 +48,9 @@ public class ReceiverDTO implements Serializable {
 
     @Override
     public boolean equals(Object obj) {
-        if (this == obj)
-            return true;
-        if (obj == null)
-            return false;
-        if (getClass() != obj.getClass())
-            return false;
+        if (this == obj) return true;
+        if (obj == null) return false;
+        if (getClass() != obj.getClass()) return false;
         ReceiverDTO other = (ReceiverDTO) obj;
         return Objects.equals(token, other.token) && Objects.equals(username, other.username);
     }
@@ -68,5 +65,4 @@ public class ReceiverDTO implements Serializable {
         builder.append("]");
         return builder.toString();
     }
-
 }

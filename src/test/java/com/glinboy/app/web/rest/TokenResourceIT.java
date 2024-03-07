@@ -1,13 +1,22 @@
 package com.glinboy.app.web.rest;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.hamcrest.Matchers.hasItem;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+
 import com.glinboy.app.IntegrationTest;
 import com.glinboy.app.domain.Token;
 import com.glinboy.app.repository.TokenRepository;
-import com.glinboy.app.security.AuthoritiesConstants;
 import com.glinboy.app.service.dto.TokenDTO;
 import com.glinboy.app.service.mapper.TokenMapper;
+import jakarta.persistence.EntityManager;
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
+import java.util.List;
+import java.util.Random;
+import java.util.concurrent.atomic.AtomicLong;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -15,18 +24,6 @@ import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
-
-import javax.persistence.EntityManager;
-import java.time.Instant;
-import java.time.temporal.ChronoUnit;
-import java.util.List;
-import java.util.Random;
-import java.util.concurrent.atomic.AtomicLong;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.hamcrest.Matchers.hasItem;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 /**
  * Integration tests for the {@link TokenResource} REST controller.
@@ -45,9 +42,6 @@ class TokenResourceIT {
     private static final Boolean DEFAULT_DISABLE = false;
     private static final Boolean UPDATED_DISABLE = true;
 
-    private static final Instant DEFAULT_CREATED_AT = Instant.ofEpochMilli(0L);
-    private static final Instant UPDATED_CREATED_AT = Instant.now().truncatedTo(ChronoUnit.MILLIS);
-
     private static final Instant DEFAULT_DEPRECATE_AT = Instant.ofEpochMilli(0L);
     private static final Instant UPDATED_DEPRECATE_AT = Instant.now().truncatedTo(ChronoUnit.MILLIS);
 
@@ -55,14 +49,23 @@ class TokenResourceIT {
     private static final Integer UPDATED_ROLES = 2;
     private static final Integer SMALLER_ROLES = 1 - 1;
 
+    private static final Instant DEFAULT_CREATED_AT = Instant.ofEpochMilli(0L);
+    private static final Instant UPDATED_CREATED_AT = Instant.now().truncatedTo(ChronoUnit.MILLIS);
+
+    private static final String DEFAULT_CREATED_BY = "AAAAAAAAAA";
+    private static final String UPDATED_CREATED_BY = "BBBBBBBBBB";
+
+    private static final Instant DEFAULT_UPDATED_AT = Instant.ofEpochMilli(0L);
+    private static final Instant UPDATED_UPDATED_AT = Instant.now().truncatedTo(ChronoUnit.MILLIS);
+
+    private static final String DEFAULT_UPDATED_BY = "AAAAAAAAAA";
+    private static final String UPDATED_UPDATED_BY = "BBBBBBBBBB";
+
     private static final String ENTITY_API_URL = "/api/tokens";
     private static final String ENTITY_API_URL_ID = ENTITY_API_URL + "/{id}";
 
-    private static final String ENTITY_API_URL_ENABLE_ID = ENTITY_API_URL + "/{id}/enable";
-    private static final String ENTITY_API_URL_DISABLE_ID = ENTITY_API_URL + "/{id}/disable";
-
     private static Random random = new Random();
-    private static AtomicLong count = new AtomicLong(random.nextInt() + (2 * Integer.MAX_VALUE));
+    private static AtomicLong longCount = new AtomicLong(random.nextInt() + (2 * Integer.MAX_VALUE));
 
     @Autowired
     private TokenRepository tokenRepository;
@@ -80,7 +83,7 @@ class TokenResourceIT {
 
     /**
      * Create an entity for this test.
-     * <p>
+     *
      * This is a static method, as tests for other entities might also need it,
      * if they test an entity which requires the current entity.
      */
@@ -89,15 +92,18 @@ class TokenResourceIT {
             .name(DEFAULT_NAME)
             .token(DEFAULT_TOKEN)
             .disable(DEFAULT_DISABLE)
-            .createdAt(DEFAULT_CREATED_AT)
             .deprecateAt(DEFAULT_DEPRECATE_AT)
-            .roles(DEFAULT_ROLES);
+            .roles(DEFAULT_ROLES)
+            .createdAt(DEFAULT_CREATED_AT)
+            .createdBy(DEFAULT_CREATED_BY)
+            .updatedAt(DEFAULT_UPDATED_AT)
+            .updatedBy(DEFAULT_UPDATED_BY);
         return token;
     }
 
     /**
      * Create an updated entity for this test.
-     * <p>
+     *
      * This is a static method, as tests for other entities might also need it,
      * if they test an entity which requires the current entity.
      */
@@ -106,9 +112,12 @@ class TokenResourceIT {
             .name(UPDATED_NAME)
             .token(UPDATED_TOKEN)
             .disable(UPDATED_DISABLE)
-            .createdAt(UPDATED_CREATED_AT)
             .deprecateAt(UPDATED_DEPRECATE_AT)
-            .roles(UPDATED_ROLES);
+            .roles(UPDATED_ROLES)
+            .createdAt(UPDATED_CREATED_AT)
+            .createdBy(UPDATED_CREATED_BY)
+            .updatedAt(UPDATED_UPDATED_AT)
+            .updatedBy(UPDATED_UPDATED_BY);
         return token;
     }
 
@@ -119,7 +128,6 @@ class TokenResourceIT {
 
     @Test
     @Transactional
-    @WithMockUser(authorities = {AuthoritiesConstants.ADMIN})
     void createToken() throws Exception {
         int databaseSizeBeforeCreate = tokenRepository.findAll().size();
         // Create the Token
@@ -137,30 +145,14 @@ class TokenResourceIT {
         assertThat(testToken.getDisable()).isEqualTo(DEFAULT_DISABLE);
         assertThat(testToken.getDeprecateAt()).isEqualTo(DEFAULT_DEPRECATE_AT);
         assertThat(testToken.getRoles()).isEqualTo(DEFAULT_ROLES);
+        assertThat(testToken.getCreatedAt()).isEqualTo(DEFAULT_CREATED_AT);
+        assertThat(testToken.getCreatedBy()).isEqualTo(DEFAULT_CREATED_BY);
+        assertThat(testToken.getUpdatedAt()).isEqualTo(DEFAULT_UPDATED_AT);
+        assertThat(testToken.getUpdatedBy()).isEqualTo(DEFAULT_UPDATED_BY);
     }
 
     @Test
     @Transactional
-    @WithMockUser(
-        authorities = {
-            AuthoritiesConstants.ANONYMOUS,
-            AuthoritiesConstants.USER,
-            AuthoritiesConstants.EMAIL_USER,
-            AuthoritiesConstants.NOTIFICATION_USER,
-            AuthoritiesConstants.SMS_USER,
-        }
-    )
-    void createTokenIsForbidenForNormalUSers() throws Exception {
-        // Create the Token
-        TokenDTO tokenDTO = tokenMapper.toDto(token);
-        restTokenMockMvc
-            .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(tokenDTO)))
-            .andExpect(status().isForbidden());
-    }
-
-    @Test
-    @Transactional
-    @WithMockUser(authorities = {AuthoritiesConstants.ADMIN})
     void createTokenWithExistingId() throws Exception {
         // Create the Token with an existing ID
         token.setId(1L);
@@ -180,7 +172,6 @@ class TokenResourceIT {
 
     @Test
     @Transactional
-    @WithMockUser(authorities = {AuthoritiesConstants.ADMIN})
     void checkNameIsRequired() throws Exception {
         int databaseSizeBeforeTest = tokenRepository.findAll().size();
         // set the field null
@@ -197,10 +188,8 @@ class TokenResourceIT {
         assertThat(tokenList).hasSize(databaseSizeBeforeTest);
     }
 
-    @Disabled("This is test isn't required any more")
     @Test
     @Transactional
-    @WithMockUser(authorities = {AuthoritiesConstants.ADMIN})
     void checkTokenIsRequired() throws Exception {
         int databaseSizeBeforeTest = tokenRepository.findAll().size();
         // set the field null
@@ -219,7 +208,6 @@ class TokenResourceIT {
 
     @Test
     @Transactional
-    @WithMockUser(authorities = {AuthoritiesConstants.ADMIN})
     void checkDisableIsRequired() throws Exception {
         int databaseSizeBeforeTest = tokenRepository.findAll().size();
         // set the field null
@@ -236,29 +224,8 @@ class TokenResourceIT {
         assertThat(tokenList).hasSize(databaseSizeBeforeTest);
     }
 
-    @Disabled("This test isn't required anymore")
     @Test
     @Transactional
-    @WithMockUser(authorities = {AuthoritiesConstants.ADMIN})
-    void checkCreatedAtIsRequired() throws Exception {
-        int databaseSizeBeforeTest = tokenRepository.findAll().size();
-        // set the field null
-        token.setCreatedAt(null);
-
-        // Create the Token, which fails.
-        TokenDTO tokenDTO = tokenMapper.toDto(token);
-
-        restTokenMockMvc
-            .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(tokenDTO)))
-            .andExpect(status().isBadRequest());
-
-        List<Token> tokenList = tokenRepository.findAll();
-        assertThat(tokenList).hasSize(databaseSizeBeforeTest);
-    }
-
-    @Test
-    @Transactional
-    @WithMockUser(authorities = {AuthoritiesConstants.ADMIN})
     void checkDeprecateAtIsRequired() throws Exception {
         int databaseSizeBeforeTest = tokenRepository.findAll().size();
         // set the field null
@@ -277,7 +244,6 @@ class TokenResourceIT {
 
     @Test
     @Transactional
-    @WithMockUser(authorities = {AuthoritiesConstants.ADMIN})
     void checkRolesIsRequired() throws Exception {
         int databaseSizeBeforeTest = tokenRepository.findAll().size();
         // set the field null
@@ -296,7 +262,78 @@ class TokenResourceIT {
 
     @Test
     @Transactional
-    @WithMockUser(authorities = {AuthoritiesConstants.ADMIN})
+    void checkCreatedAtIsRequired() throws Exception {
+        int databaseSizeBeforeTest = tokenRepository.findAll().size();
+        // set the field null
+        token.setCreatedAt(null);
+
+        // Create the Token, which fails.
+        TokenDTO tokenDTO = tokenMapper.toDto(token);
+
+        restTokenMockMvc
+            .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(tokenDTO)))
+            .andExpect(status().isBadRequest());
+
+        List<Token> tokenList = tokenRepository.findAll();
+        assertThat(tokenList).hasSize(databaseSizeBeforeTest);
+    }
+
+    @Test
+    @Transactional
+    void checkCreatedByIsRequired() throws Exception {
+        int databaseSizeBeforeTest = tokenRepository.findAll().size();
+        // set the field null
+        token.setCreatedBy(null);
+
+        // Create the Token, which fails.
+        TokenDTO tokenDTO = tokenMapper.toDto(token);
+
+        restTokenMockMvc
+            .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(tokenDTO)))
+            .andExpect(status().isBadRequest());
+
+        List<Token> tokenList = tokenRepository.findAll();
+        assertThat(tokenList).hasSize(databaseSizeBeforeTest);
+    }
+
+    @Test
+    @Transactional
+    void checkUpdatedAtIsRequired() throws Exception {
+        int databaseSizeBeforeTest = tokenRepository.findAll().size();
+        // set the field null
+        token.setUpdatedAt(null);
+
+        // Create the Token, which fails.
+        TokenDTO tokenDTO = tokenMapper.toDto(token);
+
+        restTokenMockMvc
+            .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(tokenDTO)))
+            .andExpect(status().isBadRequest());
+
+        List<Token> tokenList = tokenRepository.findAll();
+        assertThat(tokenList).hasSize(databaseSizeBeforeTest);
+    }
+
+    @Test
+    @Transactional
+    void checkUpdatedByIsRequired() throws Exception {
+        int databaseSizeBeforeTest = tokenRepository.findAll().size();
+        // set the field null
+        token.setUpdatedBy(null);
+
+        // Create the Token, which fails.
+        TokenDTO tokenDTO = tokenMapper.toDto(token);
+
+        restTokenMockMvc
+            .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(tokenDTO)))
+            .andExpect(status().isBadRequest());
+
+        List<Token> tokenList = tokenRepository.findAll();
+        assertThat(tokenList).hasSize(databaseSizeBeforeTest);
+    }
+
+    @Test
+    @Transactional
     void getAllTokens() throws Exception {
         // Initialize the database
         tokenRepository.saveAndFlush(token);
@@ -311,31 +348,15 @@ class TokenResourceIT {
             .andExpect(jsonPath("$.[*].token").value(hasItem(DEFAULT_TOKEN)))
             .andExpect(jsonPath("$.[*].disable").value(hasItem(DEFAULT_DISABLE.booleanValue())))
             .andExpect(jsonPath("$.[*].deprecateAt").value(hasItem(DEFAULT_DEPRECATE_AT.toString())))
-            .andExpect(jsonPath("$.[*].roles").value(hasItem(DEFAULT_ROLES)));
+            .andExpect(jsonPath("$.[*].roles").value(hasItem(DEFAULT_ROLES)))
+            .andExpect(jsonPath("$.[*].createdAt").value(hasItem(DEFAULT_CREATED_AT.toString())))
+            .andExpect(jsonPath("$.[*].createdBy").value(hasItem(DEFAULT_CREATED_BY)))
+            .andExpect(jsonPath("$.[*].updatedAt").value(hasItem(DEFAULT_UPDATED_AT.toString())))
+            .andExpect(jsonPath("$.[*].updatedBy").value(hasItem(DEFAULT_UPDATED_BY)));
     }
 
     @Test
     @Transactional
-    @WithMockUser(
-        authorities = {
-            AuthoritiesConstants.ANONYMOUS,
-            AuthoritiesConstants.USER,
-            AuthoritiesConstants.EMAIL_USER,
-            AuthoritiesConstants.NOTIFICATION_USER,
-            AuthoritiesConstants.SMS_USER,
-        }
-    )
-    void getAllTokensForbidenForNormalUsers() throws Exception {
-        // Initialize the database
-        tokenRepository.saveAndFlush(token);
-
-        // Get all the tokenList
-        restTokenMockMvc.perform(get(ENTITY_API_URL + "?sort=id,desc")).andExpect(status().isForbidden());
-    }
-
-    @Test
-    @Transactional
-    @WithMockUser(authorities = {AuthoritiesConstants.ADMIN})
     void getToken() throws Exception {
         // Initialize the database
         tokenRepository.saveAndFlush(token);
@@ -350,507 +371,536 @@ class TokenResourceIT {
             .andExpect(jsonPath("$.token").value(DEFAULT_TOKEN))
             .andExpect(jsonPath("$.disable").value(DEFAULT_DISABLE.booleanValue()))
             .andExpect(jsonPath("$.deprecateAt").value(DEFAULT_DEPRECATE_AT.toString()))
-            .andExpect(jsonPath("$.roles").value(DEFAULT_ROLES));
+            .andExpect(jsonPath("$.roles").value(DEFAULT_ROLES))
+            .andExpect(jsonPath("$.createdAt").value(DEFAULT_CREATED_AT.toString()))
+            .andExpect(jsonPath("$.createdBy").value(DEFAULT_CREATED_BY))
+            .andExpect(jsonPath("$.updatedAt").value(DEFAULT_UPDATED_AT.toString()))
+            .andExpect(jsonPath("$.updatedBy").value(DEFAULT_UPDATED_BY));
     }
 
     @Test
     @Transactional
-    @WithMockUser(
-        authorities = {
-            AuthoritiesConstants.ANONYMOUS,
-            AuthoritiesConstants.USER,
-            AuthoritiesConstants.EMAIL_USER,
-            AuthoritiesConstants.NOTIFICATION_USER,
-            AuthoritiesConstants.SMS_USER,
-        }
-    )
-    void getTokenForbidenForNormalUsers() throws Exception {
-        // Initialize the database
-        tokenRepository.saveAndFlush(token);
-
-        // Get the token
-        restTokenMockMvc.perform(get(ENTITY_API_URL_ID, token.getId())).andExpect(status().isForbidden());
-    }
-
-    @Test
-    @Transactional
-    @WithMockUser(authorities = {AuthoritiesConstants.ADMIN})
     void getTokensByIdFiltering() throws Exception {
         // Initialize the database
         tokenRepository.saveAndFlush(token);
 
         Long id = token.getId();
 
-        defaultTokenShouldBeFound("query=id==" + id);
-        defaultTokenShouldNotBeFound("query=id!=" + id);
+        defaultTokenShouldBeFound("id.equals=" + id);
+        defaultTokenShouldNotBeFound("id.notEquals=" + id);
 
-        defaultTokenShouldBeFound("query=id>=" + id);
-        defaultTokenShouldNotBeFound("query=id>" + id);
+        defaultTokenShouldBeFound("id.greaterThanOrEqual=" + id);
+        defaultTokenShouldNotBeFound("id.greaterThan=" + id);
 
-        defaultTokenShouldBeFound("query=id<=" + id);
-        defaultTokenShouldNotBeFound("query=id<" + id);
+        defaultTokenShouldBeFound("id.lessThanOrEqual=" + id);
+        defaultTokenShouldNotBeFound("id.lessThan=" + id);
     }
 
     @Test
     @Transactional
-    @WithMockUser(authorities = {AuthoritiesConstants.ADMIN})
     void getAllTokensByNameIsEqualToSomething() throws Exception {
         // Initialize the database
         tokenRepository.saveAndFlush(token);
 
         // Get all the tokenList where name equals to DEFAULT_NAME
-        defaultTokenShouldBeFound("query=name==" + DEFAULT_NAME);
+        defaultTokenShouldBeFound("name.equals=" + DEFAULT_NAME);
 
         // Get all the tokenList where name equals to UPDATED_NAME
-        defaultTokenShouldNotBeFound("query=name==" + UPDATED_NAME);
+        defaultTokenShouldNotBeFound("name.equals=" + UPDATED_NAME);
     }
 
     @Test
     @Transactional
-    @WithMockUser(authorities = {AuthoritiesConstants.ADMIN})
-    void getAllTokensByNameIsNotEqualToSomething() throws Exception {
-        // Initialize the database
-        tokenRepository.saveAndFlush(token);
-
-        // Get all the tokenList where name not equals to DEFAULT_NAME
-        defaultTokenShouldNotBeFound("query=name!=" + DEFAULT_NAME);
-
-        // Get all the tokenList where name not equals to UPDATED_NAME
-        defaultTokenShouldBeFound("query=name!=" + UPDATED_NAME);
-    }
-
-    @Test
-    @Transactional
-    @WithMockUser(authorities = {AuthoritiesConstants.ADMIN})
     void getAllTokensByNameIsInShouldWork() throws Exception {
         // Initialize the database
         tokenRepository.saveAndFlush(token);
 
         // Get all the tokenList where name in DEFAULT_NAME or UPDATED_NAME
-        defaultTokenShouldBeFound(String.format("query=name=in=(%s, %s)", DEFAULT_NAME, UPDATED_NAME));
+        defaultTokenShouldBeFound("name.in=" + DEFAULT_NAME + "," + UPDATED_NAME);
 
         // Get all the tokenList where name equals to UPDATED_NAME
-        defaultTokenShouldNotBeFound(String.format("query=name=in=(%s)", UPDATED_NAME));
+        defaultTokenShouldNotBeFound("name.in=" + UPDATED_NAME);
     }
 
     @Test
     @Transactional
-    @WithMockUser(authorities = {AuthoritiesConstants.ADMIN})
     void getAllTokensByNameIsNullOrNotNull() throws Exception {
         // Initialize the database
         tokenRepository.saveAndFlush(token);
 
         // Get all the tokenList where name is not null
-        defaultTokenShouldBeFound("query=name!=null");
+        defaultTokenShouldBeFound("name.specified=true");
 
         // Get all the tokenList where name is null
-        defaultTokenShouldNotBeFound("query=name==null");
+        defaultTokenShouldNotBeFound("name.specified=false");
     }
 
     @Test
     @Transactional
-    @WithMockUser(authorities = {AuthoritiesConstants.ADMIN})
     void getAllTokensByNameContainsSomething() throws Exception {
         // Initialize the database
         tokenRepository.saveAndFlush(token);
 
         // Get all the tokenList where name contains DEFAULT_NAME
-        defaultTokenShouldBeFound("query=name==*" + DEFAULT_NAME + "*");
+        defaultTokenShouldBeFound("name.contains=" + DEFAULT_NAME);
 
         // Get all the tokenList where name contains UPDATED_NAME
-        defaultTokenShouldNotBeFound("query=name==*" + UPDATED_NAME + "*");
+        defaultTokenShouldNotBeFound("name.contains=" + UPDATED_NAME);
     }
 
     @Test
     @Transactional
-    @WithMockUser(authorities = {AuthoritiesConstants.ADMIN})
     void getAllTokensByNameNotContainsSomething() throws Exception {
         // Initialize the database
         tokenRepository.saveAndFlush(token);
 
         // Get all the tokenList where name does not contain DEFAULT_NAME
-        defaultTokenShouldNotBeFound("query=name!=*" + DEFAULT_NAME + "*");
+        defaultTokenShouldNotBeFound("name.doesNotContain=" + DEFAULT_NAME);
 
         // Get all the tokenList where name does not contain UPDATED_NAME
-        defaultTokenShouldBeFound("query=name!=*" + UPDATED_NAME + "*");
+        defaultTokenShouldBeFound("name.doesNotContain=" + UPDATED_NAME);
     }
 
     @Test
     @Transactional
-    @WithMockUser(authorities = {AuthoritiesConstants.ADMIN})
     void getAllTokensByTokenIsEqualToSomething() throws Exception {
         // Initialize the database
         tokenRepository.saveAndFlush(token);
 
         // Get all the tokenList where token equals to DEFAULT_TOKEN
-        defaultTokenShouldBeFound("query=token==" + DEFAULT_TOKEN);
+        defaultTokenShouldBeFound("token.equals=" + DEFAULT_TOKEN);
 
         // Get all the tokenList where token equals to UPDATED_TOKEN
-        defaultTokenShouldNotBeFound("query=token==" + UPDATED_TOKEN);
+        defaultTokenShouldNotBeFound("token.equals=" + UPDATED_TOKEN);
     }
 
     @Test
     @Transactional
-    @WithMockUser(authorities = {AuthoritiesConstants.ADMIN})
-    void getAllTokensByTokenIsNotEqualToSomething() throws Exception {
-        // Initialize the database
-        tokenRepository.saveAndFlush(token);
-
-        // Get all the tokenList where token not equals to DEFAULT_TOKEN
-        defaultTokenShouldNotBeFound("query=token!=" + DEFAULT_TOKEN);
-
-        // Get all the tokenList where token not equals to UPDATED_TOKEN
-        defaultTokenShouldBeFound("query=token!=" + UPDATED_TOKEN);
-    }
-
-    @Test
-    @Transactional
-    @WithMockUser(authorities = {AuthoritiesConstants.ADMIN})
     void getAllTokensByTokenIsInShouldWork() throws Exception {
         // Initialize the database
         tokenRepository.saveAndFlush(token);
 
         // Get all the tokenList where token in DEFAULT_TOKEN or UPDATED_TOKEN
-        defaultTokenShouldBeFound(String.format("query=token=in=(%s, %s)", DEFAULT_TOKEN, UPDATED_TOKEN));
+        defaultTokenShouldBeFound("token.in=" + DEFAULT_TOKEN + "," + UPDATED_TOKEN);
 
         // Get all the tokenList where token equals to UPDATED_TOKEN
-        defaultTokenShouldNotBeFound(String.format("query=token=in=(%s)", UPDATED_TOKEN));
+        defaultTokenShouldNotBeFound("token.in=" + UPDATED_TOKEN);
     }
 
     @Test
     @Transactional
-    @WithMockUser(authorities = {AuthoritiesConstants.ADMIN})
     void getAllTokensByTokenIsNullOrNotNull() throws Exception {
         // Initialize the database
         tokenRepository.saveAndFlush(token);
 
         // Get all the tokenList where token is not null
-        defaultTokenShouldBeFound("query=token!=null");
+        defaultTokenShouldBeFound("token.specified=true");
 
         // Get all the tokenList where token is null
-        defaultTokenShouldNotBeFound("query=token==null");
+        defaultTokenShouldNotBeFound("token.specified=false");
     }
 
     @Test
     @Transactional
-    @WithMockUser(authorities = {AuthoritiesConstants.ADMIN})
     void getAllTokensByTokenContainsSomething() throws Exception {
         // Initialize the database
         tokenRepository.saveAndFlush(token);
 
         // Get all the tokenList where token contains DEFAULT_TOKEN
-        defaultTokenShouldBeFound("query=token==*" + DEFAULT_TOKEN + "*");
+        defaultTokenShouldBeFound("token.contains=" + DEFAULT_TOKEN);
 
         // Get all the tokenList where token contains UPDATED_TOKEN
-        defaultTokenShouldNotBeFound("query=token==*" + UPDATED_TOKEN + "*");
+        defaultTokenShouldNotBeFound("token.contains=" + UPDATED_TOKEN);
     }
 
     @Test
     @Transactional
-    @WithMockUser(authorities = {AuthoritiesConstants.ADMIN})
     void getAllTokensByTokenNotContainsSomething() throws Exception {
         // Initialize the database
         tokenRepository.saveAndFlush(token);
 
         // Get all the tokenList where token does not contain DEFAULT_TOKEN
-        defaultTokenShouldNotBeFound("query=token!=*" + DEFAULT_TOKEN + "*");
+        defaultTokenShouldNotBeFound("token.doesNotContain=" + DEFAULT_TOKEN);
 
         // Get all the tokenList where token does not contain UPDATED_TOKEN
-        defaultTokenShouldBeFound("query=token!=*" + UPDATED_TOKEN + "*");
+        defaultTokenShouldBeFound("token.doesNotContain=" + UPDATED_TOKEN);
     }
 
-    @Disabled("Need more work and does not necessary now")
     @Test
     @Transactional
-    @WithMockUser(authorities = {AuthoritiesConstants.ADMIN})
     void getAllTokensByDisableIsEqualToSomething() throws Exception {
         // Initialize the database
         tokenRepository.saveAndFlush(token);
 
         // Get all the tokenList where disable equals to DEFAULT_DISABLE
-        defaultTokenShouldBeFound("query=disable==" + DEFAULT_DISABLE);
+        defaultTokenShouldBeFound("disable.equals=" + DEFAULT_DISABLE);
 
         // Get all the tokenList where disable equals to UPDATED_DISABLE
-        defaultTokenShouldNotBeFound("query=disable==" + UPDATED_DISABLE);
+        defaultTokenShouldNotBeFound("disable.equals=" + UPDATED_DISABLE);
     }
 
-    @Disabled("Need more work and does not necessary now")
     @Test
     @Transactional
-    @WithMockUser(authorities = {AuthoritiesConstants.ADMIN})
-    void getAllTokensByDisableIsNotEqualToSomething() throws Exception {
-        // Initialize the database
-        tokenRepository.saveAndFlush(token);
-
-        // Get all the tokenList where disable not equals to DEFAULT_DISABLE
-        defaultTokenShouldNotBeFound("query=disable!=" + DEFAULT_DISABLE);
-
-        // Get all the tokenList where disable not equals to UPDATED_DISABLE
-        defaultTokenShouldBeFound("query=disable!=" + UPDATED_DISABLE);
-    }
-
-    @Disabled("Need more work and does not necessary now")
-    @Test
-    @Transactional
-    @WithMockUser(authorities = {AuthoritiesConstants.ADMIN})
     void getAllTokensByDisableIsInShouldWork() throws Exception {
         // Initialize the database
         tokenRepository.saveAndFlush(token);
 
         // Get all the tokenList where disable in DEFAULT_DISABLE or UPDATED_DISABLE
-        defaultTokenShouldBeFound(String.format("query=disable=in=(%s, %s)", DEFAULT_DISABLE, UPDATED_DISABLE));
+        defaultTokenShouldBeFound("disable.in=" + DEFAULT_DISABLE + "," + UPDATED_DISABLE);
 
         // Get all the tokenList where disable equals to UPDATED_DISABLE
-        defaultTokenShouldNotBeFound(String.format("query=disable=in=(%s)", UPDATED_DISABLE));
+        defaultTokenShouldNotBeFound("disable.in=" + UPDATED_DISABLE);
     }
 
-    @Disabled("Need more work and does not necessary now")
     @Test
     @Transactional
-    @WithMockUser(authorities = {AuthoritiesConstants.ADMIN})
     void getAllTokensByDisableIsNullOrNotNull() throws Exception {
         // Initialize the database
         tokenRepository.saveAndFlush(token);
 
         // Get all the tokenList where disable is not null
-        defaultTokenShouldBeFound("query=disable!=null");
+        defaultTokenShouldBeFound("disable.specified=true");
 
         // Get all the tokenList where disable is null
-        defaultTokenShouldNotBeFound("query=disable==null");
+        defaultTokenShouldNotBeFound("disable.specified=false");
     }
 
-    @Disabled("Need more work and does not necessary now")
     @Test
     @Transactional
-    @WithMockUser(authorities = {AuthoritiesConstants.ADMIN})
-    void getAllTokensByCreatedAtIsEqualToSomething() throws Exception {
-        // Initialize the database
-        tokenRepository.saveAndFlush(token);
-
-        // Get all the tokenList where createdAt equals to DEFAULT_CREATED_AT
-        defaultTokenShouldBeFound("query=createdAt==" + DEFAULT_CREATED_AT);
-
-        // Get all the tokenList where createdAt equals to UPDATED_CREATED_AT
-        defaultTokenShouldNotBeFound("query=createdAt==" + UPDATED_CREATED_AT);
-    }
-
-    @Disabled("Need more work and does not necessary now")
-    @Test
-    @Transactional
-    @WithMockUser(authorities = {AuthoritiesConstants.ADMIN})
-    void getAllTokensByCreatedAtIsNotEqualToSomething() throws Exception {
-        // Initialize the database
-        tokenRepository.saveAndFlush(token);
-
-        // Get all the tokenList where createdAt not equals to DEFAULT_CREATED_AT
-        defaultTokenShouldNotBeFound("query=createdAt!=" + DEFAULT_CREATED_AT);
-
-        // Get all the tokenList where createdAt not equals to UPDATED_CREATED_AT
-        defaultTokenShouldBeFound("query=createdAt!=" + UPDATED_CREATED_AT);
-    }
-
-    @Disabled("Need more work and does not necessary now")
-    @Test
-    @Transactional
-    @WithMockUser(authorities = {AuthoritiesConstants.ADMIN})
-    void getAllTokensByCreatedAtIsInShouldWork() throws Exception {
-        // Initialize the database
-        tokenRepository.saveAndFlush(token);
-
-        // Get all the tokenList where createdAt in DEFAULT_CREATED_AT or UPDATED_CREATED_AT
-        defaultTokenShouldBeFound(String.format("query=createdAt=in=(%s, %s)", DEFAULT_CREATED_AT, UPDATED_CREATED_AT));
-
-        // Get all the tokenList where createdAt equals to UPDATED_CREATED_AT
-        defaultTokenShouldNotBeFound(String.format("query=createdAt=in=(%s)" + UPDATED_CREATED_AT));
-    }
-
-    @Disabled("Need more work and does not necessary now")
-    @Test
-    @Transactional
-    @WithMockUser(authorities = {AuthoritiesConstants.ADMIN})
-    void getAllTokensByCreatedAtIsNullOrNotNull() throws Exception {
-        // Initialize the database
-        tokenRepository.saveAndFlush(token);
-
-        // Get all the tokenList where createdAt is not null
-        defaultTokenShouldBeFound("query=createdAt!=null");
-
-        // Get all the tokenList where createdAt is null
-        defaultTokenShouldNotBeFound("query=createdAt==null");
-    }
-
-    @Disabled("Need more work and does not necessary now")
-    @Test
-    @Transactional
-    @WithMockUser(authorities = {AuthoritiesConstants.ADMIN})
     void getAllTokensByDeprecateAtIsEqualToSomething() throws Exception {
         // Initialize the database
         tokenRepository.saveAndFlush(token);
 
         // Get all the tokenList where deprecateAt equals to DEFAULT_DEPRECATE_AT
-        defaultTokenShouldBeFound("query=deprecateAt==" + DEFAULT_DEPRECATE_AT);
+        defaultTokenShouldBeFound("deprecateAt.equals=" + DEFAULT_DEPRECATE_AT);
 
         // Get all the tokenList where deprecateAt equals to UPDATED_DEPRECATE_AT
-        defaultTokenShouldNotBeFound("query=deprecateAt==" + UPDATED_DEPRECATE_AT);
+        defaultTokenShouldNotBeFound("deprecateAt.equals=" + UPDATED_DEPRECATE_AT);
     }
 
-    @Disabled("Need more work and does not necessary now")
     @Test
     @Transactional
-    @WithMockUser(authorities = {AuthoritiesConstants.ADMIN})
-    void getAllTokensByDeprecateAtIsNotEqualToSomething() throws Exception {
-        // Initialize the database
-        tokenRepository.saveAndFlush(token);
-
-        // Get all the tokenList where deprecateAt not equals to DEFAULT_DEPRECATE_AT
-        defaultTokenShouldNotBeFound("query=deprecateAt!=" + DEFAULT_DEPRECATE_AT);
-
-        // Get all the tokenList where deprecateAt not equals to UPDATED_DEPRECATE_AT
-        defaultTokenShouldBeFound("query=deprecateAt!=" + UPDATED_DEPRECATE_AT);
-    }
-
-    @Disabled("Need more work and does not necessary now")
-    @Test
-    @Transactional
-    @WithMockUser(authorities = {AuthoritiesConstants.ADMIN})
     void getAllTokensByDeprecateAtIsInShouldWork() throws Exception {
         // Initialize the database
         tokenRepository.saveAndFlush(token);
 
         // Get all the tokenList where deprecateAt in DEFAULT_DEPRECATE_AT or UPDATED_DEPRECATE_AT
-        defaultTokenShouldBeFound(String.format("query=deprecateAt=in=(%s, %s)", DEFAULT_DEPRECATE_AT, UPDATED_DEPRECATE_AT));
+        defaultTokenShouldBeFound("deprecateAt.in=" + DEFAULT_DEPRECATE_AT + "," + UPDATED_DEPRECATE_AT);
 
         // Get all the tokenList where deprecateAt equals to UPDATED_DEPRECATE_AT
-        defaultTokenShouldNotBeFound(String.format("query=deprecateAt=in=(%s)" + UPDATED_DEPRECATE_AT));
+        defaultTokenShouldNotBeFound("deprecateAt.in=" + UPDATED_DEPRECATE_AT);
     }
 
-    @Disabled("Need more work and does not necessary now")
     @Test
     @Transactional
-    @WithMockUser(authorities = {AuthoritiesConstants.ADMIN})
     void getAllTokensByDeprecateAtIsNullOrNotNull() throws Exception {
         // Initialize the database
         tokenRepository.saveAndFlush(token);
 
         // Get all the tokenList where deprecateAt is not null
-        defaultTokenShouldBeFound("query=deprecateAt!=null");
+        defaultTokenShouldBeFound("deprecateAt.specified=true");
 
         // Get all the tokenList where deprecateAt is null
-        defaultTokenShouldNotBeFound("query=deprecateAt==null");
+        defaultTokenShouldNotBeFound("deprecateAt.specified=false");
     }
 
     @Test
     @Transactional
-    @WithMockUser(authorities = {AuthoritiesConstants.ADMIN})
     void getAllTokensByRolesIsEqualToSomething() throws Exception {
         // Initialize the database
         tokenRepository.saveAndFlush(token);
 
         // Get all the tokenList where roles equals to DEFAULT_ROLES
-        defaultTokenShouldBeFound("query=roles==" + DEFAULT_ROLES);
+        defaultTokenShouldBeFound("roles.equals=" + DEFAULT_ROLES);
 
         // Get all the tokenList where roles equals to UPDATED_ROLES
-        defaultTokenShouldNotBeFound("query=roles==" + UPDATED_ROLES);
+        defaultTokenShouldNotBeFound("roles.equals=" + UPDATED_ROLES);
     }
 
     @Test
     @Transactional
-    @WithMockUser(authorities = {AuthoritiesConstants.ADMIN})
-    void getAllTokensByRolesIsNotEqualToSomething() throws Exception {
-        // Initialize the database
-        tokenRepository.saveAndFlush(token);
-
-        // Get all the tokenList where roles not equals to DEFAULT_ROLES
-        defaultTokenShouldNotBeFound("query=roles!=" + DEFAULT_ROLES);
-
-        // Get all the tokenList where roles not equals to UPDATED_ROLES
-        defaultTokenShouldBeFound("query=roles!=" + UPDATED_ROLES);
-    }
-
-    @Test
-    @Transactional
-    @WithMockUser(authorities = {AuthoritiesConstants.ADMIN})
     void getAllTokensByRolesIsInShouldWork() throws Exception {
         // Initialize the database
         tokenRepository.saveAndFlush(token);
 
         // Get all the tokenList where roles in DEFAULT_ROLES or UPDATED_ROLES
-        defaultTokenShouldBeFound(String.format("query=roles=in=(%s, %s)", DEFAULT_ROLES, UPDATED_ROLES));
+        defaultTokenShouldBeFound("roles.in=" + DEFAULT_ROLES + "," + UPDATED_ROLES);
 
         // Get all the tokenList where roles equals to UPDATED_ROLES
-        defaultTokenShouldNotBeFound(String.format("query=roles=in=(%s)", UPDATED_ROLES));
+        defaultTokenShouldNotBeFound("roles.in=" + UPDATED_ROLES);
     }
 
-    @Disabled("Need more work and does not necessary now")
     @Test
     @Transactional
-    @WithMockUser(authorities = {AuthoritiesConstants.ADMIN})
     void getAllTokensByRolesIsNullOrNotNull() throws Exception {
         // Initialize the database
         tokenRepository.saveAndFlush(token);
 
         // Get all the tokenList where roles is not null
-        defaultTokenShouldBeFound("query=roles!=null");
+        defaultTokenShouldBeFound("roles.specified=true");
 
         // Get all the tokenList where roles is null
-        defaultTokenShouldNotBeFound("query=roles==null");
+        defaultTokenShouldNotBeFound("roles.specified=false");
     }
 
     @Test
     @Transactional
-    @WithMockUser(authorities = {AuthoritiesConstants.ADMIN})
     void getAllTokensByRolesIsGreaterThanOrEqualToSomething() throws Exception {
         // Initialize the database
         tokenRepository.saveAndFlush(token);
 
         // Get all the tokenList where roles is greater than or equal to DEFAULT_ROLES
-        defaultTokenShouldBeFound("query=roles>=" + DEFAULT_ROLES);
+        defaultTokenShouldBeFound("roles.greaterThanOrEqual=" + DEFAULT_ROLES);
 
         // Get all the tokenList where roles is greater than or equal to UPDATED_ROLES
-        defaultTokenShouldNotBeFound("query=roles>=" + UPDATED_ROLES);
+        defaultTokenShouldNotBeFound("roles.greaterThanOrEqual=" + UPDATED_ROLES);
     }
 
-    @Disabled("Need more work and does not necessary now")
     @Test
     @Transactional
-    @WithMockUser(authorities = {AuthoritiesConstants.ADMIN})
     void getAllTokensByRolesIsLessThanOrEqualToSomething() throws Exception {
         // Initialize the database
         tokenRepository.saveAndFlush(token);
 
         // Get all the tokenList where roles is less than or equal to DEFAULT_ROLES
-        defaultTokenShouldBeFound("query=role<=" + DEFAULT_ROLES);
+        defaultTokenShouldBeFound("roles.lessThanOrEqual=" + DEFAULT_ROLES);
 
         // Get all the tokenList where roles is less than or equal to SMALLER_ROLES
-        defaultTokenShouldNotBeFound("query=roles<=" + SMALLER_ROLES);
+        defaultTokenShouldNotBeFound("roles.lessThanOrEqual=" + SMALLER_ROLES);
     }
 
     @Test
     @Transactional
-    @WithMockUser(authorities = {AuthoritiesConstants.ADMIN})
     void getAllTokensByRolesIsLessThanSomething() throws Exception {
         // Initialize the database
         tokenRepository.saveAndFlush(token);
 
         // Get all the tokenList where roles is less than DEFAULT_ROLES
-        defaultTokenShouldNotBeFound("query=roles<" + DEFAULT_ROLES);
+        defaultTokenShouldNotBeFound("roles.lessThan=" + DEFAULT_ROLES);
 
         // Get all the tokenList where roles is less than UPDATED_ROLES
-        defaultTokenShouldBeFound("query=roles<" + UPDATED_ROLES);
+        defaultTokenShouldBeFound("roles.lessThan=" + UPDATED_ROLES);
     }
 
     @Test
     @Transactional
-    @WithMockUser(authorities = {AuthoritiesConstants.ADMIN})
     void getAllTokensByRolesIsGreaterThanSomething() throws Exception {
         // Initialize the database
         tokenRepository.saveAndFlush(token);
 
         // Get all the tokenList where roles is greater than DEFAULT_ROLES
-        defaultTokenShouldNotBeFound("query=roles>" + DEFAULT_ROLES);
+        defaultTokenShouldNotBeFound("roles.greaterThan=" + DEFAULT_ROLES);
 
         // Get all the tokenList where roles is greater than SMALLER_ROLES
-        defaultTokenShouldBeFound("query=roles>" + SMALLER_ROLES);
+        defaultTokenShouldBeFound("roles.greaterThan=" + SMALLER_ROLES);
+    }
+
+    @Test
+    @Transactional
+    void getAllTokensByCreatedAtIsEqualToSomething() throws Exception {
+        // Initialize the database
+        tokenRepository.saveAndFlush(token);
+
+        // Get all the tokenList where createdAt equals to DEFAULT_CREATED_AT
+        defaultTokenShouldBeFound("createdAt.equals=" + DEFAULT_CREATED_AT);
+
+        // Get all the tokenList where createdAt equals to UPDATED_CREATED_AT
+        defaultTokenShouldNotBeFound("createdAt.equals=" + UPDATED_CREATED_AT);
+    }
+
+    @Test
+    @Transactional
+    void getAllTokensByCreatedAtIsInShouldWork() throws Exception {
+        // Initialize the database
+        tokenRepository.saveAndFlush(token);
+
+        // Get all the tokenList where createdAt in DEFAULT_CREATED_AT or UPDATED_CREATED_AT
+        defaultTokenShouldBeFound("createdAt.in=" + DEFAULT_CREATED_AT + "," + UPDATED_CREATED_AT);
+
+        // Get all the tokenList where createdAt equals to UPDATED_CREATED_AT
+        defaultTokenShouldNotBeFound("createdAt.in=" + UPDATED_CREATED_AT);
+    }
+
+    @Test
+    @Transactional
+    void getAllTokensByCreatedAtIsNullOrNotNull() throws Exception {
+        // Initialize the database
+        tokenRepository.saveAndFlush(token);
+
+        // Get all the tokenList where createdAt is not null
+        defaultTokenShouldBeFound("createdAt.specified=true");
+
+        // Get all the tokenList where createdAt is null
+        defaultTokenShouldNotBeFound("createdAt.specified=false");
+    }
+
+    @Test
+    @Transactional
+    void getAllTokensByCreatedByIsEqualToSomething() throws Exception {
+        // Initialize the database
+        tokenRepository.saveAndFlush(token);
+
+        // Get all the tokenList where createdBy equals to DEFAULT_CREATED_BY
+        defaultTokenShouldBeFound("createdBy.equals=" + DEFAULT_CREATED_BY);
+
+        // Get all the tokenList where createdBy equals to UPDATED_CREATED_BY
+        defaultTokenShouldNotBeFound("createdBy.equals=" + UPDATED_CREATED_BY);
+    }
+
+    @Test
+    @Transactional
+    void getAllTokensByCreatedByIsInShouldWork() throws Exception {
+        // Initialize the database
+        tokenRepository.saveAndFlush(token);
+
+        // Get all the tokenList where createdBy in DEFAULT_CREATED_BY or UPDATED_CREATED_BY
+        defaultTokenShouldBeFound("createdBy.in=" + DEFAULT_CREATED_BY + "," + UPDATED_CREATED_BY);
+
+        // Get all the tokenList where createdBy equals to UPDATED_CREATED_BY
+        defaultTokenShouldNotBeFound("createdBy.in=" + UPDATED_CREATED_BY);
+    }
+
+    @Test
+    @Transactional
+    void getAllTokensByCreatedByIsNullOrNotNull() throws Exception {
+        // Initialize the database
+        tokenRepository.saveAndFlush(token);
+
+        // Get all the tokenList where createdBy is not null
+        defaultTokenShouldBeFound("createdBy.specified=true");
+
+        // Get all the tokenList where createdBy is null
+        defaultTokenShouldNotBeFound("createdBy.specified=false");
+    }
+
+    @Test
+    @Transactional
+    void getAllTokensByCreatedByContainsSomething() throws Exception {
+        // Initialize the database
+        tokenRepository.saveAndFlush(token);
+
+        // Get all the tokenList where createdBy contains DEFAULT_CREATED_BY
+        defaultTokenShouldBeFound("createdBy.contains=" + DEFAULT_CREATED_BY);
+
+        // Get all the tokenList where createdBy contains UPDATED_CREATED_BY
+        defaultTokenShouldNotBeFound("createdBy.contains=" + UPDATED_CREATED_BY);
+    }
+
+    @Test
+    @Transactional
+    void getAllTokensByCreatedByNotContainsSomething() throws Exception {
+        // Initialize the database
+        tokenRepository.saveAndFlush(token);
+
+        // Get all the tokenList where createdBy does not contain DEFAULT_CREATED_BY
+        defaultTokenShouldNotBeFound("createdBy.doesNotContain=" + DEFAULT_CREATED_BY);
+
+        // Get all the tokenList where createdBy does not contain UPDATED_CREATED_BY
+        defaultTokenShouldBeFound("createdBy.doesNotContain=" + UPDATED_CREATED_BY);
+    }
+
+    @Test
+    @Transactional
+    void getAllTokensByUpdatedAtIsEqualToSomething() throws Exception {
+        // Initialize the database
+        tokenRepository.saveAndFlush(token);
+
+        // Get all the tokenList where updatedAt equals to DEFAULT_UPDATED_AT
+        defaultTokenShouldBeFound("updatedAt.equals=" + DEFAULT_UPDATED_AT);
+
+        // Get all the tokenList where updatedAt equals to UPDATED_UPDATED_AT
+        defaultTokenShouldNotBeFound("updatedAt.equals=" + UPDATED_UPDATED_AT);
+    }
+
+    @Test
+    @Transactional
+    void getAllTokensByUpdatedAtIsInShouldWork() throws Exception {
+        // Initialize the database
+        tokenRepository.saveAndFlush(token);
+
+        // Get all the tokenList where updatedAt in DEFAULT_UPDATED_AT or UPDATED_UPDATED_AT
+        defaultTokenShouldBeFound("updatedAt.in=" + DEFAULT_UPDATED_AT + "," + UPDATED_UPDATED_AT);
+
+        // Get all the tokenList where updatedAt equals to UPDATED_UPDATED_AT
+        defaultTokenShouldNotBeFound("updatedAt.in=" + UPDATED_UPDATED_AT);
+    }
+
+    @Test
+    @Transactional
+    void getAllTokensByUpdatedAtIsNullOrNotNull() throws Exception {
+        // Initialize the database
+        tokenRepository.saveAndFlush(token);
+
+        // Get all the tokenList where updatedAt is not null
+        defaultTokenShouldBeFound("updatedAt.specified=true");
+
+        // Get all the tokenList where updatedAt is null
+        defaultTokenShouldNotBeFound("updatedAt.specified=false");
+    }
+
+    @Test
+    @Transactional
+    void getAllTokensByUpdatedByIsEqualToSomething() throws Exception {
+        // Initialize the database
+        tokenRepository.saveAndFlush(token);
+
+        // Get all the tokenList where updatedBy equals to DEFAULT_UPDATED_BY
+        defaultTokenShouldBeFound("updatedBy.equals=" + DEFAULT_UPDATED_BY);
+
+        // Get all the tokenList where updatedBy equals to UPDATED_UPDATED_BY
+        defaultTokenShouldNotBeFound("updatedBy.equals=" + UPDATED_UPDATED_BY);
+    }
+
+    @Test
+    @Transactional
+    void getAllTokensByUpdatedByIsInShouldWork() throws Exception {
+        // Initialize the database
+        tokenRepository.saveAndFlush(token);
+
+        // Get all the tokenList where updatedBy in DEFAULT_UPDATED_BY or UPDATED_UPDATED_BY
+        defaultTokenShouldBeFound("updatedBy.in=" + DEFAULT_UPDATED_BY + "," + UPDATED_UPDATED_BY);
+
+        // Get all the tokenList where updatedBy equals to UPDATED_UPDATED_BY
+        defaultTokenShouldNotBeFound("updatedBy.in=" + UPDATED_UPDATED_BY);
+    }
+
+    @Test
+    @Transactional
+    void getAllTokensByUpdatedByIsNullOrNotNull() throws Exception {
+        // Initialize the database
+        tokenRepository.saveAndFlush(token);
+
+        // Get all the tokenList where updatedBy is not null
+        defaultTokenShouldBeFound("updatedBy.specified=true");
+
+        // Get all the tokenList where updatedBy is null
+        defaultTokenShouldNotBeFound("updatedBy.specified=false");
+    }
+
+    @Test
+    @Transactional
+    void getAllTokensByUpdatedByContainsSomething() throws Exception {
+        // Initialize the database
+        tokenRepository.saveAndFlush(token);
+
+        // Get all the tokenList where updatedBy contains DEFAULT_UPDATED_BY
+        defaultTokenShouldBeFound("updatedBy.contains=" + DEFAULT_UPDATED_BY);
+
+        // Get all the tokenList where updatedBy contains UPDATED_UPDATED_BY
+        defaultTokenShouldNotBeFound("updatedBy.contains=" + UPDATED_UPDATED_BY);
+    }
+
+    @Test
+    @Transactional
+    void getAllTokensByUpdatedByNotContainsSomething() throws Exception {
+        // Initialize the database
+        tokenRepository.saveAndFlush(token);
+
+        // Get all the tokenList where updatedBy does not contain DEFAULT_UPDATED_BY
+        defaultTokenShouldNotBeFound("updatedBy.doesNotContain=" + DEFAULT_UPDATED_BY);
+
+        // Get all the tokenList where updatedBy does not contain UPDATED_UPDATED_BY
+        defaultTokenShouldBeFound("updatedBy.doesNotContain=" + UPDATED_UPDATED_BY);
     }
 
     /**
@@ -866,7 +916,11 @@ class TokenResourceIT {
             .andExpect(jsonPath("$.[*].token").value(hasItem(DEFAULT_TOKEN)))
             .andExpect(jsonPath("$.[*].disable").value(hasItem(DEFAULT_DISABLE.booleanValue())))
             .andExpect(jsonPath("$.[*].deprecateAt").value(hasItem(DEFAULT_DEPRECATE_AT.toString())))
-            .andExpect(jsonPath("$.[*].roles").value(hasItem(DEFAULT_ROLES)));
+            .andExpect(jsonPath("$.[*].roles").value(hasItem(DEFAULT_ROLES)))
+            .andExpect(jsonPath("$.[*].createdAt").value(hasItem(DEFAULT_CREATED_AT.toString())))
+            .andExpect(jsonPath("$.[*].createdBy").value(hasItem(DEFAULT_CREATED_BY)))
+            .andExpect(jsonPath("$.[*].updatedAt").value(hasItem(DEFAULT_UPDATED_AT.toString())))
+            .andExpect(jsonPath("$.[*].updatedBy").value(hasItem(DEFAULT_UPDATED_BY)));
 
         // Check, that the count call also returns 1
         restTokenMockMvc
@@ -897,7 +951,6 @@ class TokenResourceIT {
 
     @Test
     @Transactional
-    @WithMockUser(authorities = {AuthoritiesConstants.ADMIN})
     void getNonExistingToken() throws Exception {
         // Get the token
         restTokenMockMvc.perform(get(ENTITY_API_URL_ID, Long.MAX_VALUE)).andExpect(status().isNotFound());
@@ -905,22 +958,26 @@ class TokenResourceIT {
 
     @Test
     @Transactional
-    @WithMockUser(authorities = {AuthoritiesConstants.ADMIN})
-    void putNewToken() throws Exception {
+    void putExistingToken() throws Exception {
         // Initialize the database
         tokenRepository.saveAndFlush(token);
 
+        int databaseSizeBeforeUpdate = tokenRepository.findAll().size();
+
         // Update the token
-        Token updatedToken = tokenRepository.findById(token.getId()).get();
+        Token updatedToken = tokenRepository.findById(token.getId()).orElseThrow();
         // Disconnect from session so that the updates on updatedToken are not directly saved in db
         em.detach(updatedToken);
         updatedToken
             .name(UPDATED_NAME)
             .token(UPDATED_TOKEN)
             .disable(UPDATED_DISABLE)
-            .createdAt(UPDATED_CREATED_AT)
             .deprecateAt(UPDATED_DEPRECATE_AT)
-            .roles(UPDATED_ROLES);
+            .roles(UPDATED_ROLES)
+            .createdAt(UPDATED_CREATED_AT)
+            .createdBy(UPDATED_CREATED_BY)
+            .updatedAt(UPDATED_UPDATED_AT)
+            .updatedBy(UPDATED_UPDATED_BY);
         TokenDTO tokenDTO = tokenMapper.toDto(updatedToken);
 
         restTokenMockMvc
@@ -929,51 +986,28 @@ class TokenResourceIT {
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(TestUtil.convertObjectToJsonBytes(tokenDTO))
             )
-            .andExpect(status().isMethodNotAllowed());
+            .andExpect(status().isOk());
+
+        // Validate the Token in the database
+        List<Token> tokenList = tokenRepository.findAll();
+        assertThat(tokenList).hasSize(databaseSizeBeforeUpdate);
+        Token testToken = tokenList.get(tokenList.size() - 1);
+        assertThat(testToken.getName()).isEqualTo(UPDATED_NAME);
+        assertThat(testToken.getToken()).isEqualTo(UPDATED_TOKEN);
+        assertThat(testToken.getDisable()).isEqualTo(UPDATED_DISABLE);
+        assertThat(testToken.getDeprecateAt()).isEqualTo(UPDATED_DEPRECATE_AT);
+        assertThat(testToken.getRoles()).isEqualTo(UPDATED_ROLES);
+        assertThat(testToken.getCreatedAt()).isEqualTo(UPDATED_CREATED_AT);
+        assertThat(testToken.getCreatedBy()).isEqualTo(UPDATED_CREATED_BY);
+        assertThat(testToken.getUpdatedAt()).isEqualTo(UPDATED_UPDATED_AT);
+        assertThat(testToken.getUpdatedBy()).isEqualTo(UPDATED_UPDATED_BY);
     }
 
     @Test
     @Transactional
-    @WithMockUser(
-        authorities = {
-            AuthoritiesConstants.ANONYMOUS,
-            AuthoritiesConstants.USER,
-            AuthoritiesConstants.EMAIL_USER,
-            AuthoritiesConstants.NOTIFICATION_USER,
-            AuthoritiesConstants.SMS_USER,
-        }
-    )
-    void putNewTokenForbidenForNormalUsers() throws Exception {
-        // Initialize the database
-        tokenRepository.saveAndFlush(token);
-        // Update the token
-        Token updatedToken = tokenRepository.findById(token.getId()).get();
-        // Disconnect from session so that the updates on updatedToken are not directly saved in db
-        em.detach(updatedToken);
-        updatedToken
-            .name(UPDATED_NAME)
-            .token(UPDATED_TOKEN)
-            .disable(UPDATED_DISABLE)
-            .createdAt(UPDATED_CREATED_AT)
-            .deprecateAt(UPDATED_DEPRECATE_AT)
-            .roles(UPDATED_ROLES);
-        TokenDTO tokenDTO = tokenMapper.toDto(updatedToken);
-
-        restTokenMockMvc
-            .perform(
-                put(ENTITY_API_URL_ID, tokenDTO.getId())
-                    .contentType(MediaType.APPLICATION_JSON)
-                    .content(TestUtil.convertObjectToJsonBytes(tokenDTO))
-            )
-            .andExpect(status().isForbidden());
-    }
-
-    @Test
-    @Transactional
-    @WithMockUser(authorities = {AuthoritiesConstants.ADMIN})
     void putNonExistingToken() throws Exception {
         int databaseSizeBeforeUpdate = tokenRepository.findAll().size();
-        token.setId(count.incrementAndGet());
+        token.setId(longCount.incrementAndGet());
 
         // Create the Token
         TokenDTO tokenDTO = tokenMapper.toDto(token);
@@ -985,7 +1019,7 @@ class TokenResourceIT {
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(TestUtil.convertObjectToJsonBytes(tokenDTO))
             )
-            .andExpect(status().isMethodNotAllowed());
+            .andExpect(status().isBadRequest());
 
         // Validate the Token in the database
         List<Token> tokenList = tokenRepository.findAll();
@@ -994,10 +1028,9 @@ class TokenResourceIT {
 
     @Test
     @Transactional
-    @WithMockUser(authorities = {AuthoritiesConstants.ADMIN})
     void putWithIdMismatchToken() throws Exception {
         int databaseSizeBeforeUpdate = tokenRepository.findAll().size();
-        token.setId(count.incrementAndGet());
+        token.setId(longCount.incrementAndGet());
 
         // Create the Token
         TokenDTO tokenDTO = tokenMapper.toDto(token);
@@ -1005,11 +1038,11 @@ class TokenResourceIT {
         // If url ID doesn't match entity ID, it will throw BadRequestAlertException
         restTokenMockMvc
             .perform(
-                put(ENTITY_API_URL_ID, count.incrementAndGet())
+                put(ENTITY_API_URL_ID, longCount.incrementAndGet())
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(TestUtil.convertObjectToJsonBytes(tokenDTO))
             )
-            .andExpect(status().isMethodNotAllowed());
+            .andExpect(status().isBadRequest());
 
         // Validate the Token in the database
         List<Token> tokenList = tokenRepository.findAll();
@@ -1018,10 +1051,9 @@ class TokenResourceIT {
 
     @Test
     @Transactional
-    @WithMockUser(authorities = {AuthoritiesConstants.ADMIN})
     void putWithMissingIdPathParamToken() throws Exception {
         int databaseSizeBeforeUpdate = tokenRepository.findAll().size();
-        token.setId(count.incrementAndGet());
+        token.setId(longCount.incrementAndGet());
 
         // Create the Token
         TokenDTO tokenDTO = tokenMapper.toDto(token);
@@ -1038,61 +1070,11 @@ class TokenResourceIT {
 
     @Test
     @Transactional
-    @WithMockUser(authorities = {AuthoritiesConstants.ADMIN})
     void partialUpdateTokenWithPatch() throws Exception {
         // Initialize the database
         tokenRepository.saveAndFlush(token);
 
-        // Update the token using partial update
-        Token partialUpdatedToken = new Token();
-        partialUpdatedToken.setId(token.getId());
-
-        partialUpdatedToken.name(UPDATED_NAME).roles(UPDATED_ROLES);
-
-        restTokenMockMvc
-            .perform(
-                patch(ENTITY_API_URL_ID, partialUpdatedToken.getId())
-                    .contentType("application/merge-patch+json")
-                    .content(TestUtil.convertObjectToJsonBytes(partialUpdatedToken))
-            )
-            .andExpect(status().isMethodNotAllowed());
-    }
-
-    @Test
-    @Transactional
-    @WithMockUser(
-        authorities = {
-            AuthoritiesConstants.ANONYMOUS,
-            AuthoritiesConstants.USER,
-            AuthoritiesConstants.EMAIL_USER,
-            AuthoritiesConstants.NOTIFICATION_USER,
-            AuthoritiesConstants.SMS_USER,
-        }
-    )
-    void partialUpdateTokenWithPatchIsForbidenForNormalUsers() throws Exception {
-        // Initialize the database
-        tokenRepository.saveAndFlush(token);
-        // Update the token using partial update
-        Token partialUpdatedToken = new Token();
-        partialUpdatedToken.setId(token.getId());
-
-        partialUpdatedToken.name(UPDATED_NAME).roles(UPDATED_ROLES);
-
-        restTokenMockMvc
-            .perform(
-                patch(ENTITY_API_URL_ID, partialUpdatedToken.getId())
-                    .contentType("application/merge-patch+json")
-                    .content(TestUtil.convertObjectToJsonBytes(partialUpdatedToken))
-            )
-            .andExpect(status().isForbidden());
-    }
-
-    @Test
-    @Transactional
-    @WithMockUser(authorities = {AuthoritiesConstants.ADMIN})
-    void fullUpdateTokenWithPatch() throws Exception {
-        // Initialize the database
-        tokenRepository.saveAndFlush(token);
+        int databaseSizeBeforeUpdate = tokenRepository.findAll().size();
 
         // Update the token using partial update
         Token partialUpdatedToken = new Token();
@@ -1102,9 +1084,10 @@ class TokenResourceIT {
             .name(UPDATED_NAME)
             .token(UPDATED_TOKEN)
             .disable(UPDATED_DISABLE)
-            .createdAt(UPDATED_CREATED_AT)
             .deprecateAt(UPDATED_DEPRECATE_AT)
-            .roles(UPDATED_ROLES);
+            .roles(UPDATED_ROLES)
+            .createdAt(UPDATED_CREATED_AT)
+            .createdBy(UPDATED_CREATED_BY);
 
         restTokenMockMvc
             .perform(
@@ -1112,14 +1095,74 @@ class TokenResourceIT {
                     .contentType("application/merge-patch+json")
                     .content(TestUtil.convertObjectToJsonBytes(partialUpdatedToken))
             )
-            .andExpect(status().isMethodNotAllowed());
+            .andExpect(status().isOk());
+
+        // Validate the Token in the database
+        List<Token> tokenList = tokenRepository.findAll();
+        assertThat(tokenList).hasSize(databaseSizeBeforeUpdate);
+        Token testToken = tokenList.get(tokenList.size() - 1);
+        assertThat(testToken.getName()).isEqualTo(UPDATED_NAME);
+        assertThat(testToken.getToken()).isEqualTo(UPDATED_TOKEN);
+        assertThat(testToken.getDisable()).isEqualTo(UPDATED_DISABLE);
+        assertThat(testToken.getDeprecateAt()).isEqualTo(UPDATED_DEPRECATE_AT);
+        assertThat(testToken.getRoles()).isEqualTo(UPDATED_ROLES);
+        assertThat(testToken.getCreatedAt()).isEqualTo(UPDATED_CREATED_AT);
+        assertThat(testToken.getCreatedBy()).isEqualTo(UPDATED_CREATED_BY);
+        assertThat(testToken.getUpdatedAt()).isEqualTo(DEFAULT_UPDATED_AT);
+        assertThat(testToken.getUpdatedBy()).isEqualTo(DEFAULT_UPDATED_BY);
     }
 
     @Test
     @Transactional
-    @WithMockUser(authorities = {AuthoritiesConstants.ADMIN})
+    void fullUpdateTokenWithPatch() throws Exception {
+        // Initialize the database
+        tokenRepository.saveAndFlush(token);
+
+        int databaseSizeBeforeUpdate = tokenRepository.findAll().size();
+
+        // Update the token using partial update
+        Token partialUpdatedToken = new Token();
+        partialUpdatedToken.setId(token.getId());
+
+        partialUpdatedToken
+            .name(UPDATED_NAME)
+            .token(UPDATED_TOKEN)
+            .disable(UPDATED_DISABLE)
+            .deprecateAt(UPDATED_DEPRECATE_AT)
+            .roles(UPDATED_ROLES)
+            .createdAt(UPDATED_CREATED_AT)
+            .createdBy(UPDATED_CREATED_BY)
+            .updatedAt(UPDATED_UPDATED_AT)
+            .updatedBy(UPDATED_UPDATED_BY);
+
+        restTokenMockMvc
+            .perform(
+                patch(ENTITY_API_URL_ID, partialUpdatedToken.getId())
+                    .contentType("application/merge-patch+json")
+                    .content(TestUtil.convertObjectToJsonBytes(partialUpdatedToken))
+            )
+            .andExpect(status().isOk());
+
+        // Validate the Token in the database
+        List<Token> tokenList = tokenRepository.findAll();
+        assertThat(tokenList).hasSize(databaseSizeBeforeUpdate);
+        Token testToken = tokenList.get(tokenList.size() - 1);
+        assertThat(testToken.getName()).isEqualTo(UPDATED_NAME);
+        assertThat(testToken.getToken()).isEqualTo(UPDATED_TOKEN);
+        assertThat(testToken.getDisable()).isEqualTo(UPDATED_DISABLE);
+        assertThat(testToken.getDeprecateAt()).isEqualTo(UPDATED_DEPRECATE_AT);
+        assertThat(testToken.getRoles()).isEqualTo(UPDATED_ROLES);
+        assertThat(testToken.getCreatedAt()).isEqualTo(UPDATED_CREATED_AT);
+        assertThat(testToken.getCreatedBy()).isEqualTo(UPDATED_CREATED_BY);
+        assertThat(testToken.getUpdatedAt()).isEqualTo(UPDATED_UPDATED_AT);
+        assertThat(testToken.getUpdatedBy()).isEqualTo(UPDATED_UPDATED_BY);
+    }
+
+    @Test
+    @Transactional
     void patchNonExistingToken() throws Exception {
-        token.setId(count.incrementAndGet());
+        int databaseSizeBeforeUpdate = tokenRepository.findAll().size();
+        token.setId(longCount.incrementAndGet());
 
         // Create the Token
         TokenDTO tokenDTO = tokenMapper.toDto(token);
@@ -1131,27 +1174,7 @@ class TokenResourceIT {
                     .contentType("application/merge-patch+json")
                     .content(TestUtil.convertObjectToJsonBytes(tokenDTO))
             )
-            .andExpect(status().isMethodNotAllowed());
-    }
-
-    @Test
-    @Transactional
-    @WithMockUser(authorities = {AuthoritiesConstants.ADMIN})
-    void patchWithIdMismatchToken() throws Exception {
-        int databaseSizeBeforeUpdate = tokenRepository.findAll().size();
-        token.setId(count.incrementAndGet());
-
-        // Create the Token
-        TokenDTO tokenDTO = tokenMapper.toDto(token);
-
-        // If url ID doesn't match entity ID, it will throw BadRequestAlertException
-        restTokenMockMvc
-            .perform(
-                patch(ENTITY_API_URL_ID, count.incrementAndGet())
-                    .contentType("application/merge-patch+json")
-                    .content(TestUtil.convertObjectToJsonBytes(tokenDTO))
-            )
-            .andExpect(status().isMethodNotAllowed());
+            .andExpect(status().isBadRequest());
 
         // Validate the Token in the database
         List<Token> tokenList = tokenRepository.findAll();
@@ -1160,10 +1183,32 @@ class TokenResourceIT {
 
     @Test
     @Transactional
-    @WithMockUser(authorities = {AuthoritiesConstants.ADMIN})
+    void patchWithIdMismatchToken() throws Exception {
+        int databaseSizeBeforeUpdate = tokenRepository.findAll().size();
+        token.setId(longCount.incrementAndGet());
+
+        // Create the Token
+        TokenDTO tokenDTO = tokenMapper.toDto(token);
+
+        // If url ID doesn't match entity ID, it will throw BadRequestAlertException
+        restTokenMockMvc
+            .perform(
+                patch(ENTITY_API_URL_ID, longCount.incrementAndGet())
+                    .contentType("application/merge-patch+json")
+                    .content(TestUtil.convertObjectToJsonBytes(tokenDTO))
+            )
+            .andExpect(status().isBadRequest());
+
+        // Validate the Token in the database
+        List<Token> tokenList = tokenRepository.findAll();
+        assertThat(tokenList).hasSize(databaseSizeBeforeUpdate);
+    }
+
+    @Test
+    @Transactional
     void patchWithMissingIdPathParamToken() throws Exception {
         int databaseSizeBeforeUpdate = tokenRepository.findAll().size();
-        token.setId(count.incrementAndGet());
+        token.setId(longCount.incrementAndGet());
 
         // Create the Token
         TokenDTO tokenDTO = tokenMapper.toDto(token);
@@ -1180,7 +1225,6 @@ class TokenResourceIT {
 
     @Test
     @Transactional
-    @WithMockUser(authorities = {AuthoritiesConstants.ADMIN})
     void deleteToken() throws Exception {
         // Initialize the database
         tokenRepository.saveAndFlush(token);
@@ -1195,113 +1239,5 @@ class TokenResourceIT {
         // Validate the database contains one less item
         List<Token> tokenList = tokenRepository.findAll();
         assertThat(tokenList).hasSize(databaseSizeBeforeDelete - 1);
-    }
-
-    @Test
-    @Transactional
-    @WithMockUser(
-        authorities = {
-            AuthoritiesConstants.ANONYMOUS,
-            AuthoritiesConstants.USER,
-            AuthoritiesConstants.EMAIL_USER,
-            AuthoritiesConstants.NOTIFICATION_USER,
-            AuthoritiesConstants.SMS_USER,
-        }
-    )
-    void deleteTokenForbidenForNormalUsers() throws Exception {
-        // Initialize the database
-        tokenRepository.saveAndFlush(token);
-        // Delete the token
-        restTokenMockMvc
-            .perform(delete(ENTITY_API_URL_ID, token.getId()).accept(MediaType.APPLICATION_JSON))
-            .andExpect(status().isForbidden());
-    }
-
-    @Disabled("We don't update a token")
-    @Test
-    @Transactional
-    @WithMockUser(authorities = {AuthoritiesConstants.ADMIN})
-    void checkTokenEnableByAdminUsers() throws Exception {
-        // Initialize the database
-        token.setDisable(Boolean.TRUE);
-        tokenRepository.saveAndFlush(token);
-
-        assertThat(token.getDisable()).isEqualTo(Boolean.TRUE);
-
-        // Enable the token
-        restTokenMockMvc
-            .perform(put(ENTITY_API_URL_ENABLE_ID, token.getId()).accept(MediaType.APPLICATION_JSON))
-            .andExpect(status().isNoContent());
-
-        Token token_ = tokenRepository.getById(token.getId());
-        assertThat(token_.getDisable()).isEqualTo(Boolean.FALSE);
-    }
-
-    @Disabled("We don't update a token")
-    @Test
-    @Transactional
-    @WithMockUser(authorities = {AuthoritiesConstants.ADMIN})
-    void checkTokenDisableByAdminUsers() throws Exception {
-        // Initialize the database
-        token.setDisable(Boolean.FALSE);
-        tokenRepository.saveAndFlush(token);
-
-        assertThat(token.getDisable()).isEqualTo(Boolean.FALSE);
-
-        // Enable the token
-        restTokenMockMvc
-            .perform(put(ENTITY_API_URL_DISABLE_ID, token.getId()).accept(MediaType.APPLICATION_JSON))
-            .andExpect(status().isNoContent());
-
-        token = tokenRepository.getById(token.getId());
-        assertThat(token.getDisable()).isEqualTo(Boolean.TRUE);
-    }
-
-    @Test
-    @Transactional
-    @WithMockUser(
-        authorities = {
-            AuthoritiesConstants.ANONYMOUS,
-            AuthoritiesConstants.USER,
-            AuthoritiesConstants.EMAIL_USER,
-            AuthoritiesConstants.NOTIFICATION_USER,
-            AuthoritiesConstants.SMS_USER,
-        }
-    )
-    void checkTokenStatusChangeByNoneAdminUsers() throws Exception {
-        // Initialize the database
-        tokenRepository.saveAndFlush(token);
-
-        restTokenMockMvc
-            .perform(put(ENTITY_API_URL_ENABLE_ID, token.getId()).accept(MediaType.APPLICATION_JSON))
-            .andExpect(status().isForbidden());
-
-        restTokenMockMvc
-            .perform(put(ENTITY_API_URL_DISABLE_ID, token.getId()).accept(MediaType.APPLICATION_JSON))
-            .andExpect(status().isForbidden());
-    }
-
-    @Disabled("This test doesn't work on test environment")
-    @Test
-    @Transactional
-    @WithMockUser(authorities = {AuthoritiesConstants.ADMIN})
-    void createTokenWithExistingName() throws Exception {
-        // Create the Token with an existing name
-        TokenDTO tokenDTO1 = tokenMapper.toDto(token);
-        TokenDTO tokenDTO2 = tokenMapper.toDto(token);
-
-        int databaseSizeBeforeCreate = tokenRepository.findAll().size();
-
-        restTokenMockMvc
-            .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(tokenDTO1)))
-            .andExpect(status().isCreated());
-
-        // Validate the Token in the database
-        List<Token> tokenList = tokenRepository.findAll();
-        assertThat(tokenList).hasSize(databaseSizeBeforeCreate + 1);
-
-        restTokenMockMvc
-            .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(tokenDTO2)))
-            .andExpect(status().isBadRequest());
     }
 }

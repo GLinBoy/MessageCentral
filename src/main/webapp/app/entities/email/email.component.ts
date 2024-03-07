@@ -1,151 +1,170 @@
-import { mixins } from 'vue-class-component';
-import { Component, Vue, Inject } from 'vue-property-decorator';
-import Vue2Filters from 'vue2-filters';
-import { IEmail } from '@/shared/model/email.model';
-import { MessageStatus } from '@/shared/model/enumerations/message-status.model';
-
-import JhiDataUtils from '@/shared/data/data-utils.service';
+import { defineComponent, inject, onMounted, ref, type Ref, watch } from 'vue';
+import { useI18n } from 'vue-i18n';
 
 import EmailService from './email.service';
-import AlertService from '@/shared/alert/alert.service';
+import { type IEmail } from '@/shared/model/email.model';
+import { MessageStatus } from '@/shared/model/enumerations/message-status.model';
+import useDataUtils from '@/shared/data/data-utils.service';
+import { useDateFormat } from '@/shared/composables';
+import { useAlertService } from '@/shared/alert/alert.service';
 
-@Component({
-  mixins: [Vue2Filters.mixin],
-})
-export default class Email extends mixins(JhiDataUtils) {
-  @Inject('emailService') private emailService: () => EmailService;
-  @Inject('alertService') private alertService: () => AlertService;
+export default defineComponent({
+  compatConfig: { MODE: 3 },
+  name: 'Email',
+  setup() {
+    const { t: t$ } = useI18n();
+    const dateFormat = useDateFormat();
+    const dataUtils = useDataUtils();
+    const emailService = inject('emailService', () => new EmailService());
+    const alertService = inject('alertService', () => useAlertService(), true);
 
-  private removeId: number = null;
-  public itemsPerPage = 20;
-  public queryCount: number = null;
-  public page = 1;
-  public previousPage = 1;
-  public propOrder = 'id';
-  public reverse = true;
-  public totalItems = 0;
-  public currentSearch: string = null;
+    const itemsPerPage = ref(20);
+    const queryCount: Ref<number> = ref(null);
+    const page: Ref<number> = ref(1);
+    const propOrder = ref('id');
+    const reverse = ref(true);
+    const totalItems = ref(0);
+    const currentSearch: Ref<string> = ref('');
 
-  public emails: IEmail[] = [];
+    const emails: Ref<IEmail[]> = ref([]);
 
-  public isFetching = false;
+    const isFetching = ref(false);
 
-  public mounted(): void {
-    this.retrieveAllEmails();
-  }
-
-  public clear(): void {
-    this.page = 1;
-    this.currentSearch = null;
-    this.retrieveAllEmails();
-  }
-
-  public retrieveAllEmails(): void {
-    this.isFetching = true;
-    const paginationQuery = {
-      page: this.page - 1,
-      size: this.itemsPerPage,
-      sort: this.sort(),
-      search: this.search(),
+    const clear = () => {
+      page.value = 1;
     };
-    this.emailService()
-      .retrieve(paginationQuery)
-      .then(
-        res => {
-          this.emails = res.data;
-          this.totalItems = Number(res.headers['x-total-count']);
-          this.queryCount = this.totalItems;
-          this.isFetching = false;
-        },
-        err => {
-          this.isFetching = false;
-          this.alertService().showHttpError(this, err.response);
-        }
-      );
-  }
 
-  public handleSearch(): void {
-    this.retrieveAllEmails();
-  }
+    const sort = (): Array<any> => {
+      const result = [propOrder.value + ',' + (reverse.value ? 'desc' : 'asc')];
+      if (propOrder.value !== 'id') {
+        result.push('id');
+      }
+      return result;
+    };
 
-  public handleSyncList(): void {
-    this.clear();
-  }
+    const search = (): string => {
+      let result = '';
+      if (currentSearch.value) {
+        result = `receiver==*${currentSearch.value}* or subject==*${currentSearch.value}* or content==*${currentSearch.value}* or createdBy==*${currentSearch.value}*`;
+      }
+      return result;
+    };
 
-  public prepareRemove(instance: IEmail): void {
-    this.removeId = instance.id;
-    if (<any>this.$refs.removeEntity) {
-      (<any>this.$refs.removeEntity).show();
-    }
-  }
+    const retrieveEmails = async () => {
+      isFetching.value = true;
+      try {
+        const paginationQuery = {
+          page: page.value - 1,
+          size: itemsPerPage.value,
+          sort: sort(),
+          query: search(),
+        };
+        const res = await emailService().retrieve(paginationQuery);
+        totalItems.value = Number(res.headers['x-total-count']);
+        queryCount.value = totalItems.value;
+        emails.value = res.data;
+      } catch (err) {
+        alertService.showHttpError(err.response);
+      } finally {
+        isFetching.value = false;
+      }
+    };
 
-  public removeEmail(): void {
-    this.emailService()
-      .delete(this.removeId)
-      .then(() => {
-        const message = this.$t('messageCentralApp.email.deleted', { param: this.removeId });
-        this.$bvToast.toast(message.toString(), {
-          toaster: 'b-toaster-top-center',
-          title: 'Info',
-          variant: 'danger',
-          solid: true,
-          autoHideDelay: 5000,
-        });
-        this.removeId = null;
-        this.retrieveAllEmails();
-        this.closeDialog();
-      })
-      .catch(error => {
-        this.alertService().showHttpError(this, error.response);
-      });
-  }
+    const handleSyncList = () => {
+      retrieveEmails();
+    };
 
-  public sort(): Array<any> {
-    const result = [this.propOrder + ',' + (this.reverse ? 'desc' : 'asc')];
-    if (this.propOrder !== 'id') {
-      result.push('id');
-    }
-    return result;
-  }
+    onMounted(async () => {
+      await retrieveEmails();
+    });
 
-  public search(): string {
-    let result = undefined;
-    if (this.currentSearch) {
-      result = `receiver==*${this.currentSearch}* or subject==*${this.currentSearch}* or content==*${this.currentSearch}* or createdBy==*${this.currentSearch}*`;
-    }
-    return result;
-  }
+    const removeId: Ref<number> = ref(null);
+    const removeEntity = ref<any>(null);
+    const prepareRemove = (instance: IEmail) => {
+      removeId.value = instance.id;
+      removeEntity.value.show();
+    };
+    const closeDialog = () => {
+      removeEntity.value.hide();
+    };
+    const removeEmail = async () => {
+      try {
+        await emailService().delete(removeId.value);
+        const message = t$('messageCentralApp.email.deleted', { param: removeId.value }).toString();
+        alertService.showInfo(message, { variant: 'danger' });
+        removeId.value = null;
+        retrieveEmails();
+        closeDialog();
+      } catch (error) {
+        alertService.showHttpError(error.response);
+      }
+    };
 
-  public loadPage(page: number): void {
-    if (page !== this.previousPage) {
-      this.previousPage = page;
-      this.transition();
-    }
-  }
+    const changeOrder = (newOrder: string) => {
+      if (propOrder.value === newOrder) {
+        reverse.value = !reverse.value;
+      } else {
+        reverse.value = false;
+      }
+      propOrder.value = newOrder;
+    };
 
-  public transition(): void {
-    this.retrieveAllEmails();
-  }
+    // Whenever order changes, reset the pagination
+    watch([propOrder, reverse], async () => {
+      if (page.value === 1) {
+        // first page, retrieve new data
+        await retrieveEmails();
+      } else {
+        // reset the pagination
+        clear();
+      }
+    });
 
-  public changeOrder(propOrder): void {
-    this.propOrder = propOrder;
-    this.reverse = !this.reverse;
-    this.transition();
-  }
+    // Whenever page changes, switch to the new page.
+    watch(page, async () => {
+      await retrieveEmails();
+    });
 
-  public closeDialog(): void {
-    (<any>this.$refs.removeEntity).hide();
-  }
+    const handleSearch = () => {
+      retrieveEmails();
+    };
 
-  public getVariant(status) {
-    if (MessageStatus.IN_QUEUE === status) {
-      return 'info';
-    } else if (MessageStatus.SENT === status) {
-      return 'success';
-    } else if (MessageStatus.FAILED === status) {
-      return 'danger';
-    } else {
-      return 'secondary';
-    }
-  }
-}
+    const getVariant = (status: MessageStatus) => {
+      if (MessageStatus.IN_QUEUE === status) {
+        return 'info';
+      } else if (MessageStatus.SENT === status) {
+        return 'success';
+      } else if (MessageStatus.FAILED === status) {
+        return 'danger';
+      } else {
+        return 'secondary';
+      }
+    };
+
+    return {
+      emails,
+      handleSyncList,
+      isFetching,
+      retrieveEmails,
+      clear,
+      ...dateFormat,
+      removeId,
+      removeEntity,
+      prepareRemove,
+      closeDialog,
+      removeEmail,
+      itemsPerPage,
+      queryCount,
+      page,
+      propOrder,
+      reverse,
+      totalItems,
+      changeOrder,
+      t$,
+      ...dataUtils,
+      currentSearch,
+      handleSearch,
+      getVariant,
+    };
+  },
+});

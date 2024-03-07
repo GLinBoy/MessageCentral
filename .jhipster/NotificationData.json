@@ -1,4 +1,7 @@
 {
+  "annotations": {
+    "changelogDate": "20210426100905"
+  },
   "applications": ["MessageCentral"],
   "changelogDate": "20210426100905",
   "dto": "no",
@@ -28,9 +31,11 @@
       "otherEntityName": "notification",
       "otherEntityRelationshipName": "data",
       "relationshipName": "notification",
+      "relationshipSide": "right",
       "relationshipType": "many-to-one",
       "relationshipValidateRules": "required"
     }
   ],
+  "searchEngine": "no",
   "service": "no"
 }

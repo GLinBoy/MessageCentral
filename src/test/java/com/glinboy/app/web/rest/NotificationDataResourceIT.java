@@ -9,12 +9,11 @@ import com.glinboy.app.IntegrationTest;
 import com.glinboy.app.domain.Notification;
 import com.glinboy.app.domain.NotificationData;
 import com.glinboy.app.repository.NotificationDataRepository;
+import jakarta.persistence.EntityManager;
 import java.util.List;
 import java.util.Random;
 import java.util.concurrent.atomic.AtomicLong;
-import javax.persistence.EntityManager;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -29,7 +28,6 @@ import org.springframework.transaction.annotation.Transactional;
 @IntegrationTest
 @AutoConfigureMockMvc
 @WithMockUser
-@Disabled("We don't need this test class for now, probobly will be deleted in the future")
 class NotificationDataResourceIT {
 
     private static final String DEFAULT_DATA_KEY = "AAAAAAAAAA";
@@ -42,7 +40,7 @@ class NotificationDataResourceIT {
     private static final String ENTITY_API_URL_ID = ENTITY_API_URL + "/{id}";
 
     private static Random random = new Random();
-    private static AtomicLong count = new AtomicLong(random.nextInt() + (2 * Integer.MAX_VALUE));
+    private static AtomicLong longCount = new AtomicLong(random.nextInt() + (2 * Integer.MAX_VALUE));
 
     @Autowired
     private NotificationDataRepository notificationDataRepository;
@@ -227,7 +225,7 @@ class NotificationDataResourceIT {
         int databaseSizeBeforeUpdate = notificationDataRepository.findAll().size();
 
         // Update the notificationData
-        NotificationData updatedNotificationData = notificationDataRepository.findById(notificationData.getId()).get();
+        NotificationData updatedNotificationData = notificationDataRepository.findById(notificationData.getId()).orElseThrow();
         // Disconnect from session so that the updates on updatedNotificationData are not directly saved in db
         em.detach(updatedNotificationData);
         updatedNotificationData.dataKey(UPDATED_DATA_KEY).dataValue(UPDATED_DATA_VALUE);
@@ -252,7 +250,7 @@ class NotificationDataResourceIT {
     @Transactional
     void putNonExistingNotificationData() throws Exception {
         int databaseSizeBeforeUpdate = notificationDataRepository.findAll().size();
-        notificationData.setId(count.incrementAndGet());
+        notificationData.setId(longCount.incrementAndGet());
 
         // If the entity doesn't have an ID, it will throw BadRequestAlertException
         restNotificationDataMockMvc
@@ -272,12 +270,12 @@ class NotificationDataResourceIT {
     @Transactional
     void putWithIdMismatchNotificationData() throws Exception {
         int databaseSizeBeforeUpdate = notificationDataRepository.findAll().size();
-        notificationData.setId(count.incrementAndGet());
+        notificationData.setId(longCount.incrementAndGet());
 
         // If url ID doesn't match entity ID, it will throw BadRequestAlertException
         restNotificationDataMockMvc
             .perform(
-                put(ENTITY_API_URL_ID, count.incrementAndGet())
+                put(ENTITY_API_URL_ID, longCount.incrementAndGet())
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(TestUtil.convertObjectToJsonBytes(notificationData))
             )
@@ -292,7 +290,7 @@ class NotificationDataResourceIT {
     @Transactional
     void putWithMissingIdPathParamNotificationData() throws Exception {
         int databaseSizeBeforeUpdate = notificationDataRepository.findAll().size();
-        notificationData.setId(count.incrementAndGet());
+        notificationData.setId(longCount.incrementAndGet());
 
         // If url ID doesn't match entity ID, it will throw BadRequestAlertException
         restNotificationDataMockMvc
@@ -318,8 +316,6 @@ class NotificationDataResourceIT {
         NotificationData partialUpdatedNotificationData = new NotificationData();
         partialUpdatedNotificationData.setId(notificationData.getId());
 
-        partialUpdatedNotificationData.dataValue(UPDATED_DATA_VALUE);
-
         restNotificationDataMockMvc
             .perform(
                 patch(ENTITY_API_URL_ID, partialUpdatedNotificationData.getId())
@@ -333,7 +329,7 @@ class NotificationDataResourceIT {
         assertThat(notificationDataList).hasSize(databaseSizeBeforeUpdate);
         NotificationData testNotificationData = notificationDataList.get(notificationDataList.size() - 1);
         assertThat(testNotificationData.getDataKey()).isEqualTo(DEFAULT_DATA_KEY);
-        assertThat(testNotificationData.getDataValue()).isEqualTo(UPDATED_DATA_VALUE);
+        assertThat(testNotificationData.getDataValue()).isEqualTo(DEFAULT_DATA_VALUE);
     }
 
     @Test
@@ -370,7 +366,7 @@ class NotificationDataResourceIT {
     @Transactional
     void patchNonExistingNotificationData() throws Exception {
         int databaseSizeBeforeUpdate = notificationDataRepository.findAll().size();
-        notificationData.setId(count.incrementAndGet());
+        notificationData.setId(longCount.incrementAndGet());
 
         // If the entity doesn't have an ID, it will throw BadRequestAlertException
         restNotificationDataMockMvc
@@ -390,12 +386,12 @@ class NotificationDataResourceIT {
     @Transactional
     void patchWithIdMismatchNotificationData() throws Exception {
         int databaseSizeBeforeUpdate = notificationDataRepository.findAll().size();
-        notificationData.setId(count.incrementAndGet());
+        notificationData.setId(longCount.incrementAndGet());
 
         // If url ID doesn't match entity ID, it will throw BadRequestAlertException
         restNotificationDataMockMvc
             .perform(
-                patch(ENTITY_API_URL_ID, count.incrementAndGet())
+                patch(ENTITY_API_URL_ID, longCount.incrementAndGet())
                     .contentType("application/merge-patch+json")
                     .content(TestUtil.convertObjectToJsonBytes(notificationData))
             )
@@ -410,7 +406,7 @@ class NotificationDataResourceIT {
     @Transactional
     void patchWithMissingIdPathParamNotificationData() throws Exception {
         int databaseSizeBeforeUpdate = notificationDataRepository.findAll().size();
-        notificationData.setId(count.incrementAndGet());
+        notificationData.setId(longCount.incrementAndGet());
 
         // If url ID doesn't match entity ID, it will throw BadRequestAlertException
         restNotificationDataMockMvc

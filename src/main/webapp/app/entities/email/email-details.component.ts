@@ -1,52 +1,65 @@
-import { Component, Inject } from 'vue-property-decorator';
+import { defineComponent, inject, ref, type Ref } from 'vue';
+import { useI18n } from 'vue-i18n';
+import { useRoute, useRouter } from 'vue-router';
 
-import { mixins } from 'vue-class-component';
-import JhiDataUtils from '@/shared/data/data-utils.service';
-
-import { IEmail } from '@/shared/model/email.model';
-import { MessageStatus } from '@/shared/model/enumerations/message-status.model';
 import EmailService from './email.service';
-import AlertService from '@/shared/alert/alert.service';
+import useDataUtils from '@/shared/data/data-utils.service';
+import { useDateFormat } from '@/shared/composables';
+import { type IEmail } from '@/shared/model/email.model';
+import { MessageStatus } from '@/shared/model/enumerations/message-status.model';
+import { useAlertService } from '@/shared/alert/alert.service';
 
-@Component
-export default class EmailDetails extends mixins(JhiDataUtils) {
-  @Inject('emailService') private emailService: () => EmailService;
-  @Inject('alertService') private alertService: () => AlertService;
+export default defineComponent({
+  compatConfig: { MODE: 3 },
+  name: 'EmailDetails',
+  setup() {
+    const dateFormat = useDateFormat();
+    const emailService = inject('emailService', () => new EmailService());
+    const alertService = inject('alertService', () => useAlertService(), true);
 
-  public email: IEmail = {};
+    const dataUtils = useDataUtils();
 
-  beforeRouteEnter(to, from, next) {
-    next(vm => {
-      if (to.params.emailId) {
-        vm.retrieveEmail(to.params.emailId);
+    const route = useRoute();
+    const router = useRouter();
+
+    const previousState = () => router.go(-1);
+    const email: Ref<IEmail> = ref({});
+
+    const retrieveEmail = async emailId => {
+      try {
+        const res = await emailService().find(emailId);
+        email.value = res;
+      } catch (error) {
+        alertService.showHttpError(error.response);
       }
-    });
-  }
+    };
 
-  public retrieveEmail(emailId) {
-    this.emailService()
-      .find(emailId)
-      .then(res => {
-        this.email = res;
-      })
-      .catch(error => {
-        this.alertService().showHttpError(this, error.response);
-      });
-  }
-
-  public previousState() {
-    this.$router.go(-1);
-  }
-
-  public getVariant(status) {
-    if (MessageStatus.IN_QUEUE === status) {
-      return 'info';
-    } else if (MessageStatus.SENT === status) {
-      return 'success';
-    } else if (MessageStatus.FAILED === status) {
-      return 'danger';
-    } else {
-      return 'secondary';
+    if (route.params?.emailId) {
+      retrieveEmail(route.params.emailId);
     }
-  }
-}
+
+    const getVariant = (status: MessageStatus) => {
+      if (MessageStatus.IN_QUEUE === status) {
+        return 'info';
+      } else if (MessageStatus.SENT === status) {
+        return 'success';
+      } else if (MessageStatus.FAILED === status) {
+        return 'danger';
+      } else {
+        return 'secondary';
+      }
+    };
+
+    return {
+      ...dateFormat,
+      alertService,
+      email,
+
+      ...dataUtils,
+
+      previousState,
+      t$: useI18n().t,
+      getVariant,
+    };
+  },
+});

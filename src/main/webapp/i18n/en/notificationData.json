@@ -8,11 +8,11 @@
         "createOrEditLabel": "Create or edit a Notification Data",
         "notFound": "No Notification Data found"
       },
-      "created": "A new Notification Data is created with identifier {{ param }}",
-      "updated": "A Notification Data is updated with identifier {{ param }}",
-      "deleted": "A Notification Data is deleted with identifier {{ param }}",
+      "created": "A new Notification Data is created with identifier { param }",
+      "updated": "A Notification Data is updated with identifier { param }",
+      "deleted": "A Notification Data is deleted with identifier { param }",
       "delete": {
-        "question": "Are you sure you want to delete Notification Data {{ id }}?"
+        "question": "Are you sure you want to delete Notification Data { id }?"
       },
       "detail": {
         "title": "Notification Data"

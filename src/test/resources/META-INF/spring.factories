@@ -1,1 +1,2 @@
-org.springframework.test.context.ContextCustomizerFactory = com.glinboy.app.config.TestContainersSpringContextCustomizerFactory
+org.springframework.test.context.ContextCustomizerFactory = com.glinboy.app.\
+    config.SqlTestContainersSpringContextCustomizerFactory

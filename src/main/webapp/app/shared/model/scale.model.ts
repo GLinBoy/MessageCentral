@@ -1,4 +1,4 @@
-import { ITicks, Ticks } from '@/shared/model/ticks.model';
+import { type ITicks, Ticks } from '@/shared/model/ticks.model';
 
 export interface IScale {
   ticks?: ITicks;

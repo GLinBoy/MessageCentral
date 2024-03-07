@@ -1,6 +1,5 @@
-import Vuex from 'vuex';
-import VueI18n, { DateTimeFormats } from 'vue-i18n';
-import JhiFormatter from './formatter';
+import { createI18n, type IntlDateTimeFormats } from 'vue-i18n';
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { faArrowLeft } from '@fortawesome/free-solid-svg-icons/faArrowLeft';
@@ -49,15 +48,7 @@ import { faToggleOff } from '@fortawesome/free-solid-svg-icons/faToggleOff';
 import { faClipboard } from '@fortawesome/free-solid-svg-icons/faClipboard';
 import { faComments } from '@fortawesome/free-solid-svg-icons/faComments';
 
-import VueCookie from 'vue-cookie';
-import Vuelidate from 'vuelidate';
-import Vue2Filters from 'vue2-filters';
-
-import * as filters from '@/shared/date/filters';
-import { accountStore } from '@/shared/config/store/account-store';
-import { translationStore } from '@/shared/config/store/translation-store';
-
-const dateTimeFormats: DateTimeFormats = {
+const datetimeFormats: IntlDateTimeFormats = {
   en: {
     short: {
       year: 'numeric',
@@ -111,14 +102,9 @@ const dateTimeFormats: DateTimeFormats = {
   // jhipster-needle-i18n-language-date-time-format - JHipster will add/remove format options in this object
 };
 
-export function initVueApp(vue) {
-  vue.use(VueCookie);
-  vue.use(Vuelidate);
-  vue.use(Vue2Filters);
-  filters.initFilters();
-}
-
 export function initFortAwesome(vue) {
+  vue.component('font-awesome-icon', FontAwesomeIcon);
+
   library.add(
     faArrowLeft,
     faAsterisk,
@@ -164,25 +150,17 @@ export function initFortAwesome(vue) {
     faToggleOn,
     faToggleOff,
     faClipboard,
-    faComments
+    faComments,
   );
 }
 
-export function initI18N(vue) {
-  vue.use(VueI18n);
-  return new VueI18n({
-    dateTimeFormats,
+export function initI18N(opts: any = {}) {
+  return createI18n({
+    missingWarn: false,
+    fallbackWarn: false,
+    legacy: false,
+    datetimeFormats,
     silentTranslationWarn: true,
-    formatter: new JhiFormatter(),
-  });
-}
-
-export function initVueXStore(vue) {
-  vue.use(Vuex);
-  return new Vuex.Store({
-    modules: {
-      accountStore,
-      translationStore,
-    },
+    ...opts,
   });
 }

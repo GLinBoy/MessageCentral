@@ -1,4 +1,7 @@
 {
+  "annotations": {
+    "changelogDate": "20210415085652"
+  },
   "applications": ["MessageCentral"],
   "changelogDate": "20210415085652",
   "dto": "mapstruct",
@@ -53,5 +56,6 @@
   "pagination": "pagination",
   "readOnly": false,
   "relationships": [],
+  "searchEngine": "no",
   "service": "serviceImpl"
 }

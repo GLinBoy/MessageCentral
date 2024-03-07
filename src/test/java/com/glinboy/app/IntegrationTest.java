@@ -1,6 +1,5 @@
 package com.glinboy.app;
 
-import com.glinboy.app.MessageCentralApp;
 import com.glinboy.app.config.AsyncSyncConfiguration;
 import com.glinboy.app.config.EmbeddedSQL;
 import java.lang.annotation.ElementType;

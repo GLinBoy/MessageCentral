@@ -1,80 +1,78 @@
-import { Component, Vue, Inject } from 'vue-property-decorator';
-import Vue2Filters from 'vue2-filters';
-import { INotificationData } from '@/shared/model/notification-data.model';
+import { defineComponent, inject, onMounted, ref, type Ref } from 'vue';
+import { useI18n } from 'vue-i18n';
 
 import NotificationDataService from './notification-data.service';
-import AlertService from '@/shared/alert/alert.service';
+import { type INotificationData } from '@/shared/model/notification-data.model';
+import { useAlertService } from '@/shared/alert/alert.service';
 
-@Component({
-  mixins: [Vue2Filters.mixin],
-})
-export default class NotificationData extends Vue {
-  @Inject('notificationDataService') private notificationDataService: () => NotificationDataService;
-  @Inject('alertService') private alertService: () => AlertService;
+export default defineComponent({
+  compatConfig: { MODE: 3 },
+  name: 'NotificationData',
+  setup() {
+    const { t: t$ } = useI18n();
+    const notificationDataService = inject('notificationDataService', () => new NotificationDataService());
+    const alertService = inject('alertService', () => useAlertService(), true);
 
-  private removeId: number = null;
+    const notificationData: Ref<INotificationData[]> = ref([]);
 
-  public notificationData: INotificationData[] = [];
+    const isFetching = ref(false);
 
-  public isFetching = false;
+    const clear = () => {};
 
-  public mounted(): void {
-    this.retrieveAllNotificationDatas();
-  }
+    const retrieveNotificationDatas = async () => {
+      isFetching.value = true;
+      try {
+        const res = await notificationDataService().retrieve();
+        notificationData.value = res.data;
+      } catch (err) {
+        alertService.showHttpError(err.response);
+      } finally {
+        isFetching.value = false;
+      }
+    };
 
-  public clear(): void {
-    this.retrieveAllNotificationDatas();
-  }
+    const handleSyncList = () => {
+      retrieveNotificationDatas();
+    };
 
-  public retrieveAllNotificationDatas(): void {
-    this.isFetching = true;
-    this.notificationDataService()
-      .retrieve()
-      .then(
-        res => {
-          this.notificationData = res.data;
-          this.isFetching = false;
-        },
-        err => {
-          this.isFetching = false;
-          this.alertService().showHttpError(this, err.response);
-        }
-      );
-  }
+    onMounted(async () => {
+      await retrieveNotificationDatas();
+    });
 
-  public handleSyncList(): void {
-    this.clear();
-  }
+    const removeId: Ref<number> = ref(null);
+    const removeEntity = ref<any>(null);
+    const prepareRemove = (instance: INotificationData) => {
+      removeId.value = instance.id;
+      removeEntity.value.show();
+    };
+    const closeDialog = () => {
+      removeEntity.value.hide();
+    };
+    const removeNotificationData = async () => {
+      try {
+        await notificationDataService().delete(removeId.value);
+        const message = t$('messageCentralApp.notificationData.deleted', { param: removeId.value }).toString();
+        alertService.showInfo(message, { variant: 'danger' });
+        removeId.value = null;
+        retrieveNotificationDatas();
+        closeDialog();
+      } catch (error) {
+        alertService.showHttpError(error.response);
+      }
+    };
 
-  public prepareRemove(instance: INotificationData): void {
-    this.removeId = instance.id;
-    if (<any>this.$refs.removeEntity) {
-      (<any>this.$refs.removeEntity).show();
-    }
-  }
-
-  public removeNotificationData(): void {
-    this.notificationDataService()
-      .delete(this.removeId)
-      .then(() => {
-        const message = this.$t('messageCentralApp.notificationData.deleted', { param: this.removeId });
-        this.$bvToast.toast(message.toString(), {
-          toaster: 'b-toaster-top-center',
-          title: 'Info',
-          variant: 'danger',
-          solid: true,
-          autoHideDelay: 5000,
-        });
-        this.removeId = null;
-        this.retrieveAllNotificationDatas();
-        this.closeDialog();
-      })
-      .catch(error => {
-        this.alertService().showHttpError(this, error.response);
-      });
-  }
-
-  public closeDialog(): void {
-    (<any>this.$refs.removeEntity).hide();
-  }
-}
+    return {
+      notificationData,
+      handleSyncList,
+      isFetching,
+      retrieveNotificationDatas,
+      clear,
+      removeId,
+      removeEntity,
+      prepareRemove,
+      closeDialog,
+      removeNotificationData,
+      t$,
+    };
+  },
+});

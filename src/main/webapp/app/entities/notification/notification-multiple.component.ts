@@ -1,135 +1,150 @@
-import { Component, Vue, Inject } from 'vue-property-decorator';
+import { computed, defineComponent, inject, ref, type Ref } from 'vue';
+import { useI18n } from 'vue-i18n';
+import { useRoute, useRouter } from 'vue-router';
+import { useVuelidate } from '@vuelidate/core';
 
-import { required, maxLength, minLength } from 'vuelidate/lib/validators';
-
-import NotificationDataService from '@/entities/notification-data/notification-data.service';
-
-import AlertService from '@/shared/alert/alert.service';
-
-import { INotifications, Notifications } from '@/shared/model/notification.model';
-import { INotificationData, NotificationData } from '@/shared/model/notification-data.model';
-import { IReceiver, Receiver } from '@/shared/model/notification.model';
 import NotificationService from './notification.service';
+import { useDateFormat, useValidation } from '@/shared/composables';
+import { useAlertService } from '@/shared/alert/alert.service';
 
-const validations: any = {
-  notifications: {
-    receivers: {
-      required,
-      minLength: minLength(1),
-      $each: {
-        required,
+import { type INotifications, type IReceiver, Notifications, Receiver } from '@/shared/model/notification.model';
+import { type INotificationData, NotificationData } from '@/shared/model/notification-data.model';
+
+export default defineComponent({
+  compatConfig: { MODE: 3 },
+  name: 'NotificationMultiple',
+  setup() {
+    const notificationService = inject('notificationService', () => new NotificationService());
+    const alertService = inject('alertService', () => useAlertService(), true);
+
+    const notifications: Ref<INotifications> = ref(new Notifications());
+    const receiver: Ref<IReceiver> = ref(new Receiver());
+    const notificationData: Ref<INotificationData> = ref(new NotificationData());
+    const isSaving = ref(false);
+    const currentLanguage = inject('currentLanguage', () => computed(() => navigator.language ?? 'en'), true);
+
+    const route = useRoute();
+    const router = useRouter();
+
+    const previousState = () => router.go(-1);
+
+    const initRelationships = () => {};
+
+    initRelationships();
+
+    const { t: t$ } = useI18n();
+    const validations = useValidation();
+    const validationRules = {
+      // username: {
+      //   required: validations.required(t$('entity.validation.required').toString()),
+      //   maxLength: validations.maxLength(t$('entity.validation.maxlength', { max: 64 }).toString(), 64),
+      // },
+      // token: {
+      //   required: validations.required(t$('entity.validation.required').toString()),
+      //   maxLength: validations.maxLength(t$('entity.validation.maxlength', { max: 164 }).toString(), 164),
+      // },
+      subject: {
+        required: validations.required(t$('entity.validation.required').toString()),
+        maxLength: validations.maxLength(t$('entity.validation.maxlength', { max: 128 }).toString(), 128),
       },
-    },
-    subject: {
-      required,
-      maxLength: maxLength(128),
-    },
-    content: {
-      required,
-      maxLength: maxLength(4000),
-    },
-    image: {
-      maxLength: maxLength(256),
-    },
-    status: {},
-  },
-};
+      content: {
+        required: validations.required(t$('entity.validation.required').toString()),
+        maxLength: validations.maxLength(t$('entity.validation.maxlength', { max: 4000 }).toString(), 4000),
+      },
+      image: {
+        maxLength: validations.maxLength(t$('entity.validation.maxlength', { max: 256 }).toString(), 256),
+      },
+      data: {},
+    };
+    const v$ = useVuelidate(validationRules, notifications as any);
+    v$.value.$validate();
 
-@Component({
-  validations,
-})
-export default class NotificationMultiple extends Vue {
-  @Inject('notificationService') private notificationService: () => NotificationService;
-  @Inject('notificationDataService') private notificationDataService: () => NotificationDataService;
-  @Inject('alertService') private alertService: () => AlertService;
-
-  public notifications: INotifications = new Notifications();
-  public data: INotificationData = new NotificationData();
-  public receiver: IReceiver = new Receiver();
-  public isSaving = false;
-  public currentLanguage = '';
-
-  created(): void {
-    this.currentLanguage = this.$store.getters.currentLanguage;
-    this.$store.watch(
-      () => this.$store.getters.currentLanguage,
-      () => {
-        this.currentLanguage = this.$store.getters.currentLanguage;
+    const addNotificationData = () => {
+      if (notifications.value.data) {
+        notifications.value.data = notifications.value.data.filter(obj => obj.dataKey !== notificationData.value.dataKey);
+        notifications.value.data.push(notificationData.value);
+      } else {
+        notifications.value.data = [notificationData.value];
       }
-    );
-  }
+      console.log(notifications.value.data);
+      resetNotificationData();
+    };
 
-  public save(): void {
-    this.isSaving = true;
-    this.notificationService()
-      .createMultiple([this.notifications])
-      .then(() => {
-        this.isSaving = false;
-        this.$router.go(-1);
-        const message = this.$t('messageCentralApp.notification.createdMultiple');
-        return (this.$root as any).$bvToast.toast(message.toString(), {
-          toaster: 'b-toaster-top-center',
-          title: 'Success',
-          variant: 'success',
-          solid: true,
-          autoHideDelay: 5000,
-        });
-      })
-      .catch(error => {
-        this.isSaving = false;
-        this.alertService().showHttpError(this, error.response);
-      });
-  }
+    const resetNotificationData = () => {
+      notificationData.value = new NotificationData();
+    };
 
-  public previousState(): void {
-    this.$router.go(-1);
-  }
+    const prepareNotificationDataEdit = (data: INotificationData) => {
+      notificationData.value = data;
+    };
 
-  public addData(): void {
-    if (this.notifications.data) {
-      this.notifications.data = this.notifications.data.filter(obj => obj.dataKey !== this.data.dataKey);
-      this.notifications.data.push(this.data);
-    } else {
-      this.notifications.data = [this.data];
-    }
-    this.resetData();
-  }
+    const prepareNotificationDataRemove = (data: INotificationData) => {
+      notifications.value.data = notifications.value.data.filter(obj => obj.dataKey !== data.dataKey);
+    };
 
-  public resetData(): void {
-    this.data = new NotificationData();
-  }
+    const addReceiver = () => {
+      if (notifications.value.receivers) {
+        notifications.value.receivers = notifications.value.receivers.filter(
+          obj => obj.username !== receiver.value.username && obj.token !== receiver.value.token,
+        );
+        notifications.value.receivers.push(receiver.value);
+      } else {
+        notifications.value.receivers = [receiver.value];
+      }
+      resetReceiver();
+    };
 
-  public prepareDataEdit(data): void {
-    this.data = data;
-  }
+    const resetReceiver = () => {
+      receiver.value = new Receiver();
+    };
 
-  public prepareDataRemove(data) {
-    this.notifications.data = this.notifications.data.filter(obj => obj.dataKey !== data.dataKey);
-  }
+    const prepareReceiverEdit = (data: IReceiver) => {
+      receiver.value = data;
+    };
 
-  public addReceiver(): void {
-    if (this.notifications.receivers) {
-      this.notifications.receivers = this.notifications.receivers.filter(
-        obj => obj.username !== this.receiver.username && obj.token !== this.receiver.token
+    const prepareReceiverRemove = (data: IReceiver) => {
+      notifications.value.receivers = notifications.value.receivers.filter(
+        obj => obj.username !== data.username && obj.token !== data.token,
       );
-      this.notifications.receivers.push(this.receiver);
-    } else {
-      this.notifications.receivers = [this.receiver];
-    }
-    this.resetReceiver();
-  }
+    };
 
-  public resetReceiver(): void {
-    this.receiver = new Receiver();
-  }
-
-  public prepareReceiverEdit(receiver): void {
-    this.receiver = receiver;
-  }
-
-  public prepareReceiverRemove(receiver) {
-    this.notifications.receivers = this.notifications.receivers.filter(
-      obj => obj.username !== receiver.username && obj.token !== receiver.token
-    );
-  }
-}
+    return {
+      notificationService,
+      alertService,
+      notifications,
+      previousState,
+      isSaving,
+      currentLanguage,
+      v$,
+      ...useDateFormat({ entityRef: notifications }),
+      t$,
+      receiver,
+      notificationData,
+      addNotificationData,
+      resetNotificationData,
+      prepareNotificationDataEdit,
+      prepareNotificationDataRemove,
+      addReceiver,
+      resetReceiver,
+      prepareReceiverEdit,
+      prepareReceiverRemove,
+    };
+  },
+  created(): void {},
+  methods: {
+    save(): void {
+      this.isSaving = true;
+      this.notificationService()
+        .createMultiple([this.notifications])
+        .then(() => {
+          this.isSaving = false;
+          this.previousState();
+          this.alertService.showInfo(this.t$('messageCentralApp.notification.createdMultiple'));
+        })
+        .catch(error => {
+          this.isSaving = false;
+          this.alertService.showHttpError(error.response);
+        });
+    },
+  },
+});

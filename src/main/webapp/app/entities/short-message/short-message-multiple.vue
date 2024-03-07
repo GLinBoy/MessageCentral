@@ -3,88 +3,42 @@
     <div class="col-8">
       <form name="editForm" role="form" novalidate v-on:submit.prevent="save()">
         <h2
-          id="messageCentralApp.shortMessages.home.createLabel"
-          data-cy="ShortMessagesCreateHeading"
-          v-text="$t('messageCentralApp.shortMessages.home.createLabel')"
-        >
-          Create a Short Message(s)
-        </h2>
+          id="messageCentralApp.shortMessage.home.createOrEditLabel"
+          data-cy="ShortMessageCreateUpdateHeading"
+          v-text="t$('messageCentralApp.shortMessage.home.createOrEditLabel')"
+        ></h2>
         <div>
           <div class="form-group">
-            <label class="form-control-label" v-text="$t('messageCentralApp.shortMessages.phoneNumbers')" for="short-message-phoneNumbers"
-              >Phone Number</label
-            >
-            <b-form-tags
-              type="text"
-              separator=" ,;"
-              name="phoneNumbers"
-              id="short-message-phoneNumbers"
-              class="form-control"
-              data-cy="phoneNumbers"
-              :placeholder="$t('messageCentralApp.shortMessages.placeholder.newNumber')"
-              invalid-tag-text="invalid Number(s)"
-              :tag-validator="numberValidator"
-              remove-on-delete
-              no-add-on-enter
-              required
-              v-model="$v.shortMessages.phoneNumbers.$model"
-              :class="{ valid: !$v.shortMessages.phoneNumbers.$invalid, invalid: $v.shortMessages.phoneNumbers.$invalid }"
-              :input-attrs="{ 'aria-describedby': 'numbers-separate-by-help' }"
-            />
-            <b-form-text
-              name="numbers-separate-by-help"
-              id="numbers-separate-by-help"
-              class="mt-2 form-text text-muted font-weight-lighter"
-              v-html="$t('messageCentralApp.shortMessages.hint.newNumber')"
-            >
-              💡 Separate by <kbd>Space</kbd> or <kbd>,</kbd> or <kbd>;</kbd>
-            </b-form-text>
+            <vue3-tags-input :tags="v$.phoneNumbers.$model" @on-tags-changed="handleChangeTag" />
           </div>
           <div class="form-group">
-            <label class="form-control-label" v-text="$t('messageCentralApp.shortMessages.content')" for="short-message-content"
-              >Content</label
-            >
+            <label class="form-control-label" v-text="t$('messageCentralApp.shortMessage.content')" for="short-message-content"></label>
             <textarea
               class="form-control"
               name="content"
               id="short-message-content"
               data-cy="content"
-              :class="{ valid: !$v.shortMessages.content.$invalid, invalid: $v.shortMessages.content.$invalid }"
-              v-model="$v.shortMessages.content.$model"
-            ></textarea>
-            <div v-if="$v.shortMessages.content.$anyDirty && $v.shortMessages.content.$invalid">
-              <small class="form-text text-danger" v-if="!$v.shortMessages.content.required" v-text="$t('entity.validation.required')">
-                This field is required.
-              </small>
-              <small
-                class="form-text text-danger"
-                v-if="!$v.shortMessages.content.minLength"
-                v-text="$t('entity.validation.minlength', { min: 6 })"
-              >
-                This field is required to be at least 6 characters.
-              </small>
-              <small
-                class="form-text text-danger"
-                v-if="!$v.shortMessages.content.maxLength"
-                v-text="$t('entity.validation.maxlength', { max: 160 })"
-              >
-                This field cannot be longer than 160 characters.
-              </small>
+              :class="{ valid: !v$.content.$invalid, invalid: v$.content.$invalid }"
+              v-model="v$.content.$model"
+              required
+            />
+            <div v-if="v$.content.$anyDirty && v$.content.$invalid">
+              <small class="form-text text-danger" v-for="error of v$.content.$errors" :key="error.$uid">{{ error.$message }}</small>
             </div>
           </div>
         </div>
         <div>
           <button type="button" id="cancel-save" data-cy="entityCreateCancelButton" class="btn btn-secondary" v-on:click="previousState()">
-            <font-awesome-icon icon="ban"></font-awesome-icon>&nbsp;<span v-text="$t('entity.action.cancel')">Cancel</span>
+            <font-awesome-icon icon="ban"></font-awesome-icon>&nbsp;<span v-text="t$('entity.action.cancel')"></span>
           </button>
           <button
             type="submit"
             id="save-entity"
             data-cy="entityCreateSaveButton"
-            :disabled="$v.shortMessages.$invalid || isSaving"
+            :disabled="v$.$invalid || isSaving"
             class="btn btn-primary"
           >
-            <font-awesome-icon icon="save"></font-awesome-icon>&nbsp;<span v-text="$t('entity.action.send')">Save</span>
+            <font-awesome-icon icon="save"></font-awesome-icon>&nbsp;<span v-text="t$('entity.action.save')"></span>
           </button>
         </div>
       </form>
