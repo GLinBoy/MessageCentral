@@ -1,6 +1,7 @@
 import { type INotificationData } from '@/shared/model/notification-data.model';
 
 import { type MessageStatus } from '@/shared/model/enumerations/message-status.model';
+
 export interface INotification {
   id?: number;
   username?: string;

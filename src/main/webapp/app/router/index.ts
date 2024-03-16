@@ -1,15 +1,15 @@
 import { createRouter as createVueRouter, createWebHistory } from 'vue-router';
 import { Authority } from '@/shared/security/authority';
+import account from '@/router/account';
+import admin from '@/router/admin';
+import entities from '@/router/entities';
+import pages from '@/router/pages';
 
 const Home = () => import('@/core/home/home.vue');
 
 const Dashboard = () => import('@/core/dashboard/dashboard.vue');
 
 const Error = () => import('@/core/error/error.vue');
-import account from '@/router/account';
-import admin from '@/router/admin';
-import entities from '@/router/entities';
-import pages from '@/router/pages';
 
 export const createRouter = () =>
   createVueRouter({

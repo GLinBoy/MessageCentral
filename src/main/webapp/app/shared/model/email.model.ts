@@ -1,5 +1,6 @@
 import { type MessageStatus } from '@/shared/model/enumerations/message-status.model';
 import { EmailType } from '@/shared/model/enumerations/email-type.model';
+
 export interface IEmail {
   id?: number;
   receiver?: string;

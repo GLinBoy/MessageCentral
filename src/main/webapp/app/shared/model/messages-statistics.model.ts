@@ -8,5 +8,10 @@ export interface IMessagesStatistics {
 }
 
 export class MessagesStatistics implements IMessagesStatistics {
-  constructor(public date?: Date, public email?: Statistics, public sms?: Statistics, public notification?: Statistics) {}
+  constructor(
+    public date?: Date,
+    public email?: Statistics,
+    public sms?: Statistics,
+    public notification?: Statistics,
+  ) {}
 }

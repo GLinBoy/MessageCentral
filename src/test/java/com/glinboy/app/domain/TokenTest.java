@@ -1,6 +1,7 @@
 package com.glinboy.app.domain;
 
-import static com.glinboy.app.domain.TokenTestSamples.*;
+import static com.glinboy.app.domain.TokenTestSamples.getTokenSample1;
+import static com.glinboy.app.domain.TokenTestSamples.getTokenSample2;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.glinboy.app.web.rest.TestUtil;

@@ -3,7 +3,7 @@ package com.glinboy.app.config;
 import static org.springframework.security.config.Customizer.withDefaults;
 import static org.springframework.security.web.util.matcher.AntPathRequestMatcher.antMatcher;
 
-import com.glinboy.app.security.*;
+import com.glinboy.app.security.AuthoritiesConstants;
 import com.glinboy.app.web.filter.SpaWebFilter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

@@ -4,7 +4,7 @@ import { useRoute, useRouter } from 'vue-router';
 import { useVuelidate } from '@vuelidate/core';
 
 import NotificationService from './notification.service';
-import { useValidation, useDateFormat } from '@/shared/composables';
+import { useDateFormat, useValidation } from '@/shared/composables';
 import { useAlertService } from '@/shared/alert/alert.service';
 
 import { type INotification, Notification } from '@/shared/model/notification.model';

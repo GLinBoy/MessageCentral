@@ -2,7 +2,7 @@ package com.glinboy.app.security.jwt;
 
 import static com.glinboy.app.security.jwt.JwtAuthenticationTestUtils.*;
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

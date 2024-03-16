@@ -1,6 +1,7 @@
 package com.glinboy.app.config;
 
-import static com.glinboy.app.config.StaticResourcesWebConfiguration.*;
+import static com.glinboy.app.config.StaticResourcesWebConfiguration.RESOURCE_LOCATIONS;
+import static com.glinboy.app.config.StaticResourcesWebConfiguration.RESOURCE_PATHS;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.*;
 

@@ -1,7 +1,7 @@
 package com.glinboy.app.domain;
 
 import static com.glinboy.app.domain.NotificationDataTestSamples.*;
-import static com.glinboy.app.domain.NotificationTestSamples.*;
+import static com.glinboy.app.domain.NotificationTestSamples.getNotificationRandomSampleGenerator;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.glinboy.app.web.rest.TestUtil;

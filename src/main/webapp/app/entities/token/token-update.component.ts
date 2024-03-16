@@ -3,7 +3,7 @@ import { useI18n } from 'vue-i18n';
 import { useRoute, useRouter } from 'vue-router';
 import { useVuelidate } from '@vuelidate/core';
 import dayjs from 'dayjs';
-import { DATE_TIME_LONG_FORMAT, DATE_TIME_FORMAT, DATE_TIME_SERVER_LONG_FORMAT } from '@/shared/composables/date-format';
+import { DATE_TIME_FORMAT, DATE_TIME_LONG_FORMAT, DATE_TIME_SERVER_LONG_FORMAT } from '@/shared/composables/date-format';
 
 import TokenService from './token.service';
 import { useDateFormat, useValidation } from '@/shared/composables';

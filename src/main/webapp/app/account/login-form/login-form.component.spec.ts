@@ -1,5 +1,5 @@
 import { vitest } from 'vitest';
-import { shallowMount, type MountingOptions } from '@vue/test-utils';
+import { type MountingOptions, shallowMount } from '@vue/test-utils';
 import axios from 'axios';
 import sinon from 'sinon';
 import { type RouteLocation } from 'vue-router';
