@@ -87,7 +87,7 @@
         <validation-api.version>3.0.2</validation-api.version>
 
         <!-- jhipster-needle-maven-property -->
-        <greenmail.version>1.6.14</greenmail.version>
+        <greenmail.version>2.0.1</greenmail.version>
         <twilio-version>9.4.0</twilio-version>
         <kavenegar.version>2.0.3</kavenegar.version>
         <firebase-admin.version>9.1.1</firebase-admin.version>
