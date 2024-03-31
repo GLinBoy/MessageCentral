@@ -10,6 +10,14 @@
     <name>Message Central</name>
     <description>Description for Message Central</description>
 
+    <repositories>
+        <!-- jhipster-needle-maven-repository -->
+        <repository>
+            <id>jitpack.io</id>
+            <url>https://jitpack.io</url>
+        </repository>
+    </repositories>
+
     <properties>
         <!--
             Build properties
@@ -72,6 +80,13 @@
         <properties-maven-plugin.version>1.2.1</properties-maven-plugin.version>
         <sonar-maven-plugin.version>3.11.0.3922</sonar-maven-plugin.version>
         <spotless-maven-plugin.version>2.43.0</spotless-maven-plugin.version>
+
+        <!-- jhipster-needle-maven-property -->
+        <greenmail.version>2.0.1</greenmail.version>
+        <twilio-version>10.1.2</twilio-version>
+        <kavenegar.version>2.0.3</kavenegar.version>
+        <firebase-admin.version>9.2.0</firebase-admin.version>
+        <rsql-parser.version>2.2.1</rsql-parser.version>
     </properties>
 
     <dependencyManagement>
@@ -296,6 +311,32 @@
             <groupId>org.testcontainers</groupId>
             <artifactId>testcontainers</artifactId>
             <scope>test</scope>
+        </dependency>
+        <!-- jhipster-needle-maven-add-dependency -->
+        <dependency>
+            <groupId>com.icegreen</groupId>
+            <artifactId>greenmail</artifactId>
+            <version>${greenmail.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.twilio.sdk</groupId>
+            <artifactId>twilio</artifactId>
+            <version>${twilio-version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.github.kavenegar</groupId>
+            <artifactId>kavenegar-java</artifactId>
+            <version>${kavenegar.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.google.firebase</groupId>
+            <artifactId>firebase-admin</artifactId>
+            <version>${firebase-admin.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>io.github.zero88</groupId>
+            <artifactId>rsql-parser</artifactId>
+            <version>${rsql-parser.version}</version>
         </dependency>
     </dependencies>
 

@@ -89,12 +89,15 @@
     "bootstrap": "4.6.2",
     "bootstrap-vue": "2.23.1",
     "bootswatch": "4.6.2",
+    "chart.js": "^4.4.1",
     "dayjs": "1.11.10",
     "deepmerge": "4.3.1",
     "pinia": "2.1.7",
     "vue": "3.4.21",
+    "vue-chartjs": "^5.3.0",
     "vue-i18n": "9.10.2",
-    "vue-router": "4.3.0"
+    "vue-router": "4.3.0",
+    "vue3-tags-input": "^1.0.12"
   },
   "devDependencies": {
     "@pinia/testing": "0.1.3",
