@@ -65,11 +65,10 @@ public class EmailResource {
         if (emailDTO.getId() != null) {
             throw new BadRequestAlertException("A new email cannot already have an ID", ENTITY_NAME, "idexists");
         }
-        EmailDTO result = emailService.save(emailDTO);
-        return ResponseEntity
-            .created(new URI("/api/emails/" + result.getId()))
-            .headers(HeaderUtil.createEntityCreationAlert(applicationName, true, ENTITY_NAME, result.getId().toString()))
-            .body(result);
+        emailDTO = emailService.save(emailDTO);
+        return ResponseEntity.created(new URI("/api/emails/" + emailDTO.getId()))
+            .headers(HeaderUtil.createEntityCreationAlert(applicationName, true, ENTITY_NAME, emailDTO.getId().toString()))
+            .body(emailDTO);
     }
 
     /**
@@ -99,11 +98,10 @@ public class EmailResource {
             throw new BadRequestAlertException("Entity not found", ENTITY_NAME, "idnotfound");
         }
 
-        EmailDTO result = emailService.update(emailDTO);
-        return ResponseEntity
-            .ok()
+        emailDTO = emailService.update(emailDTO);
+        return ResponseEntity.ok()
             .headers(HeaderUtil.createEntityUpdateAlert(applicationName, true, ENTITY_NAME, emailDTO.getId().toString()))
-            .body(result);
+            .body(emailDTO);
     }
 
     /**
@@ -196,8 +194,7 @@ public class EmailResource {
     public ResponseEntity<Void> deleteEmail(@PathVariable("id") Long id) {
         log.debug("REST request to delete Email : {}", id);
         emailService.delete(id);
-        return ResponseEntity
-            .noContent()
+        return ResponseEntity.noContent()
             .headers(HeaderUtil.createEntityDeletionAlert(applicationName, true, ENTITY_NAME, id.toString()))
             .build();
     }

@@ -7,7 +7,6 @@ import com.glinboy.app.service.criteria.NotificationCriteria;
 import com.glinboy.app.service.dto.NotificationDTO;
 import com.glinboy.app.service.mapper.NotificationMapper;
 import jakarta.persistence.criteria.JoinType;
-import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -21,7 +20,7 @@ import tech.jhipster.service.QueryService;
  * Service for executing complex queries for {@link Notification} entities in the database.
  * The main input is a {@link NotificationCriteria} which gets converted to {@link Specification},
  * in a way that all the filters must apply.
- * It returns a {@link List} of {@link NotificationDTO} or a {@link Page} of {@link NotificationDTO} which fulfills the criteria.
+ * It returns a {@link Page} of {@link NotificationDTO} which fulfills the criteria.
  */
 @Service
 @Transactional(readOnly = true)
@@ -36,18 +35,6 @@ public class NotificationQueryService extends QueryService<Notification> {
     public NotificationQueryService(NotificationRepository notificationRepository, NotificationMapper notificationMapper) {
         this.notificationRepository = notificationRepository;
         this.notificationMapper = notificationMapper;
-    }
-
-    /**
-     * Return a {@link List} of {@link NotificationDTO} which matches the criteria from the database.
-     * @param criteria The object which holds all the filters, which the entities should match.
-     * @return the matching entities.
-     */
-    @Transactional(readOnly = true)
-    public List<NotificationDTO> findByCriteria(NotificationCriteria criteria) {
-        log.debug("find by criteria : {}", criteria);
-        final Specification<Notification> specification = createSpecification(criteria);
-        return notificationMapper.toDto(notificationRepository.findAll(specification));
     }
 
     /**
@@ -115,13 +102,9 @@ public class NotificationQueryService extends QueryService<Notification> {
                 specification = specification.and(buildStringSpecification(criteria.getCreatedBy(), Notification_.createdBy));
             }
             if (criteria.getDataId() != null) {
-                specification =
-                    specification.and(
-                        buildSpecification(
-                            criteria.getDataId(),
-                            root -> root.join(Notification_.data, JoinType.LEFT).get(NotificationData_.id)
-                        )
-                    );
+                specification = specification.and(
+                    buildSpecification(criteria.getDataId(), root -> root.join(Notification_.data, JoinType.LEFT).get(NotificationData_.id))
+                );
             }
         }
         return specification;

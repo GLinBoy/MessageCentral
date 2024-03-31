@@ -1,10 +1,13 @@
 package com.glinboy.app.web.rest;
 
+import static com.glinboy.app.domain.EmailAsserts.*;
+import static com.glinboy.app.web.rest.TestUtil.createUpdateProxyForBean;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.hasItem;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.glinboy.app.IntegrationTest;
 import com.glinboy.app.domain.Email;
 import com.glinboy.app.domain.enumeration.EmailType;
@@ -15,7 +18,6 @@ import com.glinboy.app.service.mapper.EmailMapper;
 import jakarta.persistence.EntityManager;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
-import java.util.List;
 import java.util.Random;
 import java.util.concurrent.atomic.AtomicLong;
 import org.junit.jupiter.api.BeforeEach;
@@ -35,8 +37,8 @@ import org.springframework.transaction.annotation.Transactional;
 @WithMockUser
 class EmailResourceIT {
 
-    private static final String DEFAULT_RECEIVER = "Qad.CmuPsD.Vm+.ZLo@L.4PXW.YQPotM";
-    private static final String UPDATED_RECEIVER = "Nb&.OdPePH.*zl.ypDVP.jG.y-mm@rp4nrn.EumiN.vdf.Ea";
+    private static final String DEFAULT_RECEIVER = "K.jX0.Fn.Wr&91-@lrJ.tGj0.p0.gUo";
+    private static final String UPDATED_RECEIVER = "0T1m@bYJ.uSzniJO";
 
     private static final String DEFAULT_SUBJECT = "AAAAAAAAAA";
     private static final String UPDATED_SUBJECT = "BBBBBBBBBB";
@@ -61,6 +63,9 @@ class EmailResourceIT {
 
     private static Random random = new Random();
     private static AtomicLong longCount = new AtomicLong(random.nextInt() + (2 * Integer.MAX_VALUE));
+
+    @Autowired
+    private ObjectMapper om;
 
     @Autowired
     private EmailRepository emailRepository;
@@ -120,24 +125,23 @@ class EmailResourceIT {
     @Test
     @Transactional
     void createEmail() throws Exception {
-        int databaseSizeBeforeCreate = emailRepository.findAll().size();
+        long databaseSizeBeforeCreate = getRepositoryCount();
         // Create the Email
         EmailDTO emailDTO = emailMapper.toDto(email);
-        restEmailMockMvc
-            .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(emailDTO)))
-            .andExpect(status().isCreated());
+        var returnedEmailDTO = om.readValue(
+            restEmailMockMvc
+                .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(om.writeValueAsBytes(emailDTO)))
+                .andExpect(status().isCreated())
+                .andReturn()
+                .getResponse()
+                .getContentAsString(),
+            EmailDTO.class
+        );
 
         // Validate the Email in the database
-        List<Email> emailList = emailRepository.findAll();
-        assertThat(emailList).hasSize(databaseSizeBeforeCreate + 1);
-        Email testEmail = emailList.get(emailList.size() - 1);
-        assertThat(testEmail.getReceiver()).isEqualTo(DEFAULT_RECEIVER);
-        assertThat(testEmail.getSubject()).isEqualTo(DEFAULT_SUBJECT);
-        assertThat(testEmail.getContent()).isEqualTo(DEFAULT_CONTENT);
-        assertThat(testEmail.getStatus()).isEqualTo(DEFAULT_STATUS);
-        assertThat(testEmail.getEmailType()).isEqualTo(DEFAULT_EMAIL_TYPE);
-        assertThat(testEmail.getCreatedAt()).isEqualTo(DEFAULT_CREATED_AT);
-        assertThat(testEmail.getCreatedBy()).isEqualTo(DEFAULT_CREATED_BY);
+        assertIncrementedRepositoryCount(databaseSizeBeforeCreate);
+        var returnedEmail = emailMapper.toEntity(returnedEmailDTO);
+        assertEmailUpdatableFieldsEquals(returnedEmail, getPersistedEmail(returnedEmail));
     }
 
     @Test
@@ -147,22 +151,21 @@ class EmailResourceIT {
         email.setId(1L);
         EmailDTO emailDTO = emailMapper.toDto(email);
 
-        int databaseSizeBeforeCreate = emailRepository.findAll().size();
+        long databaseSizeBeforeCreate = getRepositoryCount();
 
         // An entity with an existing ID cannot be created, so this API call must fail
         restEmailMockMvc
-            .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(emailDTO)))
+            .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(om.writeValueAsBytes(emailDTO)))
             .andExpect(status().isBadRequest());
 
         // Validate the Email in the database
-        List<Email> emailList = emailRepository.findAll();
-        assertThat(emailList).hasSize(databaseSizeBeforeCreate);
+        assertSameRepositoryCount(databaseSizeBeforeCreate);
     }
 
     @Test
     @Transactional
     void checkReceiverIsRequired() throws Exception {
-        int databaseSizeBeforeTest = emailRepository.findAll().size();
+        long databaseSizeBeforeTest = getRepositoryCount();
         // set the field null
         email.setReceiver(null);
 
@@ -170,17 +173,16 @@ class EmailResourceIT {
         EmailDTO emailDTO = emailMapper.toDto(email);
 
         restEmailMockMvc
-            .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(emailDTO)))
+            .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(om.writeValueAsBytes(emailDTO)))
             .andExpect(status().isBadRequest());
 
-        List<Email> emailList = emailRepository.findAll();
-        assertThat(emailList).hasSize(databaseSizeBeforeTest);
+        assertSameRepositoryCount(databaseSizeBeforeTest);
     }
 
     @Test
     @Transactional
     void checkSubjectIsRequired() throws Exception {
-        int databaseSizeBeforeTest = emailRepository.findAll().size();
+        long databaseSizeBeforeTest = getRepositoryCount();
         // set the field null
         email.setSubject(null);
 
@@ -188,17 +190,16 @@ class EmailResourceIT {
         EmailDTO emailDTO = emailMapper.toDto(email);
 
         restEmailMockMvc
-            .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(emailDTO)))
+            .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(om.writeValueAsBytes(emailDTO)))
             .andExpect(status().isBadRequest());
 
-        List<Email> emailList = emailRepository.findAll();
-        assertThat(emailList).hasSize(databaseSizeBeforeTest);
+        assertSameRepositoryCount(databaseSizeBeforeTest);
     }
 
     @Test
     @Transactional
     void checkCreatedAtIsRequired() throws Exception {
-        int databaseSizeBeforeTest = emailRepository.findAll().size();
+        long databaseSizeBeforeTest = getRepositoryCount();
         // set the field null
         email.setCreatedAt(null);
 
@@ -206,17 +207,16 @@ class EmailResourceIT {
         EmailDTO emailDTO = emailMapper.toDto(email);
 
         restEmailMockMvc
-            .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(emailDTO)))
+            .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(om.writeValueAsBytes(emailDTO)))
             .andExpect(status().isBadRequest());
 
-        List<Email> emailList = emailRepository.findAll();
-        assertThat(emailList).hasSize(databaseSizeBeforeTest);
+        assertSameRepositoryCount(databaseSizeBeforeTest);
     }
 
     @Test
     @Transactional
     void checkCreatedByIsRequired() throws Exception {
-        int databaseSizeBeforeTest = emailRepository.findAll().size();
+        long databaseSizeBeforeTest = getRepositoryCount();
         // set the field null
         email.setCreatedBy(null);
 
@@ -224,11 +224,10 @@ class EmailResourceIT {
         EmailDTO emailDTO = emailMapper.toDto(email);
 
         restEmailMockMvc
-            .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(emailDTO)))
+            .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(om.writeValueAsBytes(emailDTO)))
             .andExpect(status().isBadRequest());
 
-        List<Email> emailList = emailRepository.findAll();
-        assertThat(emailList).hasSize(databaseSizeBeforeTest);
+        assertSameRepositoryCount(databaseSizeBeforeTest);
     }
 
     @Test
@@ -281,14 +280,11 @@ class EmailResourceIT {
 
         Long id = email.getId();
 
-        defaultEmailShouldBeFound("id.equals=" + id);
-        defaultEmailShouldNotBeFound("id.notEquals=" + id);
+        defaultEmailFiltering("id.equals=" + id, "id.notEquals=" + id);
 
-        defaultEmailShouldBeFound("id.greaterThanOrEqual=" + id);
-        defaultEmailShouldNotBeFound("id.greaterThan=" + id);
+        defaultEmailFiltering("id.greaterThanOrEqual=" + id, "id.greaterThan=" + id);
 
-        defaultEmailShouldBeFound("id.lessThanOrEqual=" + id);
-        defaultEmailShouldNotBeFound("id.lessThan=" + id);
+        defaultEmailFiltering("id.lessThanOrEqual=" + id, "id.lessThan=" + id);
     }
 
     @Test
@@ -297,11 +293,8 @@ class EmailResourceIT {
         // Initialize the database
         emailRepository.saveAndFlush(email);
 
-        // Get all the emailList where receiver equals to DEFAULT_RECEIVER
-        defaultEmailShouldBeFound("receiver.equals=" + DEFAULT_RECEIVER);
-
-        // Get all the emailList where receiver equals to UPDATED_RECEIVER
-        defaultEmailShouldNotBeFound("receiver.equals=" + UPDATED_RECEIVER);
+        // Get all the emailList where receiver equals to
+        defaultEmailFiltering("receiver.equals=" + DEFAULT_RECEIVER, "receiver.equals=" + UPDATED_RECEIVER);
     }
 
     @Test
@@ -310,11 +303,8 @@ class EmailResourceIT {
         // Initialize the database
         emailRepository.saveAndFlush(email);
 
-        // Get all the emailList where receiver in DEFAULT_RECEIVER or UPDATED_RECEIVER
-        defaultEmailShouldBeFound("receiver.in=" + DEFAULT_RECEIVER + "," + UPDATED_RECEIVER);
-
-        // Get all the emailList where receiver equals to UPDATED_RECEIVER
-        defaultEmailShouldNotBeFound("receiver.in=" + UPDATED_RECEIVER);
+        // Get all the emailList where receiver in
+        defaultEmailFiltering("receiver.in=" + DEFAULT_RECEIVER + "," + UPDATED_RECEIVER, "receiver.in=" + UPDATED_RECEIVER);
     }
 
     @Test
@@ -324,10 +314,7 @@ class EmailResourceIT {
         emailRepository.saveAndFlush(email);
 
         // Get all the emailList where receiver is not null
-        defaultEmailShouldBeFound("receiver.specified=true");
-
-        // Get all the emailList where receiver is null
-        defaultEmailShouldNotBeFound("receiver.specified=false");
+        defaultEmailFiltering("receiver.specified=true", "receiver.specified=false");
     }
 
     @Test
@@ -336,11 +323,8 @@ class EmailResourceIT {
         // Initialize the database
         emailRepository.saveAndFlush(email);
 
-        // Get all the emailList where receiver contains DEFAULT_RECEIVER
-        defaultEmailShouldBeFound("receiver.contains=" + DEFAULT_RECEIVER);
-
-        // Get all the emailList where receiver contains UPDATED_RECEIVER
-        defaultEmailShouldNotBeFound("receiver.contains=" + UPDATED_RECEIVER);
+        // Get all the emailList where receiver contains
+        defaultEmailFiltering("receiver.contains=" + DEFAULT_RECEIVER, "receiver.contains=" + UPDATED_RECEIVER);
     }
 
     @Test
@@ -349,11 +333,8 @@ class EmailResourceIT {
         // Initialize the database
         emailRepository.saveAndFlush(email);
 
-        // Get all the emailList where receiver does not contain DEFAULT_RECEIVER
-        defaultEmailShouldNotBeFound("receiver.doesNotContain=" + DEFAULT_RECEIVER);
-
-        // Get all the emailList where receiver does not contain UPDATED_RECEIVER
-        defaultEmailShouldBeFound("receiver.doesNotContain=" + UPDATED_RECEIVER);
+        // Get all the emailList where receiver does not contain
+        defaultEmailFiltering("receiver.doesNotContain=" + UPDATED_RECEIVER, "receiver.doesNotContain=" + DEFAULT_RECEIVER);
     }
 
     @Test
@@ -362,11 +343,8 @@ class EmailResourceIT {
         // Initialize the database
         emailRepository.saveAndFlush(email);
 
-        // Get all the emailList where subject equals to DEFAULT_SUBJECT
-        defaultEmailShouldBeFound("subject.equals=" + DEFAULT_SUBJECT);
-
-        // Get all the emailList where subject equals to UPDATED_SUBJECT
-        defaultEmailShouldNotBeFound("subject.equals=" + UPDATED_SUBJECT);
+        // Get all the emailList where subject equals to
+        defaultEmailFiltering("subject.equals=" + DEFAULT_SUBJECT, "subject.equals=" + UPDATED_SUBJECT);
     }
 
     @Test
@@ -375,11 +353,8 @@ class EmailResourceIT {
         // Initialize the database
         emailRepository.saveAndFlush(email);
 
-        // Get all the emailList where subject in DEFAULT_SUBJECT or UPDATED_SUBJECT
-        defaultEmailShouldBeFound("subject.in=" + DEFAULT_SUBJECT + "," + UPDATED_SUBJECT);
-
-        // Get all the emailList where subject equals to UPDATED_SUBJECT
-        defaultEmailShouldNotBeFound("subject.in=" + UPDATED_SUBJECT);
+        // Get all the emailList where subject in
+        defaultEmailFiltering("subject.in=" + DEFAULT_SUBJECT + "," + UPDATED_SUBJECT, "subject.in=" + UPDATED_SUBJECT);
     }
 
     @Test
@@ -389,10 +364,7 @@ class EmailResourceIT {
         emailRepository.saveAndFlush(email);
 
         // Get all the emailList where subject is not null
-        defaultEmailShouldBeFound("subject.specified=true");
-
-        // Get all the emailList where subject is null
-        defaultEmailShouldNotBeFound("subject.specified=false");
+        defaultEmailFiltering("subject.specified=true", "subject.specified=false");
     }
 
     @Test
@@ -401,11 +373,8 @@ class EmailResourceIT {
         // Initialize the database
         emailRepository.saveAndFlush(email);
 
-        // Get all the emailList where subject contains DEFAULT_SUBJECT
-        defaultEmailShouldBeFound("subject.contains=" + DEFAULT_SUBJECT);
-
-        // Get all the emailList where subject contains UPDATED_SUBJECT
-        defaultEmailShouldNotBeFound("subject.contains=" + UPDATED_SUBJECT);
+        // Get all the emailList where subject contains
+        defaultEmailFiltering("subject.contains=" + DEFAULT_SUBJECT, "subject.contains=" + UPDATED_SUBJECT);
     }
 
     @Test
@@ -414,11 +383,8 @@ class EmailResourceIT {
         // Initialize the database
         emailRepository.saveAndFlush(email);
 
-        // Get all the emailList where subject does not contain DEFAULT_SUBJECT
-        defaultEmailShouldNotBeFound("subject.doesNotContain=" + DEFAULT_SUBJECT);
-
-        // Get all the emailList where subject does not contain UPDATED_SUBJECT
-        defaultEmailShouldBeFound("subject.doesNotContain=" + UPDATED_SUBJECT);
+        // Get all the emailList where subject does not contain
+        defaultEmailFiltering("subject.doesNotContain=" + UPDATED_SUBJECT, "subject.doesNotContain=" + DEFAULT_SUBJECT);
     }
 
     @Test
@@ -427,11 +393,8 @@ class EmailResourceIT {
         // Initialize the database
         emailRepository.saveAndFlush(email);
 
-        // Get all the emailList where status equals to DEFAULT_STATUS
-        defaultEmailShouldBeFound("status.equals=" + DEFAULT_STATUS);
-
-        // Get all the emailList where status equals to UPDATED_STATUS
-        defaultEmailShouldNotBeFound("status.equals=" + UPDATED_STATUS);
+        // Get all the emailList where status equals to
+        defaultEmailFiltering("status.equals=" + DEFAULT_STATUS, "status.equals=" + UPDATED_STATUS);
     }
 
     @Test
@@ -440,11 +403,8 @@ class EmailResourceIT {
         // Initialize the database
         emailRepository.saveAndFlush(email);
 
-        // Get all the emailList where status in DEFAULT_STATUS or UPDATED_STATUS
-        defaultEmailShouldBeFound("status.in=" + DEFAULT_STATUS + "," + UPDATED_STATUS);
-
-        // Get all the emailList where status equals to UPDATED_STATUS
-        defaultEmailShouldNotBeFound("status.in=" + UPDATED_STATUS);
+        // Get all the emailList where status in
+        defaultEmailFiltering("status.in=" + DEFAULT_STATUS + "," + UPDATED_STATUS, "status.in=" + UPDATED_STATUS);
     }
 
     @Test
@@ -454,10 +414,7 @@ class EmailResourceIT {
         emailRepository.saveAndFlush(email);
 
         // Get all the emailList where status is not null
-        defaultEmailShouldBeFound("status.specified=true");
-
-        // Get all the emailList where status is null
-        defaultEmailShouldNotBeFound("status.specified=false");
+        defaultEmailFiltering("status.specified=true", "status.specified=false");
     }
 
     @Test
@@ -466,11 +423,8 @@ class EmailResourceIT {
         // Initialize the database
         emailRepository.saveAndFlush(email);
 
-        // Get all the emailList where emailType equals to DEFAULT_EMAIL_TYPE
-        defaultEmailShouldBeFound("emailType.equals=" + DEFAULT_EMAIL_TYPE);
-
-        // Get all the emailList where emailType equals to UPDATED_EMAIL_TYPE
-        defaultEmailShouldNotBeFound("emailType.equals=" + UPDATED_EMAIL_TYPE);
+        // Get all the emailList where emailType equals to
+        defaultEmailFiltering("emailType.equals=" + DEFAULT_EMAIL_TYPE, "emailType.equals=" + UPDATED_EMAIL_TYPE);
     }
 
     @Test
@@ -479,11 +433,8 @@ class EmailResourceIT {
         // Initialize the database
         emailRepository.saveAndFlush(email);
 
-        // Get all the emailList where emailType in DEFAULT_EMAIL_TYPE or UPDATED_EMAIL_TYPE
-        defaultEmailShouldBeFound("emailType.in=" + DEFAULT_EMAIL_TYPE + "," + UPDATED_EMAIL_TYPE);
-
-        // Get all the emailList where emailType equals to UPDATED_EMAIL_TYPE
-        defaultEmailShouldNotBeFound("emailType.in=" + UPDATED_EMAIL_TYPE);
+        // Get all the emailList where emailType in
+        defaultEmailFiltering("emailType.in=" + DEFAULT_EMAIL_TYPE + "," + UPDATED_EMAIL_TYPE, "emailType.in=" + UPDATED_EMAIL_TYPE);
     }
 
     @Test
@@ -493,10 +444,7 @@ class EmailResourceIT {
         emailRepository.saveAndFlush(email);
 
         // Get all the emailList where emailType is not null
-        defaultEmailShouldBeFound("emailType.specified=true");
-
-        // Get all the emailList where emailType is null
-        defaultEmailShouldNotBeFound("emailType.specified=false");
+        defaultEmailFiltering("emailType.specified=true", "emailType.specified=false");
     }
 
     @Test
@@ -505,11 +453,8 @@ class EmailResourceIT {
         // Initialize the database
         emailRepository.saveAndFlush(email);
 
-        // Get all the emailList where createdAt equals to DEFAULT_CREATED_AT
-        defaultEmailShouldBeFound("createdAt.equals=" + DEFAULT_CREATED_AT);
-
-        // Get all the emailList where createdAt equals to UPDATED_CREATED_AT
-        defaultEmailShouldNotBeFound("createdAt.equals=" + UPDATED_CREATED_AT);
+        // Get all the emailList where createdAt equals to
+        defaultEmailFiltering("createdAt.equals=" + DEFAULT_CREATED_AT, "createdAt.equals=" + UPDATED_CREATED_AT);
     }
 
     @Test
@@ -518,11 +463,8 @@ class EmailResourceIT {
         // Initialize the database
         emailRepository.saveAndFlush(email);
 
-        // Get all the emailList where createdAt in DEFAULT_CREATED_AT or UPDATED_CREATED_AT
-        defaultEmailShouldBeFound("createdAt.in=" + DEFAULT_CREATED_AT + "," + UPDATED_CREATED_AT);
-
-        // Get all the emailList where createdAt equals to UPDATED_CREATED_AT
-        defaultEmailShouldNotBeFound("createdAt.in=" + UPDATED_CREATED_AT);
+        // Get all the emailList where createdAt in
+        defaultEmailFiltering("createdAt.in=" + DEFAULT_CREATED_AT + "," + UPDATED_CREATED_AT, "createdAt.in=" + UPDATED_CREATED_AT);
     }
 
     @Test
@@ -532,10 +474,7 @@ class EmailResourceIT {
         emailRepository.saveAndFlush(email);
 
         // Get all the emailList where createdAt is not null
-        defaultEmailShouldBeFound("createdAt.specified=true");
-
-        // Get all the emailList where createdAt is null
-        defaultEmailShouldNotBeFound("createdAt.specified=false");
+        defaultEmailFiltering("createdAt.specified=true", "createdAt.specified=false");
     }
 
     @Test
@@ -544,11 +483,8 @@ class EmailResourceIT {
         // Initialize the database
         emailRepository.saveAndFlush(email);
 
-        // Get all the emailList where createdBy equals to DEFAULT_CREATED_BY
-        defaultEmailShouldBeFound("createdBy.equals=" + DEFAULT_CREATED_BY);
-
-        // Get all the emailList where createdBy equals to UPDATED_CREATED_BY
-        defaultEmailShouldNotBeFound("createdBy.equals=" + UPDATED_CREATED_BY);
+        // Get all the emailList where createdBy equals to
+        defaultEmailFiltering("createdBy.equals=" + DEFAULT_CREATED_BY, "createdBy.equals=" + UPDATED_CREATED_BY);
     }
 
     @Test
@@ -557,11 +493,8 @@ class EmailResourceIT {
         // Initialize the database
         emailRepository.saveAndFlush(email);
 
-        // Get all the emailList where createdBy in DEFAULT_CREATED_BY or UPDATED_CREATED_BY
-        defaultEmailShouldBeFound("createdBy.in=" + DEFAULT_CREATED_BY + "," + UPDATED_CREATED_BY);
-
-        // Get all the emailList where createdBy equals to UPDATED_CREATED_BY
-        defaultEmailShouldNotBeFound("createdBy.in=" + UPDATED_CREATED_BY);
+        // Get all the emailList where createdBy in
+        defaultEmailFiltering("createdBy.in=" + DEFAULT_CREATED_BY + "," + UPDATED_CREATED_BY, "createdBy.in=" + UPDATED_CREATED_BY);
     }
 
     @Test
@@ -571,10 +504,7 @@ class EmailResourceIT {
         emailRepository.saveAndFlush(email);
 
         // Get all the emailList where createdBy is not null
-        defaultEmailShouldBeFound("createdBy.specified=true");
-
-        // Get all the emailList where createdBy is null
-        defaultEmailShouldNotBeFound("createdBy.specified=false");
+        defaultEmailFiltering("createdBy.specified=true", "createdBy.specified=false");
     }
 
     @Test
@@ -583,11 +513,8 @@ class EmailResourceIT {
         // Initialize the database
         emailRepository.saveAndFlush(email);
 
-        // Get all the emailList where createdBy contains DEFAULT_CREATED_BY
-        defaultEmailShouldBeFound("createdBy.contains=" + DEFAULT_CREATED_BY);
-
-        // Get all the emailList where createdBy contains UPDATED_CREATED_BY
-        defaultEmailShouldNotBeFound("createdBy.contains=" + UPDATED_CREATED_BY);
+        // Get all the emailList where createdBy contains
+        defaultEmailFiltering("createdBy.contains=" + DEFAULT_CREATED_BY, "createdBy.contains=" + UPDATED_CREATED_BY);
     }
 
     @Test
@@ -596,11 +523,13 @@ class EmailResourceIT {
         // Initialize the database
         emailRepository.saveAndFlush(email);
 
-        // Get all the emailList where createdBy does not contain DEFAULT_CREATED_BY
-        defaultEmailShouldNotBeFound("createdBy.doesNotContain=" + DEFAULT_CREATED_BY);
+        // Get all the emailList where createdBy does not contain
+        defaultEmailFiltering("createdBy.doesNotContain=" + UPDATED_CREATED_BY, "createdBy.doesNotContain=" + DEFAULT_CREATED_BY);
+    }
 
-        // Get all the emailList where createdBy does not contain UPDATED_CREATED_BY
-        defaultEmailShouldBeFound("createdBy.doesNotContain=" + UPDATED_CREATED_BY);
+    private void defaultEmailFiltering(String shouldBeFound, String shouldNotBeFound) throws Exception {
+        defaultEmailShouldBeFound(shouldBeFound);
+        defaultEmailShouldNotBeFound(shouldNotBeFound);
     }
 
     /**
@@ -660,7 +589,7 @@ class EmailResourceIT {
         // Initialize the database
         emailRepository.saveAndFlush(email);
 
-        int databaseSizeBeforeUpdate = emailRepository.findAll().size();
+        long databaseSizeBeforeUpdate = getRepositoryCount();
 
         // Update the email
         Email updatedEmail = emailRepository.findById(email.getId()).orElseThrow();
@@ -678,29 +607,19 @@ class EmailResourceIT {
 
         restEmailMockMvc
             .perform(
-                put(ENTITY_API_URL_ID, emailDTO.getId())
-                    .contentType(MediaType.APPLICATION_JSON)
-                    .content(TestUtil.convertObjectToJsonBytes(emailDTO))
+                put(ENTITY_API_URL_ID, emailDTO.getId()).contentType(MediaType.APPLICATION_JSON).content(om.writeValueAsBytes(emailDTO))
             )
             .andExpect(status().isOk());
 
         // Validate the Email in the database
-        List<Email> emailList = emailRepository.findAll();
-        assertThat(emailList).hasSize(databaseSizeBeforeUpdate);
-        Email testEmail = emailList.get(emailList.size() - 1);
-        assertThat(testEmail.getReceiver()).isEqualTo(UPDATED_RECEIVER);
-        assertThat(testEmail.getSubject()).isEqualTo(UPDATED_SUBJECT);
-        assertThat(testEmail.getContent()).isEqualTo(UPDATED_CONTENT);
-        assertThat(testEmail.getStatus()).isEqualTo(UPDATED_STATUS);
-        assertThat(testEmail.getEmailType()).isEqualTo(UPDATED_EMAIL_TYPE);
-        assertThat(testEmail.getCreatedAt()).isEqualTo(UPDATED_CREATED_AT);
-        assertThat(testEmail.getCreatedBy()).isEqualTo(UPDATED_CREATED_BY);
+        assertSameRepositoryCount(databaseSizeBeforeUpdate);
+        assertPersistedEmailToMatchAllProperties(updatedEmail);
     }
 
     @Test
     @Transactional
     void putNonExistingEmail() throws Exception {
-        int databaseSizeBeforeUpdate = emailRepository.findAll().size();
+        long databaseSizeBeforeUpdate = getRepositoryCount();
         email.setId(longCount.incrementAndGet());
 
         // Create the Email
@@ -709,21 +628,18 @@ class EmailResourceIT {
         // If the entity doesn't have an ID, it will throw BadRequestAlertException
         restEmailMockMvc
             .perform(
-                put(ENTITY_API_URL_ID, emailDTO.getId())
-                    .contentType(MediaType.APPLICATION_JSON)
-                    .content(TestUtil.convertObjectToJsonBytes(emailDTO))
+                put(ENTITY_API_URL_ID, emailDTO.getId()).contentType(MediaType.APPLICATION_JSON).content(om.writeValueAsBytes(emailDTO))
             )
             .andExpect(status().isBadRequest());
 
         // Validate the Email in the database
-        List<Email> emailList = emailRepository.findAll();
-        assertThat(emailList).hasSize(databaseSizeBeforeUpdate);
+        assertSameRepositoryCount(databaseSizeBeforeUpdate);
     }
 
     @Test
     @Transactional
     void putWithIdMismatchEmail() throws Exception {
-        int databaseSizeBeforeUpdate = emailRepository.findAll().size();
+        long databaseSizeBeforeUpdate = getRepositoryCount();
         email.setId(longCount.incrementAndGet());
 
         // Create the Email
@@ -734,19 +650,18 @@ class EmailResourceIT {
             .perform(
                 put(ENTITY_API_URL_ID, longCount.incrementAndGet())
                     .contentType(MediaType.APPLICATION_JSON)
-                    .content(TestUtil.convertObjectToJsonBytes(emailDTO))
+                    .content(om.writeValueAsBytes(emailDTO))
             )
             .andExpect(status().isBadRequest());
 
         // Validate the Email in the database
-        List<Email> emailList = emailRepository.findAll();
-        assertThat(emailList).hasSize(databaseSizeBeforeUpdate);
+        assertSameRepositoryCount(databaseSizeBeforeUpdate);
     }
 
     @Test
     @Transactional
     void putWithMissingIdPathParamEmail() throws Exception {
-        int databaseSizeBeforeUpdate = emailRepository.findAll().size();
+        long databaseSizeBeforeUpdate = getRepositoryCount();
         email.setId(longCount.incrementAndGet());
 
         // Create the Email
@@ -754,12 +669,11 @@ class EmailResourceIT {
 
         // If url ID doesn't match entity ID, it will throw BadRequestAlertException
         restEmailMockMvc
-            .perform(put(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(emailDTO)))
+            .perform(put(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(om.writeValueAsBytes(emailDTO)))
             .andExpect(status().isMethodNotAllowed());
 
         // Validate the Email in the database
-        List<Email> emailList = emailRepository.findAll();
-        assertThat(emailList).hasSize(databaseSizeBeforeUpdate);
+        assertSameRepositoryCount(databaseSizeBeforeUpdate);
     }
 
     @Test
@@ -768,33 +682,26 @@ class EmailResourceIT {
         // Initialize the database
         emailRepository.saveAndFlush(email);
 
-        int databaseSizeBeforeUpdate = emailRepository.findAll().size();
+        long databaseSizeBeforeUpdate = getRepositoryCount();
 
         // Update the email using partial update
         Email partialUpdatedEmail = new Email();
         partialUpdatedEmail.setId(email.getId());
 
-        partialUpdatedEmail.subject(UPDATED_SUBJECT).content(UPDATED_CONTENT).status(UPDATED_STATUS);
+        partialUpdatedEmail.subject(UPDATED_SUBJECT).content(UPDATED_CONTENT).emailType(UPDATED_EMAIL_TYPE).createdBy(UPDATED_CREATED_BY);
 
         restEmailMockMvc
             .perform(
                 patch(ENTITY_API_URL_ID, partialUpdatedEmail.getId())
                     .contentType("application/merge-patch+json")
-                    .content(TestUtil.convertObjectToJsonBytes(partialUpdatedEmail))
+                    .content(om.writeValueAsBytes(partialUpdatedEmail))
             )
             .andExpect(status().isOk());
 
         // Validate the Email in the database
-        List<Email> emailList = emailRepository.findAll();
-        assertThat(emailList).hasSize(databaseSizeBeforeUpdate);
-        Email testEmail = emailList.get(emailList.size() - 1);
-        assertThat(testEmail.getReceiver()).isEqualTo(DEFAULT_RECEIVER);
-        assertThat(testEmail.getSubject()).isEqualTo(UPDATED_SUBJECT);
-        assertThat(testEmail.getContent()).isEqualTo(UPDATED_CONTENT);
-        assertThat(testEmail.getStatus()).isEqualTo(UPDATED_STATUS);
-        assertThat(testEmail.getEmailType()).isEqualTo(DEFAULT_EMAIL_TYPE);
-        assertThat(testEmail.getCreatedAt()).isEqualTo(DEFAULT_CREATED_AT);
-        assertThat(testEmail.getCreatedBy()).isEqualTo(DEFAULT_CREATED_BY);
+
+        assertSameRepositoryCount(databaseSizeBeforeUpdate);
+        assertEmailUpdatableFieldsEquals(createUpdateProxyForBean(partialUpdatedEmail, email), getPersistedEmail(email));
     }
 
     @Test
@@ -803,7 +710,7 @@ class EmailResourceIT {
         // Initialize the database
         emailRepository.saveAndFlush(email);
 
-        int databaseSizeBeforeUpdate = emailRepository.findAll().size();
+        long databaseSizeBeforeUpdate = getRepositoryCount();
 
         // Update the email using partial update
         Email partialUpdatedEmail = new Email();
@@ -822,27 +729,20 @@ class EmailResourceIT {
             .perform(
                 patch(ENTITY_API_URL_ID, partialUpdatedEmail.getId())
                     .contentType("application/merge-patch+json")
-                    .content(TestUtil.convertObjectToJsonBytes(partialUpdatedEmail))
+                    .content(om.writeValueAsBytes(partialUpdatedEmail))
             )
             .andExpect(status().isOk());
 
         // Validate the Email in the database
-        List<Email> emailList = emailRepository.findAll();
-        assertThat(emailList).hasSize(databaseSizeBeforeUpdate);
-        Email testEmail = emailList.get(emailList.size() - 1);
-        assertThat(testEmail.getReceiver()).isEqualTo(UPDATED_RECEIVER);
-        assertThat(testEmail.getSubject()).isEqualTo(UPDATED_SUBJECT);
-        assertThat(testEmail.getContent()).isEqualTo(UPDATED_CONTENT);
-        assertThat(testEmail.getStatus()).isEqualTo(UPDATED_STATUS);
-        assertThat(testEmail.getEmailType()).isEqualTo(UPDATED_EMAIL_TYPE);
-        assertThat(testEmail.getCreatedAt()).isEqualTo(UPDATED_CREATED_AT);
-        assertThat(testEmail.getCreatedBy()).isEqualTo(UPDATED_CREATED_BY);
+
+        assertSameRepositoryCount(databaseSizeBeforeUpdate);
+        assertEmailUpdatableFieldsEquals(partialUpdatedEmail, getPersistedEmail(partialUpdatedEmail));
     }
 
     @Test
     @Transactional
     void patchNonExistingEmail() throws Exception {
-        int databaseSizeBeforeUpdate = emailRepository.findAll().size();
+        long databaseSizeBeforeUpdate = getRepositoryCount();
         email.setId(longCount.incrementAndGet());
 
         // Create the Email
@@ -853,19 +753,18 @@ class EmailResourceIT {
             .perform(
                 patch(ENTITY_API_URL_ID, emailDTO.getId())
                     .contentType("application/merge-patch+json")
-                    .content(TestUtil.convertObjectToJsonBytes(emailDTO))
+                    .content(om.writeValueAsBytes(emailDTO))
             )
             .andExpect(status().isBadRequest());
 
         // Validate the Email in the database
-        List<Email> emailList = emailRepository.findAll();
-        assertThat(emailList).hasSize(databaseSizeBeforeUpdate);
+        assertSameRepositoryCount(databaseSizeBeforeUpdate);
     }
 
     @Test
     @Transactional
     void patchWithIdMismatchEmail() throws Exception {
-        int databaseSizeBeforeUpdate = emailRepository.findAll().size();
+        long databaseSizeBeforeUpdate = getRepositoryCount();
         email.setId(longCount.incrementAndGet());
 
         // Create the Email
@@ -876,19 +775,18 @@ class EmailResourceIT {
             .perform(
                 patch(ENTITY_API_URL_ID, longCount.incrementAndGet())
                     .contentType("application/merge-patch+json")
-                    .content(TestUtil.convertObjectToJsonBytes(emailDTO))
+                    .content(om.writeValueAsBytes(emailDTO))
             )
             .andExpect(status().isBadRequest());
 
         // Validate the Email in the database
-        List<Email> emailList = emailRepository.findAll();
-        assertThat(emailList).hasSize(databaseSizeBeforeUpdate);
+        assertSameRepositoryCount(databaseSizeBeforeUpdate);
     }
 
     @Test
     @Transactional
     void patchWithMissingIdPathParamEmail() throws Exception {
-        int databaseSizeBeforeUpdate = emailRepository.findAll().size();
+        long databaseSizeBeforeUpdate = getRepositoryCount();
         email.setId(longCount.incrementAndGet());
 
         // Create the Email
@@ -896,12 +794,11 @@ class EmailResourceIT {
 
         // If url ID doesn't match entity ID, it will throw BadRequestAlertException
         restEmailMockMvc
-            .perform(patch(ENTITY_API_URL).contentType("application/merge-patch+json").content(TestUtil.convertObjectToJsonBytes(emailDTO)))
+            .perform(patch(ENTITY_API_URL).contentType("application/merge-patch+json").content(om.writeValueAsBytes(emailDTO)))
             .andExpect(status().isMethodNotAllowed());
 
         // Validate the Email in the database
-        List<Email> emailList = emailRepository.findAll();
-        assertThat(emailList).hasSize(databaseSizeBeforeUpdate);
+        assertSameRepositoryCount(databaseSizeBeforeUpdate);
     }
 
     @Test
@@ -910,7 +807,7 @@ class EmailResourceIT {
         // Initialize the database
         emailRepository.saveAndFlush(email);
 
-        int databaseSizeBeforeDelete = emailRepository.findAll().size();
+        long databaseSizeBeforeDelete = getRepositoryCount();
 
         // Delete the email
         restEmailMockMvc
@@ -918,7 +815,34 @@ class EmailResourceIT {
             .andExpect(status().isNoContent());
 
         // Validate the database contains one less item
-        List<Email> emailList = emailRepository.findAll();
-        assertThat(emailList).hasSize(databaseSizeBeforeDelete - 1);
+        assertDecrementedRepositoryCount(databaseSizeBeforeDelete);
+    }
+
+    protected long getRepositoryCount() {
+        return emailRepository.count();
+    }
+
+    protected void assertIncrementedRepositoryCount(long countBefore) {
+        assertThat(countBefore + 1).isEqualTo(getRepositoryCount());
+    }
+
+    protected void assertDecrementedRepositoryCount(long countBefore) {
+        assertThat(countBefore - 1).isEqualTo(getRepositoryCount());
+    }
+
+    protected void assertSameRepositoryCount(long countBefore) {
+        assertThat(countBefore).isEqualTo(getRepositoryCount());
+    }
+
+    protected Email getPersistedEmail(Email email) {
+        return emailRepository.findById(email.getId()).orElseThrow();
+    }
+
+    protected void assertPersistedEmailToMatchAllProperties(Email expectedEmail) {
+        assertEmailAllPropertiesEquals(expectedEmail, getPersistedEmail(expectedEmail));
+    }
+
+    protected void assertPersistedEmailToMatchUpdatableProperties(Email expectedEmail) {
+        assertEmailAllUpdatablePropertiesEquals(expectedEmail, getPersistedEmail(expectedEmail));
     }
 }

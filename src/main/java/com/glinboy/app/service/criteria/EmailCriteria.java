@@ -4,6 +4,7 @@ import com.glinboy.app.domain.enumeration.EmailType;
 import com.glinboy.app.domain.enumeration.MessageStatus;
 import java.io.Serializable;
 import java.util.Objects;
+import java.util.Optional;
 import org.springdoc.core.annotations.ParameterObject;
 import tech.jhipster.service.Criteria;
 import tech.jhipster.service.filter.*;
@@ -76,13 +77,13 @@ public class EmailCriteria implements Serializable, Criteria {
     public EmailCriteria() {}
 
     public EmailCriteria(EmailCriteria other) {
-        this.id = other.id == null ? null : other.id.copy();
-        this.receiver = other.receiver == null ? null : other.receiver.copy();
-        this.subject = other.subject == null ? null : other.subject.copy();
-        this.status = other.status == null ? null : other.status.copy();
-        this.emailType = other.emailType == null ? null : other.emailType.copy();
-        this.createdAt = other.createdAt == null ? null : other.createdAt.copy();
-        this.createdBy = other.createdBy == null ? null : other.createdBy.copy();
+        this.id = other.optionalId().map(LongFilter::copy).orElse(null);
+        this.receiver = other.optionalReceiver().map(StringFilter::copy).orElse(null);
+        this.subject = other.optionalSubject().map(StringFilter::copy).orElse(null);
+        this.status = other.optionalStatus().map(MessageStatusFilter::copy).orElse(null);
+        this.emailType = other.optionalEmailType().map(EmailTypeFilter::copy).orElse(null);
+        this.createdAt = other.optionalCreatedAt().map(InstantFilter::copy).orElse(null);
+        this.createdBy = other.optionalCreatedBy().map(StringFilter::copy).orElse(null);
         this.distinct = other.distinct;
     }
 
@@ -95,9 +96,13 @@ public class EmailCriteria implements Serializable, Criteria {
         return id;
     }
 
+    public Optional<LongFilter> optionalId() {
+        return Optional.ofNullable(id);
+    }
+
     public LongFilter id() {
         if (id == null) {
-            id = new LongFilter();
+            setId(new LongFilter());
         }
         return id;
     }
@@ -110,9 +115,13 @@ public class EmailCriteria implements Serializable, Criteria {
         return receiver;
     }
 
+    public Optional<StringFilter> optionalReceiver() {
+        return Optional.ofNullable(receiver);
+    }
+
     public StringFilter receiver() {
         if (receiver == null) {
-            receiver = new StringFilter();
+            setReceiver(new StringFilter());
         }
         return receiver;
     }
@@ -125,9 +134,13 @@ public class EmailCriteria implements Serializable, Criteria {
         return subject;
     }
 
+    public Optional<StringFilter> optionalSubject() {
+        return Optional.ofNullable(subject);
+    }
+
     public StringFilter subject() {
         if (subject == null) {
-            subject = new StringFilter();
+            setSubject(new StringFilter());
         }
         return subject;
     }
@@ -140,9 +153,13 @@ public class EmailCriteria implements Serializable, Criteria {
         return status;
     }
 
+    public Optional<MessageStatusFilter> optionalStatus() {
+        return Optional.ofNullable(status);
+    }
+
     public MessageStatusFilter status() {
         if (status == null) {
-            status = new MessageStatusFilter();
+            setStatus(new MessageStatusFilter());
         }
         return status;
     }
@@ -155,9 +172,13 @@ public class EmailCriteria implements Serializable, Criteria {
         return emailType;
     }
 
+    public Optional<EmailTypeFilter> optionalEmailType() {
+        return Optional.ofNullable(emailType);
+    }
+
     public EmailTypeFilter emailType() {
         if (emailType == null) {
-            emailType = new EmailTypeFilter();
+            setEmailType(new EmailTypeFilter());
         }
         return emailType;
     }
@@ -170,9 +191,13 @@ public class EmailCriteria implements Serializable, Criteria {
         return createdAt;
     }
 
+    public Optional<InstantFilter> optionalCreatedAt() {
+        return Optional.ofNullable(createdAt);
+    }
+
     public InstantFilter createdAt() {
         if (createdAt == null) {
-            createdAt = new InstantFilter();
+            setCreatedAt(new InstantFilter());
         }
         return createdAt;
     }
@@ -185,9 +210,13 @@ public class EmailCriteria implements Serializable, Criteria {
         return createdBy;
     }
 
+    public Optional<StringFilter> optionalCreatedBy() {
+        return Optional.ofNullable(createdBy);
+    }
+
     public StringFilter createdBy() {
         if (createdBy == null) {
-            createdBy = new StringFilter();
+            setCreatedBy(new StringFilter());
         }
         return createdBy;
     }
@@ -197,6 +226,17 @@ public class EmailCriteria implements Serializable, Criteria {
     }
 
     public Boolean getDistinct() {
+        return distinct;
+    }
+
+    public Optional<Boolean> optionalDistinct() {
+        return Optional.ofNullable(distinct);
+    }
+
+    public Boolean distinct() {
+        if (distinct == null) {
+            setDistinct(true);
+        }
         return distinct;
     }
 
@@ -234,14 +274,14 @@ public class EmailCriteria implements Serializable, Criteria {
     @Override
     public String toString() {
         return "EmailCriteria{" +
-            (id != null ? "id=" + id + ", " : "") +
-            (receiver != null ? "receiver=" + receiver + ", " : "") +
-            (subject != null ? "subject=" + subject + ", " : "") +
-            (status != null ? "status=" + status + ", " : "") +
-            (emailType != null ? "emailType=" + emailType + ", " : "") +
-            (createdAt != null ? "createdAt=" + createdAt + ", " : "") +
-            (createdBy != null ? "createdBy=" + createdBy + ", " : "") +
-            (distinct != null ? "distinct=" + distinct + ", " : "") +
-            "}";
+            optionalId().map(f -> "id=" + f + ", ").orElse("") +
+            optionalReceiver().map(f -> "receiver=" + f + ", ").orElse("") +
+            optionalSubject().map(f -> "subject=" + f + ", ").orElse("") +
+            optionalStatus().map(f -> "status=" + f + ", ").orElse("") +
+            optionalEmailType().map(f -> "emailType=" + f + ", ").orElse("") +
+            optionalCreatedAt().map(f -> "createdAt=" + f + ", ").orElse("") +
+            optionalCreatedBy().map(f -> "createdBy=" + f + ", ").orElse("") +
+            optionalDistinct().map(f -> "distinct=" + f + ", ").orElse("") +
+        "}";
     }
 }

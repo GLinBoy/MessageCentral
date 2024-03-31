@@ -2,8 +2,6 @@ package com.glinboy.app.service;
 
 import com.glinboy.app.service.dto.TokenDTO;
 import java.util.Optional;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 
 /**
  * Service Interface for managing {@link com.glinboy.app.domain.Token}.
@@ -32,14 +30,6 @@ public interface TokenService {
      * @return the persisted entity.
      */
     Optional<TokenDTO> partialUpdate(TokenDTO tokenDTO);
-
-    /**
-     * Get all the tokens.
-     *
-     * @param pageable the pagination information.
-     * @return the list of entities.
-     */
-    Page<TokenDTO> findAll(Pageable pageable);
 
     /**
      * Get the "id" token.

@@ -144,7 +144,8 @@ describe('Service Tests', () => {
       it('should partial update a Token', async () => {
         const patchObject = Object.assign(
           {
-            createdAt: dayjs(currentDate).format(DATE_TIME_FORMAT),
+            disable: true,
+            roles: 1,
             updatedBy: 'BBBBBB',
           },
           new Token(),

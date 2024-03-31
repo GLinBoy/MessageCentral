@@ -134,6 +134,8 @@ describe('Service Tests', () => {
           {
             phoneNumber: 'BBBBBB',
             content: 'BBBBBB',
+            status: 'BBBBBB',
+            createdBy: 'BBBBBB',
           },
           new ShortMessage(),
         );

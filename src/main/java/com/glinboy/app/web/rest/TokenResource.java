@@ -65,11 +65,10 @@ public class TokenResource {
         if (tokenDTO.getId() != null) {
             throw new BadRequestAlertException("A new token cannot already have an ID", ENTITY_NAME, "idexists");
         }
-        TokenDTO result = tokenService.save(tokenDTO);
-        return ResponseEntity
-            .created(new URI("/api/tokens/" + result.getId()))
-            .headers(HeaderUtil.createEntityCreationAlert(applicationName, true, ENTITY_NAME, result.getId().toString()))
-            .body(result);
+        tokenDTO = tokenService.save(tokenDTO);
+        return ResponseEntity.created(new URI("/api/tokens/" + tokenDTO.getId()))
+            .headers(HeaderUtil.createEntityCreationAlert(applicationName, true, ENTITY_NAME, tokenDTO.getId().toString()))
+            .body(tokenDTO);
     }
 
     /**
@@ -99,11 +98,10 @@ public class TokenResource {
             throw new BadRequestAlertException("Entity not found", ENTITY_NAME, "idnotfound");
         }
 
-        TokenDTO result = tokenService.update(tokenDTO);
-        return ResponseEntity
-            .ok()
+        tokenDTO = tokenService.update(tokenDTO);
+        return ResponseEntity.ok()
             .headers(HeaderUtil.createEntityUpdateAlert(applicationName, true, ENTITY_NAME, tokenDTO.getId().toString()))
-            .body(result);
+            .body(tokenDTO);
     }
 
     /**
@@ -196,8 +194,7 @@ public class TokenResource {
     public ResponseEntity<Void> deleteToken(@PathVariable("id") Long id) {
         log.debug("REST request to delete Token : {}", id);
         tokenService.delete(id);
-        return ResponseEntity
-            .noContent()
+        return ResponseEntity.noContent()
             .headers(HeaderUtil.createEntityDeletionAlert(applicationName, true, ENTITY_NAME, id.toString()))
             .build();
     }

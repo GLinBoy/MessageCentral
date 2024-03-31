@@ -6,7 +6,6 @@ import com.glinboy.app.repository.ShortMessageRepository;
 import com.glinboy.app.service.criteria.ShortMessageCriteria;
 import com.glinboy.app.service.dto.ShortMessageDTO;
 import com.glinboy.app.service.mapper.ShortMessageMapper;
-import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -20,7 +19,7 @@ import tech.jhipster.service.QueryService;
  * Service for executing complex queries for {@link ShortMessage} entities in the database.
  * The main input is a {@link ShortMessageCriteria} which gets converted to {@link Specification},
  * in a way that all the filters must apply.
- * It returns a {@link List} of {@link ShortMessageDTO} or a {@link Page} of {@link ShortMessageDTO} which fulfills the criteria.
+ * It returns a {@link Page} of {@link ShortMessageDTO} which fulfills the criteria.
  */
 @Service
 @Transactional(readOnly = true)
@@ -35,18 +34,6 @@ public class ShortMessageQueryService extends QueryService<ShortMessage> {
     public ShortMessageQueryService(ShortMessageRepository shortMessageRepository, ShortMessageMapper shortMessageMapper) {
         this.shortMessageRepository = shortMessageRepository;
         this.shortMessageMapper = shortMessageMapper;
-    }
-
-    /**
-     * Return a {@link List} of {@link ShortMessageDTO} which matches the criteria from the database.
-     * @param criteria The object which holds all the filters, which the entities should match.
-     * @return the matching entities.
-     */
-    @Transactional(readOnly = true)
-    public List<ShortMessageDTO> findByCriteria(ShortMessageCriteria criteria) {
-        log.debug("find by criteria : {}", criteria);
-        final Specification<ShortMessage> specification = createSpecification(criteria);
-        return shortMessageMapper.toDto(shortMessageRepository.findAll(specification));
     }
 
     /**

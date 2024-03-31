@@ -2,8 +2,6 @@ package com.glinboy.app.service;
 
 import com.glinboy.app.service.dto.NotificationDTO;
 import java.util.Optional;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 
 /**
  * Service Interface for managing {@link com.glinboy.app.domain.Notification}.
@@ -32,14 +30,6 @@ public interface NotificationService {
      * @return the persisted entity.
      */
     Optional<NotificationDTO> partialUpdate(NotificationDTO notificationDTO);
-
-    /**
-     * Get all the notifications.
-     *
-     * @param pageable the pagination information.
-     * @return the list of entities.
-     */
-    Page<NotificationDTO> findAll(Pageable pageable);
 
     /**
      * Get the "id" notification.

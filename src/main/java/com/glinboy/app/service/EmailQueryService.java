@@ -6,7 +6,6 @@ import com.glinboy.app.repository.EmailRepository;
 import com.glinboy.app.service.criteria.EmailCriteria;
 import com.glinboy.app.service.dto.EmailDTO;
 import com.glinboy.app.service.mapper.EmailMapper;
-import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -20,7 +19,7 @@ import tech.jhipster.service.QueryService;
  * Service for executing complex queries for {@link Email} entities in the database.
  * The main input is a {@link EmailCriteria} which gets converted to {@link Specification},
  * in a way that all the filters must apply.
- * It returns a {@link List} of {@link EmailDTO} or a {@link Page} of {@link EmailDTO} which fulfills the criteria.
+ * It returns a {@link Page} of {@link EmailDTO} which fulfills the criteria.
  */
 @Service
 @Transactional(readOnly = true)
@@ -35,18 +34,6 @@ public class EmailQueryService extends QueryService<Email> {
     public EmailQueryService(EmailRepository emailRepository, EmailMapper emailMapper) {
         this.emailRepository = emailRepository;
         this.emailMapper = emailMapper;
-    }
-
-    /**
-     * Return a {@link List} of {@link EmailDTO} which matches the criteria from the database.
-     * @param criteria The object which holds all the filters, which the entities should match.
-     * @return the matching entities.
-     */
-    @Transactional(readOnly = true)
-    public List<EmailDTO> findByCriteria(EmailCriteria criteria) {
-        log.debug("find by criteria : {}", criteria);
-        final Specification<Email> specification = createSpecification(criteria);
-        return emailMapper.toDto(emailRepository.findAll(specification));
     }
 
     /**
