@@ -73,7 +73,7 @@ export default defineComponent({
       },
       roles: {
         required: validations.required(t$('entity.validation.required').toString()),
-        numeric: validations.numeric(t$('entity.validation.number').toString()),
+        integer: validations.integer(t$('entity.validation.number').toString()),
       },
     };
     const v$ = useVuelidate(validationRules, token as any);

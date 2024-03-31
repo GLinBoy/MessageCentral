@@ -1,10 +1,13 @@
 package com.glinboy.app.web.rest;
 
+import static com.glinboy.app.domain.ShortMessageAsserts.*;
+import static com.glinboy.app.web.rest.TestUtil.createUpdateProxyForBean;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.hasItem;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.glinboy.app.IntegrationTest;
 import com.glinboy.app.domain.ShortMessage;
 import com.glinboy.app.domain.enumeration.MessageStatus;
@@ -14,7 +17,6 @@ import com.glinboy.app.service.mapper.ShortMessageMapper;
 import jakarta.persistence.EntityManager;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
-import java.util.List;
 import java.util.Random;
 import java.util.concurrent.atomic.AtomicLong;
 import org.junit.jupiter.api.BeforeEach;
@@ -34,8 +36,8 @@ import org.springframework.transaction.annotation.Transactional;
 @WithMockUser
 class ShortMessageResourceIT {
 
-    private static final String DEFAULT_PHONE_NUMBER = "+6112770●1";
-    private static final String UPDATED_PHONE_NUMBER = "+6●44●3283";
+    private static final String DEFAULT_PHONE_NUMBER = "+77●096●43●0●00";
+    private static final String UPDATED_PHONE_NUMBER = "+4●46●8●176●91●089●9●5";
 
     private static final String DEFAULT_CONTENT = "AAAAAAAAAA";
     private static final String UPDATED_CONTENT = "BBBBBBBBBB";
@@ -54,6 +56,9 @@ class ShortMessageResourceIT {
 
     private static Random random = new Random();
     private static AtomicLong longCount = new AtomicLong(random.nextInt() + (2 * Integer.MAX_VALUE));
+
+    @Autowired
+    private ObjectMapper om;
 
     @Autowired
     private ShortMessageRepository shortMessageRepository;
@@ -109,24 +114,23 @@ class ShortMessageResourceIT {
     @Test
     @Transactional
     void createShortMessage() throws Exception {
-        int databaseSizeBeforeCreate = shortMessageRepository.findAll().size();
+        long databaseSizeBeforeCreate = getRepositoryCount();
         // Create the ShortMessage
         ShortMessageDTO shortMessageDTO = shortMessageMapper.toDto(shortMessage);
-        restShortMessageMockMvc
-            .perform(
-                post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(shortMessageDTO))
-            )
-            .andExpect(status().isCreated());
+        var returnedShortMessageDTO = om.readValue(
+            restShortMessageMockMvc
+                .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(om.writeValueAsBytes(shortMessageDTO)))
+                .andExpect(status().isCreated())
+                .andReturn()
+                .getResponse()
+                .getContentAsString(),
+            ShortMessageDTO.class
+        );
 
         // Validate the ShortMessage in the database
-        List<ShortMessage> shortMessageList = shortMessageRepository.findAll();
-        assertThat(shortMessageList).hasSize(databaseSizeBeforeCreate + 1);
-        ShortMessage testShortMessage = shortMessageList.get(shortMessageList.size() - 1);
-        assertThat(testShortMessage.getPhoneNumber()).isEqualTo(DEFAULT_PHONE_NUMBER);
-        assertThat(testShortMessage.getContent()).isEqualTo(DEFAULT_CONTENT);
-        assertThat(testShortMessage.getStatus()).isEqualTo(DEFAULT_STATUS);
-        assertThat(testShortMessage.getCreatedAt()).isEqualTo(DEFAULT_CREATED_AT);
-        assertThat(testShortMessage.getCreatedBy()).isEqualTo(DEFAULT_CREATED_BY);
+        assertIncrementedRepositoryCount(databaseSizeBeforeCreate);
+        var returnedShortMessage = shortMessageMapper.toEntity(returnedShortMessageDTO);
+        assertShortMessageUpdatableFieldsEquals(returnedShortMessage, getPersistedShortMessage(returnedShortMessage));
     }
 
     @Test
@@ -136,24 +140,21 @@ class ShortMessageResourceIT {
         shortMessage.setId(1L);
         ShortMessageDTO shortMessageDTO = shortMessageMapper.toDto(shortMessage);
 
-        int databaseSizeBeforeCreate = shortMessageRepository.findAll().size();
+        long databaseSizeBeforeCreate = getRepositoryCount();
 
         // An entity with an existing ID cannot be created, so this API call must fail
         restShortMessageMockMvc
-            .perform(
-                post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(shortMessageDTO))
-            )
+            .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(om.writeValueAsBytes(shortMessageDTO)))
             .andExpect(status().isBadRequest());
 
         // Validate the ShortMessage in the database
-        List<ShortMessage> shortMessageList = shortMessageRepository.findAll();
-        assertThat(shortMessageList).hasSize(databaseSizeBeforeCreate);
+        assertSameRepositoryCount(databaseSizeBeforeCreate);
     }
 
     @Test
     @Transactional
     void checkPhoneNumberIsRequired() throws Exception {
-        int databaseSizeBeforeTest = shortMessageRepository.findAll().size();
+        long databaseSizeBeforeTest = getRepositoryCount();
         // set the field null
         shortMessage.setPhoneNumber(null);
 
@@ -161,19 +162,16 @@ class ShortMessageResourceIT {
         ShortMessageDTO shortMessageDTO = shortMessageMapper.toDto(shortMessage);
 
         restShortMessageMockMvc
-            .perform(
-                post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(shortMessageDTO))
-            )
+            .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(om.writeValueAsBytes(shortMessageDTO)))
             .andExpect(status().isBadRequest());
 
-        List<ShortMessage> shortMessageList = shortMessageRepository.findAll();
-        assertThat(shortMessageList).hasSize(databaseSizeBeforeTest);
+        assertSameRepositoryCount(databaseSizeBeforeTest);
     }
 
     @Test
     @Transactional
     void checkContentIsRequired() throws Exception {
-        int databaseSizeBeforeTest = shortMessageRepository.findAll().size();
+        long databaseSizeBeforeTest = getRepositoryCount();
         // set the field null
         shortMessage.setContent(null);
 
@@ -181,19 +179,16 @@ class ShortMessageResourceIT {
         ShortMessageDTO shortMessageDTO = shortMessageMapper.toDto(shortMessage);
 
         restShortMessageMockMvc
-            .perform(
-                post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(shortMessageDTO))
-            )
+            .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(om.writeValueAsBytes(shortMessageDTO)))
             .andExpect(status().isBadRequest());
 
-        List<ShortMessage> shortMessageList = shortMessageRepository.findAll();
-        assertThat(shortMessageList).hasSize(databaseSizeBeforeTest);
+        assertSameRepositoryCount(databaseSizeBeforeTest);
     }
 
     @Test
     @Transactional
     void checkCreatedAtIsRequired() throws Exception {
-        int databaseSizeBeforeTest = shortMessageRepository.findAll().size();
+        long databaseSizeBeforeTest = getRepositoryCount();
         // set the field null
         shortMessage.setCreatedAt(null);
 
@@ -201,19 +196,16 @@ class ShortMessageResourceIT {
         ShortMessageDTO shortMessageDTO = shortMessageMapper.toDto(shortMessage);
 
         restShortMessageMockMvc
-            .perform(
-                post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(shortMessageDTO))
-            )
+            .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(om.writeValueAsBytes(shortMessageDTO)))
             .andExpect(status().isBadRequest());
 
-        List<ShortMessage> shortMessageList = shortMessageRepository.findAll();
-        assertThat(shortMessageList).hasSize(databaseSizeBeforeTest);
+        assertSameRepositoryCount(databaseSizeBeforeTest);
     }
 
     @Test
     @Transactional
     void checkCreatedByIsRequired() throws Exception {
-        int databaseSizeBeforeTest = shortMessageRepository.findAll().size();
+        long databaseSizeBeforeTest = getRepositoryCount();
         // set the field null
         shortMessage.setCreatedBy(null);
 
@@ -221,13 +213,10 @@ class ShortMessageResourceIT {
         ShortMessageDTO shortMessageDTO = shortMessageMapper.toDto(shortMessage);
 
         restShortMessageMockMvc
-            .perform(
-                post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(shortMessageDTO))
-            )
+            .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(om.writeValueAsBytes(shortMessageDTO)))
             .andExpect(status().isBadRequest());
 
-        List<ShortMessage> shortMessageList = shortMessageRepository.findAll();
-        assertThat(shortMessageList).hasSize(databaseSizeBeforeTest);
+        assertSameRepositoryCount(databaseSizeBeforeTest);
     }
 
     @Test
@@ -276,14 +265,11 @@ class ShortMessageResourceIT {
 
         Long id = shortMessage.getId();
 
-        defaultShortMessageShouldBeFound("id.equals=" + id);
-        defaultShortMessageShouldNotBeFound("id.notEquals=" + id);
+        defaultShortMessageFiltering("id.equals=" + id, "id.notEquals=" + id);
 
-        defaultShortMessageShouldBeFound("id.greaterThanOrEqual=" + id);
-        defaultShortMessageShouldNotBeFound("id.greaterThan=" + id);
+        defaultShortMessageFiltering("id.greaterThanOrEqual=" + id, "id.greaterThan=" + id);
 
-        defaultShortMessageShouldBeFound("id.lessThanOrEqual=" + id);
-        defaultShortMessageShouldNotBeFound("id.lessThan=" + id);
+        defaultShortMessageFiltering("id.lessThanOrEqual=" + id, "id.lessThan=" + id);
     }
 
     @Test
@@ -292,11 +278,8 @@ class ShortMessageResourceIT {
         // Initialize the database
         shortMessageRepository.saveAndFlush(shortMessage);
 
-        // Get all the shortMessageList where phoneNumber equals to DEFAULT_PHONE_NUMBER
-        defaultShortMessageShouldBeFound("phoneNumber.equals=" + DEFAULT_PHONE_NUMBER);
-
-        // Get all the shortMessageList where phoneNumber equals to UPDATED_PHONE_NUMBER
-        defaultShortMessageShouldNotBeFound("phoneNumber.equals=" + UPDATED_PHONE_NUMBER);
+        // Get all the shortMessageList where phoneNumber equals to
+        defaultShortMessageFiltering("phoneNumber.equals=" + DEFAULT_PHONE_NUMBER, "phoneNumber.equals=" + UPDATED_PHONE_NUMBER);
     }
 
     @Test
@@ -305,11 +288,11 @@ class ShortMessageResourceIT {
         // Initialize the database
         shortMessageRepository.saveAndFlush(shortMessage);
 
-        // Get all the shortMessageList where phoneNumber in DEFAULT_PHONE_NUMBER or UPDATED_PHONE_NUMBER
-        defaultShortMessageShouldBeFound("phoneNumber.in=" + DEFAULT_PHONE_NUMBER + "," + UPDATED_PHONE_NUMBER);
-
-        // Get all the shortMessageList where phoneNumber equals to UPDATED_PHONE_NUMBER
-        defaultShortMessageShouldNotBeFound("phoneNumber.in=" + UPDATED_PHONE_NUMBER);
+        // Get all the shortMessageList where phoneNumber in
+        defaultShortMessageFiltering(
+            "phoneNumber.in=" + DEFAULT_PHONE_NUMBER + "," + UPDATED_PHONE_NUMBER,
+            "phoneNumber.in=" + UPDATED_PHONE_NUMBER
+        );
     }
 
     @Test
@@ -319,10 +302,7 @@ class ShortMessageResourceIT {
         shortMessageRepository.saveAndFlush(shortMessage);
 
         // Get all the shortMessageList where phoneNumber is not null
-        defaultShortMessageShouldBeFound("phoneNumber.specified=true");
-
-        // Get all the shortMessageList where phoneNumber is null
-        defaultShortMessageShouldNotBeFound("phoneNumber.specified=false");
+        defaultShortMessageFiltering("phoneNumber.specified=true", "phoneNumber.specified=false");
     }
 
     @Test
@@ -331,11 +311,8 @@ class ShortMessageResourceIT {
         // Initialize the database
         shortMessageRepository.saveAndFlush(shortMessage);
 
-        // Get all the shortMessageList where phoneNumber contains DEFAULT_PHONE_NUMBER
-        defaultShortMessageShouldBeFound("phoneNumber.contains=" + DEFAULT_PHONE_NUMBER);
-
-        // Get all the shortMessageList where phoneNumber contains UPDATED_PHONE_NUMBER
-        defaultShortMessageShouldNotBeFound("phoneNumber.contains=" + UPDATED_PHONE_NUMBER);
+        // Get all the shortMessageList where phoneNumber contains
+        defaultShortMessageFiltering("phoneNumber.contains=" + DEFAULT_PHONE_NUMBER, "phoneNumber.contains=" + UPDATED_PHONE_NUMBER);
     }
 
     @Test
@@ -344,11 +321,11 @@ class ShortMessageResourceIT {
         // Initialize the database
         shortMessageRepository.saveAndFlush(shortMessage);
 
-        // Get all the shortMessageList where phoneNumber does not contain DEFAULT_PHONE_NUMBER
-        defaultShortMessageShouldNotBeFound("phoneNumber.doesNotContain=" + DEFAULT_PHONE_NUMBER);
-
-        // Get all the shortMessageList where phoneNumber does not contain UPDATED_PHONE_NUMBER
-        defaultShortMessageShouldBeFound("phoneNumber.doesNotContain=" + UPDATED_PHONE_NUMBER);
+        // Get all the shortMessageList where phoneNumber does not contain
+        defaultShortMessageFiltering(
+            "phoneNumber.doesNotContain=" + UPDATED_PHONE_NUMBER,
+            "phoneNumber.doesNotContain=" + DEFAULT_PHONE_NUMBER
+        );
     }
 
     @Test
@@ -357,11 +334,8 @@ class ShortMessageResourceIT {
         // Initialize the database
         shortMessageRepository.saveAndFlush(shortMessage);
 
-        // Get all the shortMessageList where content equals to DEFAULT_CONTENT
-        defaultShortMessageShouldBeFound("content.equals=" + DEFAULT_CONTENT);
-
-        // Get all the shortMessageList where content equals to UPDATED_CONTENT
-        defaultShortMessageShouldNotBeFound("content.equals=" + UPDATED_CONTENT);
+        // Get all the shortMessageList where content equals to
+        defaultShortMessageFiltering("content.equals=" + DEFAULT_CONTENT, "content.equals=" + UPDATED_CONTENT);
     }
 
     @Test
@@ -370,11 +344,8 @@ class ShortMessageResourceIT {
         // Initialize the database
         shortMessageRepository.saveAndFlush(shortMessage);
 
-        // Get all the shortMessageList where content in DEFAULT_CONTENT or UPDATED_CONTENT
-        defaultShortMessageShouldBeFound("content.in=" + DEFAULT_CONTENT + "," + UPDATED_CONTENT);
-
-        // Get all the shortMessageList where content equals to UPDATED_CONTENT
-        defaultShortMessageShouldNotBeFound("content.in=" + UPDATED_CONTENT);
+        // Get all the shortMessageList where content in
+        defaultShortMessageFiltering("content.in=" + DEFAULT_CONTENT + "," + UPDATED_CONTENT, "content.in=" + UPDATED_CONTENT);
     }
 
     @Test
@@ -384,10 +355,7 @@ class ShortMessageResourceIT {
         shortMessageRepository.saveAndFlush(shortMessage);
 
         // Get all the shortMessageList where content is not null
-        defaultShortMessageShouldBeFound("content.specified=true");
-
-        // Get all the shortMessageList where content is null
-        defaultShortMessageShouldNotBeFound("content.specified=false");
+        defaultShortMessageFiltering("content.specified=true", "content.specified=false");
     }
 
     @Test
@@ -396,11 +364,8 @@ class ShortMessageResourceIT {
         // Initialize the database
         shortMessageRepository.saveAndFlush(shortMessage);
 
-        // Get all the shortMessageList where content contains DEFAULT_CONTENT
-        defaultShortMessageShouldBeFound("content.contains=" + DEFAULT_CONTENT);
-
-        // Get all the shortMessageList where content contains UPDATED_CONTENT
-        defaultShortMessageShouldNotBeFound("content.contains=" + UPDATED_CONTENT);
+        // Get all the shortMessageList where content contains
+        defaultShortMessageFiltering("content.contains=" + DEFAULT_CONTENT, "content.contains=" + UPDATED_CONTENT);
     }
 
     @Test
@@ -409,11 +374,8 @@ class ShortMessageResourceIT {
         // Initialize the database
         shortMessageRepository.saveAndFlush(shortMessage);
 
-        // Get all the shortMessageList where content does not contain DEFAULT_CONTENT
-        defaultShortMessageShouldNotBeFound("content.doesNotContain=" + DEFAULT_CONTENT);
-
-        // Get all the shortMessageList where content does not contain UPDATED_CONTENT
-        defaultShortMessageShouldBeFound("content.doesNotContain=" + UPDATED_CONTENT);
+        // Get all the shortMessageList where content does not contain
+        defaultShortMessageFiltering("content.doesNotContain=" + UPDATED_CONTENT, "content.doesNotContain=" + DEFAULT_CONTENT);
     }
 
     @Test
@@ -422,11 +384,8 @@ class ShortMessageResourceIT {
         // Initialize the database
         shortMessageRepository.saveAndFlush(shortMessage);
 
-        // Get all the shortMessageList where status equals to DEFAULT_STATUS
-        defaultShortMessageShouldBeFound("status.equals=" + DEFAULT_STATUS);
-
-        // Get all the shortMessageList where status equals to UPDATED_STATUS
-        defaultShortMessageShouldNotBeFound("status.equals=" + UPDATED_STATUS);
+        // Get all the shortMessageList where status equals to
+        defaultShortMessageFiltering("status.equals=" + DEFAULT_STATUS, "status.equals=" + UPDATED_STATUS);
     }
 
     @Test
@@ -435,11 +394,8 @@ class ShortMessageResourceIT {
         // Initialize the database
         shortMessageRepository.saveAndFlush(shortMessage);
 
-        // Get all the shortMessageList where status in DEFAULT_STATUS or UPDATED_STATUS
-        defaultShortMessageShouldBeFound("status.in=" + DEFAULT_STATUS + "," + UPDATED_STATUS);
-
-        // Get all the shortMessageList where status equals to UPDATED_STATUS
-        defaultShortMessageShouldNotBeFound("status.in=" + UPDATED_STATUS);
+        // Get all the shortMessageList where status in
+        defaultShortMessageFiltering("status.in=" + DEFAULT_STATUS + "," + UPDATED_STATUS, "status.in=" + UPDATED_STATUS);
     }
 
     @Test
@@ -449,10 +405,7 @@ class ShortMessageResourceIT {
         shortMessageRepository.saveAndFlush(shortMessage);
 
         // Get all the shortMessageList where status is not null
-        defaultShortMessageShouldBeFound("status.specified=true");
-
-        // Get all the shortMessageList where status is null
-        defaultShortMessageShouldNotBeFound("status.specified=false");
+        defaultShortMessageFiltering("status.specified=true", "status.specified=false");
     }
 
     @Test
@@ -461,11 +414,8 @@ class ShortMessageResourceIT {
         // Initialize the database
         shortMessageRepository.saveAndFlush(shortMessage);
 
-        // Get all the shortMessageList where createdAt equals to DEFAULT_CREATED_AT
-        defaultShortMessageShouldBeFound("createdAt.equals=" + DEFAULT_CREATED_AT);
-
-        // Get all the shortMessageList where createdAt equals to UPDATED_CREATED_AT
-        defaultShortMessageShouldNotBeFound("createdAt.equals=" + UPDATED_CREATED_AT);
+        // Get all the shortMessageList where createdAt equals to
+        defaultShortMessageFiltering("createdAt.equals=" + DEFAULT_CREATED_AT, "createdAt.equals=" + UPDATED_CREATED_AT);
     }
 
     @Test
@@ -474,11 +424,8 @@ class ShortMessageResourceIT {
         // Initialize the database
         shortMessageRepository.saveAndFlush(shortMessage);
 
-        // Get all the shortMessageList where createdAt in DEFAULT_CREATED_AT or UPDATED_CREATED_AT
-        defaultShortMessageShouldBeFound("createdAt.in=" + DEFAULT_CREATED_AT + "," + UPDATED_CREATED_AT);
-
-        // Get all the shortMessageList where createdAt equals to UPDATED_CREATED_AT
-        defaultShortMessageShouldNotBeFound("createdAt.in=" + UPDATED_CREATED_AT);
+        // Get all the shortMessageList where createdAt in
+        defaultShortMessageFiltering("createdAt.in=" + DEFAULT_CREATED_AT + "," + UPDATED_CREATED_AT, "createdAt.in=" + UPDATED_CREATED_AT);
     }
 
     @Test
@@ -488,10 +435,7 @@ class ShortMessageResourceIT {
         shortMessageRepository.saveAndFlush(shortMessage);
 
         // Get all the shortMessageList where createdAt is not null
-        defaultShortMessageShouldBeFound("createdAt.specified=true");
-
-        // Get all the shortMessageList where createdAt is null
-        defaultShortMessageShouldNotBeFound("createdAt.specified=false");
+        defaultShortMessageFiltering("createdAt.specified=true", "createdAt.specified=false");
     }
 
     @Test
@@ -500,11 +444,8 @@ class ShortMessageResourceIT {
         // Initialize the database
         shortMessageRepository.saveAndFlush(shortMessage);
 
-        // Get all the shortMessageList where createdBy equals to DEFAULT_CREATED_BY
-        defaultShortMessageShouldBeFound("createdBy.equals=" + DEFAULT_CREATED_BY);
-
-        // Get all the shortMessageList where createdBy equals to UPDATED_CREATED_BY
-        defaultShortMessageShouldNotBeFound("createdBy.equals=" + UPDATED_CREATED_BY);
+        // Get all the shortMessageList where createdBy equals to
+        defaultShortMessageFiltering("createdBy.equals=" + DEFAULT_CREATED_BY, "createdBy.equals=" + UPDATED_CREATED_BY);
     }
 
     @Test
@@ -513,11 +454,8 @@ class ShortMessageResourceIT {
         // Initialize the database
         shortMessageRepository.saveAndFlush(shortMessage);
 
-        // Get all the shortMessageList where createdBy in DEFAULT_CREATED_BY or UPDATED_CREATED_BY
-        defaultShortMessageShouldBeFound("createdBy.in=" + DEFAULT_CREATED_BY + "," + UPDATED_CREATED_BY);
-
-        // Get all the shortMessageList where createdBy equals to UPDATED_CREATED_BY
-        defaultShortMessageShouldNotBeFound("createdBy.in=" + UPDATED_CREATED_BY);
+        // Get all the shortMessageList where createdBy in
+        defaultShortMessageFiltering("createdBy.in=" + DEFAULT_CREATED_BY + "," + UPDATED_CREATED_BY, "createdBy.in=" + UPDATED_CREATED_BY);
     }
 
     @Test
@@ -527,10 +465,7 @@ class ShortMessageResourceIT {
         shortMessageRepository.saveAndFlush(shortMessage);
 
         // Get all the shortMessageList where createdBy is not null
-        defaultShortMessageShouldBeFound("createdBy.specified=true");
-
-        // Get all the shortMessageList where createdBy is null
-        defaultShortMessageShouldNotBeFound("createdBy.specified=false");
+        defaultShortMessageFiltering("createdBy.specified=true", "createdBy.specified=false");
     }
 
     @Test
@@ -539,11 +474,8 @@ class ShortMessageResourceIT {
         // Initialize the database
         shortMessageRepository.saveAndFlush(shortMessage);
 
-        // Get all the shortMessageList where createdBy contains DEFAULT_CREATED_BY
-        defaultShortMessageShouldBeFound("createdBy.contains=" + DEFAULT_CREATED_BY);
-
-        // Get all the shortMessageList where createdBy contains UPDATED_CREATED_BY
-        defaultShortMessageShouldNotBeFound("createdBy.contains=" + UPDATED_CREATED_BY);
+        // Get all the shortMessageList where createdBy contains
+        defaultShortMessageFiltering("createdBy.contains=" + DEFAULT_CREATED_BY, "createdBy.contains=" + UPDATED_CREATED_BY);
     }
 
     @Test
@@ -552,11 +484,13 @@ class ShortMessageResourceIT {
         // Initialize the database
         shortMessageRepository.saveAndFlush(shortMessage);
 
-        // Get all the shortMessageList where createdBy does not contain DEFAULT_CREATED_BY
-        defaultShortMessageShouldNotBeFound("createdBy.doesNotContain=" + DEFAULT_CREATED_BY);
+        // Get all the shortMessageList where createdBy does not contain
+        defaultShortMessageFiltering("createdBy.doesNotContain=" + UPDATED_CREATED_BY, "createdBy.doesNotContain=" + DEFAULT_CREATED_BY);
+    }
 
-        // Get all the shortMessageList where createdBy does not contain UPDATED_CREATED_BY
-        defaultShortMessageShouldBeFound("createdBy.doesNotContain=" + UPDATED_CREATED_BY);
+    private void defaultShortMessageFiltering(String shouldBeFound, String shouldNotBeFound) throws Exception {
+        defaultShortMessageShouldBeFound(shouldBeFound);
+        defaultShortMessageShouldNotBeFound(shouldNotBeFound);
     }
 
     /**
@@ -614,7 +548,7 @@ class ShortMessageResourceIT {
         // Initialize the database
         shortMessageRepository.saveAndFlush(shortMessage);
 
-        int databaseSizeBeforeUpdate = shortMessageRepository.findAll().size();
+        long databaseSizeBeforeUpdate = getRepositoryCount();
 
         // Update the shortMessage
         ShortMessage updatedShortMessage = shortMessageRepository.findById(shortMessage.getId()).orElseThrow();
@@ -632,25 +566,19 @@ class ShortMessageResourceIT {
             .perform(
                 put(ENTITY_API_URL_ID, shortMessageDTO.getId())
                     .contentType(MediaType.APPLICATION_JSON)
-                    .content(TestUtil.convertObjectToJsonBytes(shortMessageDTO))
+                    .content(om.writeValueAsBytes(shortMessageDTO))
             )
             .andExpect(status().isOk());
 
         // Validate the ShortMessage in the database
-        List<ShortMessage> shortMessageList = shortMessageRepository.findAll();
-        assertThat(shortMessageList).hasSize(databaseSizeBeforeUpdate);
-        ShortMessage testShortMessage = shortMessageList.get(shortMessageList.size() - 1);
-        assertThat(testShortMessage.getPhoneNumber()).isEqualTo(UPDATED_PHONE_NUMBER);
-        assertThat(testShortMessage.getContent()).isEqualTo(UPDATED_CONTENT);
-        assertThat(testShortMessage.getStatus()).isEqualTo(UPDATED_STATUS);
-        assertThat(testShortMessage.getCreatedAt()).isEqualTo(UPDATED_CREATED_AT);
-        assertThat(testShortMessage.getCreatedBy()).isEqualTo(UPDATED_CREATED_BY);
+        assertSameRepositoryCount(databaseSizeBeforeUpdate);
+        assertPersistedShortMessageToMatchAllProperties(updatedShortMessage);
     }
 
     @Test
     @Transactional
     void putNonExistingShortMessage() throws Exception {
-        int databaseSizeBeforeUpdate = shortMessageRepository.findAll().size();
+        long databaseSizeBeforeUpdate = getRepositoryCount();
         shortMessage.setId(longCount.incrementAndGet());
 
         // Create the ShortMessage
@@ -661,19 +589,18 @@ class ShortMessageResourceIT {
             .perform(
                 put(ENTITY_API_URL_ID, shortMessageDTO.getId())
                     .contentType(MediaType.APPLICATION_JSON)
-                    .content(TestUtil.convertObjectToJsonBytes(shortMessageDTO))
+                    .content(om.writeValueAsBytes(shortMessageDTO))
             )
             .andExpect(status().isBadRequest());
 
         // Validate the ShortMessage in the database
-        List<ShortMessage> shortMessageList = shortMessageRepository.findAll();
-        assertThat(shortMessageList).hasSize(databaseSizeBeforeUpdate);
+        assertSameRepositoryCount(databaseSizeBeforeUpdate);
     }
 
     @Test
     @Transactional
     void putWithIdMismatchShortMessage() throws Exception {
-        int databaseSizeBeforeUpdate = shortMessageRepository.findAll().size();
+        long databaseSizeBeforeUpdate = getRepositoryCount();
         shortMessage.setId(longCount.incrementAndGet());
 
         // Create the ShortMessage
@@ -684,19 +611,18 @@ class ShortMessageResourceIT {
             .perform(
                 put(ENTITY_API_URL_ID, longCount.incrementAndGet())
                     .contentType(MediaType.APPLICATION_JSON)
-                    .content(TestUtil.convertObjectToJsonBytes(shortMessageDTO))
+                    .content(om.writeValueAsBytes(shortMessageDTO))
             )
             .andExpect(status().isBadRequest());
 
         // Validate the ShortMessage in the database
-        List<ShortMessage> shortMessageList = shortMessageRepository.findAll();
-        assertThat(shortMessageList).hasSize(databaseSizeBeforeUpdate);
+        assertSameRepositoryCount(databaseSizeBeforeUpdate);
     }
 
     @Test
     @Transactional
     void putWithMissingIdPathParamShortMessage() throws Exception {
-        int databaseSizeBeforeUpdate = shortMessageRepository.findAll().size();
+        long databaseSizeBeforeUpdate = getRepositoryCount();
         shortMessage.setId(longCount.incrementAndGet());
 
         // Create the ShortMessage
@@ -704,14 +630,11 @@ class ShortMessageResourceIT {
 
         // If url ID doesn't match entity ID, it will throw BadRequestAlertException
         restShortMessageMockMvc
-            .perform(
-                put(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(shortMessageDTO))
-            )
+            .perform(put(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(om.writeValueAsBytes(shortMessageDTO)))
             .andExpect(status().isMethodNotAllowed());
 
         // Validate the ShortMessage in the database
-        List<ShortMessage> shortMessageList = shortMessageRepository.findAll();
-        assertThat(shortMessageList).hasSize(databaseSizeBeforeUpdate);
+        assertSameRepositoryCount(databaseSizeBeforeUpdate);
     }
 
     @Test
@@ -720,31 +643,29 @@ class ShortMessageResourceIT {
         // Initialize the database
         shortMessageRepository.saveAndFlush(shortMessage);
 
-        int databaseSizeBeforeUpdate = shortMessageRepository.findAll().size();
+        long databaseSizeBeforeUpdate = getRepositoryCount();
 
         // Update the shortMessage using partial update
         ShortMessage partialUpdatedShortMessage = new ShortMessage();
         partialUpdatedShortMessage.setId(shortMessage.getId());
 
-        partialUpdatedShortMessage.status(UPDATED_STATUS);
+        partialUpdatedShortMessage.phoneNumber(UPDATED_PHONE_NUMBER).content(UPDATED_CONTENT);
 
         restShortMessageMockMvc
             .perform(
                 patch(ENTITY_API_URL_ID, partialUpdatedShortMessage.getId())
                     .contentType("application/merge-patch+json")
-                    .content(TestUtil.convertObjectToJsonBytes(partialUpdatedShortMessage))
+                    .content(om.writeValueAsBytes(partialUpdatedShortMessage))
             )
             .andExpect(status().isOk());
 
         // Validate the ShortMessage in the database
-        List<ShortMessage> shortMessageList = shortMessageRepository.findAll();
-        assertThat(shortMessageList).hasSize(databaseSizeBeforeUpdate);
-        ShortMessage testShortMessage = shortMessageList.get(shortMessageList.size() - 1);
-        assertThat(testShortMessage.getPhoneNumber()).isEqualTo(DEFAULT_PHONE_NUMBER);
-        assertThat(testShortMessage.getContent()).isEqualTo(DEFAULT_CONTENT);
-        assertThat(testShortMessage.getStatus()).isEqualTo(UPDATED_STATUS);
-        assertThat(testShortMessage.getCreatedAt()).isEqualTo(DEFAULT_CREATED_AT);
-        assertThat(testShortMessage.getCreatedBy()).isEqualTo(DEFAULT_CREATED_BY);
+
+        assertSameRepositoryCount(databaseSizeBeforeUpdate);
+        assertShortMessageUpdatableFieldsEquals(
+            createUpdateProxyForBean(partialUpdatedShortMessage, shortMessage),
+            getPersistedShortMessage(shortMessage)
+        );
     }
 
     @Test
@@ -753,7 +674,7 @@ class ShortMessageResourceIT {
         // Initialize the database
         shortMessageRepository.saveAndFlush(shortMessage);
 
-        int databaseSizeBeforeUpdate = shortMessageRepository.findAll().size();
+        long databaseSizeBeforeUpdate = getRepositoryCount();
 
         // Update the shortMessage using partial update
         ShortMessage partialUpdatedShortMessage = new ShortMessage();
@@ -770,25 +691,20 @@ class ShortMessageResourceIT {
             .perform(
                 patch(ENTITY_API_URL_ID, partialUpdatedShortMessage.getId())
                     .contentType("application/merge-patch+json")
-                    .content(TestUtil.convertObjectToJsonBytes(partialUpdatedShortMessage))
+                    .content(om.writeValueAsBytes(partialUpdatedShortMessage))
             )
             .andExpect(status().isOk());
 
         // Validate the ShortMessage in the database
-        List<ShortMessage> shortMessageList = shortMessageRepository.findAll();
-        assertThat(shortMessageList).hasSize(databaseSizeBeforeUpdate);
-        ShortMessage testShortMessage = shortMessageList.get(shortMessageList.size() - 1);
-        assertThat(testShortMessage.getPhoneNumber()).isEqualTo(UPDATED_PHONE_NUMBER);
-        assertThat(testShortMessage.getContent()).isEqualTo(UPDATED_CONTENT);
-        assertThat(testShortMessage.getStatus()).isEqualTo(UPDATED_STATUS);
-        assertThat(testShortMessage.getCreatedAt()).isEqualTo(UPDATED_CREATED_AT);
-        assertThat(testShortMessage.getCreatedBy()).isEqualTo(UPDATED_CREATED_BY);
+
+        assertSameRepositoryCount(databaseSizeBeforeUpdate);
+        assertShortMessageUpdatableFieldsEquals(partialUpdatedShortMessage, getPersistedShortMessage(partialUpdatedShortMessage));
     }
 
     @Test
     @Transactional
     void patchNonExistingShortMessage() throws Exception {
-        int databaseSizeBeforeUpdate = shortMessageRepository.findAll().size();
+        long databaseSizeBeforeUpdate = getRepositoryCount();
         shortMessage.setId(longCount.incrementAndGet());
 
         // Create the ShortMessage
@@ -799,19 +715,18 @@ class ShortMessageResourceIT {
             .perform(
                 patch(ENTITY_API_URL_ID, shortMessageDTO.getId())
                     .contentType("application/merge-patch+json")
-                    .content(TestUtil.convertObjectToJsonBytes(shortMessageDTO))
+                    .content(om.writeValueAsBytes(shortMessageDTO))
             )
             .andExpect(status().isBadRequest());
 
         // Validate the ShortMessage in the database
-        List<ShortMessage> shortMessageList = shortMessageRepository.findAll();
-        assertThat(shortMessageList).hasSize(databaseSizeBeforeUpdate);
+        assertSameRepositoryCount(databaseSizeBeforeUpdate);
     }
 
     @Test
     @Transactional
     void patchWithIdMismatchShortMessage() throws Exception {
-        int databaseSizeBeforeUpdate = shortMessageRepository.findAll().size();
+        long databaseSizeBeforeUpdate = getRepositoryCount();
         shortMessage.setId(longCount.incrementAndGet());
 
         // Create the ShortMessage
@@ -822,19 +737,18 @@ class ShortMessageResourceIT {
             .perform(
                 patch(ENTITY_API_URL_ID, longCount.incrementAndGet())
                     .contentType("application/merge-patch+json")
-                    .content(TestUtil.convertObjectToJsonBytes(shortMessageDTO))
+                    .content(om.writeValueAsBytes(shortMessageDTO))
             )
             .andExpect(status().isBadRequest());
 
         // Validate the ShortMessage in the database
-        List<ShortMessage> shortMessageList = shortMessageRepository.findAll();
-        assertThat(shortMessageList).hasSize(databaseSizeBeforeUpdate);
+        assertSameRepositoryCount(databaseSizeBeforeUpdate);
     }
 
     @Test
     @Transactional
     void patchWithMissingIdPathParamShortMessage() throws Exception {
-        int databaseSizeBeforeUpdate = shortMessageRepository.findAll().size();
+        long databaseSizeBeforeUpdate = getRepositoryCount();
         shortMessage.setId(longCount.incrementAndGet());
 
         // Create the ShortMessage
@@ -842,16 +756,11 @@ class ShortMessageResourceIT {
 
         // If url ID doesn't match entity ID, it will throw BadRequestAlertException
         restShortMessageMockMvc
-            .perform(
-                patch(ENTITY_API_URL)
-                    .contentType("application/merge-patch+json")
-                    .content(TestUtil.convertObjectToJsonBytes(shortMessageDTO))
-            )
+            .perform(patch(ENTITY_API_URL).contentType("application/merge-patch+json").content(om.writeValueAsBytes(shortMessageDTO)))
             .andExpect(status().isMethodNotAllowed());
 
         // Validate the ShortMessage in the database
-        List<ShortMessage> shortMessageList = shortMessageRepository.findAll();
-        assertThat(shortMessageList).hasSize(databaseSizeBeforeUpdate);
+        assertSameRepositoryCount(databaseSizeBeforeUpdate);
     }
 
     @Test
@@ -860,7 +769,7 @@ class ShortMessageResourceIT {
         // Initialize the database
         shortMessageRepository.saveAndFlush(shortMessage);
 
-        int databaseSizeBeforeDelete = shortMessageRepository.findAll().size();
+        long databaseSizeBeforeDelete = getRepositoryCount();
 
         // Delete the shortMessage
         restShortMessageMockMvc
@@ -868,7 +777,34 @@ class ShortMessageResourceIT {
             .andExpect(status().isNoContent());
 
         // Validate the database contains one less item
-        List<ShortMessage> shortMessageList = shortMessageRepository.findAll();
-        assertThat(shortMessageList).hasSize(databaseSizeBeforeDelete - 1);
+        assertDecrementedRepositoryCount(databaseSizeBeforeDelete);
+    }
+
+    protected long getRepositoryCount() {
+        return shortMessageRepository.count();
+    }
+
+    protected void assertIncrementedRepositoryCount(long countBefore) {
+        assertThat(countBefore + 1).isEqualTo(getRepositoryCount());
+    }
+
+    protected void assertDecrementedRepositoryCount(long countBefore) {
+        assertThat(countBefore - 1).isEqualTo(getRepositoryCount());
+    }
+
+    protected void assertSameRepositoryCount(long countBefore) {
+        assertThat(countBefore).isEqualTo(getRepositoryCount());
+    }
+
+    protected ShortMessage getPersistedShortMessage(ShortMessage shortMessage) {
+        return shortMessageRepository.findById(shortMessage.getId()).orElseThrow();
+    }
+
+    protected void assertPersistedShortMessageToMatchAllProperties(ShortMessage expectedShortMessage) {
+        assertShortMessageAllPropertiesEquals(expectedShortMessage, getPersistedShortMessage(expectedShortMessage));
+    }
+
+    protected void assertPersistedShortMessageToMatchUpdatableProperties(ShortMessage expectedShortMessage) {
+        assertShortMessageAllUpdatablePropertiesEquals(expectedShortMessage, getPersistedShortMessage(expectedShortMessage));
     }
 }

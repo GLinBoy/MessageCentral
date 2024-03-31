@@ -1,8 +1,7 @@
 package com.glinboy.app.web.rest;
 
 import static org.hamcrest.Matchers.hasItem;
-import static org.hamcrest.Matchers.hasItems;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 import com.glinboy.app.IntegrationTest;
@@ -70,17 +69,6 @@ class PublicUserResourceIT {
             .andExpect(jsonPath("$.[*].email").doesNotExist())
             .andExpect(jsonPath("$.[*].imageUrl").doesNotExist())
             .andExpect(jsonPath("$.[*].langKey").doesNotExist());
-    }
-
-    @Test
-    @Transactional
-    void getAllAuthorities() throws Exception {
-        restUserMockMvc
-            .perform(get("/api/authorities").accept(MediaType.APPLICATION_JSON).contentType(MediaType.APPLICATION_JSON))
-            .andExpect(status().isOk())
-            .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
-            .andExpect(jsonPath("$").isArray())
-            .andExpect(jsonPath("$").value(hasItems(AuthoritiesConstants.USER, AuthoritiesConstants.ADMIN)));
     }
 
     @Test

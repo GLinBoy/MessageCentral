@@ -1,13 +1,15 @@
 package com.glinboy.app.web.rest;
 
+import static com.glinboy.app.domain.NotificationAsserts.*;
+import static com.glinboy.app.web.rest.TestUtil.createUpdateProxyForBean;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.hasItem;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.glinboy.app.IntegrationTest;
 import com.glinboy.app.domain.Notification;
-import com.glinboy.app.domain.NotificationData;
 import com.glinboy.app.domain.enumeration.MessageStatus;
 import com.glinboy.app.repository.NotificationRepository;
 import com.glinboy.app.service.dto.NotificationDTO;
@@ -15,7 +17,6 @@ import com.glinboy.app.service.mapper.NotificationMapper;
 import jakarta.persistence.EntityManager;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
-import java.util.List;
 import java.util.Random;
 import java.util.concurrent.atomic.AtomicLong;
 import org.junit.jupiter.api.BeforeEach;
@@ -64,6 +65,9 @@ class NotificationResourceIT {
 
     private static Random random = new Random();
     private static AtomicLong longCount = new AtomicLong(random.nextInt() + (2 * Integer.MAX_VALUE));
+
+    @Autowired
+    private ObjectMapper om;
 
     @Autowired
     private NotificationRepository notificationRepository;
@@ -125,27 +129,23 @@ class NotificationResourceIT {
     @Test
     @Transactional
     void createNotification() throws Exception {
-        int databaseSizeBeforeCreate = notificationRepository.findAll().size();
+        long databaseSizeBeforeCreate = getRepositoryCount();
         // Create the Notification
         NotificationDTO notificationDTO = notificationMapper.toDto(notification);
-        restNotificationMockMvc
-            .perform(
-                post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(notificationDTO))
-            )
-            .andExpect(status().isCreated());
+        var returnedNotificationDTO = om.readValue(
+            restNotificationMockMvc
+                .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(om.writeValueAsBytes(notificationDTO)))
+                .andExpect(status().isCreated())
+                .andReturn()
+                .getResponse()
+                .getContentAsString(),
+            NotificationDTO.class
+        );
 
         // Validate the Notification in the database
-        List<Notification> notificationList = notificationRepository.findAll();
-        assertThat(notificationList).hasSize(databaseSizeBeforeCreate + 1);
-        Notification testNotification = notificationList.get(notificationList.size() - 1);
-        assertThat(testNotification.getUsername()).isEqualTo(DEFAULT_USERNAME);
-        assertThat(testNotification.getToken()).isEqualTo(DEFAULT_TOKEN);
-        assertThat(testNotification.getSubject()).isEqualTo(DEFAULT_SUBJECT);
-        assertThat(testNotification.getContent()).isEqualTo(DEFAULT_CONTENT);
-        assertThat(testNotification.getImage()).isEqualTo(DEFAULT_IMAGE);
-        assertThat(testNotification.getStatus()).isEqualTo(DEFAULT_STATUS);
-        assertThat(testNotification.getCreatedAt()).isEqualTo(DEFAULT_CREATED_AT);
-        assertThat(testNotification.getCreatedBy()).isEqualTo(DEFAULT_CREATED_BY);
+        assertIncrementedRepositoryCount(databaseSizeBeforeCreate);
+        var returnedNotification = notificationMapper.toEntity(returnedNotificationDTO);
+        assertNotificationUpdatableFieldsEquals(returnedNotification, getPersistedNotification(returnedNotification));
     }
 
     @Test
@@ -155,24 +155,21 @@ class NotificationResourceIT {
         notification.setId(1L);
         NotificationDTO notificationDTO = notificationMapper.toDto(notification);
 
-        int databaseSizeBeforeCreate = notificationRepository.findAll().size();
+        long databaseSizeBeforeCreate = getRepositoryCount();
 
         // An entity with an existing ID cannot be created, so this API call must fail
         restNotificationMockMvc
-            .perform(
-                post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(notificationDTO))
-            )
+            .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(om.writeValueAsBytes(notificationDTO)))
             .andExpect(status().isBadRequest());
 
         // Validate the Notification in the database
-        List<Notification> notificationList = notificationRepository.findAll();
-        assertThat(notificationList).hasSize(databaseSizeBeforeCreate);
+        assertSameRepositoryCount(databaseSizeBeforeCreate);
     }
 
     @Test
     @Transactional
     void checkUsernameIsRequired() throws Exception {
-        int databaseSizeBeforeTest = notificationRepository.findAll().size();
+        long databaseSizeBeforeTest = getRepositoryCount();
         // set the field null
         notification.setUsername(null);
 
@@ -180,19 +177,16 @@ class NotificationResourceIT {
         NotificationDTO notificationDTO = notificationMapper.toDto(notification);
 
         restNotificationMockMvc
-            .perform(
-                post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(notificationDTO))
-            )
+            .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(om.writeValueAsBytes(notificationDTO)))
             .andExpect(status().isBadRequest());
 
-        List<Notification> notificationList = notificationRepository.findAll();
-        assertThat(notificationList).hasSize(databaseSizeBeforeTest);
+        assertSameRepositoryCount(databaseSizeBeforeTest);
     }
 
     @Test
     @Transactional
     void checkTokenIsRequired() throws Exception {
-        int databaseSizeBeforeTest = notificationRepository.findAll().size();
+        long databaseSizeBeforeTest = getRepositoryCount();
         // set the field null
         notification.setToken(null);
 
@@ -200,19 +194,16 @@ class NotificationResourceIT {
         NotificationDTO notificationDTO = notificationMapper.toDto(notification);
 
         restNotificationMockMvc
-            .perform(
-                post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(notificationDTO))
-            )
+            .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(om.writeValueAsBytes(notificationDTO)))
             .andExpect(status().isBadRequest());
 
-        List<Notification> notificationList = notificationRepository.findAll();
-        assertThat(notificationList).hasSize(databaseSizeBeforeTest);
+        assertSameRepositoryCount(databaseSizeBeforeTest);
     }
 
     @Test
     @Transactional
     void checkSubjectIsRequired() throws Exception {
-        int databaseSizeBeforeTest = notificationRepository.findAll().size();
+        long databaseSizeBeforeTest = getRepositoryCount();
         // set the field null
         notification.setSubject(null);
 
@@ -220,19 +211,16 @@ class NotificationResourceIT {
         NotificationDTO notificationDTO = notificationMapper.toDto(notification);
 
         restNotificationMockMvc
-            .perform(
-                post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(notificationDTO))
-            )
+            .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(om.writeValueAsBytes(notificationDTO)))
             .andExpect(status().isBadRequest());
 
-        List<Notification> notificationList = notificationRepository.findAll();
-        assertThat(notificationList).hasSize(databaseSizeBeforeTest);
+        assertSameRepositoryCount(databaseSizeBeforeTest);
     }
 
     @Test
     @Transactional
     void checkContentIsRequired() throws Exception {
-        int databaseSizeBeforeTest = notificationRepository.findAll().size();
+        long databaseSizeBeforeTest = getRepositoryCount();
         // set the field null
         notification.setContent(null);
 
@@ -240,19 +228,16 @@ class NotificationResourceIT {
         NotificationDTO notificationDTO = notificationMapper.toDto(notification);
 
         restNotificationMockMvc
-            .perform(
-                post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(notificationDTO))
-            )
+            .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(om.writeValueAsBytes(notificationDTO)))
             .andExpect(status().isBadRequest());
 
-        List<Notification> notificationList = notificationRepository.findAll();
-        assertThat(notificationList).hasSize(databaseSizeBeforeTest);
+        assertSameRepositoryCount(databaseSizeBeforeTest);
     }
 
     @Test
     @Transactional
     void checkCreatedAtIsRequired() throws Exception {
-        int databaseSizeBeforeTest = notificationRepository.findAll().size();
+        long databaseSizeBeforeTest = getRepositoryCount();
         // set the field null
         notification.setCreatedAt(null);
 
@@ -260,19 +245,16 @@ class NotificationResourceIT {
         NotificationDTO notificationDTO = notificationMapper.toDto(notification);
 
         restNotificationMockMvc
-            .perform(
-                post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(notificationDTO))
-            )
+            .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(om.writeValueAsBytes(notificationDTO)))
             .andExpect(status().isBadRequest());
 
-        List<Notification> notificationList = notificationRepository.findAll();
-        assertThat(notificationList).hasSize(databaseSizeBeforeTest);
+        assertSameRepositoryCount(databaseSizeBeforeTest);
     }
 
     @Test
     @Transactional
     void checkCreatedByIsRequired() throws Exception {
-        int databaseSizeBeforeTest = notificationRepository.findAll().size();
+        long databaseSizeBeforeTest = getRepositoryCount();
         // set the field null
         notification.setCreatedBy(null);
 
@@ -280,13 +262,10 @@ class NotificationResourceIT {
         NotificationDTO notificationDTO = notificationMapper.toDto(notification);
 
         restNotificationMockMvc
-            .perform(
-                post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(notificationDTO))
-            )
+            .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(om.writeValueAsBytes(notificationDTO)))
             .andExpect(status().isBadRequest());
 
-        List<Notification> notificationList = notificationRepository.findAll();
-        assertThat(notificationList).hasSize(databaseSizeBeforeTest);
+        assertSameRepositoryCount(databaseSizeBeforeTest);
     }
 
     @Test
@@ -341,14 +320,11 @@ class NotificationResourceIT {
 
         Long id = notification.getId();
 
-        defaultNotificationShouldBeFound("id.equals=" + id);
-        defaultNotificationShouldNotBeFound("id.notEquals=" + id);
+        defaultNotificationFiltering("id.equals=" + id, "id.notEquals=" + id);
 
-        defaultNotificationShouldBeFound("id.greaterThanOrEqual=" + id);
-        defaultNotificationShouldNotBeFound("id.greaterThan=" + id);
+        defaultNotificationFiltering("id.greaterThanOrEqual=" + id, "id.greaterThan=" + id);
 
-        defaultNotificationShouldBeFound("id.lessThanOrEqual=" + id);
-        defaultNotificationShouldNotBeFound("id.lessThan=" + id);
+        defaultNotificationFiltering("id.lessThanOrEqual=" + id, "id.lessThan=" + id);
     }
 
     @Test
@@ -357,11 +333,8 @@ class NotificationResourceIT {
         // Initialize the database
         notificationRepository.saveAndFlush(notification);
 
-        // Get all the notificationList where username equals to DEFAULT_USERNAME
-        defaultNotificationShouldBeFound("username.equals=" + DEFAULT_USERNAME);
-
-        // Get all the notificationList where username equals to UPDATED_USERNAME
-        defaultNotificationShouldNotBeFound("username.equals=" + UPDATED_USERNAME);
+        // Get all the notificationList where username equals to
+        defaultNotificationFiltering("username.equals=" + DEFAULT_USERNAME, "username.equals=" + UPDATED_USERNAME);
     }
 
     @Test
@@ -370,11 +343,8 @@ class NotificationResourceIT {
         // Initialize the database
         notificationRepository.saveAndFlush(notification);
 
-        // Get all the notificationList where username in DEFAULT_USERNAME or UPDATED_USERNAME
-        defaultNotificationShouldBeFound("username.in=" + DEFAULT_USERNAME + "," + UPDATED_USERNAME);
-
-        // Get all the notificationList where username equals to UPDATED_USERNAME
-        defaultNotificationShouldNotBeFound("username.in=" + UPDATED_USERNAME);
+        // Get all the notificationList where username in
+        defaultNotificationFiltering("username.in=" + DEFAULT_USERNAME + "," + UPDATED_USERNAME, "username.in=" + UPDATED_USERNAME);
     }
 
     @Test
@@ -384,10 +354,7 @@ class NotificationResourceIT {
         notificationRepository.saveAndFlush(notification);
 
         // Get all the notificationList where username is not null
-        defaultNotificationShouldBeFound("username.specified=true");
-
-        // Get all the notificationList where username is null
-        defaultNotificationShouldNotBeFound("username.specified=false");
+        defaultNotificationFiltering("username.specified=true", "username.specified=false");
     }
 
     @Test
@@ -396,11 +363,8 @@ class NotificationResourceIT {
         // Initialize the database
         notificationRepository.saveAndFlush(notification);
 
-        // Get all the notificationList where username contains DEFAULT_USERNAME
-        defaultNotificationShouldBeFound("username.contains=" + DEFAULT_USERNAME);
-
-        // Get all the notificationList where username contains UPDATED_USERNAME
-        defaultNotificationShouldNotBeFound("username.contains=" + UPDATED_USERNAME);
+        // Get all the notificationList where username contains
+        defaultNotificationFiltering("username.contains=" + DEFAULT_USERNAME, "username.contains=" + UPDATED_USERNAME);
     }
 
     @Test
@@ -409,11 +373,8 @@ class NotificationResourceIT {
         // Initialize the database
         notificationRepository.saveAndFlush(notification);
 
-        // Get all the notificationList where username does not contain DEFAULT_USERNAME
-        defaultNotificationShouldNotBeFound("username.doesNotContain=" + DEFAULT_USERNAME);
-
-        // Get all the notificationList where username does not contain UPDATED_USERNAME
-        defaultNotificationShouldBeFound("username.doesNotContain=" + UPDATED_USERNAME);
+        // Get all the notificationList where username does not contain
+        defaultNotificationFiltering("username.doesNotContain=" + UPDATED_USERNAME, "username.doesNotContain=" + DEFAULT_USERNAME);
     }
 
     @Test
@@ -422,11 +383,8 @@ class NotificationResourceIT {
         // Initialize the database
         notificationRepository.saveAndFlush(notification);
 
-        // Get all the notificationList where token equals to DEFAULT_TOKEN
-        defaultNotificationShouldBeFound("token.equals=" + DEFAULT_TOKEN);
-
-        // Get all the notificationList where token equals to UPDATED_TOKEN
-        defaultNotificationShouldNotBeFound("token.equals=" + UPDATED_TOKEN);
+        // Get all the notificationList where token equals to
+        defaultNotificationFiltering("token.equals=" + DEFAULT_TOKEN, "token.equals=" + UPDATED_TOKEN);
     }
 
     @Test
@@ -435,11 +393,8 @@ class NotificationResourceIT {
         // Initialize the database
         notificationRepository.saveAndFlush(notification);
 
-        // Get all the notificationList where token in DEFAULT_TOKEN or UPDATED_TOKEN
-        defaultNotificationShouldBeFound("token.in=" + DEFAULT_TOKEN + "," + UPDATED_TOKEN);
-
-        // Get all the notificationList where token equals to UPDATED_TOKEN
-        defaultNotificationShouldNotBeFound("token.in=" + UPDATED_TOKEN);
+        // Get all the notificationList where token in
+        defaultNotificationFiltering("token.in=" + DEFAULT_TOKEN + "," + UPDATED_TOKEN, "token.in=" + UPDATED_TOKEN);
     }
 
     @Test
@@ -449,10 +404,7 @@ class NotificationResourceIT {
         notificationRepository.saveAndFlush(notification);
 
         // Get all the notificationList where token is not null
-        defaultNotificationShouldBeFound("token.specified=true");
-
-        // Get all the notificationList where token is null
-        defaultNotificationShouldNotBeFound("token.specified=false");
+        defaultNotificationFiltering("token.specified=true", "token.specified=false");
     }
 
     @Test
@@ -461,11 +413,8 @@ class NotificationResourceIT {
         // Initialize the database
         notificationRepository.saveAndFlush(notification);
 
-        // Get all the notificationList where token contains DEFAULT_TOKEN
-        defaultNotificationShouldBeFound("token.contains=" + DEFAULT_TOKEN);
-
-        // Get all the notificationList where token contains UPDATED_TOKEN
-        defaultNotificationShouldNotBeFound("token.contains=" + UPDATED_TOKEN);
+        // Get all the notificationList where token contains
+        defaultNotificationFiltering("token.contains=" + DEFAULT_TOKEN, "token.contains=" + UPDATED_TOKEN);
     }
 
     @Test
@@ -474,11 +423,8 @@ class NotificationResourceIT {
         // Initialize the database
         notificationRepository.saveAndFlush(notification);
 
-        // Get all the notificationList where token does not contain DEFAULT_TOKEN
-        defaultNotificationShouldNotBeFound("token.doesNotContain=" + DEFAULT_TOKEN);
-
-        // Get all the notificationList where token does not contain UPDATED_TOKEN
-        defaultNotificationShouldBeFound("token.doesNotContain=" + UPDATED_TOKEN);
+        // Get all the notificationList where token does not contain
+        defaultNotificationFiltering("token.doesNotContain=" + UPDATED_TOKEN, "token.doesNotContain=" + DEFAULT_TOKEN);
     }
 
     @Test
@@ -487,11 +433,8 @@ class NotificationResourceIT {
         // Initialize the database
         notificationRepository.saveAndFlush(notification);
 
-        // Get all the notificationList where subject equals to DEFAULT_SUBJECT
-        defaultNotificationShouldBeFound("subject.equals=" + DEFAULT_SUBJECT);
-
-        // Get all the notificationList where subject equals to UPDATED_SUBJECT
-        defaultNotificationShouldNotBeFound("subject.equals=" + UPDATED_SUBJECT);
+        // Get all the notificationList where subject equals to
+        defaultNotificationFiltering("subject.equals=" + DEFAULT_SUBJECT, "subject.equals=" + UPDATED_SUBJECT);
     }
 
     @Test
@@ -500,11 +443,8 @@ class NotificationResourceIT {
         // Initialize the database
         notificationRepository.saveAndFlush(notification);
 
-        // Get all the notificationList where subject in DEFAULT_SUBJECT or UPDATED_SUBJECT
-        defaultNotificationShouldBeFound("subject.in=" + DEFAULT_SUBJECT + "," + UPDATED_SUBJECT);
-
-        // Get all the notificationList where subject equals to UPDATED_SUBJECT
-        defaultNotificationShouldNotBeFound("subject.in=" + UPDATED_SUBJECT);
+        // Get all the notificationList where subject in
+        defaultNotificationFiltering("subject.in=" + DEFAULT_SUBJECT + "," + UPDATED_SUBJECT, "subject.in=" + UPDATED_SUBJECT);
     }
 
     @Test
@@ -514,10 +454,7 @@ class NotificationResourceIT {
         notificationRepository.saveAndFlush(notification);
 
         // Get all the notificationList where subject is not null
-        defaultNotificationShouldBeFound("subject.specified=true");
-
-        // Get all the notificationList where subject is null
-        defaultNotificationShouldNotBeFound("subject.specified=false");
+        defaultNotificationFiltering("subject.specified=true", "subject.specified=false");
     }
 
     @Test
@@ -526,11 +463,8 @@ class NotificationResourceIT {
         // Initialize the database
         notificationRepository.saveAndFlush(notification);
 
-        // Get all the notificationList where subject contains DEFAULT_SUBJECT
-        defaultNotificationShouldBeFound("subject.contains=" + DEFAULT_SUBJECT);
-
-        // Get all the notificationList where subject contains UPDATED_SUBJECT
-        defaultNotificationShouldNotBeFound("subject.contains=" + UPDATED_SUBJECT);
+        // Get all the notificationList where subject contains
+        defaultNotificationFiltering("subject.contains=" + DEFAULT_SUBJECT, "subject.contains=" + UPDATED_SUBJECT);
     }
 
     @Test
@@ -539,11 +473,8 @@ class NotificationResourceIT {
         // Initialize the database
         notificationRepository.saveAndFlush(notification);
 
-        // Get all the notificationList where subject does not contain DEFAULT_SUBJECT
-        defaultNotificationShouldNotBeFound("subject.doesNotContain=" + DEFAULT_SUBJECT);
-
-        // Get all the notificationList where subject does not contain UPDATED_SUBJECT
-        defaultNotificationShouldBeFound("subject.doesNotContain=" + UPDATED_SUBJECT);
+        // Get all the notificationList where subject does not contain
+        defaultNotificationFiltering("subject.doesNotContain=" + UPDATED_SUBJECT, "subject.doesNotContain=" + DEFAULT_SUBJECT);
     }
 
     @Test
@@ -552,11 +483,8 @@ class NotificationResourceIT {
         // Initialize the database
         notificationRepository.saveAndFlush(notification);
 
-        // Get all the notificationList where content equals to DEFAULT_CONTENT
-        defaultNotificationShouldBeFound("content.equals=" + DEFAULT_CONTENT);
-
-        // Get all the notificationList where content equals to UPDATED_CONTENT
-        defaultNotificationShouldNotBeFound("content.equals=" + UPDATED_CONTENT);
+        // Get all the notificationList where content equals to
+        defaultNotificationFiltering("content.equals=" + DEFAULT_CONTENT, "content.equals=" + UPDATED_CONTENT);
     }
 
     @Test
@@ -565,11 +493,8 @@ class NotificationResourceIT {
         // Initialize the database
         notificationRepository.saveAndFlush(notification);
 
-        // Get all the notificationList where content in DEFAULT_CONTENT or UPDATED_CONTENT
-        defaultNotificationShouldBeFound("content.in=" + DEFAULT_CONTENT + "," + UPDATED_CONTENT);
-
-        // Get all the notificationList where content equals to UPDATED_CONTENT
-        defaultNotificationShouldNotBeFound("content.in=" + UPDATED_CONTENT);
+        // Get all the notificationList where content in
+        defaultNotificationFiltering("content.in=" + DEFAULT_CONTENT + "," + UPDATED_CONTENT, "content.in=" + UPDATED_CONTENT);
     }
 
     @Test
@@ -579,10 +504,7 @@ class NotificationResourceIT {
         notificationRepository.saveAndFlush(notification);
 
         // Get all the notificationList where content is not null
-        defaultNotificationShouldBeFound("content.specified=true");
-
-        // Get all the notificationList where content is null
-        defaultNotificationShouldNotBeFound("content.specified=false");
+        defaultNotificationFiltering("content.specified=true", "content.specified=false");
     }
 
     @Test
@@ -591,11 +513,8 @@ class NotificationResourceIT {
         // Initialize the database
         notificationRepository.saveAndFlush(notification);
 
-        // Get all the notificationList where content contains DEFAULT_CONTENT
-        defaultNotificationShouldBeFound("content.contains=" + DEFAULT_CONTENT);
-
-        // Get all the notificationList where content contains UPDATED_CONTENT
-        defaultNotificationShouldNotBeFound("content.contains=" + UPDATED_CONTENT);
+        // Get all the notificationList where content contains
+        defaultNotificationFiltering("content.contains=" + DEFAULT_CONTENT, "content.contains=" + UPDATED_CONTENT);
     }
 
     @Test
@@ -604,11 +523,8 @@ class NotificationResourceIT {
         // Initialize the database
         notificationRepository.saveAndFlush(notification);
 
-        // Get all the notificationList where content does not contain DEFAULT_CONTENT
-        defaultNotificationShouldNotBeFound("content.doesNotContain=" + DEFAULT_CONTENT);
-
-        // Get all the notificationList where content does not contain UPDATED_CONTENT
-        defaultNotificationShouldBeFound("content.doesNotContain=" + UPDATED_CONTENT);
+        // Get all the notificationList where content does not contain
+        defaultNotificationFiltering("content.doesNotContain=" + UPDATED_CONTENT, "content.doesNotContain=" + DEFAULT_CONTENT);
     }
 
     @Test
@@ -617,11 +533,8 @@ class NotificationResourceIT {
         // Initialize the database
         notificationRepository.saveAndFlush(notification);
 
-        // Get all the notificationList where image equals to DEFAULT_IMAGE
-        defaultNotificationShouldBeFound("image.equals=" + DEFAULT_IMAGE);
-
-        // Get all the notificationList where image equals to UPDATED_IMAGE
-        defaultNotificationShouldNotBeFound("image.equals=" + UPDATED_IMAGE);
+        // Get all the notificationList where image equals to
+        defaultNotificationFiltering("image.equals=" + DEFAULT_IMAGE, "image.equals=" + UPDATED_IMAGE);
     }
 
     @Test
@@ -630,11 +543,8 @@ class NotificationResourceIT {
         // Initialize the database
         notificationRepository.saveAndFlush(notification);
 
-        // Get all the notificationList where image in DEFAULT_IMAGE or UPDATED_IMAGE
-        defaultNotificationShouldBeFound("image.in=" + DEFAULT_IMAGE + "," + UPDATED_IMAGE);
-
-        // Get all the notificationList where image equals to UPDATED_IMAGE
-        defaultNotificationShouldNotBeFound("image.in=" + UPDATED_IMAGE);
+        // Get all the notificationList where image in
+        defaultNotificationFiltering("image.in=" + DEFAULT_IMAGE + "," + UPDATED_IMAGE, "image.in=" + UPDATED_IMAGE);
     }
 
     @Test
@@ -644,10 +554,7 @@ class NotificationResourceIT {
         notificationRepository.saveAndFlush(notification);
 
         // Get all the notificationList where image is not null
-        defaultNotificationShouldBeFound("image.specified=true");
-
-        // Get all the notificationList where image is null
-        defaultNotificationShouldNotBeFound("image.specified=false");
+        defaultNotificationFiltering("image.specified=true", "image.specified=false");
     }
 
     @Test
@@ -656,11 +563,8 @@ class NotificationResourceIT {
         // Initialize the database
         notificationRepository.saveAndFlush(notification);
 
-        // Get all the notificationList where image contains DEFAULT_IMAGE
-        defaultNotificationShouldBeFound("image.contains=" + DEFAULT_IMAGE);
-
-        // Get all the notificationList where image contains UPDATED_IMAGE
-        defaultNotificationShouldNotBeFound("image.contains=" + UPDATED_IMAGE);
+        // Get all the notificationList where image contains
+        defaultNotificationFiltering("image.contains=" + DEFAULT_IMAGE, "image.contains=" + UPDATED_IMAGE);
     }
 
     @Test
@@ -669,11 +573,8 @@ class NotificationResourceIT {
         // Initialize the database
         notificationRepository.saveAndFlush(notification);
 
-        // Get all the notificationList where image does not contain DEFAULT_IMAGE
-        defaultNotificationShouldNotBeFound("image.doesNotContain=" + DEFAULT_IMAGE);
-
-        // Get all the notificationList where image does not contain UPDATED_IMAGE
-        defaultNotificationShouldBeFound("image.doesNotContain=" + UPDATED_IMAGE);
+        // Get all the notificationList where image does not contain
+        defaultNotificationFiltering("image.doesNotContain=" + UPDATED_IMAGE, "image.doesNotContain=" + DEFAULT_IMAGE);
     }
 
     @Test
@@ -682,11 +583,8 @@ class NotificationResourceIT {
         // Initialize the database
         notificationRepository.saveAndFlush(notification);
 
-        // Get all the notificationList where status equals to DEFAULT_STATUS
-        defaultNotificationShouldBeFound("status.equals=" + DEFAULT_STATUS);
-
-        // Get all the notificationList where status equals to UPDATED_STATUS
-        defaultNotificationShouldNotBeFound("status.equals=" + UPDATED_STATUS);
+        // Get all the notificationList where status equals to
+        defaultNotificationFiltering("status.equals=" + DEFAULT_STATUS, "status.equals=" + UPDATED_STATUS);
     }
 
     @Test
@@ -695,11 +593,8 @@ class NotificationResourceIT {
         // Initialize the database
         notificationRepository.saveAndFlush(notification);
 
-        // Get all the notificationList where status in DEFAULT_STATUS or UPDATED_STATUS
-        defaultNotificationShouldBeFound("status.in=" + DEFAULT_STATUS + "," + UPDATED_STATUS);
-
-        // Get all the notificationList where status equals to UPDATED_STATUS
-        defaultNotificationShouldNotBeFound("status.in=" + UPDATED_STATUS);
+        // Get all the notificationList where status in
+        defaultNotificationFiltering("status.in=" + DEFAULT_STATUS + "," + UPDATED_STATUS, "status.in=" + UPDATED_STATUS);
     }
 
     @Test
@@ -709,10 +604,7 @@ class NotificationResourceIT {
         notificationRepository.saveAndFlush(notification);
 
         // Get all the notificationList where status is not null
-        defaultNotificationShouldBeFound("status.specified=true");
-
-        // Get all the notificationList where status is null
-        defaultNotificationShouldNotBeFound("status.specified=false");
+        defaultNotificationFiltering("status.specified=true", "status.specified=false");
     }
 
     @Test
@@ -721,11 +613,8 @@ class NotificationResourceIT {
         // Initialize the database
         notificationRepository.saveAndFlush(notification);
 
-        // Get all the notificationList where createdAt equals to DEFAULT_CREATED_AT
-        defaultNotificationShouldBeFound("createdAt.equals=" + DEFAULT_CREATED_AT);
-
-        // Get all the notificationList where createdAt equals to UPDATED_CREATED_AT
-        defaultNotificationShouldNotBeFound("createdAt.equals=" + UPDATED_CREATED_AT);
+        // Get all the notificationList where createdAt equals to
+        defaultNotificationFiltering("createdAt.equals=" + DEFAULT_CREATED_AT, "createdAt.equals=" + UPDATED_CREATED_AT);
     }
 
     @Test
@@ -734,11 +623,8 @@ class NotificationResourceIT {
         // Initialize the database
         notificationRepository.saveAndFlush(notification);
 
-        // Get all the notificationList where createdAt in DEFAULT_CREATED_AT or UPDATED_CREATED_AT
-        defaultNotificationShouldBeFound("createdAt.in=" + DEFAULT_CREATED_AT + "," + UPDATED_CREATED_AT);
-
-        // Get all the notificationList where createdAt equals to UPDATED_CREATED_AT
-        defaultNotificationShouldNotBeFound("createdAt.in=" + UPDATED_CREATED_AT);
+        // Get all the notificationList where createdAt in
+        defaultNotificationFiltering("createdAt.in=" + DEFAULT_CREATED_AT + "," + UPDATED_CREATED_AT, "createdAt.in=" + UPDATED_CREATED_AT);
     }
 
     @Test
@@ -748,10 +634,7 @@ class NotificationResourceIT {
         notificationRepository.saveAndFlush(notification);
 
         // Get all the notificationList where createdAt is not null
-        defaultNotificationShouldBeFound("createdAt.specified=true");
-
-        // Get all the notificationList where createdAt is null
-        defaultNotificationShouldNotBeFound("createdAt.specified=false");
+        defaultNotificationFiltering("createdAt.specified=true", "createdAt.specified=false");
     }
 
     @Test
@@ -760,11 +643,8 @@ class NotificationResourceIT {
         // Initialize the database
         notificationRepository.saveAndFlush(notification);
 
-        // Get all the notificationList where createdBy equals to DEFAULT_CREATED_BY
-        defaultNotificationShouldBeFound("createdBy.equals=" + DEFAULT_CREATED_BY);
-
-        // Get all the notificationList where createdBy equals to UPDATED_CREATED_BY
-        defaultNotificationShouldNotBeFound("createdBy.equals=" + UPDATED_CREATED_BY);
+        // Get all the notificationList where createdBy equals to
+        defaultNotificationFiltering("createdBy.equals=" + DEFAULT_CREATED_BY, "createdBy.equals=" + UPDATED_CREATED_BY);
     }
 
     @Test
@@ -773,11 +653,8 @@ class NotificationResourceIT {
         // Initialize the database
         notificationRepository.saveAndFlush(notification);
 
-        // Get all the notificationList where createdBy in DEFAULT_CREATED_BY or UPDATED_CREATED_BY
-        defaultNotificationShouldBeFound("createdBy.in=" + DEFAULT_CREATED_BY + "," + UPDATED_CREATED_BY);
-
-        // Get all the notificationList where createdBy equals to UPDATED_CREATED_BY
-        defaultNotificationShouldNotBeFound("createdBy.in=" + UPDATED_CREATED_BY);
+        // Get all the notificationList where createdBy in
+        defaultNotificationFiltering("createdBy.in=" + DEFAULT_CREATED_BY + "," + UPDATED_CREATED_BY, "createdBy.in=" + UPDATED_CREATED_BY);
     }
 
     @Test
@@ -787,10 +664,7 @@ class NotificationResourceIT {
         notificationRepository.saveAndFlush(notification);
 
         // Get all the notificationList where createdBy is not null
-        defaultNotificationShouldBeFound("createdBy.specified=true");
-
-        // Get all the notificationList where createdBy is null
-        defaultNotificationShouldNotBeFound("createdBy.specified=false");
+        defaultNotificationFiltering("createdBy.specified=true", "createdBy.specified=false");
     }
 
     @Test
@@ -799,11 +673,8 @@ class NotificationResourceIT {
         // Initialize the database
         notificationRepository.saveAndFlush(notification);
 
-        // Get all the notificationList where createdBy contains DEFAULT_CREATED_BY
-        defaultNotificationShouldBeFound("createdBy.contains=" + DEFAULT_CREATED_BY);
-
-        // Get all the notificationList where createdBy contains UPDATED_CREATED_BY
-        defaultNotificationShouldNotBeFound("createdBy.contains=" + UPDATED_CREATED_BY);
+        // Get all the notificationList where createdBy contains
+        defaultNotificationFiltering("createdBy.contains=" + DEFAULT_CREATED_BY, "createdBy.contains=" + UPDATED_CREATED_BY);
     }
 
     @Test
@@ -812,33 +683,13 @@ class NotificationResourceIT {
         // Initialize the database
         notificationRepository.saveAndFlush(notification);
 
-        // Get all the notificationList where createdBy does not contain DEFAULT_CREATED_BY
-        defaultNotificationShouldNotBeFound("createdBy.doesNotContain=" + DEFAULT_CREATED_BY);
-
-        // Get all the notificationList where createdBy does not contain UPDATED_CREATED_BY
-        defaultNotificationShouldBeFound("createdBy.doesNotContain=" + UPDATED_CREATED_BY);
+        // Get all the notificationList where createdBy does not contain
+        defaultNotificationFiltering("createdBy.doesNotContain=" + UPDATED_CREATED_BY, "createdBy.doesNotContain=" + DEFAULT_CREATED_BY);
     }
 
-    @Test
-    @Transactional
-    void getAllNotificationsByDataIsEqualToSomething() throws Exception {
-        NotificationData data;
-        if (TestUtil.findAll(em, NotificationData.class).isEmpty()) {
-            notificationRepository.saveAndFlush(notification);
-            data = NotificationDataResourceIT.createEntity(em);
-        } else {
-            data = TestUtil.findAll(em, NotificationData.class).get(0);
-        }
-        em.persist(data);
-        em.flush();
-        notification.addData(data);
-        notificationRepository.saveAndFlush(notification);
-        Long dataId = data.getId();
-        // Get all the notificationList where data equals to dataId
-        defaultNotificationShouldBeFound("dataId.equals=" + dataId);
-
-        // Get all the notificationList where data equals to (dataId + 1)
-        defaultNotificationShouldNotBeFound("dataId.equals=" + (dataId + 1));
+    private void defaultNotificationFiltering(String shouldBeFound, String shouldNotBeFound) throws Exception {
+        defaultNotificationShouldBeFound(shouldBeFound);
+        defaultNotificationShouldNotBeFound(shouldNotBeFound);
     }
 
     /**
@@ -899,7 +750,7 @@ class NotificationResourceIT {
         // Initialize the database
         notificationRepository.saveAndFlush(notification);
 
-        int databaseSizeBeforeUpdate = notificationRepository.findAll().size();
+        long databaseSizeBeforeUpdate = getRepositoryCount();
 
         // Update the notification
         Notification updatedNotification = notificationRepository.findById(notification.getId()).orElseThrow();
@@ -920,28 +771,19 @@ class NotificationResourceIT {
             .perform(
                 put(ENTITY_API_URL_ID, notificationDTO.getId())
                     .contentType(MediaType.APPLICATION_JSON)
-                    .content(TestUtil.convertObjectToJsonBytes(notificationDTO))
+                    .content(om.writeValueAsBytes(notificationDTO))
             )
             .andExpect(status().isOk());
 
         // Validate the Notification in the database
-        List<Notification> notificationList = notificationRepository.findAll();
-        assertThat(notificationList).hasSize(databaseSizeBeforeUpdate);
-        Notification testNotification = notificationList.get(notificationList.size() - 1);
-        assertThat(testNotification.getUsername()).isEqualTo(UPDATED_USERNAME);
-        assertThat(testNotification.getToken()).isEqualTo(UPDATED_TOKEN);
-        assertThat(testNotification.getSubject()).isEqualTo(UPDATED_SUBJECT);
-        assertThat(testNotification.getContent()).isEqualTo(UPDATED_CONTENT);
-        assertThat(testNotification.getImage()).isEqualTo(UPDATED_IMAGE);
-        assertThat(testNotification.getStatus()).isEqualTo(UPDATED_STATUS);
-        assertThat(testNotification.getCreatedAt()).isEqualTo(UPDATED_CREATED_AT);
-        assertThat(testNotification.getCreatedBy()).isEqualTo(UPDATED_CREATED_BY);
+        assertSameRepositoryCount(databaseSizeBeforeUpdate);
+        assertPersistedNotificationToMatchAllProperties(updatedNotification);
     }
 
     @Test
     @Transactional
     void putNonExistingNotification() throws Exception {
-        int databaseSizeBeforeUpdate = notificationRepository.findAll().size();
+        long databaseSizeBeforeUpdate = getRepositoryCount();
         notification.setId(longCount.incrementAndGet());
 
         // Create the Notification
@@ -952,19 +794,18 @@ class NotificationResourceIT {
             .perform(
                 put(ENTITY_API_URL_ID, notificationDTO.getId())
                     .contentType(MediaType.APPLICATION_JSON)
-                    .content(TestUtil.convertObjectToJsonBytes(notificationDTO))
+                    .content(om.writeValueAsBytes(notificationDTO))
             )
             .andExpect(status().isBadRequest());
 
         // Validate the Notification in the database
-        List<Notification> notificationList = notificationRepository.findAll();
-        assertThat(notificationList).hasSize(databaseSizeBeforeUpdate);
+        assertSameRepositoryCount(databaseSizeBeforeUpdate);
     }
 
     @Test
     @Transactional
     void putWithIdMismatchNotification() throws Exception {
-        int databaseSizeBeforeUpdate = notificationRepository.findAll().size();
+        long databaseSizeBeforeUpdate = getRepositoryCount();
         notification.setId(longCount.incrementAndGet());
 
         // Create the Notification
@@ -975,19 +816,18 @@ class NotificationResourceIT {
             .perform(
                 put(ENTITY_API_URL_ID, longCount.incrementAndGet())
                     .contentType(MediaType.APPLICATION_JSON)
-                    .content(TestUtil.convertObjectToJsonBytes(notificationDTO))
+                    .content(om.writeValueAsBytes(notificationDTO))
             )
             .andExpect(status().isBadRequest());
 
         // Validate the Notification in the database
-        List<Notification> notificationList = notificationRepository.findAll();
-        assertThat(notificationList).hasSize(databaseSizeBeforeUpdate);
+        assertSameRepositoryCount(databaseSizeBeforeUpdate);
     }
 
     @Test
     @Transactional
     void putWithMissingIdPathParamNotification() throws Exception {
-        int databaseSizeBeforeUpdate = notificationRepository.findAll().size();
+        long databaseSizeBeforeUpdate = getRepositoryCount();
         notification.setId(longCount.incrementAndGet());
 
         // Create the Notification
@@ -995,14 +835,11 @@ class NotificationResourceIT {
 
         // If url ID doesn't match entity ID, it will throw BadRequestAlertException
         restNotificationMockMvc
-            .perform(
-                put(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(notificationDTO))
-            )
+            .perform(put(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(om.writeValueAsBytes(notificationDTO)))
             .andExpect(status().isMethodNotAllowed());
 
         // Validate the Notification in the database
-        List<Notification> notificationList = notificationRepository.findAll();
-        assertThat(notificationList).hasSize(databaseSizeBeforeUpdate);
+        assertSameRepositoryCount(databaseSizeBeforeUpdate);
     }
 
     @Test
@@ -1011,40 +848,29 @@ class NotificationResourceIT {
         // Initialize the database
         notificationRepository.saveAndFlush(notification);
 
-        int databaseSizeBeforeUpdate = notificationRepository.findAll().size();
+        long databaseSizeBeforeUpdate = getRepositoryCount();
 
         // Update the notification using partial update
         Notification partialUpdatedNotification = new Notification();
         partialUpdatedNotification.setId(notification.getId());
 
-        partialUpdatedNotification
-            .username(UPDATED_USERNAME)
-            .token(UPDATED_TOKEN)
-            .subject(UPDATED_SUBJECT)
-            .image(UPDATED_IMAGE)
-            .createdAt(UPDATED_CREATED_AT)
-            .createdBy(UPDATED_CREATED_BY);
+        partialUpdatedNotification.token(UPDATED_TOKEN).subject(UPDATED_SUBJECT).image(UPDATED_IMAGE).createdBy(UPDATED_CREATED_BY);
 
         restNotificationMockMvc
             .perform(
                 patch(ENTITY_API_URL_ID, partialUpdatedNotification.getId())
                     .contentType("application/merge-patch+json")
-                    .content(TestUtil.convertObjectToJsonBytes(partialUpdatedNotification))
+                    .content(om.writeValueAsBytes(partialUpdatedNotification))
             )
             .andExpect(status().isOk());
 
         // Validate the Notification in the database
-        List<Notification> notificationList = notificationRepository.findAll();
-        assertThat(notificationList).hasSize(databaseSizeBeforeUpdate);
-        Notification testNotification = notificationList.get(notificationList.size() - 1);
-        assertThat(testNotification.getUsername()).isEqualTo(UPDATED_USERNAME);
-        assertThat(testNotification.getToken()).isEqualTo(UPDATED_TOKEN);
-        assertThat(testNotification.getSubject()).isEqualTo(UPDATED_SUBJECT);
-        assertThat(testNotification.getContent()).isEqualTo(DEFAULT_CONTENT);
-        assertThat(testNotification.getImage()).isEqualTo(UPDATED_IMAGE);
-        assertThat(testNotification.getStatus()).isEqualTo(DEFAULT_STATUS);
-        assertThat(testNotification.getCreatedAt()).isEqualTo(UPDATED_CREATED_AT);
-        assertThat(testNotification.getCreatedBy()).isEqualTo(UPDATED_CREATED_BY);
+
+        assertSameRepositoryCount(databaseSizeBeforeUpdate);
+        assertNotificationUpdatableFieldsEquals(
+            createUpdateProxyForBean(partialUpdatedNotification, notification),
+            getPersistedNotification(notification)
+        );
     }
 
     @Test
@@ -1053,7 +879,7 @@ class NotificationResourceIT {
         // Initialize the database
         notificationRepository.saveAndFlush(notification);
 
-        int databaseSizeBeforeUpdate = notificationRepository.findAll().size();
+        long databaseSizeBeforeUpdate = getRepositoryCount();
 
         // Update the notification using partial update
         Notification partialUpdatedNotification = new Notification();
@@ -1073,28 +899,20 @@ class NotificationResourceIT {
             .perform(
                 patch(ENTITY_API_URL_ID, partialUpdatedNotification.getId())
                     .contentType("application/merge-patch+json")
-                    .content(TestUtil.convertObjectToJsonBytes(partialUpdatedNotification))
+                    .content(om.writeValueAsBytes(partialUpdatedNotification))
             )
             .andExpect(status().isOk());
 
         // Validate the Notification in the database
-        List<Notification> notificationList = notificationRepository.findAll();
-        assertThat(notificationList).hasSize(databaseSizeBeforeUpdate);
-        Notification testNotification = notificationList.get(notificationList.size() - 1);
-        assertThat(testNotification.getUsername()).isEqualTo(UPDATED_USERNAME);
-        assertThat(testNotification.getToken()).isEqualTo(UPDATED_TOKEN);
-        assertThat(testNotification.getSubject()).isEqualTo(UPDATED_SUBJECT);
-        assertThat(testNotification.getContent()).isEqualTo(UPDATED_CONTENT);
-        assertThat(testNotification.getImage()).isEqualTo(UPDATED_IMAGE);
-        assertThat(testNotification.getStatus()).isEqualTo(UPDATED_STATUS);
-        assertThat(testNotification.getCreatedAt()).isEqualTo(UPDATED_CREATED_AT);
-        assertThat(testNotification.getCreatedBy()).isEqualTo(UPDATED_CREATED_BY);
+
+        assertSameRepositoryCount(databaseSizeBeforeUpdate);
+        assertNotificationUpdatableFieldsEquals(partialUpdatedNotification, getPersistedNotification(partialUpdatedNotification));
     }
 
     @Test
     @Transactional
     void patchNonExistingNotification() throws Exception {
-        int databaseSizeBeforeUpdate = notificationRepository.findAll().size();
+        long databaseSizeBeforeUpdate = getRepositoryCount();
         notification.setId(longCount.incrementAndGet());
 
         // Create the Notification
@@ -1105,19 +923,18 @@ class NotificationResourceIT {
             .perform(
                 patch(ENTITY_API_URL_ID, notificationDTO.getId())
                     .contentType("application/merge-patch+json")
-                    .content(TestUtil.convertObjectToJsonBytes(notificationDTO))
+                    .content(om.writeValueAsBytes(notificationDTO))
             )
             .andExpect(status().isBadRequest());
 
         // Validate the Notification in the database
-        List<Notification> notificationList = notificationRepository.findAll();
-        assertThat(notificationList).hasSize(databaseSizeBeforeUpdate);
+        assertSameRepositoryCount(databaseSizeBeforeUpdate);
     }
 
     @Test
     @Transactional
     void patchWithIdMismatchNotification() throws Exception {
-        int databaseSizeBeforeUpdate = notificationRepository.findAll().size();
+        long databaseSizeBeforeUpdate = getRepositoryCount();
         notification.setId(longCount.incrementAndGet());
 
         // Create the Notification
@@ -1128,19 +945,18 @@ class NotificationResourceIT {
             .perform(
                 patch(ENTITY_API_URL_ID, longCount.incrementAndGet())
                     .contentType("application/merge-patch+json")
-                    .content(TestUtil.convertObjectToJsonBytes(notificationDTO))
+                    .content(om.writeValueAsBytes(notificationDTO))
             )
             .andExpect(status().isBadRequest());
 
         // Validate the Notification in the database
-        List<Notification> notificationList = notificationRepository.findAll();
-        assertThat(notificationList).hasSize(databaseSizeBeforeUpdate);
+        assertSameRepositoryCount(databaseSizeBeforeUpdate);
     }
 
     @Test
     @Transactional
     void patchWithMissingIdPathParamNotification() throws Exception {
-        int databaseSizeBeforeUpdate = notificationRepository.findAll().size();
+        long databaseSizeBeforeUpdate = getRepositoryCount();
         notification.setId(longCount.incrementAndGet());
 
         // Create the Notification
@@ -1148,16 +964,11 @@ class NotificationResourceIT {
 
         // If url ID doesn't match entity ID, it will throw BadRequestAlertException
         restNotificationMockMvc
-            .perform(
-                patch(ENTITY_API_URL)
-                    .contentType("application/merge-patch+json")
-                    .content(TestUtil.convertObjectToJsonBytes(notificationDTO))
-            )
+            .perform(patch(ENTITY_API_URL).contentType("application/merge-patch+json").content(om.writeValueAsBytes(notificationDTO)))
             .andExpect(status().isMethodNotAllowed());
 
         // Validate the Notification in the database
-        List<Notification> notificationList = notificationRepository.findAll();
-        assertThat(notificationList).hasSize(databaseSizeBeforeUpdate);
+        assertSameRepositoryCount(databaseSizeBeforeUpdate);
     }
 
     @Test
@@ -1166,7 +977,7 @@ class NotificationResourceIT {
         // Initialize the database
         notificationRepository.saveAndFlush(notification);
 
-        int databaseSizeBeforeDelete = notificationRepository.findAll().size();
+        long databaseSizeBeforeDelete = getRepositoryCount();
 
         // Delete the notification
         restNotificationMockMvc
@@ -1174,7 +985,34 @@ class NotificationResourceIT {
             .andExpect(status().isNoContent());
 
         // Validate the database contains one less item
-        List<Notification> notificationList = notificationRepository.findAll();
-        assertThat(notificationList).hasSize(databaseSizeBeforeDelete - 1);
+        assertDecrementedRepositoryCount(databaseSizeBeforeDelete);
+    }
+
+    protected long getRepositoryCount() {
+        return notificationRepository.count();
+    }
+
+    protected void assertIncrementedRepositoryCount(long countBefore) {
+        assertThat(countBefore + 1).isEqualTo(getRepositoryCount());
+    }
+
+    protected void assertDecrementedRepositoryCount(long countBefore) {
+        assertThat(countBefore - 1).isEqualTo(getRepositoryCount());
+    }
+
+    protected void assertSameRepositoryCount(long countBefore) {
+        assertThat(countBefore).isEqualTo(getRepositoryCount());
+    }
+
+    protected Notification getPersistedNotification(Notification notification) {
+        return notificationRepository.findById(notification.getId()).orElseThrow();
+    }
+
+    protected void assertPersistedNotificationToMatchAllProperties(Notification expectedNotification) {
+        assertNotificationAllPropertiesEquals(expectedNotification, getPersistedNotification(expectedNotification));
+    }
+
+    protected void assertPersistedNotificationToMatchUpdatableProperties(Notification expectedNotification) {
+        assertNotificationAllUpdatablePropertiesEquals(expectedNotification, getPersistedNotification(expectedNotification));
     }
 }

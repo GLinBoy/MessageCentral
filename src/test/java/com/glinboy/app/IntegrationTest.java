@@ -2,6 +2,7 @@ package com.glinboy.app;
 
 import com.glinboy.app.config.AsyncSyncConfiguration;
 import com.glinboy.app.config.EmbeddedSQL;
+import com.glinboy.app.config.JacksonConfiguration;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -14,7 +15,7 @@ import org.springframework.test.annotation.DirtiesContext;
  */
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
-@SpringBootTest(classes = { MessageCentralApp.class, AsyncSyncConfiguration.class })
+@SpringBootTest(classes = { MessageCentralApp.class, JacksonConfiguration.class, AsyncSyncConfiguration.class })
 @EmbeddedSQL
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_CLASS)
 public @interface IntegrationTest {
