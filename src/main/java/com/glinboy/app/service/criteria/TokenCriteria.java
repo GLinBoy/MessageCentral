@@ -2,6 +2,7 @@ package com.glinboy.app.service.criteria;
 
 import java.io.Serializable;
 import java.util.Objects;
+import java.util.Optional;
 import org.springdoc.core.annotations.ParameterObject;
 import tech.jhipster.service.Criteria;
 import tech.jhipster.service.filter.*;
@@ -46,16 +47,16 @@ public class TokenCriteria implements Serializable, Criteria {
     public TokenCriteria() {}
 
     public TokenCriteria(TokenCriteria other) {
-        this.id = other.id == null ? null : other.id.copy();
-        this.name = other.name == null ? null : other.name.copy();
-        this.token = other.token == null ? null : other.token.copy();
-        this.disable = other.disable == null ? null : other.disable.copy();
-        this.deprecateAt = other.deprecateAt == null ? null : other.deprecateAt.copy();
-        this.roles = other.roles == null ? null : other.roles.copy();
-        this.createdAt = other.createdAt == null ? null : other.createdAt.copy();
-        this.createdBy = other.createdBy == null ? null : other.createdBy.copy();
-        this.updatedAt = other.updatedAt == null ? null : other.updatedAt.copy();
-        this.updatedBy = other.updatedBy == null ? null : other.updatedBy.copy();
+        this.id = other.optionalId().map(LongFilter::copy).orElse(null);
+        this.name = other.optionalName().map(StringFilter::copy).orElse(null);
+        this.token = other.optionalToken().map(StringFilter::copy).orElse(null);
+        this.disable = other.optionalDisable().map(BooleanFilter::copy).orElse(null);
+        this.deprecateAt = other.optionalDeprecateAt().map(InstantFilter::copy).orElse(null);
+        this.roles = other.optionalRoles().map(IntegerFilter::copy).orElse(null);
+        this.createdAt = other.optionalCreatedAt().map(InstantFilter::copy).orElse(null);
+        this.createdBy = other.optionalCreatedBy().map(StringFilter::copy).orElse(null);
+        this.updatedAt = other.optionalUpdatedAt().map(InstantFilter::copy).orElse(null);
+        this.updatedBy = other.optionalUpdatedBy().map(StringFilter::copy).orElse(null);
         this.distinct = other.distinct;
     }
 
@@ -68,9 +69,13 @@ public class TokenCriteria implements Serializable, Criteria {
         return id;
     }
 
+    public Optional<LongFilter> optionalId() {
+        return Optional.ofNullable(id);
+    }
+
     public LongFilter id() {
         if (id == null) {
-            id = new LongFilter();
+            setId(new LongFilter());
         }
         return id;
     }
@@ -83,9 +88,13 @@ public class TokenCriteria implements Serializable, Criteria {
         return name;
     }
 
+    public Optional<StringFilter> optionalName() {
+        return Optional.ofNullable(name);
+    }
+
     public StringFilter name() {
         if (name == null) {
-            name = new StringFilter();
+            setName(new StringFilter());
         }
         return name;
     }
@@ -98,9 +107,13 @@ public class TokenCriteria implements Serializable, Criteria {
         return token;
     }
 
+    public Optional<StringFilter> optionalToken() {
+        return Optional.ofNullable(token);
+    }
+
     public StringFilter token() {
         if (token == null) {
-            token = new StringFilter();
+            setToken(new StringFilter());
         }
         return token;
     }
@@ -113,9 +126,13 @@ public class TokenCriteria implements Serializable, Criteria {
         return disable;
     }
 
+    public Optional<BooleanFilter> optionalDisable() {
+        return Optional.ofNullable(disable);
+    }
+
     public BooleanFilter disable() {
         if (disable == null) {
-            disable = new BooleanFilter();
+            setDisable(new BooleanFilter());
         }
         return disable;
     }
@@ -128,9 +145,13 @@ public class TokenCriteria implements Serializable, Criteria {
         return deprecateAt;
     }
 
+    public Optional<InstantFilter> optionalDeprecateAt() {
+        return Optional.ofNullable(deprecateAt);
+    }
+
     public InstantFilter deprecateAt() {
         if (deprecateAt == null) {
-            deprecateAt = new InstantFilter();
+            setDeprecateAt(new InstantFilter());
         }
         return deprecateAt;
     }
@@ -143,9 +164,13 @@ public class TokenCriteria implements Serializable, Criteria {
         return roles;
     }
 
+    public Optional<IntegerFilter> optionalRoles() {
+        return Optional.ofNullable(roles);
+    }
+
     public IntegerFilter roles() {
         if (roles == null) {
-            roles = new IntegerFilter();
+            setRoles(new IntegerFilter());
         }
         return roles;
     }
@@ -158,9 +183,13 @@ public class TokenCriteria implements Serializable, Criteria {
         return createdAt;
     }
 
+    public Optional<InstantFilter> optionalCreatedAt() {
+        return Optional.ofNullable(createdAt);
+    }
+
     public InstantFilter createdAt() {
         if (createdAt == null) {
-            createdAt = new InstantFilter();
+            setCreatedAt(new InstantFilter());
         }
         return createdAt;
     }
@@ -173,9 +202,13 @@ public class TokenCriteria implements Serializable, Criteria {
         return createdBy;
     }
 
+    public Optional<StringFilter> optionalCreatedBy() {
+        return Optional.ofNullable(createdBy);
+    }
+
     public StringFilter createdBy() {
         if (createdBy == null) {
-            createdBy = new StringFilter();
+            setCreatedBy(new StringFilter());
         }
         return createdBy;
     }
@@ -188,9 +221,13 @@ public class TokenCriteria implements Serializable, Criteria {
         return updatedAt;
     }
 
+    public Optional<InstantFilter> optionalUpdatedAt() {
+        return Optional.ofNullable(updatedAt);
+    }
+
     public InstantFilter updatedAt() {
         if (updatedAt == null) {
-            updatedAt = new InstantFilter();
+            setUpdatedAt(new InstantFilter());
         }
         return updatedAt;
     }
@@ -203,9 +240,13 @@ public class TokenCriteria implements Serializable, Criteria {
         return updatedBy;
     }
 
+    public Optional<StringFilter> optionalUpdatedBy() {
+        return Optional.ofNullable(updatedBy);
+    }
+
     public StringFilter updatedBy() {
         if (updatedBy == null) {
-            updatedBy = new StringFilter();
+            setUpdatedBy(new StringFilter());
         }
         return updatedBy;
     }
@@ -215,6 +256,17 @@ public class TokenCriteria implements Serializable, Criteria {
     }
 
     public Boolean getDistinct() {
+        return distinct;
+    }
+
+    public Optional<Boolean> optionalDistinct() {
+        return Optional.ofNullable(distinct);
+    }
+
+    public Boolean distinct() {
+        if (distinct == null) {
+            setDistinct(true);
+        }
         return distinct;
     }
 
@@ -255,17 +307,17 @@ public class TokenCriteria implements Serializable, Criteria {
     @Override
     public String toString() {
         return "TokenCriteria{" +
-            (id != null ? "id=" + id + ", " : "") +
-            (name != null ? "name=" + name + ", " : "") +
-            (token != null ? "token=" + token + ", " : "") +
-            (disable != null ? "disable=" + disable + ", " : "") +
-            (deprecateAt != null ? "deprecateAt=" + deprecateAt + ", " : "") +
-            (roles != null ? "roles=" + roles + ", " : "") +
-            (createdAt != null ? "createdAt=" + createdAt + ", " : "") +
-            (createdBy != null ? "createdBy=" + createdBy + ", " : "") +
-            (updatedAt != null ? "updatedAt=" + updatedAt + ", " : "") +
-            (updatedBy != null ? "updatedBy=" + updatedBy + ", " : "") +
-            (distinct != null ? "distinct=" + distinct + ", " : "") +
-            "}";
+            optionalId().map(f -> "id=" + f + ", ").orElse("") +
+            optionalName().map(f -> "name=" + f + ", ").orElse("") +
+            optionalToken().map(f -> "token=" + f + ", ").orElse("") +
+            optionalDisable().map(f -> "disable=" + f + ", ").orElse("") +
+            optionalDeprecateAt().map(f -> "deprecateAt=" + f + ", ").orElse("") +
+            optionalRoles().map(f -> "roles=" + f + ", ").orElse("") +
+            optionalCreatedAt().map(f -> "createdAt=" + f + ", ").orElse("") +
+            optionalCreatedBy().map(f -> "createdBy=" + f + ", ").orElse("") +
+            optionalUpdatedAt().map(f -> "updatedAt=" + f + ", ").orElse("") +
+            optionalUpdatedBy().map(f -> "updatedBy=" + f + ", ").orElse("") +
+            optionalDistinct().map(f -> "distinct=" + f + ", ").orElse("") +
+        "}";
     }
 }

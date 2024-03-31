@@ -3,6 +3,7 @@ package com.glinboy.app.service.criteria;
 import com.glinboy.app.domain.enumeration.MessageStatus;
 import java.io.Serializable;
 import java.util.Objects;
+import java.util.Optional;
 import org.springdoc.core.annotations.ParameterObject;
 import tech.jhipster.service.Criteria;
 import tech.jhipster.service.filter.Filter;
@@ -59,12 +60,12 @@ public class ShortMessageCriteria implements Serializable, Criteria {
     public ShortMessageCriteria() {}
 
     public ShortMessageCriteria(ShortMessageCriteria other) {
-        this.id = other.id == null ? null : other.id.copy();
-        this.phoneNumber = other.phoneNumber == null ? null : other.phoneNumber.copy();
-        this.content = other.content == null ? null : other.content.copy();
-        this.status = other.status == null ? null : other.status.copy();
-        this.createdAt = other.createdAt == null ? null : other.createdAt.copy();
-        this.createdBy = other.createdBy == null ? null : other.createdBy.copy();
+        this.id = other.optionalId().map(LongFilter::copy).orElse(null);
+        this.phoneNumber = other.optionalPhoneNumber().map(StringFilter::copy).orElse(null);
+        this.content = other.optionalContent().map(StringFilter::copy).orElse(null);
+        this.status = other.optionalStatus().map(MessageStatusFilter::copy).orElse(null);
+        this.createdAt = other.optionalCreatedAt().map(InstantFilter::copy).orElse(null);
+        this.createdBy = other.optionalCreatedBy().map(StringFilter::copy).orElse(null);
         this.distinct = other.distinct;
     }
 
@@ -77,9 +78,13 @@ public class ShortMessageCriteria implements Serializable, Criteria {
         return id;
     }
 
+    public Optional<LongFilter> optionalId() {
+        return Optional.ofNullable(id);
+    }
+
     public LongFilter id() {
         if (id == null) {
-            id = new LongFilter();
+            setId(new LongFilter());
         }
         return id;
     }
@@ -92,9 +97,13 @@ public class ShortMessageCriteria implements Serializable, Criteria {
         return phoneNumber;
     }
 
+    public Optional<StringFilter> optionalPhoneNumber() {
+        return Optional.ofNullable(phoneNumber);
+    }
+
     public StringFilter phoneNumber() {
         if (phoneNumber == null) {
-            phoneNumber = new StringFilter();
+            setPhoneNumber(new StringFilter());
         }
         return phoneNumber;
     }
@@ -107,9 +116,13 @@ public class ShortMessageCriteria implements Serializable, Criteria {
         return content;
     }
 
+    public Optional<StringFilter> optionalContent() {
+        return Optional.ofNullable(content);
+    }
+
     public StringFilter content() {
         if (content == null) {
-            content = new StringFilter();
+            setContent(new StringFilter());
         }
         return content;
     }
@@ -122,9 +135,13 @@ public class ShortMessageCriteria implements Serializable, Criteria {
         return status;
     }
 
+    public Optional<MessageStatusFilter> optionalStatus() {
+        return Optional.ofNullable(status);
+    }
+
     public MessageStatusFilter status() {
         if (status == null) {
-            status = new MessageStatusFilter();
+            setStatus(new MessageStatusFilter());
         }
         return status;
     }
@@ -137,9 +154,13 @@ public class ShortMessageCriteria implements Serializable, Criteria {
         return createdAt;
     }
 
+    public Optional<InstantFilter> optionalCreatedAt() {
+        return Optional.ofNullable(createdAt);
+    }
+
     public InstantFilter createdAt() {
         if (createdAt == null) {
-            createdAt = new InstantFilter();
+            setCreatedAt(new InstantFilter());
         }
         return createdAt;
     }
@@ -152,9 +173,13 @@ public class ShortMessageCriteria implements Serializable, Criteria {
         return createdBy;
     }
 
+    public Optional<StringFilter> optionalCreatedBy() {
+        return Optional.ofNullable(createdBy);
+    }
+
     public StringFilter createdBy() {
         if (createdBy == null) {
-            createdBy = new StringFilter();
+            setCreatedBy(new StringFilter());
         }
         return createdBy;
     }
@@ -164,6 +189,17 @@ public class ShortMessageCriteria implements Serializable, Criteria {
     }
 
     public Boolean getDistinct() {
+        return distinct;
+    }
+
+    public Optional<Boolean> optionalDistinct() {
+        return Optional.ofNullable(distinct);
+    }
+
+    public Boolean distinct() {
+        if (distinct == null) {
+            setDistinct(true);
+        }
         return distinct;
     }
 
@@ -200,13 +236,13 @@ public class ShortMessageCriteria implements Serializable, Criteria {
     @Override
     public String toString() {
         return "ShortMessageCriteria{" +
-            (id != null ? "id=" + id + ", " : "") +
-            (phoneNumber != null ? "phoneNumber=" + phoneNumber + ", " : "") +
-            (content != null ? "content=" + content + ", " : "") +
-            (status != null ? "status=" + status + ", " : "") +
-            (createdAt != null ? "createdAt=" + createdAt + ", " : "") +
-            (createdBy != null ? "createdBy=" + createdBy + ", " : "") +
-            (distinct != null ? "distinct=" + distinct + ", " : "") +
-            "}";
+            optionalId().map(f -> "id=" + f + ", ").orElse("") +
+            optionalPhoneNumber().map(f -> "phoneNumber=" + f + ", ").orElse("") +
+            optionalContent().map(f -> "content=" + f + ", ").orElse("") +
+            optionalStatus().map(f -> "status=" + f + ", ").orElse("") +
+            optionalCreatedAt().map(f -> "createdAt=" + f + ", ").orElse("") +
+            optionalCreatedBy().map(f -> "createdBy=" + f + ", ").orElse("") +
+            optionalDistinct().map(f -> "distinct=" + f + ", ").orElse("") +
+        "}";
     }
 }

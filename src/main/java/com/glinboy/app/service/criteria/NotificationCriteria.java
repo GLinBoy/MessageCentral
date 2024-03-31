@@ -3,6 +3,7 @@ package com.glinboy.app.service.criteria;
 import com.glinboy.app.domain.enumeration.MessageStatus;
 import java.io.Serializable;
 import java.util.Objects;
+import java.util.Optional;
 import org.springdoc.core.annotations.ParameterObject;
 import tech.jhipster.service.Criteria;
 import tech.jhipster.service.filter.Filter;
@@ -67,16 +68,16 @@ public class NotificationCriteria implements Serializable, Criteria {
     public NotificationCriteria() {}
 
     public NotificationCriteria(NotificationCriteria other) {
-        this.id = other.id == null ? null : other.id.copy();
-        this.username = other.username == null ? null : other.username.copy();
-        this.token = other.token == null ? null : other.token.copy();
-        this.subject = other.subject == null ? null : other.subject.copy();
-        this.content = other.content == null ? null : other.content.copy();
-        this.image = other.image == null ? null : other.image.copy();
-        this.status = other.status == null ? null : other.status.copy();
-        this.createdAt = other.createdAt == null ? null : other.createdAt.copy();
-        this.createdBy = other.createdBy == null ? null : other.createdBy.copy();
-        this.dataId = other.dataId == null ? null : other.dataId.copy();
+        this.id = other.optionalId().map(LongFilter::copy).orElse(null);
+        this.username = other.optionalUsername().map(StringFilter::copy).orElse(null);
+        this.token = other.optionalToken().map(StringFilter::copy).orElse(null);
+        this.subject = other.optionalSubject().map(StringFilter::copy).orElse(null);
+        this.content = other.optionalContent().map(StringFilter::copy).orElse(null);
+        this.image = other.optionalImage().map(StringFilter::copy).orElse(null);
+        this.status = other.optionalStatus().map(MessageStatusFilter::copy).orElse(null);
+        this.createdAt = other.optionalCreatedAt().map(InstantFilter::copy).orElse(null);
+        this.createdBy = other.optionalCreatedBy().map(StringFilter::copy).orElse(null);
+        this.dataId = other.optionalDataId().map(LongFilter::copy).orElse(null);
         this.distinct = other.distinct;
     }
 
@@ -89,9 +90,13 @@ public class NotificationCriteria implements Serializable, Criteria {
         return id;
     }
 
+    public Optional<LongFilter> optionalId() {
+        return Optional.ofNullable(id);
+    }
+
     public LongFilter id() {
         if (id == null) {
-            id = new LongFilter();
+            setId(new LongFilter());
         }
         return id;
     }
@@ -104,9 +109,13 @@ public class NotificationCriteria implements Serializable, Criteria {
         return username;
     }
 
+    public Optional<StringFilter> optionalUsername() {
+        return Optional.ofNullable(username);
+    }
+
     public StringFilter username() {
         if (username == null) {
-            username = new StringFilter();
+            setUsername(new StringFilter());
         }
         return username;
     }
@@ -119,9 +128,13 @@ public class NotificationCriteria implements Serializable, Criteria {
         return token;
     }
 
+    public Optional<StringFilter> optionalToken() {
+        return Optional.ofNullable(token);
+    }
+
     public StringFilter token() {
         if (token == null) {
-            token = new StringFilter();
+            setToken(new StringFilter());
         }
         return token;
     }
@@ -134,9 +147,13 @@ public class NotificationCriteria implements Serializable, Criteria {
         return subject;
     }
 
+    public Optional<StringFilter> optionalSubject() {
+        return Optional.ofNullable(subject);
+    }
+
     public StringFilter subject() {
         if (subject == null) {
-            subject = new StringFilter();
+            setSubject(new StringFilter());
         }
         return subject;
     }
@@ -149,9 +166,13 @@ public class NotificationCriteria implements Serializable, Criteria {
         return content;
     }
 
+    public Optional<StringFilter> optionalContent() {
+        return Optional.ofNullable(content);
+    }
+
     public StringFilter content() {
         if (content == null) {
-            content = new StringFilter();
+            setContent(new StringFilter());
         }
         return content;
     }
@@ -164,9 +185,13 @@ public class NotificationCriteria implements Serializable, Criteria {
         return image;
     }
 
+    public Optional<StringFilter> optionalImage() {
+        return Optional.ofNullable(image);
+    }
+
     public StringFilter image() {
         if (image == null) {
-            image = new StringFilter();
+            setImage(new StringFilter());
         }
         return image;
     }
@@ -179,9 +204,13 @@ public class NotificationCriteria implements Serializable, Criteria {
         return status;
     }
 
+    public Optional<MessageStatusFilter> optionalStatus() {
+        return Optional.ofNullable(status);
+    }
+
     public MessageStatusFilter status() {
         if (status == null) {
-            status = new MessageStatusFilter();
+            setStatus(new MessageStatusFilter());
         }
         return status;
     }
@@ -194,9 +223,13 @@ public class NotificationCriteria implements Serializable, Criteria {
         return createdAt;
     }
 
+    public Optional<InstantFilter> optionalCreatedAt() {
+        return Optional.ofNullable(createdAt);
+    }
+
     public InstantFilter createdAt() {
         if (createdAt == null) {
-            createdAt = new InstantFilter();
+            setCreatedAt(new InstantFilter());
         }
         return createdAt;
     }
@@ -209,9 +242,13 @@ public class NotificationCriteria implements Serializable, Criteria {
         return createdBy;
     }
 
+    public Optional<StringFilter> optionalCreatedBy() {
+        return Optional.ofNullable(createdBy);
+    }
+
     public StringFilter createdBy() {
         if (createdBy == null) {
-            createdBy = new StringFilter();
+            setCreatedBy(new StringFilter());
         }
         return createdBy;
     }
@@ -224,9 +261,13 @@ public class NotificationCriteria implements Serializable, Criteria {
         return dataId;
     }
 
+    public Optional<LongFilter> optionalDataId() {
+        return Optional.ofNullable(dataId);
+    }
+
     public LongFilter dataId() {
         if (dataId == null) {
-            dataId = new LongFilter();
+            setDataId(new LongFilter());
         }
         return dataId;
     }
@@ -236,6 +277,17 @@ public class NotificationCriteria implements Serializable, Criteria {
     }
 
     public Boolean getDistinct() {
+        return distinct;
+    }
+
+    public Optional<Boolean> optionalDistinct() {
+        return Optional.ofNullable(distinct);
+    }
+
+    public Boolean distinct() {
+        if (distinct == null) {
+            setDistinct(true);
+        }
         return distinct;
     }
 
@@ -276,17 +328,17 @@ public class NotificationCriteria implements Serializable, Criteria {
     @Override
     public String toString() {
         return "NotificationCriteria{" +
-            (id != null ? "id=" + id + ", " : "") +
-            (username != null ? "username=" + username + ", " : "") +
-            (token != null ? "token=" + token + ", " : "") +
-            (subject != null ? "subject=" + subject + ", " : "") +
-            (content != null ? "content=" + content + ", " : "") +
-            (image != null ? "image=" + image + ", " : "") +
-            (status != null ? "status=" + status + ", " : "") +
-            (createdAt != null ? "createdAt=" + createdAt + ", " : "") +
-            (createdBy != null ? "createdBy=" + createdBy + ", " : "") +
-            (dataId != null ? "dataId=" + dataId + ", " : "") +
-            (distinct != null ? "distinct=" + distinct + ", " : "") +
-            "}";
+            optionalId().map(f -> "id=" + f + ", ").orElse("") +
+            optionalUsername().map(f -> "username=" + f + ", ").orElse("") +
+            optionalToken().map(f -> "token=" + f + ", ").orElse("") +
+            optionalSubject().map(f -> "subject=" + f + ", ").orElse("") +
+            optionalContent().map(f -> "content=" + f + ", ").orElse("") +
+            optionalImage().map(f -> "image=" + f + ", ").orElse("") +
+            optionalStatus().map(f -> "status=" + f + ", ").orElse("") +
+            optionalCreatedAt().map(f -> "createdAt=" + f + ", ").orElse("") +
+            optionalCreatedBy().map(f -> "createdBy=" + f + ", ").orElse("") +
+            optionalDataId().map(f -> "dataId=" + f + ", ").orElse("") +
+            optionalDistinct().map(f -> "distinct=" + f + ", ").orElse("") +
+        "}";
     }
 }

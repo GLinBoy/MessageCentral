@@ -1,5 +1,3 @@
-import { type INotificationData } from '@/shared/model/notification-data.model';
-
 import { type MessageStatus } from '@/shared/model/enumerations/message-status.model';
 
 export interface INotification {
@@ -12,7 +10,6 @@ export interface INotification {
   status?: keyof typeof MessageStatus | null;
   createdAt?: Date;
   createdBy?: string;
-  data?: INotificationData[] | null;
 }
 
 export class Notification implements INotification {
@@ -26,7 +23,6 @@ export class Notification implements INotification {
     public status?: keyof typeof MessageStatus | null,
     public createdAt?: Date,
     public createdBy?: string,
-    public data?: INotificationData[] | null,
   ) {}
 }
 

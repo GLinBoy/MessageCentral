@@ -41,10 +41,6 @@ export default defineComponent({
       retrieveNotification(route.params.notificationId);
     }
 
-    const initRelationships = () => {};
-
-    initRelationships();
-
     const { t: t$ } = useI18n();
     const validations = useValidation();
     const validationRules = {
@@ -74,7 +70,6 @@ export default defineComponent({
       createdBy: {
         required: validations.required(t$('entity.validation.required').toString()),
       },
-      data: {},
     };
     const v$ = useVuelidate(validationRules, notification as any);
     v$.value.$validate();

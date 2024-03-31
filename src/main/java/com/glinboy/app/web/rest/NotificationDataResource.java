@@ -52,11 +52,10 @@ public class NotificationDataResource {
         if (notificationData.getId() != null) {
             throw new BadRequestAlertException("A new notificationData cannot already have an ID", ENTITY_NAME, "idexists");
         }
-        NotificationData result = notificationDataRepository.save(notificationData);
-        return ResponseEntity
-            .created(new URI("/api/notification-data/" + result.getId()))
-            .headers(HeaderUtil.createEntityCreationAlert(applicationName, true, ENTITY_NAME, result.getId().toString()))
-            .body(result);
+        notificationData = notificationDataRepository.save(notificationData);
+        return ResponseEntity.created(new URI("/api/notification-data/" + notificationData.getId()))
+            .headers(HeaderUtil.createEntityCreationAlert(applicationName, true, ENTITY_NAME, notificationData.getId().toString()))
+            .body(notificationData);
     }
 
     /**
@@ -86,11 +85,10 @@ public class NotificationDataResource {
             throw new BadRequestAlertException("Entity not found", ENTITY_NAME, "idnotfound");
         }
 
-        NotificationData result = notificationDataRepository.save(notificationData);
-        return ResponseEntity
-            .ok()
+        notificationData = notificationDataRepository.save(notificationData);
+        return ResponseEntity.ok()
             .headers(HeaderUtil.createEntityUpdateAlert(applicationName, true, ENTITY_NAME, notificationData.getId().toString()))
-            .body(result);
+            .body(notificationData);
     }
 
     /**
@@ -175,8 +173,7 @@ public class NotificationDataResource {
     public ResponseEntity<Void> deleteNotificationData(@PathVariable Long id) {
         log.debug("REST request to delete NotificationData : {}", id);
         notificationDataRepository.deleteById(id);
-        return ResponseEntity
-            .noContent()
+        return ResponseEntity.noContent()
             .headers(HeaderUtil.createEntityDeletionAlert(applicationName, true, ENTITY_NAME, id.toString()))
             .build();
     }

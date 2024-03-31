@@ -4,13 +4,12 @@ import com.glinboy.app.domain.Authority;
 import com.glinboy.app.domain.User;
 import com.glinboy.app.service.dto.AdminUserDTO;
 import com.glinboy.app.service.dto.UserDTO;
+import java.util.*;
+import java.util.stream.Collectors;
 import org.mapstruct.BeanMapping;
 import org.mapstruct.Mapping;
 import org.mapstruct.Named;
 import org.springframework.stereotype.Service;
-
-import java.util.*;
-import java.util.stream.Collectors;
 
 /**
  * Mapper for the entity {@link User} and its DTO called {@link UserDTO}.
@@ -64,15 +63,14 @@ public class UserMapper {
         Set<Authority> authorities = new HashSet<>();
 
         if (authoritiesAsString != null) {
-            authorities =
-                authoritiesAsString
-                    .stream()
-                    .map(string -> {
-                        Authority auth = new Authority();
-                        auth.setName(string);
-                        return auth;
-                    })
-                    .collect(Collectors.toSet());
+            authorities = authoritiesAsString
+                .stream()
+                .map(string -> {
+                    Authority auth = new Authority();
+                    auth.setName(string);
+                    return auth;
+                })
+                .collect(Collectors.toSet());
         }
 
         return authorities;

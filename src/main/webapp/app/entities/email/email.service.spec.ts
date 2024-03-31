@@ -134,8 +134,11 @@ describe('Service Tests', () => {
       it('should partial update a Email', async () => {
         const patchObject = Object.assign(
           {
+            receiver: 'BBBBBB',
+            subject: 'BBBBBB',
+            content: 'BBBBBB',
+            status: 'BBBBBB',
             emailType: 'BBBBBB',
-            createdAt: dayjs(currentDate).format(DATE_TIME_FORMAT),
           },
           new Email(),
         );

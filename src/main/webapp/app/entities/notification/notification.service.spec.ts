@@ -135,9 +135,11 @@ describe('Service Tests', () => {
       it('should partial update a Notification', async () => {
         const patchObject = Object.assign(
           {
+            username: 'BBBBBB',
+            token: 'BBBBBB',
+            content: 'BBBBBB',
             image: 'BBBBBB',
-            status: 'BBBBBB',
-            createdAt: dayjs(currentDate).format(DATE_TIME_FORMAT),
+            createdBy: 'BBBBBB',
           },
           new Notification(),
         );
