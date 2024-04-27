@@ -1,7 +1,7 @@
 package com.glinboy.app.service.mapper;
 
-import static com.glinboy.app.domain.EmailAsserts.*;
-import static com.glinboy.app.domain.EmailTestSamples.*;
+import static com.glinboy.app.domain.EmailAsserts.assertEmailAllPropertiesEquals;
+import static com.glinboy.app.domain.EmailTestSamples.getEmailSample1;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

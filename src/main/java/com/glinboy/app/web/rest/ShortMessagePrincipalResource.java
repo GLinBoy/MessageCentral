@@ -71,8 +71,7 @@ public class ShortMessagePrincipalResource extends ShortMessageResource {
             throw new BadRequestAlertException("A new shortMessage cannot already have an ID", ENTITY_NAME, "idexists");
         }
         ShortMessageDTO result = shortMessageService.save(shortMessageDTO);
-        return ResponseEntity
-            .created(new URI("/api/short-messages/" + result.getId()))
+        return ResponseEntity.created(new URI("/api/short-messages/" + result.getId()))
             .headers(HeaderUtil.createEntityCreationAlert(applicationName, true, ENTITY_NAME, result.getId().toString()))
             .body(result);
     }
@@ -120,8 +119,7 @@ public class ShortMessagePrincipalResource extends ShortMessageResource {
         }
 
         ShortMessageDTO result = shortMessageService.update(shortMessageDTO);
-        return ResponseEntity
-            .ok()
+        return ResponseEntity.ok()
             .headers(HeaderUtil.createEntityUpdateAlert(applicationName, true, ENTITY_NAME, shortMessageDTO.getId().toString()))
             .body(result);
     }
@@ -223,8 +221,7 @@ public class ShortMessagePrincipalResource extends ShortMessageResource {
     public ResponseEntity<Void> deleteShortMessage(@PathVariable Long id) {
         log.debug("REST request to delete ShortMessage : {}", id);
         shortMessageService.delete(id);
-        return ResponseEntity
-            .noContent()
+        return ResponseEntity.noContent()
             .headers(HeaderUtil.createEntityDeletionAlert(applicationName, true, ENTITY_NAME, id.toString()))
             .build();
     }

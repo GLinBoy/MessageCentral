@@ -94,8 +94,7 @@ public class NotificationServiceImpl implements NotificationService {
                                 .collect(Collectors.toSet())
                         );
                         return n;
-                    })
-            )
+                    }))
             .collect(Collectors.toList());
         log.info("List of {} Notification: {}", notifications.size(), notifications);
         notifications = this.notificationRepository.saveAll(notifications);

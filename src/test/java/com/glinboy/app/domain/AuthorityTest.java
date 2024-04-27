@@ -1,6 +1,7 @@
 package com.glinboy.app.domain;
 
-import static com.glinboy.app.domain.AuthorityTestSamples.*;
+import static com.glinboy.app.domain.AuthorityTestSamples.getAuthoritySample1;
+import static com.glinboy.app.domain.AuthorityTestSamples.getAuthoritySample2;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.glinboy.app.web.rest.TestUtil;

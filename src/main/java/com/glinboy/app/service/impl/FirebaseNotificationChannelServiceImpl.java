@@ -32,14 +32,12 @@ public class FirebaseNotificationChannelServiceImpl extends AbstractNotification
         for (var i = 0; i < notificationDTOs.length; i++) {
             try {
                 NotificationDTO notificationDTO = notificationDTOs[i];
-                Notification notification = Notification
-                    .builder()
+                Notification notification = Notification.builder()
                     .setTitle(notificationDTO.getSubject())
                     .setBody(notificationDTO.getContent())
                     .build();
 
-                Builder message = com.google.firebase.messaging.Message
-                    .builder()
+                Builder message = com.google.firebase.messaging.Message.builder()
                     .setToken(notificationDTO.getToken())
                     .setNotification(notification);
                 if (notificationDTO.getData() != null && !notificationDTO.getData().isEmpty()) {

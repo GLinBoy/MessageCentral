@@ -63,8 +63,7 @@ public class EmailPrincipalServiceImpl extends EmailServiceImpl {
         var emails = emailsDTO
             .stream()
             .flatMap(es ->
-                Set
-                    .copyOf(es.getReceivers())
+                Set.copyOf(es.getReceivers())
                     .stream()
                     .filter(r -> r.matches(Patterns.EMAIL_PATTERN))
                     .map(r -> {
@@ -75,8 +74,7 @@ public class EmailPrincipalServiceImpl extends EmailServiceImpl {
                         e.setStatus(MessageStatus.IN_QUEUE);
                         e.setEmailType(es.getEmailType());
                         return e;
-                    })
-            )
+                    }))
             .toList();
         log.info("List of {} Emails: {}", emails.size(), emails);
         emails = this.emailRepository.saveAll(emails);

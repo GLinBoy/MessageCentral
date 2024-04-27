@@ -1,7 +1,7 @@
 package com.glinboy.app.service.mapper;
 
-import static com.glinboy.app.domain.ShortMessageAsserts.*;
-import static com.glinboy.app.domain.ShortMessageTestSamples.*;
+import static com.glinboy.app.domain.ShortMessageAsserts.assertShortMessageAllPropertiesEquals;
+import static com.glinboy.app.domain.ShortMessageTestSamples.getShortMessageSample1;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

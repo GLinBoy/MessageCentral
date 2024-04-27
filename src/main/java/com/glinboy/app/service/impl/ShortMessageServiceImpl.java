@@ -67,8 +67,7 @@ public class ShortMessageServiceImpl implements ShortMessageService {
         List<ShortMessage> messages = shortMessagesDTO
             .stream()
             .flatMap(ss ->
-                Set
-                    .copyOf(ss.getPhoneNumbers())
+                Set.copyOf(ss.getPhoneNumbers())
                     .stream()
                     .filter(p -> p.matches(Patterns.SMS_PATTERN))
                     .map(p -> {
@@ -77,8 +76,7 @@ public class ShortMessageServiceImpl implements ShortMessageService {
                         s.setContent(ss.getContent());
                         s.setStatus(MessageStatus.IN_QUEUE);
                         return s;
-                    })
-            )
+                    }))
             .collect(Collectors.toList());
         log.info("List of {} SMSs: {}", messages.size(), messages);
         messages = this.shortMessageRepository.saveAll(messages);

@@ -3,7 +3,6 @@ package com.glinboy.app.config;
 import static java.net.URLDecoder.decode;
 
 import jakarta.servlet.ServletContext;
-import jakarta.servlet.ServletException;
 import java.io.File;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Paths;

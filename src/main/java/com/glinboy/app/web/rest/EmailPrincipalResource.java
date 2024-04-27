@@ -67,8 +67,7 @@ public class EmailPrincipalResource extends EmailResource {
             throw new BadRequestAlertException("A new email cannot already have an ID", ENTITY_NAME, "idexists");
         }
         EmailDTO result = emailService.save(emailDTO);
-        return ResponseEntity
-            .created(new URI("/api/emails/" + result.getId()))
+        return ResponseEntity.created(new URI("/api/emails/" + result.getId()))
             .headers(HeaderUtil.createEntityCreationAlert(applicationName, true, ENTITY_NAME, result.getId().toString()))
             .body(result);
     }
@@ -115,8 +114,7 @@ public class EmailPrincipalResource extends EmailResource {
         }
 
         EmailDTO result = emailService.update(emailDTO);
-        return ResponseEntity
-            .ok()
+        return ResponseEntity.ok()
             .headers(HeaderUtil.createEntityUpdateAlert(applicationName, true, ENTITY_NAME, emailDTO.getId().toString()))
             .body(result);
     }
@@ -218,8 +216,7 @@ public class EmailPrincipalResource extends EmailResource {
     public ResponseEntity<Void> deleteEmail(@PathVariable Long id) {
         log.debug("REST request to delete Email : {}", id);
         emailService.delete(id);
-        return ResponseEntity
-            .noContent()
+        return ResponseEntity.noContent()
             .headers(HeaderUtil.createEntityDeletionAlert(applicationName, true, ENTITY_NAME, id.toString()))
             .build();
     }

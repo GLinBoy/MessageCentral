@@ -67,8 +67,7 @@ public class TokenPrincipalResource extends TokenResource {
             throw new BadRequestAlertException("A new token cannot already have an ID", ENTITY_NAME, "idexists");
         }
         TokenDTO result = tokenService.save(tokenDTO);
-        return ResponseEntity
-            .created(new URI("/api/tokens/" + result.getId()))
+        return ResponseEntity.created(new URI("/api/tokens/" + result.getId()))
             .headers(HeaderUtil.createEntityCreationAlert(applicationName, true, ENTITY_NAME, result.getId().toString()))
             .body(result);
     }
@@ -103,8 +102,7 @@ public class TokenPrincipalResource extends TokenResource {
         }
 
         TokenDTO result = tokenService.save(tokenDTO);
-        return ResponseEntity
-            .ok()
+        return ResponseEntity.ok()
             .headers(HeaderUtil.createEntityUpdateAlert(applicationName, true, ENTITY_NAME, tokenDTO.getId().toString()))
             .body(result);
     }
@@ -212,8 +210,7 @@ public class TokenPrincipalResource extends TokenResource {
     public ResponseEntity<Void> deleteToken(@PathVariable Long id) {
         log.debug("REST request to delete Token : {}", id);
         tokenService.delete(id);
-        return ResponseEntity
-            .noContent()
+        return ResponseEntity.noContent()
             .headers(HeaderUtil.createEntityDeletionAlert(applicationName, true, ENTITY_NAME, id.toString()))
             .build();
     }
