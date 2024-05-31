@@ -18,6 +18,7 @@ import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.Random;
 import java.util.concurrent.atomic.AtomicLong;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -86,6 +87,8 @@ class TokenResourceIT {
 
     private Token token;
 
+    private Token insertedToken;
+
     /**
      * Create an entity for this test.
      *
@@ -131,6 +134,14 @@ class TokenResourceIT {
         token = createEntity(em);
     }
 
+    @AfterEach
+    public void cleanup() {
+        if (insertedToken != null) {
+            tokenRepository.delete(insertedToken);
+            insertedToken = null;
+        }
+    }
+
     @Test
     @Transactional
     void createToken() throws Exception {
@@ -151,6 +162,8 @@ class TokenResourceIT {
         assertIncrementedRepositoryCount(databaseSizeBeforeCreate);
         var returnedToken = tokenMapper.toEntity(returnedTokenDTO);
         assertTokenUpdatableFieldsEquals(returnedToken, getPersistedToken(returnedToken));
+
+        insertedToken = returnedToken;
     }
 
     @Test
@@ -328,7 +341,7 @@ class TokenResourceIT {
     @Transactional
     void getAllTokens() throws Exception {
         // Initialize the database
-        tokenRepository.saveAndFlush(token);
+        insertedToken = tokenRepository.saveAndFlush(token);
 
         // Get all the tokenList
         restTokenMockMvc
@@ -351,7 +364,7 @@ class TokenResourceIT {
     @Transactional
     void getToken() throws Exception {
         // Initialize the database
-        tokenRepository.saveAndFlush(token);
+        insertedToken = tokenRepository.saveAndFlush(token);
 
         // Get the token
         restTokenMockMvc
@@ -374,7 +387,7 @@ class TokenResourceIT {
     @Transactional
     void getTokensByIdFiltering() throws Exception {
         // Initialize the database
-        tokenRepository.saveAndFlush(token);
+        insertedToken = tokenRepository.saveAndFlush(token);
 
         Long id = token.getId();
 
@@ -389,7 +402,7 @@ class TokenResourceIT {
     @Transactional
     void getAllTokensByNameIsEqualToSomething() throws Exception {
         // Initialize the database
-        tokenRepository.saveAndFlush(token);
+        insertedToken = tokenRepository.saveAndFlush(token);
 
         // Get all the tokenList where name equals to
         defaultTokenFiltering("name.equals=" + DEFAULT_NAME, "name.equals=" + UPDATED_NAME);
@@ -399,7 +412,7 @@ class TokenResourceIT {
     @Transactional
     void getAllTokensByNameIsInShouldWork() throws Exception {
         // Initialize the database
-        tokenRepository.saveAndFlush(token);
+        insertedToken = tokenRepository.saveAndFlush(token);
 
         // Get all the tokenList where name in
         defaultTokenFiltering("name.in=" + DEFAULT_NAME + "," + UPDATED_NAME, "name.in=" + UPDATED_NAME);
@@ -409,7 +422,7 @@ class TokenResourceIT {
     @Transactional
     void getAllTokensByNameIsNullOrNotNull() throws Exception {
         // Initialize the database
-        tokenRepository.saveAndFlush(token);
+        insertedToken = tokenRepository.saveAndFlush(token);
 
         // Get all the tokenList where name is not null
         defaultTokenFiltering("name.specified=true", "name.specified=false");
@@ -419,7 +432,7 @@ class TokenResourceIT {
     @Transactional
     void getAllTokensByNameContainsSomething() throws Exception {
         // Initialize the database
-        tokenRepository.saveAndFlush(token);
+        insertedToken = tokenRepository.saveAndFlush(token);
 
         // Get all the tokenList where name contains
         defaultTokenFiltering("name.contains=" + DEFAULT_NAME, "name.contains=" + UPDATED_NAME);
@@ -429,7 +442,7 @@ class TokenResourceIT {
     @Transactional
     void getAllTokensByNameNotContainsSomething() throws Exception {
         // Initialize the database
-        tokenRepository.saveAndFlush(token);
+        insertedToken = tokenRepository.saveAndFlush(token);
 
         // Get all the tokenList where name does not contain
         defaultTokenFiltering("name.doesNotContain=" + UPDATED_NAME, "name.doesNotContain=" + DEFAULT_NAME);
@@ -439,7 +452,7 @@ class TokenResourceIT {
     @Transactional
     void getAllTokensByTokenIsEqualToSomething() throws Exception {
         // Initialize the database
-        tokenRepository.saveAndFlush(token);
+        insertedToken = tokenRepository.saveAndFlush(token);
 
         // Get all the tokenList where token equals to
         defaultTokenFiltering("token.equals=" + DEFAULT_TOKEN, "token.equals=" + UPDATED_TOKEN);
@@ -449,7 +462,7 @@ class TokenResourceIT {
     @Transactional
     void getAllTokensByTokenIsInShouldWork() throws Exception {
         // Initialize the database
-        tokenRepository.saveAndFlush(token);
+        insertedToken = tokenRepository.saveAndFlush(token);
 
         // Get all the tokenList where token in
         defaultTokenFiltering("token.in=" + DEFAULT_TOKEN + "," + UPDATED_TOKEN, "token.in=" + UPDATED_TOKEN);
@@ -459,7 +472,7 @@ class TokenResourceIT {
     @Transactional
     void getAllTokensByTokenIsNullOrNotNull() throws Exception {
         // Initialize the database
-        tokenRepository.saveAndFlush(token);
+        insertedToken = tokenRepository.saveAndFlush(token);
 
         // Get all the tokenList where token is not null
         defaultTokenFiltering("token.specified=true", "token.specified=false");
@@ -469,7 +482,7 @@ class TokenResourceIT {
     @Transactional
     void getAllTokensByTokenContainsSomething() throws Exception {
         // Initialize the database
-        tokenRepository.saveAndFlush(token);
+        insertedToken = tokenRepository.saveAndFlush(token);
 
         // Get all the tokenList where token contains
         defaultTokenFiltering("token.contains=" + DEFAULT_TOKEN, "token.contains=" + UPDATED_TOKEN);
@@ -479,7 +492,7 @@ class TokenResourceIT {
     @Transactional
     void getAllTokensByTokenNotContainsSomething() throws Exception {
         // Initialize the database
-        tokenRepository.saveAndFlush(token);
+        insertedToken = tokenRepository.saveAndFlush(token);
 
         // Get all the tokenList where token does not contain
         defaultTokenFiltering("token.doesNotContain=" + UPDATED_TOKEN, "token.doesNotContain=" + DEFAULT_TOKEN);
@@ -489,7 +502,7 @@ class TokenResourceIT {
     @Transactional
     void getAllTokensByDisableIsEqualToSomething() throws Exception {
         // Initialize the database
-        tokenRepository.saveAndFlush(token);
+        insertedToken = tokenRepository.saveAndFlush(token);
 
         // Get all the tokenList where disable equals to
         defaultTokenFiltering("disable.equals=" + DEFAULT_DISABLE, "disable.equals=" + UPDATED_DISABLE);
@@ -499,7 +512,7 @@ class TokenResourceIT {
     @Transactional
     void getAllTokensByDisableIsInShouldWork() throws Exception {
         // Initialize the database
-        tokenRepository.saveAndFlush(token);
+        insertedToken = tokenRepository.saveAndFlush(token);
 
         // Get all the tokenList where disable in
         defaultTokenFiltering("disable.in=" + DEFAULT_DISABLE + "," + UPDATED_DISABLE, "disable.in=" + UPDATED_DISABLE);
@@ -509,7 +522,7 @@ class TokenResourceIT {
     @Transactional
     void getAllTokensByDisableIsNullOrNotNull() throws Exception {
         // Initialize the database
-        tokenRepository.saveAndFlush(token);
+        insertedToken = tokenRepository.saveAndFlush(token);
 
         // Get all the tokenList where disable is not null
         defaultTokenFiltering("disable.specified=true", "disable.specified=false");
@@ -519,7 +532,7 @@ class TokenResourceIT {
     @Transactional
     void getAllTokensByDeprecateAtIsEqualToSomething() throws Exception {
         // Initialize the database
-        tokenRepository.saveAndFlush(token);
+        insertedToken = tokenRepository.saveAndFlush(token);
 
         // Get all the tokenList where deprecateAt equals to
         defaultTokenFiltering("deprecateAt.equals=" + DEFAULT_DEPRECATE_AT, "deprecateAt.equals=" + UPDATED_DEPRECATE_AT);
@@ -529,7 +542,7 @@ class TokenResourceIT {
     @Transactional
     void getAllTokensByDeprecateAtIsInShouldWork() throws Exception {
         // Initialize the database
-        tokenRepository.saveAndFlush(token);
+        insertedToken = tokenRepository.saveAndFlush(token);
 
         // Get all the tokenList where deprecateAt in
         defaultTokenFiltering(
@@ -542,7 +555,7 @@ class TokenResourceIT {
     @Transactional
     void getAllTokensByDeprecateAtIsNullOrNotNull() throws Exception {
         // Initialize the database
-        tokenRepository.saveAndFlush(token);
+        insertedToken = tokenRepository.saveAndFlush(token);
 
         // Get all the tokenList where deprecateAt is not null
         defaultTokenFiltering("deprecateAt.specified=true", "deprecateAt.specified=false");
@@ -552,7 +565,7 @@ class TokenResourceIT {
     @Transactional
     void getAllTokensByRolesIsEqualToSomething() throws Exception {
         // Initialize the database
-        tokenRepository.saveAndFlush(token);
+        insertedToken = tokenRepository.saveAndFlush(token);
 
         // Get all the tokenList where roles equals to
         defaultTokenFiltering("roles.equals=" + DEFAULT_ROLES, "roles.equals=" + UPDATED_ROLES);
@@ -562,7 +575,7 @@ class TokenResourceIT {
     @Transactional
     void getAllTokensByRolesIsInShouldWork() throws Exception {
         // Initialize the database
-        tokenRepository.saveAndFlush(token);
+        insertedToken = tokenRepository.saveAndFlush(token);
 
         // Get all the tokenList where roles in
         defaultTokenFiltering("roles.in=" + DEFAULT_ROLES + "," + UPDATED_ROLES, "roles.in=" + UPDATED_ROLES);
@@ -572,7 +585,7 @@ class TokenResourceIT {
     @Transactional
     void getAllTokensByRolesIsNullOrNotNull() throws Exception {
         // Initialize the database
-        tokenRepository.saveAndFlush(token);
+        insertedToken = tokenRepository.saveAndFlush(token);
 
         // Get all the tokenList where roles is not null
         defaultTokenFiltering("roles.specified=true", "roles.specified=false");
@@ -582,7 +595,7 @@ class TokenResourceIT {
     @Transactional
     void getAllTokensByRolesIsGreaterThanOrEqualToSomething() throws Exception {
         // Initialize the database
-        tokenRepository.saveAndFlush(token);
+        insertedToken = tokenRepository.saveAndFlush(token);
 
         // Get all the tokenList where roles is greater than or equal to
         defaultTokenFiltering("roles.greaterThanOrEqual=" + DEFAULT_ROLES, "roles.greaterThanOrEqual=" + UPDATED_ROLES);
@@ -592,7 +605,7 @@ class TokenResourceIT {
     @Transactional
     void getAllTokensByRolesIsLessThanOrEqualToSomething() throws Exception {
         // Initialize the database
-        tokenRepository.saveAndFlush(token);
+        insertedToken = tokenRepository.saveAndFlush(token);
 
         // Get all the tokenList where roles is less than or equal to
         defaultTokenFiltering("roles.lessThanOrEqual=" + DEFAULT_ROLES, "roles.lessThanOrEqual=" + SMALLER_ROLES);
@@ -602,7 +615,7 @@ class TokenResourceIT {
     @Transactional
     void getAllTokensByRolesIsLessThanSomething() throws Exception {
         // Initialize the database
-        tokenRepository.saveAndFlush(token);
+        insertedToken = tokenRepository.saveAndFlush(token);
 
         // Get all the tokenList where roles is less than
         defaultTokenFiltering("roles.lessThan=" + UPDATED_ROLES, "roles.lessThan=" + DEFAULT_ROLES);
@@ -612,7 +625,7 @@ class TokenResourceIT {
     @Transactional
     void getAllTokensByRolesIsGreaterThanSomething() throws Exception {
         // Initialize the database
-        tokenRepository.saveAndFlush(token);
+        insertedToken = tokenRepository.saveAndFlush(token);
 
         // Get all the tokenList where roles is greater than
         defaultTokenFiltering("roles.greaterThan=" + SMALLER_ROLES, "roles.greaterThan=" + DEFAULT_ROLES);
@@ -622,7 +635,7 @@ class TokenResourceIT {
     @Transactional
     void getAllTokensByCreatedAtIsEqualToSomething() throws Exception {
         // Initialize the database
-        tokenRepository.saveAndFlush(token);
+        insertedToken = tokenRepository.saveAndFlush(token);
 
         // Get all the tokenList where createdAt equals to
         defaultTokenFiltering("createdAt.equals=" + DEFAULT_CREATED_AT, "createdAt.equals=" + UPDATED_CREATED_AT);
@@ -632,7 +645,7 @@ class TokenResourceIT {
     @Transactional
     void getAllTokensByCreatedAtIsInShouldWork() throws Exception {
         // Initialize the database
-        tokenRepository.saveAndFlush(token);
+        insertedToken = tokenRepository.saveAndFlush(token);
 
         // Get all the tokenList where createdAt in
         defaultTokenFiltering("createdAt.in=" + DEFAULT_CREATED_AT + "," + UPDATED_CREATED_AT, "createdAt.in=" + UPDATED_CREATED_AT);
@@ -642,7 +655,7 @@ class TokenResourceIT {
     @Transactional
     void getAllTokensByCreatedAtIsNullOrNotNull() throws Exception {
         // Initialize the database
-        tokenRepository.saveAndFlush(token);
+        insertedToken = tokenRepository.saveAndFlush(token);
 
         // Get all the tokenList where createdAt is not null
         defaultTokenFiltering("createdAt.specified=true", "createdAt.specified=false");
@@ -652,7 +665,7 @@ class TokenResourceIT {
     @Transactional
     void getAllTokensByCreatedByIsEqualToSomething() throws Exception {
         // Initialize the database
-        tokenRepository.saveAndFlush(token);
+        insertedToken = tokenRepository.saveAndFlush(token);
 
         // Get all the tokenList where createdBy equals to
         defaultTokenFiltering("createdBy.equals=" + DEFAULT_CREATED_BY, "createdBy.equals=" + UPDATED_CREATED_BY);
@@ -662,7 +675,7 @@ class TokenResourceIT {
     @Transactional
     void getAllTokensByCreatedByIsInShouldWork() throws Exception {
         // Initialize the database
-        tokenRepository.saveAndFlush(token);
+        insertedToken = tokenRepository.saveAndFlush(token);
 
         // Get all the tokenList where createdBy in
         defaultTokenFiltering("createdBy.in=" + DEFAULT_CREATED_BY + "," + UPDATED_CREATED_BY, "createdBy.in=" + UPDATED_CREATED_BY);
@@ -672,7 +685,7 @@ class TokenResourceIT {
     @Transactional
     void getAllTokensByCreatedByIsNullOrNotNull() throws Exception {
         // Initialize the database
-        tokenRepository.saveAndFlush(token);
+        insertedToken = tokenRepository.saveAndFlush(token);
 
         // Get all the tokenList where createdBy is not null
         defaultTokenFiltering("createdBy.specified=true", "createdBy.specified=false");
@@ -682,7 +695,7 @@ class TokenResourceIT {
     @Transactional
     void getAllTokensByCreatedByContainsSomething() throws Exception {
         // Initialize the database
-        tokenRepository.saveAndFlush(token);
+        insertedToken = tokenRepository.saveAndFlush(token);
 
         // Get all the tokenList where createdBy contains
         defaultTokenFiltering("createdBy.contains=" + DEFAULT_CREATED_BY, "createdBy.contains=" + UPDATED_CREATED_BY);
@@ -692,7 +705,7 @@ class TokenResourceIT {
     @Transactional
     void getAllTokensByCreatedByNotContainsSomething() throws Exception {
         // Initialize the database
-        tokenRepository.saveAndFlush(token);
+        insertedToken = tokenRepository.saveAndFlush(token);
 
         // Get all the tokenList where createdBy does not contain
         defaultTokenFiltering("createdBy.doesNotContain=" + UPDATED_CREATED_BY, "createdBy.doesNotContain=" + DEFAULT_CREATED_BY);
@@ -702,7 +715,7 @@ class TokenResourceIT {
     @Transactional
     void getAllTokensByUpdatedAtIsEqualToSomething() throws Exception {
         // Initialize the database
-        tokenRepository.saveAndFlush(token);
+        insertedToken = tokenRepository.saveAndFlush(token);
 
         // Get all the tokenList where updatedAt equals to
         defaultTokenFiltering("updatedAt.equals=" + DEFAULT_UPDATED_AT, "updatedAt.equals=" + UPDATED_UPDATED_AT);
@@ -712,7 +725,7 @@ class TokenResourceIT {
     @Transactional
     void getAllTokensByUpdatedAtIsInShouldWork() throws Exception {
         // Initialize the database
-        tokenRepository.saveAndFlush(token);
+        insertedToken = tokenRepository.saveAndFlush(token);
 
         // Get all the tokenList where updatedAt in
         defaultTokenFiltering("updatedAt.in=" + DEFAULT_UPDATED_AT + "," + UPDATED_UPDATED_AT, "updatedAt.in=" + UPDATED_UPDATED_AT);
@@ -722,7 +735,7 @@ class TokenResourceIT {
     @Transactional
     void getAllTokensByUpdatedAtIsNullOrNotNull() throws Exception {
         // Initialize the database
-        tokenRepository.saveAndFlush(token);
+        insertedToken = tokenRepository.saveAndFlush(token);
 
         // Get all the tokenList where updatedAt is not null
         defaultTokenFiltering("updatedAt.specified=true", "updatedAt.specified=false");
@@ -732,7 +745,7 @@ class TokenResourceIT {
     @Transactional
     void getAllTokensByUpdatedByIsEqualToSomething() throws Exception {
         // Initialize the database
-        tokenRepository.saveAndFlush(token);
+        insertedToken = tokenRepository.saveAndFlush(token);
 
         // Get all the tokenList where updatedBy equals to
         defaultTokenFiltering("updatedBy.equals=" + DEFAULT_UPDATED_BY, "updatedBy.equals=" + UPDATED_UPDATED_BY);
@@ -742,7 +755,7 @@ class TokenResourceIT {
     @Transactional
     void getAllTokensByUpdatedByIsInShouldWork() throws Exception {
         // Initialize the database
-        tokenRepository.saveAndFlush(token);
+        insertedToken = tokenRepository.saveAndFlush(token);
 
         // Get all the tokenList where updatedBy in
         defaultTokenFiltering("updatedBy.in=" + DEFAULT_UPDATED_BY + "," + UPDATED_UPDATED_BY, "updatedBy.in=" + UPDATED_UPDATED_BY);
@@ -752,7 +765,7 @@ class TokenResourceIT {
     @Transactional
     void getAllTokensByUpdatedByIsNullOrNotNull() throws Exception {
         // Initialize the database
-        tokenRepository.saveAndFlush(token);
+        insertedToken = tokenRepository.saveAndFlush(token);
 
         // Get all the tokenList where updatedBy is not null
         defaultTokenFiltering("updatedBy.specified=true", "updatedBy.specified=false");
@@ -762,7 +775,7 @@ class TokenResourceIT {
     @Transactional
     void getAllTokensByUpdatedByContainsSomething() throws Exception {
         // Initialize the database
-        tokenRepository.saveAndFlush(token);
+        insertedToken = tokenRepository.saveAndFlush(token);
 
         // Get all the tokenList where updatedBy contains
         defaultTokenFiltering("updatedBy.contains=" + DEFAULT_UPDATED_BY, "updatedBy.contains=" + UPDATED_UPDATED_BY);
@@ -772,7 +785,7 @@ class TokenResourceIT {
     @Transactional
     void getAllTokensByUpdatedByNotContainsSomething() throws Exception {
         // Initialize the database
-        tokenRepository.saveAndFlush(token);
+        insertedToken = tokenRepository.saveAndFlush(token);
 
         // Get all the tokenList where updatedBy does not contain
         defaultTokenFiltering("updatedBy.doesNotContain=" + UPDATED_UPDATED_BY, "updatedBy.doesNotContain=" + DEFAULT_UPDATED_BY);
@@ -840,7 +853,7 @@ class TokenResourceIT {
     @Transactional
     void putExistingToken() throws Exception {
         // Initialize the database
-        tokenRepository.saveAndFlush(token);
+        insertedToken = tokenRepository.saveAndFlush(token);
 
         long databaseSizeBeforeUpdate = getRepositoryCount();
 
@@ -935,7 +948,7 @@ class TokenResourceIT {
     @Transactional
     void partialUpdateTokenWithPatch() throws Exception {
         // Initialize the database
-        tokenRepository.saveAndFlush(token);
+        insertedToken = tokenRepository.saveAndFlush(token);
 
         long databaseSizeBeforeUpdate = getRepositoryCount();
 
@@ -943,7 +956,14 @@ class TokenResourceIT {
         Token partialUpdatedToken = new Token();
         partialUpdatedToken.setId(token.getId());
 
-        partialUpdatedToken.token(UPDATED_TOKEN).updatedAt(UPDATED_UPDATED_AT).updatedBy(UPDATED_UPDATED_BY);
+        partialUpdatedToken
+            .name(UPDATED_NAME)
+            .token(UPDATED_TOKEN)
+            .disable(UPDATED_DISABLE)
+            .deprecateAt(UPDATED_DEPRECATE_AT)
+            .roles(UPDATED_ROLES)
+            .createdAt(UPDATED_CREATED_AT)
+            .createdBy(UPDATED_CREATED_BY);
 
         restTokenMockMvc
             .perform(
@@ -963,7 +983,7 @@ class TokenResourceIT {
     @Transactional
     void fullUpdateTokenWithPatch() throws Exception {
         // Initialize the database
-        tokenRepository.saveAndFlush(token);
+        insertedToken = tokenRepository.saveAndFlush(token);
 
         long databaseSizeBeforeUpdate = getRepositoryCount();
 
@@ -1062,7 +1082,7 @@ class TokenResourceIT {
     @Transactional
     void deleteToken() throws Exception {
         // Initialize the database
-        tokenRepository.saveAndFlush(token);
+        insertedToken = tokenRepository.saveAndFlush(token);
 
         long databaseSizeBeforeDelete = getRepositoryCount();
 

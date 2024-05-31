@@ -19,6 +19,7 @@ import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.Random;
 import java.util.concurrent.atomic.AtomicLong;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,8 +37,8 @@ import org.springframework.transaction.annotation.Transactional;
 @WithMockUser
 class ShortMessageResourceIT {
 
-    private static final String DEFAULT_PHONE_NUMBER = "+77●096●43●0●00";
-    private static final String UPDATED_PHONE_NUMBER = "+4●46●8●176●91●089●9●5";
+    private static final String DEFAULT_PHONE_NUMBER = "+6112770●1";
+    private static final String UPDATED_PHONE_NUMBER = "+6●44●3283";
 
     private static final String DEFAULT_CONTENT = "AAAAAAAAAA";
     private static final String UPDATED_CONTENT = "BBBBBBBBBB";
@@ -73,6 +74,8 @@ class ShortMessageResourceIT {
     private MockMvc restShortMessageMockMvc;
 
     private ShortMessage shortMessage;
+
+    private ShortMessage insertedShortMessage;
 
     /**
      * Create an entity for this test.
@@ -111,6 +114,14 @@ class ShortMessageResourceIT {
         shortMessage = createEntity(em);
     }
 
+    @AfterEach
+    public void cleanup() {
+        if (insertedShortMessage != null) {
+            shortMessageRepository.delete(insertedShortMessage);
+            insertedShortMessage = null;
+        }
+    }
+
     @Test
     @Transactional
     void createShortMessage() throws Exception {
@@ -131,6 +142,8 @@ class ShortMessageResourceIT {
         assertIncrementedRepositoryCount(databaseSizeBeforeCreate);
         var returnedShortMessage = shortMessageMapper.toEntity(returnedShortMessageDTO);
         assertShortMessageUpdatableFieldsEquals(returnedShortMessage, getPersistedShortMessage(returnedShortMessage));
+
+        insertedShortMessage = returnedShortMessage;
     }
 
     @Test
@@ -223,7 +236,7 @@ class ShortMessageResourceIT {
     @Transactional
     void getAllShortMessages() throws Exception {
         // Initialize the database
-        shortMessageRepository.saveAndFlush(shortMessage);
+        insertedShortMessage = shortMessageRepository.saveAndFlush(shortMessage);
 
         // Get all the shortMessageList
         restShortMessageMockMvc
@@ -242,7 +255,7 @@ class ShortMessageResourceIT {
     @Transactional
     void getShortMessage() throws Exception {
         // Initialize the database
-        shortMessageRepository.saveAndFlush(shortMessage);
+        insertedShortMessage = shortMessageRepository.saveAndFlush(shortMessage);
 
         // Get the shortMessage
         restShortMessageMockMvc
@@ -261,7 +274,7 @@ class ShortMessageResourceIT {
     @Transactional
     void getShortMessagesByIdFiltering() throws Exception {
         // Initialize the database
-        shortMessageRepository.saveAndFlush(shortMessage);
+        insertedShortMessage = shortMessageRepository.saveAndFlush(shortMessage);
 
         Long id = shortMessage.getId();
 
@@ -276,7 +289,7 @@ class ShortMessageResourceIT {
     @Transactional
     void getAllShortMessagesByPhoneNumberIsEqualToSomething() throws Exception {
         // Initialize the database
-        shortMessageRepository.saveAndFlush(shortMessage);
+        insertedShortMessage = shortMessageRepository.saveAndFlush(shortMessage);
 
         // Get all the shortMessageList where phoneNumber equals to
         defaultShortMessageFiltering("phoneNumber.equals=" + DEFAULT_PHONE_NUMBER, "phoneNumber.equals=" + UPDATED_PHONE_NUMBER);
@@ -286,7 +299,7 @@ class ShortMessageResourceIT {
     @Transactional
     void getAllShortMessagesByPhoneNumberIsInShouldWork() throws Exception {
         // Initialize the database
-        shortMessageRepository.saveAndFlush(shortMessage);
+        insertedShortMessage = shortMessageRepository.saveAndFlush(shortMessage);
 
         // Get all the shortMessageList where phoneNumber in
         defaultShortMessageFiltering(
@@ -299,7 +312,7 @@ class ShortMessageResourceIT {
     @Transactional
     void getAllShortMessagesByPhoneNumberIsNullOrNotNull() throws Exception {
         // Initialize the database
-        shortMessageRepository.saveAndFlush(shortMessage);
+        insertedShortMessage = shortMessageRepository.saveAndFlush(shortMessage);
 
         // Get all the shortMessageList where phoneNumber is not null
         defaultShortMessageFiltering("phoneNumber.specified=true", "phoneNumber.specified=false");
@@ -309,7 +322,7 @@ class ShortMessageResourceIT {
     @Transactional
     void getAllShortMessagesByPhoneNumberContainsSomething() throws Exception {
         // Initialize the database
-        shortMessageRepository.saveAndFlush(shortMessage);
+        insertedShortMessage = shortMessageRepository.saveAndFlush(shortMessage);
 
         // Get all the shortMessageList where phoneNumber contains
         defaultShortMessageFiltering("phoneNumber.contains=" + DEFAULT_PHONE_NUMBER, "phoneNumber.contains=" + UPDATED_PHONE_NUMBER);
@@ -319,7 +332,7 @@ class ShortMessageResourceIT {
     @Transactional
     void getAllShortMessagesByPhoneNumberNotContainsSomething() throws Exception {
         // Initialize the database
-        shortMessageRepository.saveAndFlush(shortMessage);
+        insertedShortMessage = shortMessageRepository.saveAndFlush(shortMessage);
 
         // Get all the shortMessageList where phoneNumber does not contain
         defaultShortMessageFiltering(
@@ -332,7 +345,7 @@ class ShortMessageResourceIT {
     @Transactional
     void getAllShortMessagesByContentIsEqualToSomething() throws Exception {
         // Initialize the database
-        shortMessageRepository.saveAndFlush(shortMessage);
+        insertedShortMessage = shortMessageRepository.saveAndFlush(shortMessage);
 
         // Get all the shortMessageList where content equals to
         defaultShortMessageFiltering("content.equals=" + DEFAULT_CONTENT, "content.equals=" + UPDATED_CONTENT);
@@ -342,7 +355,7 @@ class ShortMessageResourceIT {
     @Transactional
     void getAllShortMessagesByContentIsInShouldWork() throws Exception {
         // Initialize the database
-        shortMessageRepository.saveAndFlush(shortMessage);
+        insertedShortMessage = shortMessageRepository.saveAndFlush(shortMessage);
 
         // Get all the shortMessageList where content in
         defaultShortMessageFiltering("content.in=" + DEFAULT_CONTENT + "," + UPDATED_CONTENT, "content.in=" + UPDATED_CONTENT);
@@ -352,7 +365,7 @@ class ShortMessageResourceIT {
     @Transactional
     void getAllShortMessagesByContentIsNullOrNotNull() throws Exception {
         // Initialize the database
-        shortMessageRepository.saveAndFlush(shortMessage);
+        insertedShortMessage = shortMessageRepository.saveAndFlush(shortMessage);
 
         // Get all the shortMessageList where content is not null
         defaultShortMessageFiltering("content.specified=true", "content.specified=false");
@@ -362,7 +375,7 @@ class ShortMessageResourceIT {
     @Transactional
     void getAllShortMessagesByContentContainsSomething() throws Exception {
         // Initialize the database
-        shortMessageRepository.saveAndFlush(shortMessage);
+        insertedShortMessage = shortMessageRepository.saveAndFlush(shortMessage);
 
         // Get all the shortMessageList where content contains
         defaultShortMessageFiltering("content.contains=" + DEFAULT_CONTENT, "content.contains=" + UPDATED_CONTENT);
@@ -372,7 +385,7 @@ class ShortMessageResourceIT {
     @Transactional
     void getAllShortMessagesByContentNotContainsSomething() throws Exception {
         // Initialize the database
-        shortMessageRepository.saveAndFlush(shortMessage);
+        insertedShortMessage = shortMessageRepository.saveAndFlush(shortMessage);
 
         // Get all the shortMessageList where content does not contain
         defaultShortMessageFiltering("content.doesNotContain=" + UPDATED_CONTENT, "content.doesNotContain=" + DEFAULT_CONTENT);
@@ -382,7 +395,7 @@ class ShortMessageResourceIT {
     @Transactional
     void getAllShortMessagesByStatusIsEqualToSomething() throws Exception {
         // Initialize the database
-        shortMessageRepository.saveAndFlush(shortMessage);
+        insertedShortMessage = shortMessageRepository.saveAndFlush(shortMessage);
 
         // Get all the shortMessageList where status equals to
         defaultShortMessageFiltering("status.equals=" + DEFAULT_STATUS, "status.equals=" + UPDATED_STATUS);
@@ -392,7 +405,7 @@ class ShortMessageResourceIT {
     @Transactional
     void getAllShortMessagesByStatusIsInShouldWork() throws Exception {
         // Initialize the database
-        shortMessageRepository.saveAndFlush(shortMessage);
+        insertedShortMessage = shortMessageRepository.saveAndFlush(shortMessage);
 
         // Get all the shortMessageList where status in
         defaultShortMessageFiltering("status.in=" + DEFAULT_STATUS + "," + UPDATED_STATUS, "status.in=" + UPDATED_STATUS);
@@ -402,7 +415,7 @@ class ShortMessageResourceIT {
     @Transactional
     void getAllShortMessagesByStatusIsNullOrNotNull() throws Exception {
         // Initialize the database
-        shortMessageRepository.saveAndFlush(shortMessage);
+        insertedShortMessage = shortMessageRepository.saveAndFlush(shortMessage);
 
         // Get all the shortMessageList where status is not null
         defaultShortMessageFiltering("status.specified=true", "status.specified=false");
@@ -412,7 +425,7 @@ class ShortMessageResourceIT {
     @Transactional
     void getAllShortMessagesByCreatedAtIsEqualToSomething() throws Exception {
         // Initialize the database
-        shortMessageRepository.saveAndFlush(shortMessage);
+        insertedShortMessage = shortMessageRepository.saveAndFlush(shortMessage);
 
         // Get all the shortMessageList where createdAt equals to
         defaultShortMessageFiltering("createdAt.equals=" + DEFAULT_CREATED_AT, "createdAt.equals=" + UPDATED_CREATED_AT);
@@ -422,7 +435,7 @@ class ShortMessageResourceIT {
     @Transactional
     void getAllShortMessagesByCreatedAtIsInShouldWork() throws Exception {
         // Initialize the database
-        shortMessageRepository.saveAndFlush(shortMessage);
+        insertedShortMessage = shortMessageRepository.saveAndFlush(shortMessage);
 
         // Get all the shortMessageList where createdAt in
         defaultShortMessageFiltering("createdAt.in=" + DEFAULT_CREATED_AT + "," + UPDATED_CREATED_AT, "createdAt.in=" + UPDATED_CREATED_AT);
@@ -432,7 +445,7 @@ class ShortMessageResourceIT {
     @Transactional
     void getAllShortMessagesByCreatedAtIsNullOrNotNull() throws Exception {
         // Initialize the database
-        shortMessageRepository.saveAndFlush(shortMessage);
+        insertedShortMessage = shortMessageRepository.saveAndFlush(shortMessage);
 
         // Get all the shortMessageList where createdAt is not null
         defaultShortMessageFiltering("createdAt.specified=true", "createdAt.specified=false");
@@ -442,7 +455,7 @@ class ShortMessageResourceIT {
     @Transactional
     void getAllShortMessagesByCreatedByIsEqualToSomething() throws Exception {
         // Initialize the database
-        shortMessageRepository.saveAndFlush(shortMessage);
+        insertedShortMessage = shortMessageRepository.saveAndFlush(shortMessage);
 
         // Get all the shortMessageList where createdBy equals to
         defaultShortMessageFiltering("createdBy.equals=" + DEFAULT_CREATED_BY, "createdBy.equals=" + UPDATED_CREATED_BY);
@@ -452,7 +465,7 @@ class ShortMessageResourceIT {
     @Transactional
     void getAllShortMessagesByCreatedByIsInShouldWork() throws Exception {
         // Initialize the database
-        shortMessageRepository.saveAndFlush(shortMessage);
+        insertedShortMessage = shortMessageRepository.saveAndFlush(shortMessage);
 
         // Get all the shortMessageList where createdBy in
         defaultShortMessageFiltering("createdBy.in=" + DEFAULT_CREATED_BY + "," + UPDATED_CREATED_BY, "createdBy.in=" + UPDATED_CREATED_BY);
@@ -462,7 +475,7 @@ class ShortMessageResourceIT {
     @Transactional
     void getAllShortMessagesByCreatedByIsNullOrNotNull() throws Exception {
         // Initialize the database
-        shortMessageRepository.saveAndFlush(shortMessage);
+        insertedShortMessage = shortMessageRepository.saveAndFlush(shortMessage);
 
         // Get all the shortMessageList where createdBy is not null
         defaultShortMessageFiltering("createdBy.specified=true", "createdBy.specified=false");
@@ -472,7 +485,7 @@ class ShortMessageResourceIT {
     @Transactional
     void getAllShortMessagesByCreatedByContainsSomething() throws Exception {
         // Initialize the database
-        shortMessageRepository.saveAndFlush(shortMessage);
+        insertedShortMessage = shortMessageRepository.saveAndFlush(shortMessage);
 
         // Get all the shortMessageList where createdBy contains
         defaultShortMessageFiltering("createdBy.contains=" + DEFAULT_CREATED_BY, "createdBy.contains=" + UPDATED_CREATED_BY);
@@ -482,7 +495,7 @@ class ShortMessageResourceIT {
     @Transactional
     void getAllShortMessagesByCreatedByNotContainsSomething() throws Exception {
         // Initialize the database
-        shortMessageRepository.saveAndFlush(shortMessage);
+        insertedShortMessage = shortMessageRepository.saveAndFlush(shortMessage);
 
         // Get all the shortMessageList where createdBy does not contain
         defaultShortMessageFiltering("createdBy.doesNotContain=" + UPDATED_CREATED_BY, "createdBy.doesNotContain=" + DEFAULT_CREATED_BY);
@@ -546,7 +559,7 @@ class ShortMessageResourceIT {
     @Transactional
     void putExistingShortMessage() throws Exception {
         // Initialize the database
-        shortMessageRepository.saveAndFlush(shortMessage);
+        insertedShortMessage = shortMessageRepository.saveAndFlush(shortMessage);
 
         long databaseSizeBeforeUpdate = getRepositoryCount();
 
@@ -641,7 +654,7 @@ class ShortMessageResourceIT {
     @Transactional
     void partialUpdateShortMessageWithPatch() throws Exception {
         // Initialize the database
-        shortMessageRepository.saveAndFlush(shortMessage);
+        insertedShortMessage = shortMessageRepository.saveAndFlush(shortMessage);
 
         long databaseSizeBeforeUpdate = getRepositoryCount();
 
@@ -649,7 +662,7 @@ class ShortMessageResourceIT {
         ShortMessage partialUpdatedShortMessage = new ShortMessage();
         partialUpdatedShortMessage.setId(shortMessage.getId());
 
-        partialUpdatedShortMessage.phoneNumber(UPDATED_PHONE_NUMBER).content(UPDATED_CONTENT);
+        partialUpdatedShortMessage.status(UPDATED_STATUS);
 
         restShortMessageMockMvc
             .perform(
@@ -672,7 +685,7 @@ class ShortMessageResourceIT {
     @Transactional
     void fullUpdateShortMessageWithPatch() throws Exception {
         // Initialize the database
-        shortMessageRepository.saveAndFlush(shortMessage);
+        insertedShortMessage = shortMessageRepository.saveAndFlush(shortMessage);
 
         long databaseSizeBeforeUpdate = getRepositoryCount();
 
@@ -767,7 +780,7 @@ class ShortMessageResourceIT {
     @Transactional
     void deleteShortMessage() throws Exception {
         // Initialize the database
-        shortMessageRepository.saveAndFlush(shortMessage);
+        insertedShortMessage = shortMessageRepository.saveAndFlush(shortMessage);
 
         long databaseSizeBeforeDelete = getRepositoryCount();
 
