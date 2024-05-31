@@ -15,6 +15,7 @@ import com.glinboy.app.repository.NotificationDataRepository;
 import jakarta.persistence.EntityManager;
 import java.util.Random;
 import java.util.concurrent.atomic.AtomicLong;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -57,6 +58,8 @@ class NotificationDataResourceIT {
     private MockMvc restNotificationDataMockMvc;
 
     private NotificationData notificationData;
+
+    private NotificationData insertedNotificationData;
 
     /**
      * Create an entity for this test.
@@ -105,6 +108,14 @@ class NotificationDataResourceIT {
         notificationData = createEntity(em);
     }
 
+    @AfterEach
+    public void cleanup() {
+        if (insertedNotificationData != null) {
+            notificationDataRepository.delete(insertedNotificationData);
+            insertedNotificationData = null;
+        }
+    }
+
     @Test
     @Transactional
     void createNotificationData() throws Exception {
@@ -123,6 +134,8 @@ class NotificationDataResourceIT {
         // Validate the NotificationData in the database
         assertIncrementedRepositoryCount(databaseSizeBeforeCreate);
         assertNotificationDataUpdatableFieldsEquals(returnedNotificationData, getPersistedNotificationData(returnedNotificationData));
+
+        insertedNotificationData = returnedNotificationData;
     }
 
     @Test
@@ -178,7 +191,7 @@ class NotificationDataResourceIT {
     @Transactional
     void getAllNotificationData() throws Exception {
         // Initialize the database
-        notificationDataRepository.saveAndFlush(notificationData);
+        insertedNotificationData = notificationDataRepository.saveAndFlush(notificationData);
 
         // Get all the notificationDataList
         restNotificationDataMockMvc
@@ -194,7 +207,7 @@ class NotificationDataResourceIT {
     @Transactional
     void getNotificationData() throws Exception {
         // Initialize the database
-        notificationDataRepository.saveAndFlush(notificationData);
+        insertedNotificationData = notificationDataRepository.saveAndFlush(notificationData);
 
         // Get the notificationData
         restNotificationDataMockMvc
@@ -217,7 +230,7 @@ class NotificationDataResourceIT {
     @Transactional
     void putExistingNotificationData() throws Exception {
         // Initialize the database
-        notificationDataRepository.saveAndFlush(notificationData);
+        insertedNotificationData = notificationDataRepository.saveAndFlush(notificationData);
 
         long databaseSizeBeforeUpdate = getRepositoryCount();
 
@@ -297,15 +310,13 @@ class NotificationDataResourceIT {
     @Transactional
     void partialUpdateNotificationDataWithPatch() throws Exception {
         // Initialize the database
-        notificationDataRepository.saveAndFlush(notificationData);
+        insertedNotificationData = notificationDataRepository.saveAndFlush(notificationData);
 
         long databaseSizeBeforeUpdate = getRepositoryCount();
 
         // Update the notificationData using partial update
         NotificationData partialUpdatedNotificationData = new NotificationData();
         partialUpdatedNotificationData.setId(notificationData.getId());
-
-        partialUpdatedNotificationData.dataKey(UPDATED_DATA_KEY).dataValue(UPDATED_DATA_VALUE);
 
         restNotificationDataMockMvc
             .perform(
@@ -328,7 +339,7 @@ class NotificationDataResourceIT {
     @Transactional
     void fullUpdateNotificationDataWithPatch() throws Exception {
         // Initialize the database
-        notificationDataRepository.saveAndFlush(notificationData);
+        insertedNotificationData = notificationDataRepository.saveAndFlush(notificationData);
 
         long databaseSizeBeforeUpdate = getRepositoryCount();
 
@@ -412,7 +423,7 @@ class NotificationDataResourceIT {
     @Transactional
     void deleteNotificationData() throws Exception {
         // Initialize the database
-        notificationDataRepository.saveAndFlush(notificationData);
+        insertedNotificationData = notificationDataRepository.saveAndFlush(notificationData);
 
         long databaseSizeBeforeDelete = getRepositoryCount();
 

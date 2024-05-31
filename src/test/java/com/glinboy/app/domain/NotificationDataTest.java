@@ -24,7 +24,7 @@ class NotificationDataTest {
     }
 
     @Test
-    void notificationTest() throws Exception {
+    void notificationTest() {
         NotificationData notificationData = getNotificationDataRandomSampleGenerator();
         Notification notificationBack = getNotificationRandomSampleGenerator();
 
