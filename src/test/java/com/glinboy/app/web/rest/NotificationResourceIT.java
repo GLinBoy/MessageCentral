@@ -19,6 +19,7 @@ import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.Random;
 import java.util.concurrent.atomic.AtomicLong;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -83,6 +84,8 @@ class NotificationResourceIT {
 
     private Notification notification;
 
+    private Notification insertedNotification;
+
     /**
      * Create an entity for this test.
      *
@@ -126,6 +129,14 @@ class NotificationResourceIT {
         notification = createEntity(em);
     }
 
+    @AfterEach
+    public void cleanup() {
+        if (insertedNotification != null) {
+            notificationRepository.delete(insertedNotification);
+            insertedNotification = null;
+        }
+    }
+
     @Test
     @Transactional
     void createNotification() throws Exception {
@@ -146,6 +157,8 @@ class NotificationResourceIT {
         assertIncrementedRepositoryCount(databaseSizeBeforeCreate);
         var returnedNotification = notificationMapper.toEntity(returnedNotificationDTO);
         assertNotificationUpdatableFieldsEquals(returnedNotification, getPersistedNotification(returnedNotification));
+
+        insertedNotification = returnedNotification;
     }
 
     @Test
@@ -272,7 +285,7 @@ class NotificationResourceIT {
     @Transactional
     void getAllNotifications() throws Exception {
         // Initialize the database
-        notificationRepository.saveAndFlush(notification);
+        insertedNotification = notificationRepository.saveAndFlush(notification);
 
         // Get all the notificationList
         restNotificationMockMvc
@@ -294,7 +307,7 @@ class NotificationResourceIT {
     @Transactional
     void getNotification() throws Exception {
         // Initialize the database
-        notificationRepository.saveAndFlush(notification);
+        insertedNotification = notificationRepository.saveAndFlush(notification);
 
         // Get the notification
         restNotificationMockMvc
@@ -316,7 +329,7 @@ class NotificationResourceIT {
     @Transactional
     void getNotificationsByIdFiltering() throws Exception {
         // Initialize the database
-        notificationRepository.saveAndFlush(notification);
+        insertedNotification = notificationRepository.saveAndFlush(notification);
 
         Long id = notification.getId();
 
@@ -331,7 +344,7 @@ class NotificationResourceIT {
     @Transactional
     void getAllNotificationsByUsernameIsEqualToSomething() throws Exception {
         // Initialize the database
-        notificationRepository.saveAndFlush(notification);
+        insertedNotification = notificationRepository.saveAndFlush(notification);
 
         // Get all the notificationList where username equals to
         defaultNotificationFiltering("username.equals=" + DEFAULT_USERNAME, "username.equals=" + UPDATED_USERNAME);
@@ -341,7 +354,7 @@ class NotificationResourceIT {
     @Transactional
     void getAllNotificationsByUsernameIsInShouldWork() throws Exception {
         // Initialize the database
-        notificationRepository.saveAndFlush(notification);
+        insertedNotification = notificationRepository.saveAndFlush(notification);
 
         // Get all the notificationList where username in
         defaultNotificationFiltering("username.in=" + DEFAULT_USERNAME + "," + UPDATED_USERNAME, "username.in=" + UPDATED_USERNAME);
@@ -351,7 +364,7 @@ class NotificationResourceIT {
     @Transactional
     void getAllNotificationsByUsernameIsNullOrNotNull() throws Exception {
         // Initialize the database
-        notificationRepository.saveAndFlush(notification);
+        insertedNotification = notificationRepository.saveAndFlush(notification);
 
         // Get all the notificationList where username is not null
         defaultNotificationFiltering("username.specified=true", "username.specified=false");
@@ -361,7 +374,7 @@ class NotificationResourceIT {
     @Transactional
     void getAllNotificationsByUsernameContainsSomething() throws Exception {
         // Initialize the database
-        notificationRepository.saveAndFlush(notification);
+        insertedNotification = notificationRepository.saveAndFlush(notification);
 
         // Get all the notificationList where username contains
         defaultNotificationFiltering("username.contains=" + DEFAULT_USERNAME, "username.contains=" + UPDATED_USERNAME);
@@ -371,7 +384,7 @@ class NotificationResourceIT {
     @Transactional
     void getAllNotificationsByUsernameNotContainsSomething() throws Exception {
         // Initialize the database
-        notificationRepository.saveAndFlush(notification);
+        insertedNotification = notificationRepository.saveAndFlush(notification);
 
         // Get all the notificationList where username does not contain
         defaultNotificationFiltering("username.doesNotContain=" + UPDATED_USERNAME, "username.doesNotContain=" + DEFAULT_USERNAME);
@@ -381,7 +394,7 @@ class NotificationResourceIT {
     @Transactional
     void getAllNotificationsByTokenIsEqualToSomething() throws Exception {
         // Initialize the database
-        notificationRepository.saveAndFlush(notification);
+        insertedNotification = notificationRepository.saveAndFlush(notification);
 
         // Get all the notificationList where token equals to
         defaultNotificationFiltering("token.equals=" + DEFAULT_TOKEN, "token.equals=" + UPDATED_TOKEN);
@@ -391,7 +404,7 @@ class NotificationResourceIT {
     @Transactional
     void getAllNotificationsByTokenIsInShouldWork() throws Exception {
         // Initialize the database
-        notificationRepository.saveAndFlush(notification);
+        insertedNotification = notificationRepository.saveAndFlush(notification);
 
         // Get all the notificationList where token in
         defaultNotificationFiltering("token.in=" + DEFAULT_TOKEN + "," + UPDATED_TOKEN, "token.in=" + UPDATED_TOKEN);
@@ -401,7 +414,7 @@ class NotificationResourceIT {
     @Transactional
     void getAllNotificationsByTokenIsNullOrNotNull() throws Exception {
         // Initialize the database
-        notificationRepository.saveAndFlush(notification);
+        insertedNotification = notificationRepository.saveAndFlush(notification);
 
         // Get all the notificationList where token is not null
         defaultNotificationFiltering("token.specified=true", "token.specified=false");
@@ -411,7 +424,7 @@ class NotificationResourceIT {
     @Transactional
     void getAllNotificationsByTokenContainsSomething() throws Exception {
         // Initialize the database
-        notificationRepository.saveAndFlush(notification);
+        insertedNotification = notificationRepository.saveAndFlush(notification);
 
         // Get all the notificationList where token contains
         defaultNotificationFiltering("token.contains=" + DEFAULT_TOKEN, "token.contains=" + UPDATED_TOKEN);
@@ -421,7 +434,7 @@ class NotificationResourceIT {
     @Transactional
     void getAllNotificationsByTokenNotContainsSomething() throws Exception {
         // Initialize the database
-        notificationRepository.saveAndFlush(notification);
+        insertedNotification = notificationRepository.saveAndFlush(notification);
 
         // Get all the notificationList where token does not contain
         defaultNotificationFiltering("token.doesNotContain=" + UPDATED_TOKEN, "token.doesNotContain=" + DEFAULT_TOKEN);
@@ -431,7 +444,7 @@ class NotificationResourceIT {
     @Transactional
     void getAllNotificationsBySubjectIsEqualToSomething() throws Exception {
         // Initialize the database
-        notificationRepository.saveAndFlush(notification);
+        insertedNotification = notificationRepository.saveAndFlush(notification);
 
         // Get all the notificationList where subject equals to
         defaultNotificationFiltering("subject.equals=" + DEFAULT_SUBJECT, "subject.equals=" + UPDATED_SUBJECT);
@@ -441,7 +454,7 @@ class NotificationResourceIT {
     @Transactional
     void getAllNotificationsBySubjectIsInShouldWork() throws Exception {
         // Initialize the database
-        notificationRepository.saveAndFlush(notification);
+        insertedNotification = notificationRepository.saveAndFlush(notification);
 
         // Get all the notificationList where subject in
         defaultNotificationFiltering("subject.in=" + DEFAULT_SUBJECT + "," + UPDATED_SUBJECT, "subject.in=" + UPDATED_SUBJECT);
@@ -451,7 +464,7 @@ class NotificationResourceIT {
     @Transactional
     void getAllNotificationsBySubjectIsNullOrNotNull() throws Exception {
         // Initialize the database
-        notificationRepository.saveAndFlush(notification);
+        insertedNotification = notificationRepository.saveAndFlush(notification);
 
         // Get all the notificationList where subject is not null
         defaultNotificationFiltering("subject.specified=true", "subject.specified=false");
@@ -461,7 +474,7 @@ class NotificationResourceIT {
     @Transactional
     void getAllNotificationsBySubjectContainsSomething() throws Exception {
         // Initialize the database
-        notificationRepository.saveAndFlush(notification);
+        insertedNotification = notificationRepository.saveAndFlush(notification);
 
         // Get all the notificationList where subject contains
         defaultNotificationFiltering("subject.contains=" + DEFAULT_SUBJECT, "subject.contains=" + UPDATED_SUBJECT);
@@ -471,7 +484,7 @@ class NotificationResourceIT {
     @Transactional
     void getAllNotificationsBySubjectNotContainsSomething() throws Exception {
         // Initialize the database
-        notificationRepository.saveAndFlush(notification);
+        insertedNotification = notificationRepository.saveAndFlush(notification);
 
         // Get all the notificationList where subject does not contain
         defaultNotificationFiltering("subject.doesNotContain=" + UPDATED_SUBJECT, "subject.doesNotContain=" + DEFAULT_SUBJECT);
@@ -481,7 +494,7 @@ class NotificationResourceIT {
     @Transactional
     void getAllNotificationsByContentIsEqualToSomething() throws Exception {
         // Initialize the database
-        notificationRepository.saveAndFlush(notification);
+        insertedNotification = notificationRepository.saveAndFlush(notification);
 
         // Get all the notificationList where content equals to
         defaultNotificationFiltering("content.equals=" + DEFAULT_CONTENT, "content.equals=" + UPDATED_CONTENT);
@@ -491,7 +504,7 @@ class NotificationResourceIT {
     @Transactional
     void getAllNotificationsByContentIsInShouldWork() throws Exception {
         // Initialize the database
-        notificationRepository.saveAndFlush(notification);
+        insertedNotification = notificationRepository.saveAndFlush(notification);
 
         // Get all the notificationList where content in
         defaultNotificationFiltering("content.in=" + DEFAULT_CONTENT + "," + UPDATED_CONTENT, "content.in=" + UPDATED_CONTENT);
@@ -501,7 +514,7 @@ class NotificationResourceIT {
     @Transactional
     void getAllNotificationsByContentIsNullOrNotNull() throws Exception {
         // Initialize the database
-        notificationRepository.saveAndFlush(notification);
+        insertedNotification = notificationRepository.saveAndFlush(notification);
 
         // Get all the notificationList where content is not null
         defaultNotificationFiltering("content.specified=true", "content.specified=false");
@@ -511,7 +524,7 @@ class NotificationResourceIT {
     @Transactional
     void getAllNotificationsByContentContainsSomething() throws Exception {
         // Initialize the database
-        notificationRepository.saveAndFlush(notification);
+        insertedNotification = notificationRepository.saveAndFlush(notification);
 
         // Get all the notificationList where content contains
         defaultNotificationFiltering("content.contains=" + DEFAULT_CONTENT, "content.contains=" + UPDATED_CONTENT);
@@ -521,7 +534,7 @@ class NotificationResourceIT {
     @Transactional
     void getAllNotificationsByContentNotContainsSomething() throws Exception {
         // Initialize the database
-        notificationRepository.saveAndFlush(notification);
+        insertedNotification = notificationRepository.saveAndFlush(notification);
 
         // Get all the notificationList where content does not contain
         defaultNotificationFiltering("content.doesNotContain=" + UPDATED_CONTENT, "content.doesNotContain=" + DEFAULT_CONTENT);
@@ -531,7 +544,7 @@ class NotificationResourceIT {
     @Transactional
     void getAllNotificationsByImageIsEqualToSomething() throws Exception {
         // Initialize the database
-        notificationRepository.saveAndFlush(notification);
+        insertedNotification = notificationRepository.saveAndFlush(notification);
 
         // Get all the notificationList where image equals to
         defaultNotificationFiltering("image.equals=" + DEFAULT_IMAGE, "image.equals=" + UPDATED_IMAGE);
@@ -541,7 +554,7 @@ class NotificationResourceIT {
     @Transactional
     void getAllNotificationsByImageIsInShouldWork() throws Exception {
         // Initialize the database
-        notificationRepository.saveAndFlush(notification);
+        insertedNotification = notificationRepository.saveAndFlush(notification);
 
         // Get all the notificationList where image in
         defaultNotificationFiltering("image.in=" + DEFAULT_IMAGE + "," + UPDATED_IMAGE, "image.in=" + UPDATED_IMAGE);
@@ -551,7 +564,7 @@ class NotificationResourceIT {
     @Transactional
     void getAllNotificationsByImageIsNullOrNotNull() throws Exception {
         // Initialize the database
-        notificationRepository.saveAndFlush(notification);
+        insertedNotification = notificationRepository.saveAndFlush(notification);
 
         // Get all the notificationList where image is not null
         defaultNotificationFiltering("image.specified=true", "image.specified=false");
@@ -561,7 +574,7 @@ class NotificationResourceIT {
     @Transactional
     void getAllNotificationsByImageContainsSomething() throws Exception {
         // Initialize the database
-        notificationRepository.saveAndFlush(notification);
+        insertedNotification = notificationRepository.saveAndFlush(notification);
 
         // Get all the notificationList where image contains
         defaultNotificationFiltering("image.contains=" + DEFAULT_IMAGE, "image.contains=" + UPDATED_IMAGE);
@@ -571,7 +584,7 @@ class NotificationResourceIT {
     @Transactional
     void getAllNotificationsByImageNotContainsSomething() throws Exception {
         // Initialize the database
-        notificationRepository.saveAndFlush(notification);
+        insertedNotification = notificationRepository.saveAndFlush(notification);
 
         // Get all the notificationList where image does not contain
         defaultNotificationFiltering("image.doesNotContain=" + UPDATED_IMAGE, "image.doesNotContain=" + DEFAULT_IMAGE);
@@ -581,7 +594,7 @@ class NotificationResourceIT {
     @Transactional
     void getAllNotificationsByStatusIsEqualToSomething() throws Exception {
         // Initialize the database
-        notificationRepository.saveAndFlush(notification);
+        insertedNotification = notificationRepository.saveAndFlush(notification);
 
         // Get all the notificationList where status equals to
         defaultNotificationFiltering("status.equals=" + DEFAULT_STATUS, "status.equals=" + UPDATED_STATUS);
@@ -591,7 +604,7 @@ class NotificationResourceIT {
     @Transactional
     void getAllNotificationsByStatusIsInShouldWork() throws Exception {
         // Initialize the database
-        notificationRepository.saveAndFlush(notification);
+        insertedNotification = notificationRepository.saveAndFlush(notification);
 
         // Get all the notificationList where status in
         defaultNotificationFiltering("status.in=" + DEFAULT_STATUS + "," + UPDATED_STATUS, "status.in=" + UPDATED_STATUS);
@@ -601,7 +614,7 @@ class NotificationResourceIT {
     @Transactional
     void getAllNotificationsByStatusIsNullOrNotNull() throws Exception {
         // Initialize the database
-        notificationRepository.saveAndFlush(notification);
+        insertedNotification = notificationRepository.saveAndFlush(notification);
 
         // Get all the notificationList where status is not null
         defaultNotificationFiltering("status.specified=true", "status.specified=false");
@@ -611,7 +624,7 @@ class NotificationResourceIT {
     @Transactional
     void getAllNotificationsByCreatedAtIsEqualToSomething() throws Exception {
         // Initialize the database
-        notificationRepository.saveAndFlush(notification);
+        insertedNotification = notificationRepository.saveAndFlush(notification);
 
         // Get all the notificationList where createdAt equals to
         defaultNotificationFiltering("createdAt.equals=" + DEFAULT_CREATED_AT, "createdAt.equals=" + UPDATED_CREATED_AT);
@@ -621,7 +634,7 @@ class NotificationResourceIT {
     @Transactional
     void getAllNotificationsByCreatedAtIsInShouldWork() throws Exception {
         // Initialize the database
-        notificationRepository.saveAndFlush(notification);
+        insertedNotification = notificationRepository.saveAndFlush(notification);
 
         // Get all the notificationList where createdAt in
         defaultNotificationFiltering("createdAt.in=" + DEFAULT_CREATED_AT + "," + UPDATED_CREATED_AT, "createdAt.in=" + UPDATED_CREATED_AT);
@@ -631,7 +644,7 @@ class NotificationResourceIT {
     @Transactional
     void getAllNotificationsByCreatedAtIsNullOrNotNull() throws Exception {
         // Initialize the database
-        notificationRepository.saveAndFlush(notification);
+        insertedNotification = notificationRepository.saveAndFlush(notification);
 
         // Get all the notificationList where createdAt is not null
         defaultNotificationFiltering("createdAt.specified=true", "createdAt.specified=false");
@@ -641,7 +654,7 @@ class NotificationResourceIT {
     @Transactional
     void getAllNotificationsByCreatedByIsEqualToSomething() throws Exception {
         // Initialize the database
-        notificationRepository.saveAndFlush(notification);
+        insertedNotification = notificationRepository.saveAndFlush(notification);
 
         // Get all the notificationList where createdBy equals to
         defaultNotificationFiltering("createdBy.equals=" + DEFAULT_CREATED_BY, "createdBy.equals=" + UPDATED_CREATED_BY);
@@ -651,7 +664,7 @@ class NotificationResourceIT {
     @Transactional
     void getAllNotificationsByCreatedByIsInShouldWork() throws Exception {
         // Initialize the database
-        notificationRepository.saveAndFlush(notification);
+        insertedNotification = notificationRepository.saveAndFlush(notification);
 
         // Get all the notificationList where createdBy in
         defaultNotificationFiltering("createdBy.in=" + DEFAULT_CREATED_BY + "," + UPDATED_CREATED_BY, "createdBy.in=" + UPDATED_CREATED_BY);
@@ -661,7 +674,7 @@ class NotificationResourceIT {
     @Transactional
     void getAllNotificationsByCreatedByIsNullOrNotNull() throws Exception {
         // Initialize the database
-        notificationRepository.saveAndFlush(notification);
+        insertedNotification = notificationRepository.saveAndFlush(notification);
 
         // Get all the notificationList where createdBy is not null
         defaultNotificationFiltering("createdBy.specified=true", "createdBy.specified=false");
@@ -671,7 +684,7 @@ class NotificationResourceIT {
     @Transactional
     void getAllNotificationsByCreatedByContainsSomething() throws Exception {
         // Initialize the database
-        notificationRepository.saveAndFlush(notification);
+        insertedNotification = notificationRepository.saveAndFlush(notification);
 
         // Get all the notificationList where createdBy contains
         defaultNotificationFiltering("createdBy.contains=" + DEFAULT_CREATED_BY, "createdBy.contains=" + UPDATED_CREATED_BY);
@@ -681,7 +694,7 @@ class NotificationResourceIT {
     @Transactional
     void getAllNotificationsByCreatedByNotContainsSomething() throws Exception {
         // Initialize the database
-        notificationRepository.saveAndFlush(notification);
+        insertedNotification = notificationRepository.saveAndFlush(notification);
 
         // Get all the notificationList where createdBy does not contain
         defaultNotificationFiltering("createdBy.doesNotContain=" + UPDATED_CREATED_BY, "createdBy.doesNotContain=" + DEFAULT_CREATED_BY);
@@ -748,7 +761,7 @@ class NotificationResourceIT {
     @Transactional
     void putExistingNotification() throws Exception {
         // Initialize the database
-        notificationRepository.saveAndFlush(notification);
+        insertedNotification = notificationRepository.saveAndFlush(notification);
 
         long databaseSizeBeforeUpdate = getRepositoryCount();
 
@@ -846,7 +859,7 @@ class NotificationResourceIT {
     @Transactional
     void partialUpdateNotificationWithPatch() throws Exception {
         // Initialize the database
-        notificationRepository.saveAndFlush(notification);
+        insertedNotification = notificationRepository.saveAndFlush(notification);
 
         long databaseSizeBeforeUpdate = getRepositoryCount();
 
@@ -854,7 +867,13 @@ class NotificationResourceIT {
         Notification partialUpdatedNotification = new Notification();
         partialUpdatedNotification.setId(notification.getId());
 
-        partialUpdatedNotification.token(UPDATED_TOKEN).subject(UPDATED_SUBJECT).image(UPDATED_IMAGE).createdBy(UPDATED_CREATED_BY);
+        partialUpdatedNotification
+            .username(UPDATED_USERNAME)
+            .token(UPDATED_TOKEN)
+            .subject(UPDATED_SUBJECT)
+            .image(UPDATED_IMAGE)
+            .createdAt(UPDATED_CREATED_AT)
+            .createdBy(UPDATED_CREATED_BY);
 
         restNotificationMockMvc
             .perform(
@@ -877,7 +896,7 @@ class NotificationResourceIT {
     @Transactional
     void fullUpdateNotificationWithPatch() throws Exception {
         // Initialize the database
-        notificationRepository.saveAndFlush(notification);
+        insertedNotification = notificationRepository.saveAndFlush(notification);
 
         long databaseSizeBeforeUpdate = getRepositoryCount();
 
@@ -975,7 +994,7 @@ class NotificationResourceIT {
     @Transactional
     void deleteNotification() throws Exception {
         // Initialize the database
-        notificationRepository.saveAndFlush(notification);
+        insertedNotification = notificationRepository.saveAndFlush(notification);
 
         long databaseSizeBeforeDelete = getRepositoryCount();
 

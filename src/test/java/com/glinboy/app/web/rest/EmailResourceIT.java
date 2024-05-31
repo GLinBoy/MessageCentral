@@ -20,6 +20,7 @@ import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.Random;
 import java.util.concurrent.atomic.AtomicLong;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,8 +38,8 @@ import org.springframework.transaction.annotation.Transactional;
 @WithMockUser
 class EmailResourceIT {
 
-    private static final String DEFAULT_RECEIVER = "K.jX0.Fn.Wr&91-@lrJ.tGj0.p0.gUo";
-    private static final String UPDATED_RECEIVER = "0T1m@bYJ.uSzniJO";
+    private static final String DEFAULT_RECEIVER = "Qad.CmuPsD.Vm+.ZLo@L.4PXW.YQPotM";
+    private static final String UPDATED_RECEIVER = "Nb&.OdPePH.*zl.ypDVP.jG.y-mm@rp4nrn.EumiN.vdf.Ea";
 
     private static final String DEFAULT_SUBJECT = "AAAAAAAAAA";
     private static final String UPDATED_SUBJECT = "BBBBBBBBBB";
@@ -81,6 +82,8 @@ class EmailResourceIT {
 
     private Email email;
 
+    private Email insertedEmail;
+
     /**
      * Create an entity for this test.
      *
@@ -122,6 +125,14 @@ class EmailResourceIT {
         email = createEntity(em);
     }
 
+    @AfterEach
+    public void cleanup() {
+        if (insertedEmail != null) {
+            emailRepository.delete(insertedEmail);
+            insertedEmail = null;
+        }
+    }
+
     @Test
     @Transactional
     void createEmail() throws Exception {
@@ -142,6 +153,8 @@ class EmailResourceIT {
         assertIncrementedRepositoryCount(databaseSizeBeforeCreate);
         var returnedEmail = emailMapper.toEntity(returnedEmailDTO);
         assertEmailUpdatableFieldsEquals(returnedEmail, getPersistedEmail(returnedEmail));
+
+        insertedEmail = returnedEmail;
     }
 
     @Test
@@ -234,7 +247,7 @@ class EmailResourceIT {
     @Transactional
     void getAllEmails() throws Exception {
         // Initialize the database
-        emailRepository.saveAndFlush(email);
+        insertedEmail = emailRepository.saveAndFlush(email);
 
         // Get all the emailList
         restEmailMockMvc
@@ -255,7 +268,7 @@ class EmailResourceIT {
     @Transactional
     void getEmail() throws Exception {
         // Initialize the database
-        emailRepository.saveAndFlush(email);
+        insertedEmail = emailRepository.saveAndFlush(email);
 
         // Get the email
         restEmailMockMvc
@@ -276,7 +289,7 @@ class EmailResourceIT {
     @Transactional
     void getEmailsByIdFiltering() throws Exception {
         // Initialize the database
-        emailRepository.saveAndFlush(email);
+        insertedEmail = emailRepository.saveAndFlush(email);
 
         Long id = email.getId();
 
@@ -291,7 +304,7 @@ class EmailResourceIT {
     @Transactional
     void getAllEmailsByReceiverIsEqualToSomething() throws Exception {
         // Initialize the database
-        emailRepository.saveAndFlush(email);
+        insertedEmail = emailRepository.saveAndFlush(email);
 
         // Get all the emailList where receiver equals to
         defaultEmailFiltering("receiver.equals=" + DEFAULT_RECEIVER, "receiver.equals=" + UPDATED_RECEIVER);
@@ -301,7 +314,7 @@ class EmailResourceIT {
     @Transactional
     void getAllEmailsByReceiverIsInShouldWork() throws Exception {
         // Initialize the database
-        emailRepository.saveAndFlush(email);
+        insertedEmail = emailRepository.saveAndFlush(email);
 
         // Get all the emailList where receiver in
         defaultEmailFiltering("receiver.in=" + DEFAULT_RECEIVER + "," + UPDATED_RECEIVER, "receiver.in=" + UPDATED_RECEIVER);
@@ -311,7 +324,7 @@ class EmailResourceIT {
     @Transactional
     void getAllEmailsByReceiverIsNullOrNotNull() throws Exception {
         // Initialize the database
-        emailRepository.saveAndFlush(email);
+        insertedEmail = emailRepository.saveAndFlush(email);
 
         // Get all the emailList where receiver is not null
         defaultEmailFiltering("receiver.specified=true", "receiver.specified=false");
@@ -321,7 +334,7 @@ class EmailResourceIT {
     @Transactional
     void getAllEmailsByReceiverContainsSomething() throws Exception {
         // Initialize the database
-        emailRepository.saveAndFlush(email);
+        insertedEmail = emailRepository.saveAndFlush(email);
 
         // Get all the emailList where receiver contains
         defaultEmailFiltering("receiver.contains=" + DEFAULT_RECEIVER, "receiver.contains=" + UPDATED_RECEIVER);
@@ -331,7 +344,7 @@ class EmailResourceIT {
     @Transactional
     void getAllEmailsByReceiverNotContainsSomething() throws Exception {
         // Initialize the database
-        emailRepository.saveAndFlush(email);
+        insertedEmail = emailRepository.saveAndFlush(email);
 
         // Get all the emailList where receiver does not contain
         defaultEmailFiltering("receiver.doesNotContain=" + UPDATED_RECEIVER, "receiver.doesNotContain=" + DEFAULT_RECEIVER);
@@ -341,7 +354,7 @@ class EmailResourceIT {
     @Transactional
     void getAllEmailsBySubjectIsEqualToSomething() throws Exception {
         // Initialize the database
-        emailRepository.saveAndFlush(email);
+        insertedEmail = emailRepository.saveAndFlush(email);
 
         // Get all the emailList where subject equals to
         defaultEmailFiltering("subject.equals=" + DEFAULT_SUBJECT, "subject.equals=" + UPDATED_SUBJECT);
@@ -351,7 +364,7 @@ class EmailResourceIT {
     @Transactional
     void getAllEmailsBySubjectIsInShouldWork() throws Exception {
         // Initialize the database
-        emailRepository.saveAndFlush(email);
+        insertedEmail = emailRepository.saveAndFlush(email);
 
         // Get all the emailList where subject in
         defaultEmailFiltering("subject.in=" + DEFAULT_SUBJECT + "," + UPDATED_SUBJECT, "subject.in=" + UPDATED_SUBJECT);
@@ -361,7 +374,7 @@ class EmailResourceIT {
     @Transactional
     void getAllEmailsBySubjectIsNullOrNotNull() throws Exception {
         // Initialize the database
-        emailRepository.saveAndFlush(email);
+        insertedEmail = emailRepository.saveAndFlush(email);
 
         // Get all the emailList where subject is not null
         defaultEmailFiltering("subject.specified=true", "subject.specified=false");
@@ -371,7 +384,7 @@ class EmailResourceIT {
     @Transactional
     void getAllEmailsBySubjectContainsSomething() throws Exception {
         // Initialize the database
-        emailRepository.saveAndFlush(email);
+        insertedEmail = emailRepository.saveAndFlush(email);
 
         // Get all the emailList where subject contains
         defaultEmailFiltering("subject.contains=" + DEFAULT_SUBJECT, "subject.contains=" + UPDATED_SUBJECT);
@@ -381,7 +394,7 @@ class EmailResourceIT {
     @Transactional
     void getAllEmailsBySubjectNotContainsSomething() throws Exception {
         // Initialize the database
-        emailRepository.saveAndFlush(email);
+        insertedEmail = emailRepository.saveAndFlush(email);
 
         // Get all the emailList where subject does not contain
         defaultEmailFiltering("subject.doesNotContain=" + UPDATED_SUBJECT, "subject.doesNotContain=" + DEFAULT_SUBJECT);
@@ -391,7 +404,7 @@ class EmailResourceIT {
     @Transactional
     void getAllEmailsByStatusIsEqualToSomething() throws Exception {
         // Initialize the database
-        emailRepository.saveAndFlush(email);
+        insertedEmail = emailRepository.saveAndFlush(email);
 
         // Get all the emailList where status equals to
         defaultEmailFiltering("status.equals=" + DEFAULT_STATUS, "status.equals=" + UPDATED_STATUS);
@@ -401,7 +414,7 @@ class EmailResourceIT {
     @Transactional
     void getAllEmailsByStatusIsInShouldWork() throws Exception {
         // Initialize the database
-        emailRepository.saveAndFlush(email);
+        insertedEmail = emailRepository.saveAndFlush(email);
 
         // Get all the emailList where status in
         defaultEmailFiltering("status.in=" + DEFAULT_STATUS + "," + UPDATED_STATUS, "status.in=" + UPDATED_STATUS);
@@ -411,7 +424,7 @@ class EmailResourceIT {
     @Transactional
     void getAllEmailsByStatusIsNullOrNotNull() throws Exception {
         // Initialize the database
-        emailRepository.saveAndFlush(email);
+        insertedEmail = emailRepository.saveAndFlush(email);
 
         // Get all the emailList where status is not null
         defaultEmailFiltering("status.specified=true", "status.specified=false");
@@ -421,7 +434,7 @@ class EmailResourceIT {
     @Transactional
     void getAllEmailsByEmailTypeIsEqualToSomething() throws Exception {
         // Initialize the database
-        emailRepository.saveAndFlush(email);
+        insertedEmail = emailRepository.saveAndFlush(email);
 
         // Get all the emailList where emailType equals to
         defaultEmailFiltering("emailType.equals=" + DEFAULT_EMAIL_TYPE, "emailType.equals=" + UPDATED_EMAIL_TYPE);
@@ -431,7 +444,7 @@ class EmailResourceIT {
     @Transactional
     void getAllEmailsByEmailTypeIsInShouldWork() throws Exception {
         // Initialize the database
-        emailRepository.saveAndFlush(email);
+        insertedEmail = emailRepository.saveAndFlush(email);
 
         // Get all the emailList where emailType in
         defaultEmailFiltering("emailType.in=" + DEFAULT_EMAIL_TYPE + "," + UPDATED_EMAIL_TYPE, "emailType.in=" + UPDATED_EMAIL_TYPE);
@@ -441,7 +454,7 @@ class EmailResourceIT {
     @Transactional
     void getAllEmailsByEmailTypeIsNullOrNotNull() throws Exception {
         // Initialize the database
-        emailRepository.saveAndFlush(email);
+        insertedEmail = emailRepository.saveAndFlush(email);
 
         // Get all the emailList where emailType is not null
         defaultEmailFiltering("emailType.specified=true", "emailType.specified=false");
@@ -451,7 +464,7 @@ class EmailResourceIT {
     @Transactional
     void getAllEmailsByCreatedAtIsEqualToSomething() throws Exception {
         // Initialize the database
-        emailRepository.saveAndFlush(email);
+        insertedEmail = emailRepository.saveAndFlush(email);
 
         // Get all the emailList where createdAt equals to
         defaultEmailFiltering("createdAt.equals=" + DEFAULT_CREATED_AT, "createdAt.equals=" + UPDATED_CREATED_AT);
@@ -461,7 +474,7 @@ class EmailResourceIT {
     @Transactional
     void getAllEmailsByCreatedAtIsInShouldWork() throws Exception {
         // Initialize the database
-        emailRepository.saveAndFlush(email);
+        insertedEmail = emailRepository.saveAndFlush(email);
 
         // Get all the emailList where createdAt in
         defaultEmailFiltering("createdAt.in=" + DEFAULT_CREATED_AT + "," + UPDATED_CREATED_AT, "createdAt.in=" + UPDATED_CREATED_AT);
@@ -471,7 +484,7 @@ class EmailResourceIT {
     @Transactional
     void getAllEmailsByCreatedAtIsNullOrNotNull() throws Exception {
         // Initialize the database
-        emailRepository.saveAndFlush(email);
+        insertedEmail = emailRepository.saveAndFlush(email);
 
         // Get all the emailList where createdAt is not null
         defaultEmailFiltering("createdAt.specified=true", "createdAt.specified=false");
@@ -481,7 +494,7 @@ class EmailResourceIT {
     @Transactional
     void getAllEmailsByCreatedByIsEqualToSomething() throws Exception {
         // Initialize the database
-        emailRepository.saveAndFlush(email);
+        insertedEmail = emailRepository.saveAndFlush(email);
 
         // Get all the emailList where createdBy equals to
         defaultEmailFiltering("createdBy.equals=" + DEFAULT_CREATED_BY, "createdBy.equals=" + UPDATED_CREATED_BY);
@@ -491,7 +504,7 @@ class EmailResourceIT {
     @Transactional
     void getAllEmailsByCreatedByIsInShouldWork() throws Exception {
         // Initialize the database
-        emailRepository.saveAndFlush(email);
+        insertedEmail = emailRepository.saveAndFlush(email);
 
         // Get all the emailList where createdBy in
         defaultEmailFiltering("createdBy.in=" + DEFAULT_CREATED_BY + "," + UPDATED_CREATED_BY, "createdBy.in=" + UPDATED_CREATED_BY);
@@ -501,7 +514,7 @@ class EmailResourceIT {
     @Transactional
     void getAllEmailsByCreatedByIsNullOrNotNull() throws Exception {
         // Initialize the database
-        emailRepository.saveAndFlush(email);
+        insertedEmail = emailRepository.saveAndFlush(email);
 
         // Get all the emailList where createdBy is not null
         defaultEmailFiltering("createdBy.specified=true", "createdBy.specified=false");
@@ -511,7 +524,7 @@ class EmailResourceIT {
     @Transactional
     void getAllEmailsByCreatedByContainsSomething() throws Exception {
         // Initialize the database
-        emailRepository.saveAndFlush(email);
+        insertedEmail = emailRepository.saveAndFlush(email);
 
         // Get all the emailList where createdBy contains
         defaultEmailFiltering("createdBy.contains=" + DEFAULT_CREATED_BY, "createdBy.contains=" + UPDATED_CREATED_BY);
@@ -521,7 +534,7 @@ class EmailResourceIT {
     @Transactional
     void getAllEmailsByCreatedByNotContainsSomething() throws Exception {
         // Initialize the database
-        emailRepository.saveAndFlush(email);
+        insertedEmail = emailRepository.saveAndFlush(email);
 
         // Get all the emailList where createdBy does not contain
         defaultEmailFiltering("createdBy.doesNotContain=" + UPDATED_CREATED_BY, "createdBy.doesNotContain=" + DEFAULT_CREATED_BY);
@@ -587,7 +600,7 @@ class EmailResourceIT {
     @Transactional
     void putExistingEmail() throws Exception {
         // Initialize the database
-        emailRepository.saveAndFlush(email);
+        insertedEmail = emailRepository.saveAndFlush(email);
 
         long databaseSizeBeforeUpdate = getRepositoryCount();
 
@@ -680,7 +693,7 @@ class EmailResourceIT {
     @Transactional
     void partialUpdateEmailWithPatch() throws Exception {
         // Initialize the database
-        emailRepository.saveAndFlush(email);
+        insertedEmail = emailRepository.saveAndFlush(email);
 
         long databaseSizeBeforeUpdate = getRepositoryCount();
 
@@ -688,7 +701,7 @@ class EmailResourceIT {
         Email partialUpdatedEmail = new Email();
         partialUpdatedEmail.setId(email.getId());
 
-        partialUpdatedEmail.subject(UPDATED_SUBJECT).content(UPDATED_CONTENT).emailType(UPDATED_EMAIL_TYPE).createdBy(UPDATED_CREATED_BY);
+        partialUpdatedEmail.subject(UPDATED_SUBJECT).content(UPDATED_CONTENT).status(UPDATED_STATUS);
 
         restEmailMockMvc
             .perform(
@@ -708,7 +721,7 @@ class EmailResourceIT {
     @Transactional
     void fullUpdateEmailWithPatch() throws Exception {
         // Initialize the database
-        emailRepository.saveAndFlush(email);
+        insertedEmail = emailRepository.saveAndFlush(email);
 
         long databaseSizeBeforeUpdate = getRepositoryCount();
 
@@ -805,7 +818,7 @@ class EmailResourceIT {
     @Transactional
     void deleteEmail() throws Exception {
         // Initialize the database
-        emailRepository.saveAndFlush(email);
+        insertedEmail = emailRepository.saveAndFlush(email);
 
         long databaseSizeBeforeDelete = getRepositoryCount();
 

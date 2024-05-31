@@ -2,6 +2,7 @@ package com.glinboy.app.service.dto;
 
 import com.glinboy.app.domain.User;
 import java.io.Serializable;
+import java.util.Objects;
 
 /**
  * A DTO representing a user, with only the public attributes.
@@ -38,6 +39,23 @@ public class UserDTO implements Serializable {
 
     public void setLogin(String login) {
         this.login = login;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+
+        UserDTO userDTO = (UserDTO) o;
+        if (userDTO.getId() == null || getId() == null) {
+            return false;
+        }
+
+        return Objects.equals(getId(), userDTO.getId()) && Objects.equals(getLogin(), userDTO.getLogin());
     }
 
     // prettier-ignore
