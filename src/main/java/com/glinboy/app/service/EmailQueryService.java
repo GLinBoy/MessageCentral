@@ -26,7 +26,7 @@ import tech.jhipster.service.QueryService;
 @Transactional(readOnly = true)
 public class EmailQueryService extends QueryService<Email> {
 
-    private final Logger log = LoggerFactory.getLogger(EmailQueryService.class);
+    private static final Logger log = LoggerFactory.getLogger(EmailQueryService.class);
 
     private final EmailRepository emailRepository;
 

@@ -20,19 +20,21 @@ import tech.jhipster.web.util.HeaderUtil;
 import tech.jhipster.web.util.ResponseUtil;
 
 /**
- * REST controller for managing {@link NotificationData}.
+ * REST controller for managing {@link com.glinboy.app.domain.NotificationData}.
  */
-//@RestController
-//@RequestMapping("/api")
+@RestController
+@RequestMapping("/api/notification-data")
 @Transactional
 public class NotificationDataResource {
 
+    private static final Logger log = LoggerFactory.getLogger(NotificationDataResource.class);
+
     private static final String ENTITY_NAME = "notificationData";
-    private final Logger log = LoggerFactory.getLogger(NotificationDataResource.class);
-    private final NotificationDataRepository notificationDataRepository;
 
     @Value("${jhipster.clientApp.name}")
     private String applicationName;
+
+    private final NotificationDataRepository notificationDataRepository;
 
     public NotificationDataResource(NotificationDataRepository notificationDataRepository) {
         this.notificationDataRepository = notificationDataRepository;
@@ -45,7 +47,7 @@ public class NotificationDataResource {
      * @return the {@link ResponseEntity} with status {@code 201 (Created)} and with body the new notificationData, or with status {@code 400 (Bad Request)} if the notificationData has already an ID.
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
-    @PostMapping("/notification-data")
+    @PostMapping("")
     public ResponseEntity<NotificationData> createNotificationData(@Valid @RequestBody NotificationData notificationData)
         throws URISyntaxException {
         log.debug("REST request to save NotificationData : {}", notificationData);
@@ -61,14 +63,14 @@ public class NotificationDataResource {
     /**
      * {@code PUT  /notification-data/:id} : Updates an existing notificationData.
      *
-     * @param id               the id of the notificationData to save.
+     * @param id the id of the notificationData to save.
      * @param notificationData the notificationData to update.
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the updated notificationData,
      * or with status {@code 400 (Bad Request)} if the notificationData is not valid,
      * or with status {@code 500 (Internal Server Error)} if the notificationData couldn't be updated.
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
-    @PutMapping("/notification-data/{id}")
+    @PutMapping("/{id}")
     public ResponseEntity<NotificationData> updateNotificationData(
         @PathVariable(value = "id", required = false) final Long id,
         @Valid @RequestBody NotificationData notificationData
@@ -94,7 +96,7 @@ public class NotificationDataResource {
     /**
      * {@code PATCH  /notification-data/:id} : Partial updates given fields of an existing notificationData, field will ignore if it is null
      *
-     * @param id               the id of the notificationData to save.
+     * @param id the id of the notificationData to save.
      * @param notificationData the notificationData to update.
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the updated notificationData,
      * or with status {@code 400 (Bad Request)} if the notificationData is not valid,
@@ -102,7 +104,7 @@ public class NotificationDataResource {
      * or with status {@code 500 (Internal Server Error)} if the notificationData couldn't be updated.
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
-    @PatchMapping(value = "/notification-data/{id}", consumes = { "application/json", "application/merge-patch+json" })
+    @PatchMapping(value = "/{id}", consumes = { "application/json", "application/merge-patch+json" })
     public ResponseEntity<NotificationData> partialUpdateNotificationData(
         @PathVariable(value = "id", required = false) final Long id,
         @NotNull @RequestBody NotificationData notificationData
@@ -144,7 +146,7 @@ public class NotificationDataResource {
      *
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of notificationData in body.
      */
-    @GetMapping("/notification-data")
+    @GetMapping("")
     public List<NotificationData> getAllNotificationData() {
         log.debug("REST request to get all NotificationData");
         return notificationDataRepository.findAll();
@@ -156,8 +158,8 @@ public class NotificationDataResource {
      * @param id the id of the notificationData to retrieve.
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the notificationData, or with status {@code 404 (Not Found)}.
      */
-    @GetMapping("/notification-data/{id}")
-    public ResponseEntity<NotificationData> getNotificationData(@PathVariable Long id) {
+    @GetMapping("/{id}")
+    public ResponseEntity<NotificationData> getNotificationData(@PathVariable("id") Long id) {
         log.debug("REST request to get NotificationData : {}", id);
         Optional<NotificationData> notificationData = notificationDataRepository.findById(id);
         return ResponseUtil.wrapOrNotFound(notificationData);
@@ -169,8 +171,8 @@ public class NotificationDataResource {
      * @param id the id of the notificationData to delete.
      * @return the {@link ResponseEntity} with status {@code 204 (NO_CONTENT)}.
      */
-    @DeleteMapping("/notification-data/{id}")
-    public ResponseEntity<Void> deleteNotificationData(@PathVariable Long id) {
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteNotificationData(@PathVariable("id") Long id) {
         log.debug("REST request to delete NotificationData : {}", id);
         notificationDataRepository.deleteById(id);
         return ResponseEntity.noContent()

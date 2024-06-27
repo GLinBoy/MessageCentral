@@ -32,7 +32,7 @@ import java.util.Set;
 @Transactional
 public class TokenServiceImpl implements TokenService {
 
-    private final Logger log = LoggerFactory.getLogger(TokenServiceImpl.class);
+    private static final Logger log = LoggerFactory.getLogger(TokenServiceImpl.class);
 
     private final TokenRepository tokenRepository;
 
