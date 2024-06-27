@@ -33,7 +33,7 @@ import tech.jhipster.web.util.ResponseUtil;
 @RequestMapping("/api/short-messages")
 public class ShortMessageResource {
 
-    private final Logger log = LoggerFactory.getLogger(ShortMessageResource.class);
+    private static final Logger log = LoggerFactory.getLogger(ShortMessageResource.class);
 
     private static final String ENTITY_NAME = "shortMessage";
 

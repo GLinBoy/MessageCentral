@@ -25,7 +25,7 @@ import tech.jhipster.service.QueryService;
 @Transactional(readOnly = true)
 public class ShortMessageQueryService extends QueryService<ShortMessage> {
 
-    private final Logger log = LoggerFactory.getLogger(ShortMessageQueryService.class);
+    private static final Logger log = LoggerFactory.getLogger(ShortMessageQueryService.class);
 
     private final ShortMessageRepository shortMessageRepository;
 

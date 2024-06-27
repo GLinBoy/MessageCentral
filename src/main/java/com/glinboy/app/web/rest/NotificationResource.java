@@ -33,7 +33,7 @@ import tech.jhipster.web.util.ResponseUtil;
 @RequestMapping("/api/notifications")
 public class NotificationResource {
 
-    private final Logger log = LoggerFactory.getLogger(NotificationResource.class);
+    private static final Logger log = LoggerFactory.getLogger(NotificationResource.class);
 
     private static final String ENTITY_NAME = "notification";
 

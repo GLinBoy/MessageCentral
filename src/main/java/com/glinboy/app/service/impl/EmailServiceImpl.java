@@ -18,7 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 public class EmailServiceImpl implements EmailService {
 
-    private final Logger log = LoggerFactory.getLogger(EmailServiceImpl.class);
+    private static final Logger log = LoggerFactory.getLogger(EmailServiceImpl.class);
 
     private final EmailRepository emailRepository;
 

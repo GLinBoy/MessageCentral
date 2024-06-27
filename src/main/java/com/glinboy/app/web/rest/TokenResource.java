@@ -33,7 +33,7 @@ import tech.jhipster.web.util.ResponseUtil;
 @RequestMapping("/api/tokens")
 public class TokenResource {
 
-    private final Logger log = LoggerFactory.getLogger(TokenResource.class);
+    private static final Logger log = LoggerFactory.getLogger(TokenResource.class);
 
     private static final String ENTITY_NAME = "token";
 

@@ -26,7 +26,7 @@ import tech.jhipster.service.QueryService;
 @Transactional(readOnly = true)
 public class NotificationQueryService extends QueryService<Notification> {
 
-    private final Logger log = LoggerFactory.getLogger(NotificationQueryService.class);
+    private static final Logger log = LoggerFactory.getLogger(NotificationQueryService.class);
 
     private final NotificationRepository notificationRepository;
 

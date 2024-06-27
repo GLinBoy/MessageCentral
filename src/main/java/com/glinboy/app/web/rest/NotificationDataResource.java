@@ -27,7 +27,7 @@ import tech.jhipster.web.util.ResponseUtil;
 @Transactional
 public class NotificationDataResource {
 
-    private final Logger log = LoggerFactory.getLogger(NotificationDataResource.class);
+    private static final Logger log = LoggerFactory.getLogger(NotificationDataResource.class);
 
     private static final String ENTITY_NAME = "notificationData";
 

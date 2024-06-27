@@ -25,7 +25,7 @@ import tech.jhipster.service.QueryService;
 @Transactional(readOnly = true)
 public class TokenQueryService extends QueryService<Token> {
 
-    private final Logger log = LoggerFactory.getLogger(TokenQueryService.class);
+    private static final Logger log = LoggerFactory.getLogger(TokenQueryService.class);
 
     private final TokenRepository tokenRepository;
 

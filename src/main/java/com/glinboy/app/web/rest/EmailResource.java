@@ -33,7 +33,7 @@ import tech.jhipster.web.util.ResponseUtil;
 @RequestMapping("/api/emails")
 public class EmailResource {
 
-    private final Logger log = LoggerFactory.getLogger(EmailResource.class);
+    private static final Logger log = LoggerFactory.getLogger(EmailResource.class);
 
     private static final String ENTITY_NAME = "email";
 
