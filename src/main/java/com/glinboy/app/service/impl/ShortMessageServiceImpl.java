@@ -30,7 +30,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 public class ShortMessageServiceImpl implements ShortMessageService {
 
-    private final Logger log = LoggerFactory.getLogger(ShortMessageServiceImpl.class);
+    private static final Logger log = LoggerFactory.getLogger(ShortMessageServiceImpl.class);
 
     private final ShortMessageRepository shortMessageRepository;
 
