@@ -51,6 +51,7 @@ public class ShortMessagePrincipalResource extends ShortMessageResource {
         ShortMessageRepository shortMessageRepository,
         ShortMessageQueryService shortMessageQueryService
     ) {
+        super(shortMessageService, shortMessageRepository, shortMessageQueryService);
         this.shortMessageService = shortMessageService;
         this.shortMessageRepository = shortMessageRepository;
         this.shortMessageQueryService = shortMessageQueryService;

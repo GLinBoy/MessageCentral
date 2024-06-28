@@ -72,39 +72,6 @@ public class TokenResource {
     }
 
     /**
-     * {@code PUT  /tokens/:id} : Updates an existing token.
-     *
-     * @param id the id of the tokenDTO to save.
-     * @param tokenDTO the tokenDTO to update.
-     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the updated tokenDTO,
-     * or with status {@code 400 (Bad Request)} if the tokenDTO is not valid,
-     * or with status {@code 500 (Internal Server Error)} if the tokenDTO couldn't be updated.
-     * @throws URISyntaxException if the Location URI syntax is incorrect.
-     */
-    @PutMapping("/{id}")
-    public ResponseEntity<TokenDTO> updateToken(
-        @PathVariable(value = "id", required = false) final Long id,
-        @Valid @RequestBody TokenDTO tokenDTO
-    ) throws URISyntaxException {
-        log.debug("REST request to update Token : {}, {}", id, tokenDTO);
-        if (tokenDTO.getId() == null) {
-            throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
-        }
-        if (!Objects.equals(id, tokenDTO.getId())) {
-            throw new BadRequestAlertException("Invalid ID", ENTITY_NAME, "idinvalid");
-        }
-
-        if (!tokenRepository.existsById(id)) {
-            throw new BadRequestAlertException("Entity not found", ENTITY_NAME, "idnotfound");
-        }
-
-        tokenDTO = tokenService.update(tokenDTO);
-        return ResponseEntity.ok()
-            .headers(HeaderUtil.createEntityUpdateAlert(applicationName, true, ENTITY_NAME, tokenDTO.getId().toString()))
-            .body(tokenDTO);
-    }
-
-    /**
      * {@code PATCH  /tokens/:id} : Partial updates given fields of an existing token, field will ignore if it is null
      *
      * @param id the id of the tokenDTO to save.

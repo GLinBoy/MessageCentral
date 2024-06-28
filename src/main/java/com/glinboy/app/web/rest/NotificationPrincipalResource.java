@@ -51,6 +51,7 @@ public class NotificationPrincipalResource extends NotificationResource {
         NotificationRepository notificationRepository,
         NotificationQueryService notificationQueryService
     ) {
+        super(notificationService, notificationRepository, notificationQueryService);
         this.notificationService = notificationService;
         this.notificationRepository = notificationRepository;
         this.notificationQueryService = notificationQueryService;

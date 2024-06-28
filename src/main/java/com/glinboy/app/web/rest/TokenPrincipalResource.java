@@ -46,6 +46,7 @@ public class TokenPrincipalResource extends TokenResource {
     private String applicationName;
 
     public TokenPrincipalResource(TokenService tokenService, TokenRepository tokenRepository, TokenQueryService tokenQueryService) {
+        super(tokenService, tokenRepository, tokenQueryService);
         this.tokenService = tokenService;
         this.tokenRepository = tokenRepository;
         this.tokenQueryService = tokenQueryService;

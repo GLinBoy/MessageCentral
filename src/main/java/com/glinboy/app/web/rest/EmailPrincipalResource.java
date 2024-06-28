@@ -48,6 +48,7 @@ public class EmailPrincipalResource extends EmailResource {
     private String applicationName;
 
     public EmailPrincipalResource(EmailService emailService, EmailRepository emailRepository, EmailQueryService emailQueryService) {
+        super(emailService, emailRepository, emailQueryService);
         this.emailService = emailService;
         this.emailRepository = emailRepository;
         this.emailQueryService = emailQueryService;
