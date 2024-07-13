@@ -1,11 +1,15 @@
 package com.glinboy.app.web.rest;
 
+import com.glinboy.app.domain.Email;
 import com.glinboy.app.repository.EmailRepository;
+import com.glinboy.app.rsql.CustomRsqlVisitor;
 import com.glinboy.app.service.EmailQueryService;
 import com.glinboy.app.service.EmailService;
-import com.glinboy.app.service.criteria.EmailCriteria;
 import com.glinboy.app.service.dto.EmailDTO;
+import com.glinboy.app.service.dto.EmailsDTO;
 import com.glinboy.app.web.rest.errors.BadRequestAlertException;
+import cz.jirutka.rsql.parser.RSQLParser;
+import cz.jirutka.rsql.parser.ast.Node;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import java.net.URI;
@@ -13,11 +17,14 @@ import java.net.URISyntaxException;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -72,6 +79,20 @@ public class EmailResource {
     }
 
     /**
+     * {@code POST  /emails} : Create a new email.
+     *
+     * @param emailDTO the emailDTO to create.
+     * @return the {@link ResponseEntity} with status {@code 201 (Created)} and with body the new emailDTO, or with status {@code 400 (Bad Request)} if the email has already an ID.
+     * @throws URISyntaxException if the Location URI syntax is incorrect.
+     */
+    @PostMapping("/multiple")
+    public ResponseEntity<Void> createEmails(@Valid @RequestBody List<EmailsDTO> emailsDTO) throws URISyntaxException {
+        log.debug("REST request to save Emails : {}", emailsDTO);
+        emailService.save(emailsDTO);
+        return ResponseEntity.ok().build();
+    }
+
+    /**
      * {@code PUT  /emails/:id} : Updates an existing email.
      *
      * @param id the id of the emailDTO to save.
@@ -81,7 +102,7 @@ public class EmailResource {
      * or with status {@code 500 (Internal Server Error)} if the emailDTO couldn't be updated.
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
-    @PutMapping("/{id}")
+    //    @PutMapping("/{id}")
     public ResponseEntity<EmailDTO> updateEmail(
         @PathVariable(value = "id", required = false) final Long id,
         @Valid @RequestBody EmailDTO emailDTO
@@ -115,7 +136,7 @@ public class EmailResource {
      * or with status {@code 500 (Internal Server Error)} if the emailDTO couldn't be updated.
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
-    @PatchMapping(value = "/{id}", consumes = { "application/json", "application/merge-patch+json" })
+    //    @PatchMapping(value = "/{id}", consumes = { "application/json", "application/merge-patch+json" })
     public ResponseEntity<EmailDTO> partialUpdateEmail(
         @PathVariable(value = "id", required = false) final Long id,
         @NotNull @RequestBody EmailDTO emailDTO
@@ -149,12 +170,16 @@ public class EmailResource {
      */
     @GetMapping("")
     public ResponseEntity<List<EmailDTO>> getAllEmails(
-        EmailCriteria criteria,
-        @org.springdoc.core.annotations.ParameterObject Pageable pageable
+        @ParameterObject Pageable pageable,
+        @RequestParam(value = "query", required = false, defaultValue = "") String query
     ) {
-        log.debug("REST request to get Emails by criteria: {}", criteria);
-
-        Page<EmailDTO> page = emailQueryService.findByCriteria(criteria, pageable);
+        log.debug("REST request to get Emails by search query: {}", query);
+        Specification<Email> specs = Specification.where(null);
+        if (!StringUtils.isBlank(query)) {
+            Node rootNode = new RSQLParser().parse(query);
+            specs = rootNode.accept(new CustomRsqlVisitor<Email>());
+        }
+        Page<EmailDTO> page = emailQueryService.findBySearch(specs, pageable);
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
         return ResponseEntity.ok().headers(headers).body(page.getContent());
     }
@@ -166,9 +191,14 @@ public class EmailResource {
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the count in body.
      */
     @GetMapping("/count")
-    public ResponseEntity<Long> countEmails(EmailCriteria criteria) {
-        log.debug("REST request to count Emails by criteria: {}", criteria);
-        return ResponseEntity.ok().body(emailQueryService.countByCriteria(criteria));
+    public ResponseEntity<Long> countEmails(@RequestParam(value = "query", required = false, defaultValue = "") String query) {
+        log.debug("REST request to count Emails by search query: {}", query);
+        Specification<Email> specs = Specification.where(null);
+        if (!StringUtils.isBlank(query)) {
+            Node rootNode = new RSQLParser().parse(query);
+            specs = rootNode.accept(new CustomRsqlVisitor<Email>());
+        }
+        return ResponseEntity.ok().body(emailQueryService.countBySpecification(specs));
     }
 
     /**
@@ -190,7 +220,7 @@ public class EmailResource {
      * @param id the id of the emailDTO to delete.
      * @return the {@link ResponseEntity} with status {@code 204 (NO_CONTENT)}.
      */
-    @DeleteMapping("/{id}")
+    //    @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteEmail(@PathVariable("id") Long id) {
         log.debug("REST request to delete Email : {}", id);
         emailService.delete(id);
