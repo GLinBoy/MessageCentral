@@ -1,11 +1,15 @@
 package com.glinboy.app.web.rest;
 
+import com.glinboy.app.domain.ShortMessage;
 import com.glinboy.app.repository.ShortMessageRepository;
+import com.glinboy.app.rsql.CustomRsqlVisitor;
 import com.glinboy.app.service.ShortMessageQueryService;
 import com.glinboy.app.service.ShortMessageService;
-import com.glinboy.app.service.criteria.ShortMessageCriteria;
 import com.glinboy.app.service.dto.ShortMessageDTO;
+import com.glinboy.app.service.dto.ShortMessagesDTO;
 import com.glinboy.app.web.rest.errors.BadRequestAlertException;
+import cz.jirutka.rsql.parser.RSQLParser;
+import cz.jirutka.rsql.parser.ast.Node;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import java.net.URI;
@@ -13,11 +17,13 @@ import java.net.URISyntaxException;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -77,6 +83,21 @@ public class ShortMessageResource {
     }
 
     /**
+     * {@code POST  /short-messages} : Create a new shortMessage.
+     *
+     * @param shortMessageDTO the shortMessageDTO to create.
+     * @return the {@link ResponseEntity} with status {@code 201 (Created)} and with body the new shortMessageDTO, or with status {@code 400 (Bad Request)} if the shortMessage has already an ID.
+     * @throws URISyntaxException if the Location URI syntax is incorrect.
+     */
+    @PostMapping("/multiple")
+    public ResponseEntity<Void> createMultipleShortMessage(@Valid @RequestBody List<ShortMessagesDTO> shortMessagesDTO)
+        throws URISyntaxException {
+        log.debug("REST request to save ShortMessage : {}", shortMessagesDTO);
+        shortMessageService.save(shortMessagesDTO);
+        return ResponseEntity.ok().build();
+    }
+
+    /**
      * {@code PUT  /short-messages/:id} : Updates an existing shortMessage.
      *
      * @param id the id of the shortMessageDTO to save.
@@ -86,7 +107,7 @@ public class ShortMessageResource {
      * or with status {@code 500 (Internal Server Error)} if the shortMessageDTO couldn't be updated.
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
-    @PutMapping("/{id}")
+    //    @PutMapping("/{id}")
     public ResponseEntity<ShortMessageDTO> updateShortMessage(
         @PathVariable(value = "id", required = false) final Long id,
         @Valid @RequestBody ShortMessageDTO shortMessageDTO
@@ -120,7 +141,7 @@ public class ShortMessageResource {
      * or with status {@code 500 (Internal Server Error)} if the shortMessageDTO couldn't be updated.
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
-    @PatchMapping(value = "/{id}", consumes = { "application/json", "application/merge-patch+json" })
+    //    @PatchMapping(value = "/{id}", consumes = { "application/json", "application/merge-patch+json" })
     public ResponseEntity<ShortMessageDTO> partialUpdateShortMessage(
         @PathVariable(value = "id", required = false) final Long id,
         @NotNull @RequestBody ShortMessageDTO shortMessageDTO
@@ -154,12 +175,16 @@ public class ShortMessageResource {
      */
     @GetMapping("")
     public ResponseEntity<List<ShortMessageDTO>> getAllShortMessages(
-        ShortMessageCriteria criteria,
-        @org.springdoc.core.annotations.ParameterObject Pageable pageable
+        @org.springdoc.core.annotations.ParameterObject Pageable pageable,
+        @RequestParam(value = "query", required = false, defaultValue = "") String query
     ) {
-        log.debug("REST request to get ShortMessages by criteria: {}", criteria);
-
-        Page<ShortMessageDTO> page = shortMessageQueryService.findByCriteria(criteria, pageable);
+        log.debug("REST request to get ShortMessages by search query: {}", query);
+        Specification<ShortMessage> specs = Specification.where(null);
+        if (!StringUtils.isBlank(query)) {
+            Node rootNode = new RSQLParser().parse(query);
+            specs = rootNode.accept(new CustomRsqlVisitor<ShortMessage>());
+        }
+        Page<ShortMessageDTO> page = shortMessageQueryService.findBySearch(specs, pageable);
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
         return ResponseEntity.ok().headers(headers).body(page.getContent());
     }
@@ -171,9 +196,14 @@ public class ShortMessageResource {
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the count in body.
      */
     @GetMapping("/count")
-    public ResponseEntity<Long> countShortMessages(ShortMessageCriteria criteria) {
-        log.debug("REST request to count ShortMessages by criteria: {}", criteria);
-        return ResponseEntity.ok().body(shortMessageQueryService.countByCriteria(criteria));
+    public ResponseEntity<Long> countShortMessages(@RequestParam(value = "query", required = false, defaultValue = "") String query) {
+        log.debug("REST request to count ShortMessages by search query: {}", query);
+        Specification<ShortMessage> specs = Specification.where(null);
+        if (!StringUtils.isBlank(query)) {
+            Node rootNode = new RSQLParser().parse(query);
+            specs = rootNode.accept(new CustomRsqlVisitor<ShortMessage>());
+        }
+        return ResponseEntity.ok().body(shortMessageQueryService.countBySpecification(specs));
     }
 
     /**
@@ -195,7 +225,7 @@ public class ShortMessageResource {
      * @param id the id of the shortMessageDTO to delete.
      * @return the {@link ResponseEntity} with status {@code 204 (NO_CONTENT)}.
      */
-    @DeleteMapping("/{id}")
+    //    @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteShortMessage(@PathVariable("id") Long id) {
         log.debug("REST request to delete ShortMessage : {}", id);
         shortMessageService.delete(id);
