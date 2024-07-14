@@ -1,11 +1,14 @@
 package com.glinboy.app.web.rest;
 
+import com.glinboy.app.domain.Token;
 import com.glinboy.app.repository.TokenRepository;
+import com.glinboy.app.rsql.CustomRsqlVisitor;
 import com.glinboy.app.service.TokenQueryService;
 import com.glinboy.app.service.TokenService;
-import com.glinboy.app.service.criteria.TokenCriteria;
 import com.glinboy.app.service.dto.TokenDTO;
 import com.glinboy.app.web.rest.errors.BadRequestAlertException;
+import cz.jirutka.rsql.parser.RSQLParser;
+import cz.jirutka.rsql.parser.ast.Node;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import java.net.URI;
@@ -13,11 +16,13 @@ import java.net.URISyntaxException;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -82,7 +87,7 @@ public class TokenResource {
      * or with status {@code 500 (Internal Server Error)} if the tokenDTO couldn't be updated.
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
-    @PatchMapping(value = "/{id}", consumes = { "application/json", "application/merge-patch+json" })
+    //    @PatchMapping(value = "/{id}", consumes = { "application/json", "application/merge-patch+json" })
     public ResponseEntity<TokenDTO> partialUpdateToken(
         @PathVariable(value = "id", required = false) final Long id,
         @NotNull @RequestBody TokenDTO tokenDTO
@@ -116,12 +121,16 @@ public class TokenResource {
      */
     @GetMapping("")
     public ResponseEntity<List<TokenDTO>> getAllTokens(
-        TokenCriteria criteria,
-        @org.springdoc.core.annotations.ParameterObject Pageable pageable
+        @org.springdoc.core.annotations.ParameterObject Pageable pageable,
+        @RequestParam(value = "query", required = false, defaultValue = "") String query
     ) {
-        log.debug("REST request to get Tokens by criteria: {}", criteria);
-
-        Page<TokenDTO> page = tokenQueryService.findByCriteria(criteria, pageable);
+        log.debug("REST request to get Tokens by search query: {}", query);
+        Specification<Token> specs = Specification.where(null);
+        if (!StringUtils.isBlank(query)) {
+            Node rootNode = new RSQLParser().parse(query);
+            specs = rootNode.accept(new CustomRsqlVisitor<Token>());
+        }
+        Page<TokenDTO> page = tokenQueryService.findBySearch(specs, pageable);
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
         return ResponseEntity.ok().headers(headers).body(page.getContent());
     }
@@ -133,9 +142,14 @@ public class TokenResource {
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the count in body.
      */
     @GetMapping("/count")
-    public ResponseEntity<Long> countTokens(TokenCriteria criteria) {
-        log.debug("REST request to count Tokens by criteria: {}", criteria);
-        return ResponseEntity.ok().body(tokenQueryService.countByCriteria(criteria));
+    public ResponseEntity<Long> countTokens(@RequestParam(value = "query", required = false, defaultValue = "") String query) {
+        log.debug("REST request to count Tokens by search query: {}", query);
+        Specification<Token> specs = Specification.where(null);
+        if (!StringUtils.isBlank(query)) {
+            Node rootNode = new RSQLParser().parse(query);
+            specs = rootNode.accept(new CustomRsqlVisitor<Token>());
+        }
+        return ResponseEntity.ok().body(tokenQueryService.countBySpecification(specs));
     }
 
     /**
@@ -164,5 +178,17 @@ public class TokenResource {
         return ResponseEntity.noContent()
             .headers(HeaderUtil.createEntityDeletionAlert(applicationName, true, ENTITY_NAME, id.toString()))
             .build();
+    }
+
+    @PutMapping("/{id}/enable")
+    public ResponseEntity<Void> enableToken(@PathVariable Long id) {
+        this.tokenService.enableToken(id);
+        return ResponseEntity.noContent().build();
+    }
+
+    @PutMapping("/{id}/disable")
+    public ResponseEntity<Void> disableToken(@PathVariable Long id) {
+        this.tokenService.disableToken(id);
+        return ResponseEntity.noContent().build();
     }
 }
