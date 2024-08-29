@@ -63,5 +63,7 @@ public class NotificationAsserts {
      * @param expected the expected entity
      * @param actual the actual entity
      */
-    public static void assertNotificationUpdatableRelationshipsEquals(Notification expected, Notification actual) {}
+    public static void assertNotificationUpdatableRelationshipsEquals(Notification expected, Notification actual) {
+        // empty method
+    }
 }

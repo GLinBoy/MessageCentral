@@ -26,7 +26,7 @@ import tech.jhipster.service.QueryService;
 @Transactional(readOnly = true)
 public class NotificationQueryService extends QueryService<Notification> {
 
-    private static final Logger log = LoggerFactory.getLogger(NotificationQueryService.class);
+    private static final Logger LOG = LoggerFactory.getLogger(NotificationQueryService.class);
 
     private final NotificationRepository notificationRepository;
 
@@ -45,7 +45,7 @@ public class NotificationQueryService extends QueryService<Notification> {
      */
     @Transactional(readOnly = true)
     public Page<NotificationDTO> findByCriteria(NotificationCriteria criteria, Pageable page) {
-        log.debug("find by criteria : {}, page: {}", criteria, page);
+        LOG.debug("find by criteria : {}, page: {}", criteria, page);
         final Specification<Notification> specification = createSpecification(criteria);
         return notificationRepository.findAll(specification, page).map(notificationMapper::toDto);
     }
@@ -57,7 +57,7 @@ public class NotificationQueryService extends QueryService<Notification> {
      */
     @Transactional(readOnly = true)
     public long countByCriteria(NotificationCriteria criteria) {
-        log.debug("count by criteria : {}", criteria);
+        LOG.debug("count by criteria : {}", criteria);
         final Specification<Notification> specification = createSpecification(criteria);
         return notificationRepository.count(specification);
     }

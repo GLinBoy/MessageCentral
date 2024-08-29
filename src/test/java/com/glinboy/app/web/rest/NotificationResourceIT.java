@@ -92,8 +92,8 @@ class NotificationResourceIT {
      * This is a static method, as tests for other entities might also need it,
      * if they test an entity which requires the current entity.
      */
-    public static Notification createEntity(EntityManager em) {
-        Notification notification = new Notification()
+    public static Notification createEntity() {
+        return new Notification()
             .username(DEFAULT_USERNAME)
             .token(DEFAULT_TOKEN)
             .subject(DEFAULT_SUBJECT)
@@ -102,7 +102,6 @@ class NotificationResourceIT {
             .status(DEFAULT_STATUS)
             .createdAt(DEFAULT_CREATED_AT)
             .createdBy(DEFAULT_CREATED_BY);
-        return notification;
     }
 
     /**
@@ -111,8 +110,8 @@ class NotificationResourceIT {
      * This is a static method, as tests for other entities might also need it,
      * if they test an entity which requires the current entity.
      */
-    public static Notification createUpdatedEntity(EntityManager em) {
-        Notification notification = new Notification()
+    public static Notification createUpdatedEntity() {
+        return new Notification()
             .username(UPDATED_USERNAME)
             .token(UPDATED_TOKEN)
             .subject(UPDATED_SUBJECT)
@@ -121,12 +120,11 @@ class NotificationResourceIT {
             .status(UPDATED_STATUS)
             .createdAt(UPDATED_CREATED_AT)
             .createdBy(UPDATED_CREATED_BY);
-        return notification;
     }
 
     @BeforeEach
     public void initTest() {
-        notification = createEntity(em);
+        notification = createEntity();
     }
 
     @AfterEach

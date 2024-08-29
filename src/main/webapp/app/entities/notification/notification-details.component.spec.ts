@@ -1,6 +1,6 @@
 /* tslint:disable max-line-length */
 import { vitest } from 'vitest';
-import { shallowMount, type MountingOptions } from '@vue/test-utils';
+import { type MountingOptions, shallowMount } from '@vue/test-utils';
 import sinon, { type SinonStubbedInstance } from 'sinon';
 import { type RouteLocation } from 'vue-router';
 
@@ -60,7 +60,7 @@ describe('Component Tests', () => {
         notificationServiceStub.find.resolves(notificationSample);
         route = {
           params: {
-            notificationId: '' + 123,
+            notificationId: `${123}`,
           },
         };
         const wrapper = shallowMount(NotificationDetails, { global: mountOptions });

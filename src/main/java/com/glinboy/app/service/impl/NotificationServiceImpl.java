@@ -18,7 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 public class NotificationServiceImpl implements NotificationService {
 
-    private static final Logger log = LoggerFactory.getLogger(NotificationServiceImpl.class);
+    private static final Logger LOG = LoggerFactory.getLogger(NotificationServiceImpl.class);
 
     private final NotificationRepository notificationRepository;
 
@@ -31,7 +31,7 @@ public class NotificationServiceImpl implements NotificationService {
 
     @Override
     public NotificationDTO save(NotificationDTO notificationDTO) {
-        log.debug("Request to save Notification : {}", notificationDTO);
+        LOG.debug("Request to save Notification : {}", notificationDTO);
         Notification notification = notificationMapper.toEntity(notificationDTO);
         notification = notificationRepository.save(notification);
         return notificationMapper.toDto(notification);
@@ -39,7 +39,7 @@ public class NotificationServiceImpl implements NotificationService {
 
     @Override
     public NotificationDTO update(NotificationDTO notificationDTO) {
-        log.debug("Request to update Notification : {}", notificationDTO);
+        LOG.debug("Request to update Notification : {}", notificationDTO);
         Notification notification = notificationMapper.toEntity(notificationDTO);
         notification = notificationRepository.save(notification);
         return notificationMapper.toDto(notification);
@@ -47,7 +47,7 @@ public class NotificationServiceImpl implements NotificationService {
 
     @Override
     public Optional<NotificationDTO> partialUpdate(NotificationDTO notificationDTO) {
-        log.debug("Request to partially update Notification : {}", notificationDTO);
+        LOG.debug("Request to partially update Notification : {}", notificationDTO);
 
         return notificationRepository
             .findById(notificationDTO.getId())
@@ -63,13 +63,13 @@ public class NotificationServiceImpl implements NotificationService {
     @Override
     @Transactional(readOnly = true)
     public Optional<NotificationDTO> findOne(Long id) {
-        log.debug("Request to get Notification : {}", id);
+        LOG.debug("Request to get Notification : {}", id);
         return notificationRepository.findById(id).map(notificationMapper::toDto);
     }
 
     @Override
     public void delete(Long id) {
-        log.debug("Request to delete Notification : {}", id);
+        LOG.debug("Request to delete Notification : {}", id);
         notificationRepository.deleteById(id);
     }
 }

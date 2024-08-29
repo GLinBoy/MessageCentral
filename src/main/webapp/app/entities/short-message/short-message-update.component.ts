@@ -1,10 +1,10 @@
-import { computed, defineComponent, inject, ref, type Ref } from 'vue';
+import { type Ref, computed, defineComponent, inject, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRoute, useRouter } from 'vue-router';
 import { useVuelidate } from '@vuelidate/core';
 
 import ShortMessageService from './short-message.service';
-import { useValidation, useDateFormat } from '@/shared/composables';
+import { useDateFormat, useValidation } from '@/shared/composables';
 import { useAlertService } from '@/shared/alert/alert.service';
 
 import { type IShortMessage, ShortMessage } from '@/shared/model/short-message.model';

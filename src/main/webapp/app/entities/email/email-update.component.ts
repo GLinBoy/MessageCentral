@@ -1,14 +1,14 @@
-import { computed, defineComponent, inject, ref, type Ref } from 'vue';
+import { type Ref, computed, defineComponent, inject, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRoute, useRouter } from 'vue-router';
 import { useVuelidate } from '@vuelidate/core';
 
 import EmailService from './email.service';
 import useDataUtils from '@/shared/data/data-utils.service';
-import { useValidation, useDateFormat } from '@/shared/composables';
+import { useDateFormat, useValidation } from '@/shared/composables';
 import { useAlertService } from '@/shared/alert/alert.service';
 
-import { type IEmail, Email } from '@/shared/model/email.model';
+import { Email, type IEmail } from '@/shared/model/email.model';
 import { MessageStatus } from '@/shared/model/enumerations/message-status.model';
 import { EmailType } from '@/shared/model/enumerations/email-type.model';
 

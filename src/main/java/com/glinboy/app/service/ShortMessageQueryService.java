@@ -25,7 +25,7 @@ import tech.jhipster.service.QueryService;
 @Transactional(readOnly = true)
 public class ShortMessageQueryService extends QueryService<ShortMessage> {
 
-    private static final Logger log = LoggerFactory.getLogger(ShortMessageQueryService.class);
+    private static final Logger LOG = LoggerFactory.getLogger(ShortMessageQueryService.class);
 
     private final ShortMessageRepository shortMessageRepository;
 
@@ -44,7 +44,7 @@ public class ShortMessageQueryService extends QueryService<ShortMessage> {
      */
     @Transactional(readOnly = true)
     public Page<ShortMessageDTO> findByCriteria(ShortMessageCriteria criteria, Pageable page) {
-        log.debug("find by criteria : {}, page: {}", criteria, page);
+        LOG.debug("find by criteria : {}, page: {}", criteria, page);
         final Specification<ShortMessage> specification = createSpecification(criteria);
         return shortMessageRepository.findAll(specification, page).map(shortMessageMapper::toDto);
     }
@@ -56,7 +56,7 @@ public class ShortMessageQueryService extends QueryService<ShortMessage> {
      */
     @Transactional(readOnly = true)
     public long countByCriteria(ShortMessageCriteria criteria) {
-        log.debug("count by criteria : {}", criteria);
+        LOG.debug("count by criteria : {}", criteria);
         final Specification<ShortMessage> specification = createSpecification(criteria);
         return shortMessageRepository.count(specification);
     }

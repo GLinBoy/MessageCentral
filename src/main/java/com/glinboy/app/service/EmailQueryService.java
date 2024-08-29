@@ -25,7 +25,7 @@ import tech.jhipster.service.QueryService;
 @Transactional(readOnly = true)
 public class EmailQueryService extends QueryService<Email> {
 
-    private static final Logger log = LoggerFactory.getLogger(EmailQueryService.class);
+    private static final Logger LOG = LoggerFactory.getLogger(EmailQueryService.class);
 
     private final EmailRepository emailRepository;
 
@@ -44,7 +44,7 @@ public class EmailQueryService extends QueryService<Email> {
      */
     @Transactional(readOnly = true)
     public Page<EmailDTO> findByCriteria(EmailCriteria criteria, Pageable page) {
-        log.debug("find by criteria : {}, page: {}", criteria, page);
+        LOG.debug("find by criteria : {}, page: {}", criteria, page);
         final Specification<Email> specification = createSpecification(criteria);
         return emailRepository.findAll(specification, page).map(emailMapper::toDto);
     }
@@ -56,7 +56,7 @@ public class EmailQueryService extends QueryService<Email> {
      */
     @Transactional(readOnly = true)
     public long countByCriteria(EmailCriteria criteria) {
-        log.debug("count by criteria : {}", criteria);
+        LOG.debug("count by criteria : {}", criteria);
         final Specification<Email> specification = createSpecification(criteria);
         return emailRepository.count(specification);
     }

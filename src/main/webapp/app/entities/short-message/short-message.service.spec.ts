@@ -38,12 +38,7 @@ describe('Service Tests', () => {
 
     describe('Service methods', () => {
       it('should find an element', async () => {
-        const returnedFromService = Object.assign(
-          {
-            createdAt: dayjs(currentDate).format(DATE_TIME_FORMAT),
-          },
-          elemDefault,
-        );
+        const returnedFromService = { createdAt: dayjs(currentDate).format(DATE_TIME_FORMAT), ...elemDefault };
         axiosStub.get.resolves({ data: returnedFromService });
 
         return service.find(123).then(res => {
@@ -62,19 +57,8 @@ describe('Service Tests', () => {
       });
 
       it('should create a ShortMessage', async () => {
-        const returnedFromService = Object.assign(
-          {
-            id: 123,
-            createdAt: dayjs(currentDate).format(DATE_TIME_FORMAT),
-          },
-          elemDefault,
-        );
-        const expected = Object.assign(
-          {
-            createdAt: currentDate,
-          },
-          returnedFromService,
-        );
+        const returnedFromService = { id: 123, createdAt: dayjs(currentDate).format(DATE_TIME_FORMAT), ...elemDefault };
+        const expected = { createdAt: currentDate, ...returnedFromService };
 
         axiosStub.post.resolves({ data: returnedFromService });
         return service.create({}).then(res => {
@@ -94,23 +78,16 @@ describe('Service Tests', () => {
       });
 
       it('should update a ShortMessage', async () => {
-        const returnedFromService = Object.assign(
-          {
-            phoneNumber: 'BBBBBB',
-            content: 'BBBBBB',
-            status: 'BBBBBB',
-            createdAt: dayjs(currentDate).format(DATE_TIME_FORMAT),
-            createdBy: 'BBBBBB',
-          },
-          elemDefault,
-        );
+        const returnedFromService = {
+          phoneNumber: 'BBBBBB',
+          content: 'BBBBBB',
+          status: 'BBBBBB',
+          createdAt: dayjs(currentDate).format(DATE_TIME_FORMAT),
+          createdBy: 'BBBBBB',
+          ...elemDefault,
+        };
 
-        const expected = Object.assign(
-          {
-            createdAt: currentDate,
-          },
-          returnedFromService,
-        );
+        const expected = { createdAt: currentDate, ...returnedFromService };
         axiosStub.put.resolves({ data: returnedFromService });
 
         return service.update(expected).then(res => {
@@ -130,21 +107,10 @@ describe('Service Tests', () => {
       });
 
       it('should partial update a ShortMessage', async () => {
-        const patchObject = Object.assign(
-          {
-            phoneNumber: 'BBBBBB',
-            content: 'BBBBBB',
-          },
-          new ShortMessage(),
-        );
+        const patchObject = { phoneNumber: 'BBBBBB', content: 'BBBBBB', ...new ShortMessage() };
         const returnedFromService = Object.assign(patchObject, elemDefault);
 
-        const expected = Object.assign(
-          {
-            createdAt: currentDate,
-          },
-          returnedFromService,
-        );
+        const expected = { createdAt: currentDate, ...returnedFromService };
         axiosStub.patch.resolves({ data: returnedFromService });
 
         return service.partialUpdate(patchObject).then(res => {
@@ -164,22 +130,15 @@ describe('Service Tests', () => {
       });
 
       it('should return a list of ShortMessage', async () => {
-        const returnedFromService = Object.assign(
-          {
-            phoneNumber: 'BBBBBB',
-            content: 'BBBBBB',
-            status: 'BBBBBB',
-            createdAt: dayjs(currentDate).format(DATE_TIME_FORMAT),
-            createdBy: 'BBBBBB',
-          },
-          elemDefault,
-        );
-        const expected = Object.assign(
-          {
-            createdAt: currentDate,
-          },
-          returnedFromService,
-        );
+        const returnedFromService = {
+          phoneNumber: 'BBBBBB',
+          content: 'BBBBBB',
+          status: 'BBBBBB',
+          createdAt: dayjs(currentDate).format(DATE_TIME_FORMAT),
+          createdBy: 'BBBBBB',
+          ...elemDefault,
+        };
+        const expected = { createdAt: currentDate, ...returnedFromService };
         axiosStub.get.resolves([returnedFromService]);
         return service.retrieve({ sort: {}, page: 0, size: 10 }).then(res => {
           expect(res).toContainEqual(expected);

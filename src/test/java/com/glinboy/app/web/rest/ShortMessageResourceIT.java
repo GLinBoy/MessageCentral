@@ -83,14 +83,13 @@ class ShortMessageResourceIT {
      * This is a static method, as tests for other entities might also need it,
      * if they test an entity which requires the current entity.
      */
-    public static ShortMessage createEntity(EntityManager em) {
-        ShortMessage shortMessage = new ShortMessage()
+    public static ShortMessage createEntity() {
+        return new ShortMessage()
             .phoneNumber(DEFAULT_PHONE_NUMBER)
             .content(DEFAULT_CONTENT)
             .status(DEFAULT_STATUS)
             .createdAt(DEFAULT_CREATED_AT)
             .createdBy(DEFAULT_CREATED_BY);
-        return shortMessage;
     }
 
     /**
@@ -99,19 +98,18 @@ class ShortMessageResourceIT {
      * This is a static method, as tests for other entities might also need it,
      * if they test an entity which requires the current entity.
      */
-    public static ShortMessage createUpdatedEntity(EntityManager em) {
-        ShortMessage shortMessage = new ShortMessage()
+    public static ShortMessage createUpdatedEntity() {
+        return new ShortMessage()
             .phoneNumber(UPDATED_PHONE_NUMBER)
             .content(UPDATED_CONTENT)
             .status(UPDATED_STATUS)
             .createdAt(UPDATED_CREATED_AT)
             .createdBy(UPDATED_CREATED_BY);
-        return shortMessage;
     }
 
     @BeforeEach
     public void initTest() {
-        shortMessage = createEntity(em);
+        shortMessage = createEntity();
     }
 
     @AfterEach

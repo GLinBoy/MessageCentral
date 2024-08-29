@@ -18,7 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 public class ShortMessageServiceImpl implements ShortMessageService {
 
-    private static final Logger log = LoggerFactory.getLogger(ShortMessageServiceImpl.class);
+    private static final Logger LOG = LoggerFactory.getLogger(ShortMessageServiceImpl.class);
 
     private final ShortMessageRepository shortMessageRepository;
 
@@ -31,7 +31,7 @@ public class ShortMessageServiceImpl implements ShortMessageService {
 
     @Override
     public ShortMessageDTO save(ShortMessageDTO shortMessageDTO) {
-        log.debug("Request to save ShortMessage : {}", shortMessageDTO);
+        LOG.debug("Request to save ShortMessage : {}", shortMessageDTO);
         ShortMessage shortMessage = shortMessageMapper.toEntity(shortMessageDTO);
         shortMessage = shortMessageRepository.save(shortMessage);
         return shortMessageMapper.toDto(shortMessage);
@@ -39,7 +39,7 @@ public class ShortMessageServiceImpl implements ShortMessageService {
 
     @Override
     public ShortMessageDTO update(ShortMessageDTO shortMessageDTO) {
-        log.debug("Request to update ShortMessage : {}", shortMessageDTO);
+        LOG.debug("Request to update ShortMessage : {}", shortMessageDTO);
         ShortMessage shortMessage = shortMessageMapper.toEntity(shortMessageDTO);
         shortMessage = shortMessageRepository.save(shortMessage);
         return shortMessageMapper.toDto(shortMessage);
@@ -47,7 +47,7 @@ public class ShortMessageServiceImpl implements ShortMessageService {
 
     @Override
     public Optional<ShortMessageDTO> partialUpdate(ShortMessageDTO shortMessageDTO) {
-        log.debug("Request to partially update ShortMessage : {}", shortMessageDTO);
+        LOG.debug("Request to partially update ShortMessage : {}", shortMessageDTO);
 
         return shortMessageRepository
             .findById(shortMessageDTO.getId())
@@ -63,13 +63,13 @@ public class ShortMessageServiceImpl implements ShortMessageService {
     @Override
     @Transactional(readOnly = true)
     public Optional<ShortMessageDTO> findOne(Long id) {
-        log.debug("Request to get ShortMessage : {}", id);
+        LOG.debug("Request to get ShortMessage : {}", id);
         return shortMessageRepository.findById(id).map(shortMessageMapper::toDto);
     }
 
     @Override
     public void delete(Long id) {
-        log.debug("Request to delete ShortMessage : {}", id);
+        LOG.debug("Request to delete ShortMessage : {}", id);
         shortMessageRepository.deleteById(id);
     }
 }

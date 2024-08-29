@@ -18,7 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 public class TokenServiceImpl implements TokenService {
 
-    private static final Logger log = LoggerFactory.getLogger(TokenServiceImpl.class);
+    private static final Logger LOG = LoggerFactory.getLogger(TokenServiceImpl.class);
 
     private final TokenRepository tokenRepository;
 
@@ -31,7 +31,7 @@ public class TokenServiceImpl implements TokenService {
 
     @Override
     public TokenDTO save(TokenDTO tokenDTO) {
-        log.debug("Request to save Token : {}", tokenDTO);
+        LOG.debug("Request to save Token : {}", tokenDTO);
         Token token = tokenMapper.toEntity(tokenDTO);
         token = tokenRepository.save(token);
         return tokenMapper.toDto(token);
@@ -39,7 +39,7 @@ public class TokenServiceImpl implements TokenService {
 
     @Override
     public TokenDTO update(TokenDTO tokenDTO) {
-        log.debug("Request to update Token : {}", tokenDTO);
+        LOG.debug("Request to update Token : {}", tokenDTO);
         Token token = tokenMapper.toEntity(tokenDTO);
         token = tokenRepository.save(token);
         return tokenMapper.toDto(token);
@@ -47,7 +47,7 @@ public class TokenServiceImpl implements TokenService {
 
     @Override
     public Optional<TokenDTO> partialUpdate(TokenDTO tokenDTO) {
-        log.debug("Request to partially update Token : {}", tokenDTO);
+        LOG.debug("Request to partially update Token : {}", tokenDTO);
 
         return tokenRepository
             .findById(tokenDTO.getId())
@@ -63,13 +63,13 @@ public class TokenServiceImpl implements TokenService {
     @Override
     @Transactional(readOnly = true)
     public Optional<TokenDTO> findOne(Long id) {
-        log.debug("Request to get Token : {}", id);
+        LOG.debug("Request to get Token : {}", id);
         return tokenRepository.findById(id).map(tokenMapper::toDto);
     }
 
     @Override
     public void delete(Long id) {
-        log.debug("Request to delete Token : {}", id);
+        LOG.debug("Request to delete Token : {}", id);
         tokenRepository.deleteById(id);
     }
 }

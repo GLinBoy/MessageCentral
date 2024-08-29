@@ -3,7 +3,7 @@
     <h2 id="page-heading" data-cy="NotificationDataHeading">
       <span v-text="t$('messageCentralApp.notificationData.home.title')" id="notification-data-heading"></span>
       <div class="d-flex justify-content-end">
-        <button class="btn btn-info mr-2" v-on:click="handleSyncList" :disabled="isFetching">
+        <button class="btn btn-info mr-2" @click="handleSyncList" :disabled="isFetching">
           <font-awesome-icon icon="sync" :spin="isFetching"></font-awesome-icon>
           <span v-text="t$('messageCentralApp.notificationData.home.refreshListLabel')"></span>
         </button>
@@ -74,7 +74,7 @@
                   </button>
                 </router-link>
                 <b-button
-                  v-on:click="prepareRemove(notificationData)"
+                  @click="prepareRemove(notificationData)"
                   variant="danger"
                   class="btn btn-sm"
                   data-cy="entityDeleteButton"
@@ -102,14 +102,14 @@
       </div>
       <template #modal-footer>
         <div>
-          <button type="button" class="btn btn-secondary" v-text="t$('entity.action.cancel')" v-on:click="closeDialog()"></button>
+          <button type="button" class="btn btn-secondary" v-text="t$('entity.action.cancel')" @click="closeDialog()"></button>
           <button
             type="button"
             class="btn btn-primary"
             id="jhi-confirm-delete-notificationData"
             data-cy="entityConfirmDeleteButton"
             v-text="t$('entity.action.delete')"
-            v-on:click="removeNotificationData()"
+            @click="removeNotificationData()"
           ></button>
         </div>
       </template>

@@ -1,6 +1,6 @@
 /* tslint:disable max-line-length */
 import { vitest } from 'vitest';
-import { shallowMount, type MountingOptions } from '@vue/test-utils';
+import { type MountingOptions, shallowMount } from '@vue/test-utils';
 import sinon, { type SinonStubbedInstance } from 'sinon';
 import { type RouteLocation } from 'vue-router';
 
@@ -126,7 +126,7 @@ describe('Component Tests', () => {
         // WHEN
         route = {
           params: {
-            tokenId: '' + tokenSample.id,
+            tokenId: `${tokenSample.id}`,
           },
         };
         const wrapper = shallowMount(TokenUpdate, { global: mountOptions });

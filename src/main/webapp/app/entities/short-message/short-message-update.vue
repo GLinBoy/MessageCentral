@@ -1,7 +1,7 @@
 <template>
   <div class="row justify-content-center">
     <div class="col-8">
-      <form name="editForm" novalidate v-on:submit.prevent="save()">
+      <form name="editForm" novalidate @submit.prevent="save()">
         <h2
           id="messageCentralApp.shortMessage.home.createOrEditLabel"
           data-cy="ShortMessageCreateUpdateHeading"
@@ -61,8 +61,8 @@
               <option
                 v-for="messageStatus in messageStatusValues"
                 :key="messageStatus"
-                v-bind:value="messageStatus"
-                v-bind:label="t$('messageCentralApp.MessageStatus.' + messageStatus)"
+                :value="messageStatus"
+                :label="t$('messageCentralApp.MessageStatus.' + messageStatus)"
               >
                 {{ messageStatus }}
               </option>
@@ -105,7 +105,7 @@
           </div>
         </div>
         <div>
-          <button type="button" id="cancel-save" data-cy="entityCreateCancelButton" class="btn btn-secondary" v-on:click="previousState()">
+          <button type="button" id="cancel-save" data-cy="entityCreateCancelButton" class="btn btn-secondary" @click="previousState()">
             <font-awesome-icon icon="ban"></font-awesome-icon>&nbsp;<span v-text="t$('entity.action.cancel')"></span>
           </button>
           <button

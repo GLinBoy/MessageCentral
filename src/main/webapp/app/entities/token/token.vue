@@ -3,7 +3,7 @@
     <h2 id="page-heading" data-cy="TokenHeading">
       <span v-text="t$('messageCentralApp.token.home.title')" id="token-heading"></span>
       <div class="d-flex justify-content-end">
-        <button class="btn btn-info mr-2" v-on:click="handleSyncList" :disabled="isFetching">
+        <button class="btn btn-info mr-2" @click="handleSyncList" :disabled="isFetching">
           <font-awesome-icon icon="sync" :spin="isFetching"></font-awesome-icon>
           <span v-text="t$('messageCentralApp.token.home.refreshListLabel')"></span>
         </button>
@@ -28,43 +28,43 @@
       <table class="table table-striped" aria-describedby="tokens">
         <thead>
           <tr>
-            <th scope="row" v-on:click="changeOrder('id')">
+            <th scope="row" @click="changeOrder('id')">
               <span v-text="t$('global.field.id')"></span>
               <jhi-sort-indicator :current-order="propOrder" :reverse="reverse" :field-name="'id'"></jhi-sort-indicator>
             </th>
-            <th scope="row" v-on:click="changeOrder('name')">
+            <th scope="row" @click="changeOrder('name')">
               <span v-text="t$('messageCentralApp.token.name')"></span>
               <jhi-sort-indicator :current-order="propOrder" :reverse="reverse" :field-name="'name'"></jhi-sort-indicator>
             </th>
-            <th scope="row" v-on:click="changeOrder('token')">
+            <th scope="row" @click="changeOrder('token')">
               <span v-text="t$('messageCentralApp.token.token')"></span>
               <jhi-sort-indicator :current-order="propOrder" :reverse="reverse" :field-name="'token'"></jhi-sort-indicator>
             </th>
-            <th scope="row" v-on:click="changeOrder('disable')">
+            <th scope="row" @click="changeOrder('disable')">
               <span v-text="t$('messageCentralApp.token.disable')"></span>
               <jhi-sort-indicator :current-order="propOrder" :reverse="reverse" :field-name="'disable'"></jhi-sort-indicator>
             </th>
-            <th scope="row" v-on:click="changeOrder('deprecateAt')">
+            <th scope="row" @click="changeOrder('deprecateAt')">
               <span v-text="t$('messageCentralApp.token.deprecateAt')"></span>
               <jhi-sort-indicator :current-order="propOrder" :reverse="reverse" :field-name="'deprecateAt'"></jhi-sort-indicator>
             </th>
-            <th scope="row" v-on:click="changeOrder('roles')">
+            <th scope="row" @click="changeOrder('roles')">
               <span v-text="t$('messageCentralApp.token.roles')"></span>
               <jhi-sort-indicator :current-order="propOrder" :reverse="reverse" :field-name="'roles'"></jhi-sort-indicator>
             </th>
-            <th scope="row" v-on:click="changeOrder('createdAt')">
+            <th scope="row" @click="changeOrder('createdAt')">
               <span v-text="t$('messageCentralApp.token.createdAt')"></span>
               <jhi-sort-indicator :current-order="propOrder" :reverse="reverse" :field-name="'createdAt'"></jhi-sort-indicator>
             </th>
-            <th scope="row" v-on:click="changeOrder('createdBy')">
+            <th scope="row" @click="changeOrder('createdBy')">
               <span v-text="t$('messageCentralApp.token.createdBy')"></span>
               <jhi-sort-indicator :current-order="propOrder" :reverse="reverse" :field-name="'createdBy'"></jhi-sort-indicator>
             </th>
-            <th scope="row" v-on:click="changeOrder('updatedAt')">
+            <th scope="row" @click="changeOrder('updatedAt')">
               <span v-text="t$('messageCentralApp.token.updatedAt')"></span>
               <jhi-sort-indicator :current-order="propOrder" :reverse="reverse" :field-name="'updatedAt'"></jhi-sort-indicator>
             </th>
-            <th scope="row" v-on:click="changeOrder('updatedBy')">
+            <th scope="row" @click="changeOrder('updatedBy')">
               <span v-text="t$('messageCentralApp.token.updatedBy')"></span>
               <jhi-sort-indicator :current-order="propOrder" :reverse="reverse" :field-name="'updatedBy'"></jhi-sort-indicator>
             </th>
@@ -100,7 +100,7 @@
                   </button>
                 </router-link>
                 <b-button
-                  v-on:click="prepareRemove(token)"
+                  @click="prepareRemove(token)"
                   variant="danger"
                   class="btn btn-sm"
                   data-cy="entityDeleteButton"
@@ -124,14 +124,14 @@
       </div>
       <template #modal-footer>
         <div>
-          <button type="button" class="btn btn-secondary" v-text="t$('entity.action.cancel')" v-on:click="closeDialog()"></button>
+          <button type="button" class="btn btn-secondary" v-text="t$('entity.action.cancel')" @click="closeDialog()"></button>
           <button
             type="button"
             class="btn btn-primary"
             id="jhi-confirm-delete-token"
             data-cy="entityConfirmDeleteButton"
             v-text="t$('entity.action.delete')"
-            v-on:click="removeToken()"
+            @click="removeToken()"
           ></button>
         </div>
       </template>

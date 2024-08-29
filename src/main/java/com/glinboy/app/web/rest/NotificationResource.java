@@ -33,7 +33,7 @@ import tech.jhipster.web.util.ResponseUtil;
 @RequestMapping("/api/notifications")
 public class NotificationResource {
 
-    private static final Logger log = LoggerFactory.getLogger(NotificationResource.class);
+    private static final Logger LOG = LoggerFactory.getLogger(NotificationResource.class);
 
     private static final String ENTITY_NAME = "notification";
 
@@ -66,7 +66,7 @@ public class NotificationResource {
     @PostMapping("")
     public ResponseEntity<NotificationDTO> createNotification(@Valid @RequestBody NotificationDTO notificationDTO)
         throws URISyntaxException {
-        log.debug("REST request to save Notification : {}", notificationDTO);
+        LOG.debug("REST request to save Notification : {}", notificationDTO);
         if (notificationDTO.getId() != null) {
             throw new BadRequestAlertException("A new notification cannot already have an ID", ENTITY_NAME, "idexists");
         }
@@ -91,7 +91,7 @@ public class NotificationResource {
         @PathVariable(value = "id", required = false) final Long id,
         @Valid @RequestBody NotificationDTO notificationDTO
     ) throws URISyntaxException {
-        log.debug("REST request to update Notification : {}, {}", id, notificationDTO);
+        LOG.debug("REST request to update Notification : {}, {}", id, notificationDTO);
         if (notificationDTO.getId() == null) {
             throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
         }
@@ -125,7 +125,7 @@ public class NotificationResource {
         @PathVariable(value = "id", required = false) final Long id,
         @NotNull @RequestBody NotificationDTO notificationDTO
     ) throws URISyntaxException {
-        log.debug("REST request to partial update Notification partially : {}, {}", id, notificationDTO);
+        LOG.debug("REST request to partial update Notification partially : {}, {}", id, notificationDTO);
         if (notificationDTO.getId() == null) {
             throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
         }
@@ -157,7 +157,7 @@ public class NotificationResource {
         NotificationCriteria criteria,
         @org.springdoc.core.annotations.ParameterObject Pageable pageable
     ) {
-        log.debug("REST request to get Notifications by criteria: {}", criteria);
+        LOG.debug("REST request to get Notifications by criteria: {}", criteria);
 
         Page<NotificationDTO> page = notificationQueryService.findByCriteria(criteria, pageable);
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
@@ -172,7 +172,7 @@ public class NotificationResource {
      */
     @GetMapping("/count")
     public ResponseEntity<Long> countNotifications(NotificationCriteria criteria) {
-        log.debug("REST request to count Notifications by criteria: {}", criteria);
+        LOG.debug("REST request to count Notifications by criteria: {}", criteria);
         return ResponseEntity.ok().body(notificationQueryService.countByCriteria(criteria));
     }
 
@@ -184,7 +184,7 @@ public class NotificationResource {
      */
     @GetMapping("/{id}")
     public ResponseEntity<NotificationDTO> getNotification(@PathVariable("id") Long id) {
-        log.debug("REST request to get Notification : {}", id);
+        LOG.debug("REST request to get Notification : {}", id);
         Optional<NotificationDTO> notificationDTO = notificationService.findOne(id);
         return ResponseUtil.wrapOrNotFound(notificationDTO);
     }
@@ -197,7 +197,7 @@ public class NotificationResource {
      */
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteNotification(@PathVariable("id") Long id) {
-        log.debug("REST request to delete Notification : {}", id);
+        LOG.debug("REST request to delete Notification : {}", id);
         notificationService.delete(id);
         return ResponseEntity.noContent()
             .headers(HeaderUtil.createEntityDeletionAlert(applicationName, true, ENTITY_NAME, id.toString()))

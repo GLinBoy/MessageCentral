@@ -60,5 +60,7 @@ public class ShortMessageAsserts {
      * @param expected the expected entity
      * @param actual the actual entity
      */
-    public static void assertShortMessageUpdatableRelationshipsEquals(ShortMessage expected, ShortMessage actual) {}
+    public static void assertShortMessageUpdatableRelationshipsEquals(ShortMessage expected, ShortMessage actual) {
+        // empty method
+    }
 }

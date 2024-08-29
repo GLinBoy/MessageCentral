@@ -18,7 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 public class EmailServiceImpl implements EmailService {
 
-    private static final Logger log = LoggerFactory.getLogger(EmailServiceImpl.class);
+    private static final Logger LOG = LoggerFactory.getLogger(EmailServiceImpl.class);
 
     private final EmailRepository emailRepository;
 
@@ -31,7 +31,7 @@ public class EmailServiceImpl implements EmailService {
 
     @Override
     public EmailDTO save(EmailDTO emailDTO) {
-        log.debug("Request to save Email : {}", emailDTO);
+        LOG.debug("Request to save Email : {}", emailDTO);
         Email email = emailMapper.toEntity(emailDTO);
         email = emailRepository.save(email);
         return emailMapper.toDto(email);
@@ -39,7 +39,7 @@ public class EmailServiceImpl implements EmailService {
 
     @Override
     public EmailDTO update(EmailDTO emailDTO) {
-        log.debug("Request to update Email : {}", emailDTO);
+        LOG.debug("Request to update Email : {}", emailDTO);
         Email email = emailMapper.toEntity(emailDTO);
         email = emailRepository.save(email);
         return emailMapper.toDto(email);
@@ -47,7 +47,7 @@ public class EmailServiceImpl implements EmailService {
 
     @Override
     public Optional<EmailDTO> partialUpdate(EmailDTO emailDTO) {
-        log.debug("Request to partially update Email : {}", emailDTO);
+        LOG.debug("Request to partially update Email : {}", emailDTO);
 
         return emailRepository
             .findById(emailDTO.getId())
@@ -63,13 +63,13 @@ public class EmailServiceImpl implements EmailService {
     @Override
     @Transactional(readOnly = true)
     public Optional<EmailDTO> findOne(Long id) {
-        log.debug("Request to get Email : {}", id);
+        LOG.debug("Request to get Email : {}", id);
         return emailRepository.findById(id).map(emailMapper::toDto);
     }
 
     @Override
     public void delete(Long id) {
-        log.debug("Request to delete Email : {}", id);
+        LOG.debug("Request to delete Email : {}", id);
         emailRepository.deleteById(id);
     }
 }
