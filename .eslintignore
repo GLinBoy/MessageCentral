@@ -1,0 +1,5 @@
+node_modules/
+src/main/docker/
+target/
+coverage/
+target/classes/static/
