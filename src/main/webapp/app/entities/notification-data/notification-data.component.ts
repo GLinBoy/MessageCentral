@@ -1,4 +1,4 @@
-import { defineComponent, inject, onMounted, ref, type Ref } from 'vue';
+import { type Ref, defineComponent, inject, onMounted, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 
 import NotificationDataService from './notification-data.service';

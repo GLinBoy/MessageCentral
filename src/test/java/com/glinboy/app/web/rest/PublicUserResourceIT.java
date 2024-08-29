@@ -9,7 +9,6 @@ import com.glinboy.app.domain.User;
 import com.glinboy.app.repository.UserRepository;
 import com.glinboy.app.security.AuthoritiesConstants;
 import com.glinboy.app.service.UserService;
-import jakarta.persistence.EntityManager;
 import java.util.Objects;
 import java.util.Set;
 import org.junit.jupiter.api.AfterEach;
@@ -32,16 +31,11 @@ import org.springframework.transaction.annotation.Transactional;
 @IntegrationTest
 class PublicUserResourceIT {
 
-    private static final String DEFAULT_LOGIN = "johndoe";
-
     @Autowired
     private UserRepository userRepository;
 
     @Autowired
     private UserService userService;
-
-    @Autowired
-    private EntityManager em;
 
     @Autowired
     private CacheManager cacheManager;
@@ -59,7 +53,7 @@ class PublicUserResourceIT {
 
     @BeforeEach
     public void initTest() {
-        user = UserResourceIT.initTestUser(em);
+        user = UserResourceIT.initTestUser();
     }
 
     @AfterEach

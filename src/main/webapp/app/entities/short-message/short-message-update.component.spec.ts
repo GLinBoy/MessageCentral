@@ -126,7 +126,7 @@ describe('Component Tests', () => {
         // WHEN
         route = {
           params: {
-            shortMessageId: '' + shortMessageSample.id,
+            shortMessageId: `${shortMessageSample.id}`,
           },
         };
         const wrapper = shallowMount(ShortMessageUpdate, { global: mountOptions });

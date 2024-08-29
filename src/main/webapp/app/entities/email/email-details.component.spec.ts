@@ -60,7 +60,7 @@ describe('Component Tests', () => {
         emailServiceStub.find.resolves(emailSample);
         route = {
           params: {
-            emailId: '' + 123,
+            emailId: `${123}`,
           },
         };
         const wrapper = shallowMount(EmailDetails, { global: mountOptions });

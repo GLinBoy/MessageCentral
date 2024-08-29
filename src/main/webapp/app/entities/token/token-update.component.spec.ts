@@ -126,7 +126,7 @@ describe('Component Tests', () => {
         // WHEN
         route = {
           params: {
-            tokenId: '' + tokenSample.id,
+            tokenId: `${tokenSample.id}`,
           },
         };
         const wrapper = shallowMount(TokenUpdate, { global: mountOptions });

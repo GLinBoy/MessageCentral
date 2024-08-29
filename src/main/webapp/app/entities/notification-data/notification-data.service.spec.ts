@@ -34,7 +34,7 @@ describe('Service Tests', () => {
 
     describe('Service methods', () => {
       it('should find an element', async () => {
-        const returnedFromService = Object.assign({}, elemDefault);
+        const returnedFromService = { ...elemDefault };
         axiosStub.get.resolves({ data: returnedFromService });
 
         return service.find(123).then(res => {
@@ -53,13 +53,8 @@ describe('Service Tests', () => {
       });
 
       it('should create a NotificationData', async () => {
-        const returnedFromService = Object.assign(
-          {
-            id: 123,
-          },
-          elemDefault,
-        );
-        const expected = Object.assign({}, returnedFromService);
+        const returnedFromService = { id: 123, ...elemDefault };
+        const expected = { ...returnedFromService };
 
         axiosStub.post.resolves({ data: returnedFromService });
         return service.create({}).then(res => {
@@ -79,15 +74,9 @@ describe('Service Tests', () => {
       });
 
       it('should update a NotificationData', async () => {
-        const returnedFromService = Object.assign(
-          {
-            dataKey: 'BBBBBB',
-            dataValue: 'BBBBBB',
-          },
-          elemDefault,
-        );
+        const returnedFromService = { dataKey: 'BBBBBB', dataValue: 'BBBBBB', ...elemDefault };
 
-        const expected = Object.assign({}, returnedFromService);
+        const expected = { ...returnedFromService };
         axiosStub.put.resolves({ data: returnedFromService });
 
         return service.update(expected).then(res => {
@@ -107,15 +96,10 @@ describe('Service Tests', () => {
       });
 
       it('should partial update a NotificationData', async () => {
-        const patchObject = Object.assign(
-          {
-            dataValue: 'BBBBBB',
-          },
-          new NotificationData(),
-        );
+        const patchObject = { dataValue: 'BBBBBB', ...new NotificationData() };
         const returnedFromService = Object.assign(patchObject, elemDefault);
 
-        const expected = Object.assign({}, returnedFromService);
+        const expected = { ...returnedFromService };
         axiosStub.patch.resolves({ data: returnedFromService });
 
         return service.partialUpdate(patchObject).then(res => {
@@ -135,14 +119,8 @@ describe('Service Tests', () => {
       });
 
       it('should return a list of NotificationData', async () => {
-        const returnedFromService = Object.assign(
-          {
-            dataKey: 'BBBBBB',
-            dataValue: 'BBBBBB',
-          },
-          elemDefault,
-        );
-        const expected = Object.assign({}, returnedFromService);
+        const returnedFromService = { dataKey: 'BBBBBB', dataValue: 'BBBBBB', ...elemDefault };
+        const expected = { ...returnedFromService };
         axiosStub.get.resolves([returnedFromService]);
         return service.retrieve().then(res => {
           expect(res).toContainEqual(expected);

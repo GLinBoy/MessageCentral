@@ -60,7 +60,7 @@ describe('Component Tests', () => {
         shortMessageServiceStub.find.resolves(shortMessageSample);
         route = {
           params: {
-            shortMessageId: '' + 123,
+            shortMessageId: `${123}`,
           },
         };
         const wrapper = shallowMount(ShortMessageDetails, { global: mountOptions });

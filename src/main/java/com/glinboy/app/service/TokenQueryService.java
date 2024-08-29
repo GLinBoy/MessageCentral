@@ -26,7 +26,7 @@ import tech.jhipster.service.QueryService;
 @Transactional(readOnly = true)
 public class TokenQueryService extends QueryService<Token> {
 
-    private static final Logger log = LoggerFactory.getLogger(TokenQueryService.class);
+    private static final Logger LOG = LoggerFactory.getLogger(TokenQueryService.class);
 
     private final TokenRepository tokenRepository;
 
@@ -45,7 +45,7 @@ public class TokenQueryService extends QueryService<Token> {
      */
     @Transactional(readOnly = true)
     public List<TokenDTO> findByCriteria(TokenCriteria criteria) {
-        log.debug("find by criteria : {}", criteria);
+        LOG.debug("find by criteria : {}", criteria);
         final Specification<Token> specification = createSpecification(criteria);
         return tokenMapper.toDto(tokenRepository.findAll(specification));
     }
@@ -59,7 +59,7 @@ public class TokenQueryService extends QueryService<Token> {
      */
     @Transactional(readOnly = true)
     public Page<TokenDTO> findByCriteria(TokenCriteria criteria, Pageable page) {
-        log.debug("find by criteria : {}, page: {}", criteria, page);
+        LOG.debug("find by criteria : {}, page: {}", criteria, page);
         final Specification<Token> specification = createSpecification(criteria);
         return tokenRepository.findAll(specification, page).map(tokenMapper::toDto);
     }
@@ -72,7 +72,7 @@ public class TokenQueryService extends QueryService<Token> {
      */
     @Transactional(readOnly = true)
     public long countByCriteria(TokenCriteria criteria) {
-        log.debug("count by criteria : {}", criteria);
+        LOG.debug("count by criteria : {}", criteria);
         final Specification<Token> specification = createSpecification(criteria);
         return tokenRepository.count(specification);
     }
@@ -85,7 +85,7 @@ public class TokenQueryService extends QueryService<Token> {
      */
     @Transactional(readOnly = true)
     public long countBySpecification(Specification<Token> specification) {
-        log.debug("count by specification: {}", specification);
+        LOG.debug("count by specification: {}", specification);
         return tokenRepository.count(specification);
     }
 
@@ -129,7 +129,7 @@ public class TokenQueryService extends QueryService<Token> {
 
     @Transactional(readOnly = true)
     public Page<TokenDTO> findBySearch(Specification<Token> specs, Pageable pageable) {
-        log.debug("find by specification : {}, page: {}", specs, pageable);
+        LOG.debug("find by specification : {}, page: {}", specs, pageable);
         return tokenRepository.findAll(specs, pageable).map(tokenMapper::toDto);
     }
 }

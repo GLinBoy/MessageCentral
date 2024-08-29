@@ -1,7 +1,7 @@
 <template>
   <div class="row justify-content-center">
     <div class="col-8">
-      <form name="editForm" novalidate v-on:submit.prevent="save()">
+      <form name="editForm" novalidate @submit.prevent="save()">
         <h2
           id="messageCentralApp.notificationData.home.createOrEditLabel"
           data-cy="NotificationDataCreateUpdateHeading"
@@ -66,9 +66,9 @@
               v-model="notificationData.notification"
               required
             >
-              <option v-if="!notificationData.notification" v-bind:value="null" selected></option>
+              <option v-if="!notificationData.notification" :value="null" selected></option>
               <option
-                v-bind:value="
+                :value="
                   notificationData.notification && notificationOption.id === notificationData.notification.id
                     ? notificationData.notification
                     : notificationOption
@@ -85,7 +85,7 @@
           </div>
         </div>
         <div>
-          <button type="button" id="cancel-save" data-cy="entityCreateCancelButton" class="btn btn-secondary" v-on:click="previousState()">
+          <button type="button" id="cancel-save" data-cy="entityCreateCancelButton" class="btn btn-secondary" @click="previousState()">
             <font-awesome-icon icon="ban"></font-awesome-icon>&nbsp;<span v-text="t$('entity.action.cancel')"></span>
           </button>
           <button

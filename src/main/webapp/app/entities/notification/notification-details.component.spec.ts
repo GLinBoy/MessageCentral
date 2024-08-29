@@ -60,7 +60,7 @@ describe('Component Tests', () => {
         notificationServiceStub.find.resolves(notificationSample);
         route = {
           params: {
-            notificationId: '' + 123,
+            notificationId: `${123}`,
           },
         };
         const wrapper = shallowMount(NotificationDetails, { global: mountOptions });

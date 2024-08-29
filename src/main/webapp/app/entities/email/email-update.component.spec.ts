@@ -126,7 +126,7 @@ describe('Component Tests', () => {
         // WHEN
         route = {
           params: {
-            emailId: '' + emailSample.id,
+            emailId: `${emailSample.id}`,
           },
         };
         const wrapper = shallowMount(EmailUpdate, { global: mountOptions });

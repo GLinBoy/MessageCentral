@@ -27,7 +27,7 @@ import tech.jhipster.web.util.ResponseUtil;
 @Transactional
 public class NotificationDataResource {
 
-    private static final Logger log = LoggerFactory.getLogger(NotificationDataResource.class);
+    private static final Logger LOG = LoggerFactory.getLogger(NotificationDataResource.class);
 
     private static final String ENTITY_NAME = "notificationData";
 
@@ -50,7 +50,7 @@ public class NotificationDataResource {
     @PostMapping("")
     public ResponseEntity<NotificationData> createNotificationData(@Valid @RequestBody NotificationData notificationData)
         throws URISyntaxException {
-        log.debug("REST request to save NotificationData : {}", notificationData);
+        LOG.debug("REST request to save NotificationData : {}", notificationData);
         if (notificationData.getId() != null) {
             throw new BadRequestAlertException("A new notificationData cannot already have an ID", ENTITY_NAME, "idexists");
         }
@@ -75,7 +75,7 @@ public class NotificationDataResource {
         @PathVariable(value = "id", required = false) final Long id,
         @Valid @RequestBody NotificationData notificationData
     ) throws URISyntaxException {
-        log.debug("REST request to update NotificationData : {}, {}", id, notificationData);
+        LOG.debug("REST request to update NotificationData : {}, {}", id, notificationData);
         if (notificationData.getId() == null) {
             throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
         }
@@ -109,7 +109,7 @@ public class NotificationDataResource {
         @PathVariable(value = "id", required = false) final Long id,
         @NotNull @RequestBody NotificationData notificationData
     ) throws URISyntaxException {
-        log.debug("REST request to partial update NotificationData partially : {}, {}", id, notificationData);
+        LOG.debug("REST request to partial update NotificationData partially : {}, {}", id, notificationData);
         if (notificationData.getId() == null) {
             throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
         }
@@ -148,7 +148,7 @@ public class NotificationDataResource {
      */
     @GetMapping("")
     public List<NotificationData> getAllNotificationData() {
-        log.debug("REST request to get all NotificationData");
+        LOG.debug("REST request to get all NotificationData");
         return notificationDataRepository.findAll();
     }
 
@@ -160,7 +160,7 @@ public class NotificationDataResource {
      */
     @GetMapping("/{id}")
     public ResponseEntity<NotificationData> getNotificationData(@PathVariable("id") Long id) {
-        log.debug("REST request to get NotificationData : {}", id);
+        LOG.debug("REST request to get NotificationData : {}", id);
         Optional<NotificationData> notificationData = notificationDataRepository.findById(id);
         return ResponseUtil.wrapOrNotFound(notificationData);
     }
@@ -173,7 +173,7 @@ public class NotificationDataResource {
      */
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteNotificationData(@PathVariable("id") Long id) {
-        log.debug("REST request to delete NotificationData : {}", id);
+        LOG.debug("REST request to delete NotificationData : {}", id);
         notificationDataRepository.deleteById(id);
         return ResponseEntity.noContent()
             .headers(HeaderUtil.createEntityDeletionAlert(applicationName, true, ENTITY_NAME, id.toString()))

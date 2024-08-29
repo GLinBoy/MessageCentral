@@ -39,7 +39,7 @@ import tech.jhipster.web.util.ResponseUtil;
 @RequestMapping("/api/short-messages")
 public class ShortMessageResource {
 
-    private static final Logger log = LoggerFactory.getLogger(ShortMessageResource.class);
+    private static final Logger LOG = LoggerFactory.getLogger(ShortMessageResource.class);
 
     private static final String ENTITY_NAME = "shortMessage";
 
@@ -72,7 +72,7 @@ public class ShortMessageResource {
     @PostMapping("")
     public ResponseEntity<ShortMessageDTO> createShortMessage(@Valid @RequestBody ShortMessageDTO shortMessageDTO)
         throws URISyntaxException {
-        log.debug("REST request to save ShortMessage : {}", shortMessageDTO);
+        LOG.debug("REST request to save ShortMessage : {}", shortMessageDTO);
         if (shortMessageDTO.getId() != null) {
             throw new BadRequestAlertException("A new shortMessage cannot already have an ID", ENTITY_NAME, "idexists");
         }
@@ -92,7 +92,7 @@ public class ShortMessageResource {
     @PostMapping("/multiple")
     public ResponseEntity<Void> createMultipleShortMessage(@Valid @RequestBody List<ShortMessagesDTO> shortMessagesDTO)
         throws URISyntaxException {
-        log.debug("REST request to save ShortMessage : {}", shortMessagesDTO);
+        LOG.debug("REST request to save ShortMessage : {}", shortMessagesDTO);
         shortMessageService.save(shortMessagesDTO);
         return ResponseEntity.ok().build();
     }
@@ -112,7 +112,7 @@ public class ShortMessageResource {
         @PathVariable(value = "id", required = false) final Long id,
         @Valid @RequestBody ShortMessageDTO shortMessageDTO
     ) throws URISyntaxException {
-        log.debug("REST request to update ShortMessage : {}, {}", id, shortMessageDTO);
+        LOG.debug("REST request to update ShortMessage : {}, {}", id, shortMessageDTO);
         if (shortMessageDTO.getId() == null) {
             throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
         }
@@ -146,7 +146,7 @@ public class ShortMessageResource {
         @PathVariable(value = "id", required = false) final Long id,
         @NotNull @RequestBody ShortMessageDTO shortMessageDTO
     ) throws URISyntaxException {
-        log.debug("REST request to partial update ShortMessage partially : {}, {}", id, shortMessageDTO);
+        LOG.debug("REST request to partial update ShortMessage partially : {}, {}", id, shortMessageDTO);
         if (shortMessageDTO.getId() == null) {
             throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
         }
@@ -178,7 +178,7 @@ public class ShortMessageResource {
         @org.springdoc.core.annotations.ParameterObject Pageable pageable,
         @RequestParam(value = "query", required = false, defaultValue = "") String query
     ) {
-        log.debug("REST request to get ShortMessages by search query: {}", query);
+        LOG.debug("REST request to get ShortMessages by search query: {}", query);
         Specification<ShortMessage> specs = Specification.where(null);
         if (!StringUtils.isBlank(query)) {
             Node rootNode = new RSQLParser().parse(query);
@@ -197,7 +197,7 @@ public class ShortMessageResource {
      */
     @GetMapping("/count")
     public ResponseEntity<Long> countShortMessages(@RequestParam(value = "query", required = false, defaultValue = "") String query) {
-        log.debug("REST request to count ShortMessages by search query: {}", query);
+        LOG.debug("REST request to count ShortMessages by search query: {}", query);
         Specification<ShortMessage> specs = Specification.where(null);
         if (!StringUtils.isBlank(query)) {
             Node rootNode = new RSQLParser().parse(query);
@@ -214,7 +214,7 @@ public class ShortMessageResource {
      */
     @GetMapping("/{id}")
     public ResponseEntity<ShortMessageDTO> getShortMessage(@PathVariable("id") Long id) {
-        log.debug("REST request to get ShortMessage : {}", id);
+        LOG.debug("REST request to get ShortMessage : {}", id);
         Optional<ShortMessageDTO> shortMessageDTO = shortMessageService.findOne(id);
         return ResponseUtil.wrapOrNotFound(shortMessageDTO);
     }
@@ -227,7 +227,7 @@ public class ShortMessageResource {
      */
     //    @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteShortMessage(@PathVariable("id") Long id) {
-        log.debug("REST request to delete ShortMessage : {}", id);
+        LOG.debug("REST request to delete ShortMessage : {}", id);
         shortMessageService.delete(id);
         return ResponseEntity.noContent()
             .headers(HeaderUtil.createEntityDeletionAlert(applicationName, true, ENTITY_NAME, id.toString()))

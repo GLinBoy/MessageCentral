@@ -60,7 +60,7 @@ describe('Component Tests', () => {
         tokenServiceStub.find.resolves(tokenSample);
         route = {
           params: {
-            tokenId: '' + 123,
+            tokenId: `${123}`,
           },
         };
         const wrapper = shallowMount(TokenDetails, { global: mountOptions });

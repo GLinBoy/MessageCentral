@@ -90,8 +90,8 @@ class EmailResourceIT {
      * This is a static method, as tests for other entities might also need it,
      * if they test an entity which requires the current entity.
      */
-    public static Email createEntity(EntityManager em) {
-        Email email = new Email()
+    public static Email createEntity() {
+        return new Email()
             .receiver(DEFAULT_RECEIVER)
             .subject(DEFAULT_SUBJECT)
             .content(DEFAULT_CONTENT)
@@ -99,7 +99,6 @@ class EmailResourceIT {
             .emailType(DEFAULT_EMAIL_TYPE)
             .createdAt(DEFAULT_CREATED_AT)
             .createdBy(DEFAULT_CREATED_BY);
-        return email;
     }
 
     /**
@@ -108,8 +107,8 @@ class EmailResourceIT {
      * This is a static method, as tests for other entities might also need it,
      * if they test an entity which requires the current entity.
      */
-    public static Email createUpdatedEntity(EntityManager em) {
-        Email email = new Email()
+    public static Email createUpdatedEntity() {
+        return new Email()
             .receiver(UPDATED_RECEIVER)
             .subject(UPDATED_SUBJECT)
             .content(UPDATED_CONTENT)
@@ -117,12 +116,11 @@ class EmailResourceIT {
             .emailType(UPDATED_EMAIL_TYPE)
             .createdAt(UPDATED_CREATED_AT)
             .createdBy(UPDATED_CREATED_BY);
-        return email;
     }
 
     @BeforeEach
     public void initTest() {
-        email = createEntity(em);
+        email = createEntity();
     }
 
     @AfterEach

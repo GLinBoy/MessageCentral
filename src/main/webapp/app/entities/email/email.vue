@@ -54,19 +54,19 @@
       <table class="table table-striped messages-list-table" aria-describedby="emails">
         <thead>
           <tr>
-            <th scope="row" v-on:click="changeOrder('id')">
+            <th scope="row" @click="changeOrder('id')">
               <span v-text="t$('global.field.id')"></span>
               <jhi-sort-indicator :current-order="propOrder" :reverse="reverse" :field-name="'id'"></jhi-sort-indicator>
             </th>
-            <th scope="row" v-on:click="changeOrder('receiver')">
+            <th scope="row" @click="changeOrder('receiver')">
               <span v-text="t$('messageCentralApp.email.receiver')"></span>
               <jhi-sort-indicator :current-order="propOrder" :reverse="reverse" :field-name="'receiver'"></jhi-sort-indicator>
             </th>
-            <th scope="row" v-on:click="changeOrder('subject')">
+            <th scope="row" @click="changeOrder('subject')">
               <span v-text="t$('messageCentralApp.email.subject')"></span>
               <jhi-sort-indicator :current-order="propOrder" :reverse="reverse" :field-name="'subject'"></jhi-sort-indicator>
             </th>
-            <th scope="row" v-on:click="changeOrder('content')">
+            <th scope="row" @click="changeOrder('content')">
               <span v-text="t$('messageCentralApp.email.content')"></span>
               <jhi-sort-indicator :current-order="propOrder" :reverse="reverse" :field-name="'content'"></jhi-sort-indicator>
             </th>
@@ -74,11 +74,11 @@
               <span v-text="t$('messageCentralApp.email.emailType')"></span>
               <jhi-sort-indicator :current-order="propOrder" :reverse="reverse" :field-name="'emailType'"></jhi-sort-indicator>
             </th>
-            <th scope="row" v-on:click="changeOrder('createdAt')">
+            <th scope="row" @click="changeOrder('createdAt')">
               <span v-text="t$('messageCentralApp.email.createdAt')"></span>
               <jhi-sort-indicator :current-order="propOrder" :reverse="reverse" :field-name="'createdAt'"></jhi-sort-indicator>
             </th>
-            <th scope="row" v-on:click="changeOrder('createdBy')">
+            <th scope="row" @click="changeOrder('createdBy')">
               <span v-text="t$('messageCentralApp.email.createdBy')"></span>
               <jhi-sort-indicator :current-order="propOrder" :reverse="reverse" :field-name="'createdBy'"></jhi-sort-indicator>
             </th>
@@ -129,14 +129,14 @@
       </div>
       <template #modal-footer>
         <div>
-          <button type="button" class="btn btn-secondary" v-text="t$('entity.action.cancel')" v-on:click="closeDialog()"></button>
+          <button type="button" class="btn btn-secondary" v-text="t$('entity.action.cancel')" @click="closeDialog()"></button>
           <button
             type="button"
             class="btn btn-primary"
             id="jhi-confirm-delete-email"
             data-cy="entityConfirmDeleteButton"
             v-text="t$('entity.action.delete')"
-            v-on:click="removeEmail()"
+            @click="removeEmail()"
           ></button>
         </div>
       </template>

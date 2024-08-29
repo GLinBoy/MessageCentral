@@ -30,7 +30,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 public class ShortMessageServiceImpl implements ShortMessageService {
 
-    private static final Logger log = LoggerFactory.getLogger(ShortMessageServiceImpl.class);
+    private static final Logger LOG = LoggerFactory.getLogger(ShortMessageServiceImpl.class);
 
     private final ShortMessageRepository shortMessageRepository;
 
@@ -50,7 +50,7 @@ public class ShortMessageServiceImpl implements ShortMessageService {
 
     @Override
     public ShortMessageDTO save(ShortMessageDTO shortMessageDTO) {
-        log.debug("Request to save ShortMessage : {}", shortMessageDTO);
+        LOG.debug("Request to save ShortMessage : {}", shortMessageDTO);
         ShortMessage shortMessage = shortMessageMapper.toEntity(shortMessageDTO);
         if (shortMessage.getId() == null) {
             shortMessage.setStatus(MessageStatus.IN_QUEUE);
@@ -63,7 +63,7 @@ public class ShortMessageServiceImpl implements ShortMessageService {
 
     @Override
     public List<ShortMessageDTO> save(List<ShortMessagesDTO> shortMessagesDTO) {
-        log.debug("Request to save ShortMessage : {}", shortMessagesDTO);
+        LOG.debug("Request to save ShortMessage : {}", shortMessagesDTO);
         List<ShortMessage> messages = shortMessagesDTO
             .stream()
             .flatMap(ss ->
@@ -76,9 +76,10 @@ public class ShortMessageServiceImpl implements ShortMessageService {
                         s.setContent(ss.getContent());
                         s.setStatus(MessageStatus.IN_QUEUE);
                         return s;
-                    }))
+                    })
+            )
             .collect(Collectors.toList());
-        log.info("List of {} SMSs: {}", messages.size(), messages);
+        LOG.info("List of {} SMSs: {}", messages.size(), messages);
         messages = this.shortMessageRepository.saveAll(messages);
         List<ShortMessageDTO> dtoList = this.shortMessageMapper.toDto(messages);
         this.smsProvider.sendMessage(dtoList.toArray(new ShortMessageDTO[dtoList.size()]));
@@ -87,7 +88,7 @@ public class ShortMessageServiceImpl implements ShortMessageService {
 
     @Override
     public ShortMessageDTO update(ShortMessageDTO shortMessageDTO) {
-        log.debug("Request to update ShortMessage : {}", shortMessageDTO);
+        LOG.debug("Request to update ShortMessage : {}", shortMessageDTO);
         ShortMessage shortMessage = shortMessageMapper.toEntity(shortMessageDTO);
         shortMessage = shortMessageRepository.save(shortMessage);
         return shortMessageMapper.toDto(shortMessage);
@@ -95,7 +96,7 @@ public class ShortMessageServiceImpl implements ShortMessageService {
 
     @Override
     public Optional<ShortMessageDTO> partialUpdate(ShortMessageDTO shortMessageDTO) {
-        log.debug("Request to partially update ShortMessage : {}", shortMessageDTO);
+        LOG.debug("Request to partially update ShortMessage : {}", shortMessageDTO);
 
         return shortMessageRepository
             .findById(shortMessageDTO.getId())
@@ -111,20 +112,20 @@ public class ShortMessageServiceImpl implements ShortMessageService {
     @Override
     @Transactional(readOnly = true)
     public Page<ShortMessageDTO> findAll(Pageable pageable) {
-        log.debug("Request to get all ShortMessages");
+        LOG.debug("Request to get all ShortMessages");
         return shortMessageRepository.findAll(pageable).map(shortMessageMapper::toDto);
     }
 
     @Override
     @Transactional(readOnly = true)
     public Optional<ShortMessageDTO> findOne(Long id) {
-        log.debug("Request to get ShortMessage : {}", id);
+        LOG.debug("Request to get ShortMessage : {}", id);
         return shortMessageRepository.findById(id).map(shortMessageMapper::toDto);
     }
 
     @Override
     public void delete(Long id) {
-        log.debug("Request to delete ShortMessage : {}", id);
+        LOG.debug("Request to delete ShortMessage : {}", id);
         shortMessageRepository.deleteById(id);
     }
 
