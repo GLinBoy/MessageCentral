@@ -72,7 +72,7 @@ class NotificationDataResourceIT {
         // Add required entity
         Notification notification;
         if (TestUtil.findAll(em, Notification.class).isEmpty()) {
-            notification = NotificationResourceIT.createEntity(em);
+            notification = NotificationResourceIT.createEntity();
             em.persist(notification);
             em.flush();
         } else {
@@ -89,18 +89,18 @@ class NotificationDataResourceIT {
      * if they test an entity which requires the current entity.
      */
     public static NotificationData createUpdatedEntity(EntityManager em) {
-        NotificationData notificationData = new NotificationData().dataKey(UPDATED_DATA_KEY).dataValue(UPDATED_DATA_VALUE);
+        NotificationData updatedNotificationData = new NotificationData().dataKey(UPDATED_DATA_KEY).dataValue(UPDATED_DATA_VALUE);
         // Add required entity
         Notification notification;
         if (TestUtil.findAll(em, Notification.class).isEmpty()) {
-            notification = NotificationResourceIT.createUpdatedEntity(em);
+            notification = NotificationResourceIT.createUpdatedEntity();
             em.persist(notification);
             em.flush();
         } else {
             notification = TestUtil.findAll(em, Notification.class).get(0);
         }
-        notificationData.setNotification(notification);
-        return notificationData;
+        updatedNotificationData.setNotification(notification);
+        return updatedNotificationData;
     }
 
     @BeforeEach

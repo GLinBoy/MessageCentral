@@ -28,7 +28,7 @@ import tech.jhipster.service.QueryService;
 @Transactional(readOnly = true)
 public class ShortMessageQueryService extends QueryService<ShortMessage> {
 
-    private static final Logger log = LoggerFactory.getLogger(ShortMessageQueryService.class);
+    private static final Logger LOG = LoggerFactory.getLogger(ShortMessageQueryService.class);
 
     private final ShortMessageRepository shortMessageRepository;
 
@@ -47,7 +47,7 @@ public class ShortMessageQueryService extends QueryService<ShortMessage> {
      */
     @Transactional(readOnly = true)
     public List<ShortMessageDTO> findByCriteria(ShortMessageCriteria criteria) {
-        log.debug("find by criteria : {}", criteria);
+        LOG.debug("find by criteria : {}", criteria);
         final Specification<ShortMessage> specification = createSpecification(criteria);
         return shortMessageMapper.toDto(shortMessageRepository.findAll(specification));
     }
@@ -61,7 +61,7 @@ public class ShortMessageQueryService extends QueryService<ShortMessage> {
      */
     @Transactional(readOnly = true)
     public Page<ShortMessageDTO> findByCriteria(ShortMessageCriteria criteria, Pageable page) {
-        log.debug("find by criteria : {}, page: {}", criteria, page);
+        LOG.debug("find by criteria : {}, page: {}", criteria, page);
         final Specification<ShortMessage> specification = createSpecification(criteria);
         return shortMessageRepository.findAll(specification, page).map(shortMessageMapper::toDto);
     }
@@ -74,7 +74,7 @@ public class ShortMessageQueryService extends QueryService<ShortMessage> {
      */
     @Transactional(readOnly = true)
     public long countByCriteria(ShortMessageCriteria criteria) {
-        log.debug("count by criteria : {}", criteria);
+        LOG.debug("count by criteria : {}", criteria);
         final Specification<ShortMessage> specification = createSpecification(criteria);
         return shortMessageRepository.count(specification);
     }
@@ -87,7 +87,7 @@ public class ShortMessageQueryService extends QueryService<ShortMessage> {
      */
     @Transactional(readOnly = true)
     public long countBySpecification(Specification<ShortMessage> specs) {
-        log.debug("count by specification: {}", specs);
+        LOG.debug("count by specification: {}", specs);
         return shortMessageRepository.count(specs);
     }
 
@@ -122,7 +122,7 @@ public class ShortMessageQueryService extends QueryService<ShortMessage> {
 
     @Transactional(readOnly = true)
     public Page<ShortMessageDTO> findBySearch(Specification<ShortMessage> specs, Pageable page) {
-        log.debug("find by specification : {}, page: {}", specs, page);
+        LOG.debug("find by specification : {}, page: {}", specs, page);
         return shortMessageRepository.findAll(specs, page).map(shortMessageMapper::toDto);
     }
 }

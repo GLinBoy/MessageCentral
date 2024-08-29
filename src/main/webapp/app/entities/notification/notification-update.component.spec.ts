@@ -126,7 +126,7 @@ describe('Component Tests', () => {
         // WHEN
         route = {
           params: {
-            notificationId: '' + notificationSample.id,
+            notificationId: `${notificationSample.id}`,
           },
         };
         const wrapper = shallowMount(NotificationUpdate, { global: mountOptions });

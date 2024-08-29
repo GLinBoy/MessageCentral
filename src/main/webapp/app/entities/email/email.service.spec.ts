@@ -38,12 +38,7 @@ describe('Service Tests', () => {
 
     describe('Service methods', () => {
       it('should find an element', async () => {
-        const returnedFromService = Object.assign(
-          {
-            createdAt: dayjs(currentDate).format(DATE_TIME_FORMAT),
-          },
-          elemDefault,
-        );
+        const returnedFromService = { createdAt: dayjs(currentDate).format(DATE_TIME_FORMAT), ...elemDefault };
         axiosStub.get.resolves({ data: returnedFromService });
 
         return service.find(123).then(res => {
@@ -62,19 +57,8 @@ describe('Service Tests', () => {
       });
 
       it('should create a Email', async () => {
-        const returnedFromService = Object.assign(
-          {
-            id: 123,
-            createdAt: dayjs(currentDate).format(DATE_TIME_FORMAT),
-          },
-          elemDefault,
-        );
-        const expected = Object.assign(
-          {
-            createdAt: currentDate,
-          },
-          returnedFromService,
-        );
+        const returnedFromService = { id: 123, createdAt: dayjs(currentDate).format(DATE_TIME_FORMAT), ...elemDefault };
+        const expected = { createdAt: currentDate, ...returnedFromService };
 
         axiosStub.post.resolves({ data: returnedFromService });
         return service.create({}).then(res => {
@@ -94,25 +78,18 @@ describe('Service Tests', () => {
       });
 
       it('should update a Email', async () => {
-        const returnedFromService = Object.assign(
-          {
-            receiver: 'BBBBBB',
-            subject: 'BBBBBB',
-            content: 'BBBBBB',
-            status: 'BBBBBB',
-            emailType: 'BBBBBB',
-            createdAt: dayjs(currentDate).format(DATE_TIME_FORMAT),
-            createdBy: 'BBBBBB',
-          },
-          elemDefault,
-        );
+        const returnedFromService = {
+          receiver: 'BBBBBB',
+          subject: 'BBBBBB',
+          content: 'BBBBBB',
+          status: 'BBBBBB',
+          emailType: 'BBBBBB',
+          createdAt: dayjs(currentDate).format(DATE_TIME_FORMAT),
+          createdBy: 'BBBBBB',
+          ...elemDefault,
+        };
 
-        const expected = Object.assign(
-          {
-            createdAt: currentDate,
-          },
-          returnedFromService,
-        );
+        const expected = { createdAt: currentDate, ...returnedFromService };
         axiosStub.put.resolves({ data: returnedFromService });
 
         return service.update(expected).then(res => {
@@ -132,21 +109,10 @@ describe('Service Tests', () => {
       });
 
       it('should partial update a Email', async () => {
-        const patchObject = Object.assign(
-          {
-            emailType: 'BBBBBB',
-            createdAt: dayjs(currentDate).format(DATE_TIME_FORMAT),
-          },
-          new Email(),
-        );
+        const patchObject = { emailType: 'BBBBBB', createdAt: dayjs(currentDate).format(DATE_TIME_FORMAT), ...new Email() };
         const returnedFromService = Object.assign(patchObject, elemDefault);
 
-        const expected = Object.assign(
-          {
-            createdAt: currentDate,
-          },
-          returnedFromService,
-        );
+        const expected = { createdAt: currentDate, ...returnedFromService };
         axiosStub.patch.resolves({ data: returnedFromService });
 
         return service.partialUpdate(patchObject).then(res => {
@@ -166,24 +132,17 @@ describe('Service Tests', () => {
       });
 
       it('should return a list of Email', async () => {
-        const returnedFromService = Object.assign(
-          {
-            receiver: 'BBBBBB',
-            subject: 'BBBBBB',
-            content: 'BBBBBB',
-            status: 'BBBBBB',
-            emailType: 'BBBBBB',
-            createdAt: dayjs(currentDate).format(DATE_TIME_FORMAT),
-            createdBy: 'BBBBBB',
-          },
-          elemDefault,
-        );
-        const expected = Object.assign(
-          {
-            createdAt: currentDate,
-          },
-          returnedFromService,
-        );
+        const returnedFromService = {
+          receiver: 'BBBBBB',
+          subject: 'BBBBBB',
+          content: 'BBBBBB',
+          status: 'BBBBBB',
+          emailType: 'BBBBBB',
+          createdAt: dayjs(currentDate).format(DATE_TIME_FORMAT),
+          createdBy: 'BBBBBB',
+          ...elemDefault,
+        };
+        const expected = { createdAt: currentDate, ...returnedFromService };
         axiosStub.get.resolves([returnedFromService]);
         return service.retrieve({ sort: {}, page: 0, size: 10 }).then(res => {
           expect(res).toContainEqual(expected);

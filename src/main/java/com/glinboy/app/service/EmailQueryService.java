@@ -26,7 +26,7 @@ import tech.jhipster.service.QueryService;
 @Transactional(readOnly = true)
 public class EmailQueryService extends QueryService<Email> {
 
-    private static final Logger log = LoggerFactory.getLogger(EmailQueryService.class);
+    private static final Logger LOG = LoggerFactory.getLogger(EmailQueryService.class);
 
     private final EmailRepository emailRepository;
 
@@ -44,7 +44,7 @@ public class EmailQueryService extends QueryService<Email> {
      */
     @Transactional(readOnly = true)
     public List<EmailDTO> findByCriteria(EmailCriteria criteria) {
-        log.debug("find by criteria : {}", criteria);
+        LOG.debug("find by criteria : {}", criteria);
         final Specification<Email> specification = createSpecification(criteria);
         return emailMapper.toDto(emailRepository.findAll(specification));
     }
@@ -57,7 +57,7 @@ public class EmailQueryService extends QueryService<Email> {
      */
     @Transactional(readOnly = true)
     public Page<EmailDTO> findByCriteria(EmailCriteria criteria, Pageable page) {
-        log.debug("find by criteria : {}, page: {}", criteria, page);
+        LOG.debug("find by criteria : {}, page: {}", criteria, page);
         final Specification<Email> specification = createSpecification(criteria);
         return emailRepository.findAll(specification, page).map(emailMapper::toDto);
     }
@@ -69,7 +69,7 @@ public class EmailQueryService extends QueryService<Email> {
      */
     @Transactional(readOnly = true)
     public long countByCriteria(EmailCriteria criteria) {
-        log.debug("count by criteria : {}", criteria);
+        LOG.debug("count by criteria : {}", criteria);
         final Specification<Email> specification = createSpecification(criteria);
         return emailRepository.count(specification);
     }
@@ -82,7 +82,7 @@ public class EmailQueryService extends QueryService<Email> {
      */
     @Transactional(readOnly = true)
     public long countBySpecification(Specification<Email> specs) {
-        log.debug("count by specification: {}", specs);
+        LOG.debug("count by specification: {}", specs);
         return emailRepository.count(specs);
     }
 
@@ -125,7 +125,7 @@ public class EmailQueryService extends QueryService<Email> {
 
     @Transactional(readOnly = true)
     public Page<EmailDTO> findBySearch(Specification<Email> specs, Pageable page) {
-        log.debug("find by specification : {}, page: {}", specs, page);
+        LOG.debug("find by specification : {}, page: {}", specs, page);
         return emailRepository.findAll(specs, page).map(emailMapper::toDto);
     }
 }

@@ -64,5 +64,7 @@ public class TokenAsserts {
      * @param expected the expected entity
      * @param actual the actual entity
      */
-    public static void assertTokenUpdatableRelationshipsEquals(Token expected, Token actual) {}
+    public static void assertTokenUpdatableRelationshipsEquals(Token expected, Token actual) {
+        // empty method
+    }
 }

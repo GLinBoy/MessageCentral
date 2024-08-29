@@ -62,5 +62,7 @@ public class EmailAsserts {
      * @param expected the expected entity
      * @param actual the actual entity
      */
-    public static void assertEmailUpdatableRelationshipsEquals(Email expected, Email actual) {}
+    public static void assertEmailUpdatableRelationshipsEquals(Email expected, Email actual) {
+        // empty method
+    }
 }

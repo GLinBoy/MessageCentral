@@ -95,8 +95,8 @@ class TokenResourceIT {
      * This is a static method, as tests for other entities might also need it,
      * if they test an entity which requires the current entity.
      */
-    public static Token createEntity(EntityManager em) {
-        Token token = new Token()
+    public static Token createEntity() {
+        return new Token()
             .name(DEFAULT_NAME)
             .token(DEFAULT_TOKEN)
             .disable(DEFAULT_DISABLE)
@@ -106,7 +106,6 @@ class TokenResourceIT {
             .createdBy(DEFAULT_CREATED_BY)
             .updatedAt(DEFAULT_UPDATED_AT)
             .updatedBy(DEFAULT_UPDATED_BY);
-        return token;
     }
 
     /**
@@ -115,8 +114,8 @@ class TokenResourceIT {
      * This is a static method, as tests for other entities might also need it,
      * if they test an entity which requires the current entity.
      */
-    public static Token createUpdatedEntity(EntityManager em) {
-        Token token = new Token()
+    public static Token createUpdatedEntity() {
+        return new Token()
             .name(UPDATED_NAME)
             .token(UPDATED_TOKEN)
             .disable(UPDATED_DISABLE)
@@ -126,12 +125,11 @@ class TokenResourceIT {
             .createdBy(UPDATED_CREATED_BY)
             .updatedAt(UPDATED_UPDATED_AT)
             .updatedBy(UPDATED_UPDATED_BY);
-        return token;
     }
 
     @BeforeEach
     public void initTest() {
-        token = createEntity(em);
+        token = createEntity();
     }
 
     @AfterEach

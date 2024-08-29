@@ -1,4 +1,4 @@
-import { computed, defineComponent, inject, ref, type Ref, watch } from 'vue';
+import { type Ref, computed, defineComponent, inject, ref, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRoute, useRouter } from 'vue-router';
 import { useVuelidate } from '@vuelidate/core';

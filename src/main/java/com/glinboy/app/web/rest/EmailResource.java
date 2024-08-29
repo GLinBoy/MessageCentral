@@ -40,7 +40,7 @@ import tech.jhipster.web.util.ResponseUtil;
 @RequestMapping("/api/emails")
 public class EmailResource {
 
-    private static final Logger log = LoggerFactory.getLogger(EmailResource.class);
+    private static final Logger LOG = LoggerFactory.getLogger(EmailResource.class);
 
     private static final String ENTITY_NAME = "email";
 
@@ -68,7 +68,7 @@ public class EmailResource {
      */
     @PostMapping("")
     public ResponseEntity<EmailDTO> createEmail(@Valid @RequestBody EmailDTO emailDTO) throws URISyntaxException {
-        log.debug("REST request to save Email : {}", emailDTO);
+        LOG.debug("REST request to save Email : {}", emailDTO);
         if (emailDTO.getId() != null) {
             throw new BadRequestAlertException("A new email cannot already have an ID", ENTITY_NAME, "idexists");
         }
@@ -87,7 +87,7 @@ public class EmailResource {
      */
     @PostMapping("/multiple")
     public ResponseEntity<Void> createEmails(@Valid @RequestBody List<EmailsDTO> emailsDTO) throws URISyntaxException {
-        log.debug("REST request to save Emails : {}", emailsDTO);
+        LOG.debug("REST request to save Emails : {}", emailsDTO);
         emailService.save(emailsDTO);
         return ResponseEntity.ok().build();
     }
@@ -107,7 +107,7 @@ public class EmailResource {
         @PathVariable(value = "id", required = false) final Long id,
         @Valid @RequestBody EmailDTO emailDTO
     ) throws URISyntaxException {
-        log.debug("REST request to update Email : {}, {}", id, emailDTO);
+        LOG.debug("REST request to update Email : {}, {}", id, emailDTO);
         if (emailDTO.getId() == null) {
             throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
         }
@@ -141,7 +141,7 @@ public class EmailResource {
         @PathVariable(value = "id", required = false) final Long id,
         @NotNull @RequestBody EmailDTO emailDTO
     ) throws URISyntaxException {
-        log.debug("REST request to partial update Email partially : {}, {}", id, emailDTO);
+        LOG.debug("REST request to partial update Email partially : {}, {}", id, emailDTO);
         if (emailDTO.getId() == null) {
             throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
         }
@@ -173,7 +173,7 @@ public class EmailResource {
         @ParameterObject Pageable pageable,
         @RequestParam(value = "query", required = false, defaultValue = "") String query
     ) {
-        log.debug("REST request to get Emails by search query: {}", query);
+        LOG.debug("REST request to get Emails by search query: {}", query);
         Specification<Email> specs = Specification.where(null);
         if (!StringUtils.isBlank(query)) {
             Node rootNode = new RSQLParser().parse(query);
@@ -192,7 +192,7 @@ public class EmailResource {
      */
     @GetMapping("/count")
     public ResponseEntity<Long> countEmails(@RequestParam(value = "query", required = false, defaultValue = "") String query) {
-        log.debug("REST request to count Emails by search query: {}", query);
+        LOG.debug("REST request to count Emails by search query: {}", query);
         Specification<Email> specs = Specification.where(null);
         if (!StringUtils.isBlank(query)) {
             Node rootNode = new RSQLParser().parse(query);
@@ -209,7 +209,7 @@ public class EmailResource {
      */
     @GetMapping("/{id}")
     public ResponseEntity<EmailDTO> getEmail(@PathVariable("id") Long id) {
-        log.debug("REST request to get Email : {}", id);
+        LOG.debug("REST request to get Email : {}", id);
         Optional<EmailDTO> emailDTO = emailService.findOne(id);
         return ResponseUtil.wrapOrNotFound(emailDTO);
     }
@@ -222,7 +222,7 @@ public class EmailResource {
      */
     //    @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteEmail(@PathVariable("id") Long id) {
-        log.debug("REST request to delete Email : {}", id);
+        LOG.debug("REST request to delete Email : {}", id);
         emailService.delete(id);
         return ResponseEntity.noContent()
             .headers(HeaderUtil.createEntityDeletionAlert(applicationName, true, ENTITY_NAME, id.toString()))

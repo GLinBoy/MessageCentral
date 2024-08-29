@@ -38,14 +38,12 @@ describe('Service Tests', () => {
 
     describe('Service methods', () => {
       it('should find an element', async () => {
-        const returnedFromService = Object.assign(
-          {
-            deprecateAt: dayjs(currentDate).format(DATE_TIME_FORMAT),
-            createdAt: dayjs(currentDate).format(DATE_TIME_FORMAT),
-            updatedAt: dayjs(currentDate).format(DATE_TIME_FORMAT),
-          },
-          elemDefault,
-        );
+        const returnedFromService = {
+          deprecateAt: dayjs(currentDate).format(DATE_TIME_FORMAT),
+          createdAt: dayjs(currentDate).format(DATE_TIME_FORMAT),
+          updatedAt: dayjs(currentDate).format(DATE_TIME_FORMAT),
+          ...elemDefault,
+        };
         axiosStub.get.resolves({ data: returnedFromService });
 
         return service.find(123).then(res => {
@@ -64,23 +62,14 @@ describe('Service Tests', () => {
       });
 
       it('should create a Token', async () => {
-        const returnedFromService = Object.assign(
-          {
-            id: 123,
-            deprecateAt: dayjs(currentDate).format(DATE_TIME_FORMAT),
-            createdAt: dayjs(currentDate).format(DATE_TIME_FORMAT),
-            updatedAt: dayjs(currentDate).format(DATE_TIME_FORMAT),
-          },
-          elemDefault,
-        );
-        const expected = Object.assign(
-          {
-            deprecateAt: currentDate,
-            createdAt: currentDate,
-            updatedAt: currentDate,
-          },
-          returnedFromService,
-        );
+        const returnedFromService = {
+          id: 123,
+          deprecateAt: dayjs(currentDate).format(DATE_TIME_FORMAT),
+          createdAt: dayjs(currentDate).format(DATE_TIME_FORMAT),
+          updatedAt: dayjs(currentDate).format(DATE_TIME_FORMAT),
+          ...elemDefault,
+        };
+        const expected = { deprecateAt: currentDate, createdAt: currentDate, updatedAt: currentDate, ...returnedFromService };
 
         axiosStub.post.resolves({ data: returnedFromService });
         return service.create({}).then(res => {
@@ -100,29 +89,20 @@ describe('Service Tests', () => {
       });
 
       it('should update a Token', async () => {
-        const returnedFromService = Object.assign(
-          {
-            name: 'BBBBBB',
-            token: 'BBBBBB',
-            disable: true,
-            deprecateAt: dayjs(currentDate).format(DATE_TIME_FORMAT),
-            roles: 1,
-            createdAt: dayjs(currentDate).format(DATE_TIME_FORMAT),
-            createdBy: 'BBBBBB',
-            updatedAt: dayjs(currentDate).format(DATE_TIME_FORMAT),
-            updatedBy: 'BBBBBB',
-          },
-          elemDefault,
-        );
+        const returnedFromService = {
+          name: 'BBBBBB',
+          token: 'BBBBBB',
+          disable: true,
+          deprecateAt: dayjs(currentDate).format(DATE_TIME_FORMAT),
+          roles: 1,
+          createdAt: dayjs(currentDate).format(DATE_TIME_FORMAT),
+          createdBy: 'BBBBBB',
+          updatedAt: dayjs(currentDate).format(DATE_TIME_FORMAT),
+          updatedBy: 'BBBBBB',
+          ...elemDefault,
+        };
 
-        const expected = Object.assign(
-          {
-            deprecateAt: currentDate,
-            createdAt: currentDate,
-            updatedAt: currentDate,
-          },
-          returnedFromService,
-        );
+        const expected = { deprecateAt: currentDate, createdAt: currentDate, updatedAt: currentDate, ...returnedFromService };
         axiosStub.put.resolves({ data: returnedFromService });
 
         return service.update(expected).then(res => {
@@ -142,23 +122,10 @@ describe('Service Tests', () => {
       });
 
       it('should partial update a Token', async () => {
-        const patchObject = Object.assign(
-          {
-            createdAt: dayjs(currentDate).format(DATE_TIME_FORMAT),
-            updatedBy: 'BBBBBB',
-          },
-          new Token(),
-        );
+        const patchObject = { createdAt: dayjs(currentDate).format(DATE_TIME_FORMAT), updatedBy: 'BBBBBB', ...new Token() };
         const returnedFromService = Object.assign(patchObject, elemDefault);
 
-        const expected = Object.assign(
-          {
-            deprecateAt: currentDate,
-            createdAt: currentDate,
-            updatedAt: currentDate,
-          },
-          returnedFromService,
-        );
+        const expected = { deprecateAt: currentDate, createdAt: currentDate, updatedAt: currentDate, ...returnedFromService };
         axiosStub.patch.resolves({ data: returnedFromService });
 
         return service.partialUpdate(patchObject).then(res => {
@@ -178,28 +145,19 @@ describe('Service Tests', () => {
       });
 
       it('should return a list of Token', async () => {
-        const returnedFromService = Object.assign(
-          {
-            name: 'BBBBBB',
-            token: 'BBBBBB',
-            disable: true,
-            deprecateAt: dayjs(currentDate).format(DATE_TIME_FORMAT),
-            roles: 1,
-            createdAt: dayjs(currentDate).format(DATE_TIME_FORMAT),
-            createdBy: 'BBBBBB',
-            updatedAt: dayjs(currentDate).format(DATE_TIME_FORMAT),
-            updatedBy: 'BBBBBB',
-          },
-          elemDefault,
-        );
-        const expected = Object.assign(
-          {
-            deprecateAt: currentDate,
-            createdAt: currentDate,
-            updatedAt: currentDate,
-          },
-          returnedFromService,
-        );
+        const returnedFromService = {
+          name: 'BBBBBB',
+          token: 'BBBBBB',
+          disable: true,
+          deprecateAt: dayjs(currentDate).format(DATE_TIME_FORMAT),
+          roles: 1,
+          createdAt: dayjs(currentDate).format(DATE_TIME_FORMAT),
+          createdBy: 'BBBBBB',
+          updatedAt: dayjs(currentDate).format(DATE_TIME_FORMAT),
+          updatedBy: 'BBBBBB',
+          ...elemDefault,
+        };
+        const expected = { deprecateAt: currentDate, createdAt: currentDate, updatedAt: currentDate, ...returnedFromService };
         axiosStub.get.resolves([returnedFromService]);
         return service.retrieve({ sort: {}, page: 0, size: 10 }).then(res => {
           expect(res).toContainEqual(expected);

@@ -38,7 +38,7 @@ import tech.jhipster.web.util.ResponseUtil;
 @RequestMapping("/api/tokens")
 public class TokenResource {
 
-    private static final Logger log = LoggerFactory.getLogger(TokenResource.class);
+    private static final Logger LOG = LoggerFactory.getLogger(TokenResource.class);
 
     private static final String ENTITY_NAME = "token";
 
@@ -66,7 +66,7 @@ public class TokenResource {
      */
     @PostMapping("")
     public ResponseEntity<TokenDTO> createToken(@Valid @RequestBody TokenDTO tokenDTO) throws URISyntaxException {
-        log.debug("REST request to save Token : {}", tokenDTO);
+        LOG.debug("REST request to save Token : {}", tokenDTO);
         if (tokenDTO.getId() != null) {
             throw new BadRequestAlertException("A new token cannot already have an ID", ENTITY_NAME, "idexists");
         }
@@ -92,7 +92,7 @@ public class TokenResource {
         @PathVariable(value = "id", required = false) final Long id,
         @NotNull @RequestBody TokenDTO tokenDTO
     ) throws URISyntaxException {
-        log.debug("REST request to partial update Token partially : {}, {}", id, tokenDTO);
+        LOG.debug("REST request to partial update Token partially : {}, {}", id, tokenDTO);
         if (tokenDTO.getId() == null) {
             throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
         }
@@ -124,7 +124,7 @@ public class TokenResource {
         @org.springdoc.core.annotations.ParameterObject Pageable pageable,
         @RequestParam(value = "query", required = false, defaultValue = "") String query
     ) {
-        log.debug("REST request to get Tokens by search query: {}", query);
+        LOG.debug("REST request to get Tokens by search query: {}", query);
         Specification<Token> specs = Specification.where(null);
         if (!StringUtils.isBlank(query)) {
             Node rootNode = new RSQLParser().parse(query);
@@ -143,7 +143,7 @@ public class TokenResource {
      */
     @GetMapping("/count")
     public ResponseEntity<Long> countTokens(@RequestParam(value = "query", required = false, defaultValue = "") String query) {
-        log.debug("REST request to count Tokens by search query: {}", query);
+        LOG.debug("REST request to count Tokens by search query: {}", query);
         Specification<Token> specs = Specification.where(null);
         if (!StringUtils.isBlank(query)) {
             Node rootNode = new RSQLParser().parse(query);
@@ -160,7 +160,7 @@ public class TokenResource {
      */
     @GetMapping("/{id}")
     public ResponseEntity<TokenDTO> getToken(@PathVariable("id") Long id) {
-        log.debug("REST request to get Token : {}", id);
+        LOG.debug("REST request to get Token : {}", id);
         Optional<TokenDTO> tokenDTO = tokenService.findOne(id);
         return ResponseUtil.wrapOrNotFound(tokenDTO);
     }
@@ -173,7 +173,7 @@ public class TokenResource {
      */
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteToken(@PathVariable("id") Long id) {
-        log.debug("REST request to delete Token : {}", id);
+        LOG.debug("REST request to delete Token : {}", id);
         tokenService.delete(id);
         return ResponseEntity.noContent()
             .headers(HeaderUtil.createEntityDeletionAlert(applicationName, true, ENTITY_NAME, id.toString()))

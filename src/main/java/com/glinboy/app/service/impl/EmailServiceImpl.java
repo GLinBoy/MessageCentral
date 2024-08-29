@@ -30,7 +30,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 public class EmailServiceImpl implements EmailService {
 
-    private static final Logger log = LoggerFactory.getLogger(EmailServiceImpl.class);
+    private static final Logger LOG = LoggerFactory.getLogger(EmailServiceImpl.class);
 
     private final EmailRepository emailRepository;
 
@@ -46,7 +46,7 @@ public class EmailServiceImpl implements EmailService {
 
     @Override
     public EmailDTO save(EmailDTO emailDTO) {
-        log.debug("Request to save Email : {}", emailDTO);
+        LOG.debug("Request to save Email : {}", emailDTO);
         var email = emailMapper.toEntity(emailDTO);
         if (email.getId() == null) {
             email.setStatus(MessageStatus.IN_QUEUE);
@@ -59,7 +59,7 @@ public class EmailServiceImpl implements EmailService {
 
     @Override
     public List<EmailDTO> save(List<EmailsDTO> emailsDTO) {
-        log.debug("Request to save Emails : {}", emailsDTO);
+        LOG.debug("Request to save Emails : {}", emailsDTO);
         var emails = emailsDTO
             .stream()
             .flatMap(es ->
@@ -75,7 +75,7 @@ public class EmailServiceImpl implements EmailService {
                         return e;
                     }))
             .collect(Collectors.toList());
-        log.info("List of {} Emails: {}", emails.size(), emails);
+        LOG.info("List of {} Emails: {}", emails.size(), emails);
         emails = this.emailRepository.saveAll(emails);
         var dtoList = this.emailMapper.toDto(emails);
         this.mailProviderService.sendMessage(dtoList.toArray(new EmailDTO[dtoList.size()]));
@@ -84,7 +84,7 @@ public class EmailServiceImpl implements EmailService {
 
     @Override
     public EmailDTO update(EmailDTO emailDTO) {
-        log.debug("Request to update Email : {}", emailDTO);
+        LOG.debug("Request to update Email : {}", emailDTO);
         Email email = emailMapper.toEntity(emailDTO);
         email = emailRepository.save(email);
         return emailMapper.toDto(email);
@@ -92,12 +92,13 @@ public class EmailServiceImpl implements EmailService {
 
     @Override
     public Optional<EmailDTO> partialUpdate(EmailDTO emailDTO) {
-        log.debug("Request to partially update Email : {}", emailDTO);
+        LOG.debug("Request to partially update Email : {}", emailDTO);
 
         return emailRepository
             .findById(emailDTO.getId())
             .map(existingEmail -> {
                 emailMapper.partialUpdate(existingEmail, emailDTO);
+
                 return existingEmail;
             })
             .map(emailRepository::save)
@@ -107,20 +108,20 @@ public class EmailServiceImpl implements EmailService {
     @Override
     @Transactional(readOnly = true)
     public Page<EmailDTO> findAll(Pageable pageable) {
-        log.debug("Request to get all Emails");
+        LOG.debug("Request to get all Emails");
         return emailRepository.findAll(pageable).map(emailMapper::toDto);
     }
 
     @Override
     @Transactional(readOnly = true)
     public Optional<EmailDTO> findOne(Long id) {
-        log.debug("Request to get Email : {}", id);
+        LOG.debug("Request to get Email : {}", id);
         return emailRepository.findById(id).map(emailMapper::toDto);
     }
 
     @Override
     public void delete(Long id) {
-        log.debug("Request to delete Email : {}", id);
+        LOG.debug("Request to delete Email : {}", id);
         emailRepository.deleteById(id);
     }
 
