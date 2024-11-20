@@ -959,9 +959,7 @@ class TokenResourceIT {
             .token(UPDATED_TOKEN)
             .disable(UPDATED_DISABLE)
             .deprecateAt(UPDATED_DEPRECATE_AT)
-            .roles(UPDATED_ROLES)
-            .createdAt(UPDATED_CREATED_AT)
-            .createdBy(UPDATED_CREATED_BY);
+            .updatedAt(UPDATED_UPDATED_AT);
 
         restTokenMockMvc
             .perform(

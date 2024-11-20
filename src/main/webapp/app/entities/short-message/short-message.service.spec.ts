@@ -107,7 +107,7 @@ describe('Service Tests', () => {
       });
 
       it('should partial update a ShortMessage', async () => {
-        const patchObject = { phoneNumber: 'BBBBBB', content: 'BBBBBB', ...new ShortMessage() };
+        const patchObject = { phoneNumber: 'BBBBBB', createdBy: 'BBBBBB', ...new ShortMessage() };
         const returnedFromService = Object.assign(patchObject, elemDefault);
 
         const expected = { createdAt: currentDate, ...returnedFromService };

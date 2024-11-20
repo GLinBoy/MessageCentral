@@ -38,8 +38,8 @@ import org.springframework.transaction.annotation.Transactional;
 @WithMockUser
 class EmailResourceIT {
 
-    private static final String DEFAULT_RECEIVER = "Qad.CmuPsD.Vm+.ZLo@L.4PXW.YQPotM";
-    private static final String UPDATED_RECEIVER = "Nb&.OdPePH.*zl.ypDVP.jG.y-mm@rp4nrn.EumiN.vdf.Ea";
+    private static final String DEFAULT_RECEIVER = "aLC.Gm@mL4X.ZsUL9.ceF7lx.GhHZ";
+    private static final String UPDATED_RECEIVER = "6q.Gn@fKR.-6X.m5iUY6.jqw5.dADhUVR";
 
     private static final String DEFAULT_SUBJECT = "AAAAAAAAAA";
     private static final String UPDATED_SUBJECT = "BBBBBBBBBB";
@@ -699,7 +699,7 @@ class EmailResourceIT {
         Email partialUpdatedEmail = new Email();
         partialUpdatedEmail.setId(email.getId());
 
-        partialUpdatedEmail.subject(UPDATED_SUBJECT).content(UPDATED_CONTENT).status(UPDATED_STATUS);
+        partialUpdatedEmail.receiver(UPDATED_RECEIVER).status(UPDATED_STATUS).createdAt(UPDATED_CREATED_AT);
 
         restEmailMockMvc
             .perform(

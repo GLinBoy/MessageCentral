@@ -37,8 +37,8 @@ import org.springframework.transaction.annotation.Transactional;
 @WithMockUser
 class ShortMessageResourceIT {
 
-    private static final String DEFAULT_PHONE_NUMBER = "+6112770●1";
-    private static final String UPDATED_PHONE_NUMBER = "+6●44●3283";
+    private static final String DEFAULT_PHONE_NUMBER = "+40455845";
+    private static final String UPDATED_PHONE_NUMBER = "+87●7●9●5●0057";
 
     private static final String DEFAULT_CONTENT = "AAAAAAAAAA";
     private static final String UPDATED_CONTENT = "BBBBBBBBBB";
@@ -660,7 +660,11 @@ class ShortMessageResourceIT {
         ShortMessage partialUpdatedShortMessage = new ShortMessage();
         partialUpdatedShortMessage.setId(shortMessage.getId());
 
-        partialUpdatedShortMessage.status(UPDATED_STATUS);
+        partialUpdatedShortMessage
+            .phoneNumber(UPDATED_PHONE_NUMBER)
+            .content(UPDATED_CONTENT)
+            .status(UPDATED_STATUS)
+            .createdBy(UPDATED_CREATED_BY);
 
         restShortMessageMockMvc
             .perform(

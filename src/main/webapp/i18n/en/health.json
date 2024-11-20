@@ -11,6 +11,7 @@
       "error": "Error"
     },
     "indicator": {
+      "binders": "Message broker",
       "discoveryComposite": "Discovery Composite",
       "refreshScope": "Microservice Refresh Scope",
       "clientConfigServer": "Microservice Config Server",

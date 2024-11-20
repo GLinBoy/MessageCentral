@@ -122,7 +122,7 @@ describe('Service Tests', () => {
       });
 
       it('should partial update a Token', async () => {
-        const patchObject = { createdAt: dayjs(currentDate).format(DATE_TIME_FORMAT), updatedBy: 'BBBBBB', ...new Token() };
+        const patchObject = { roles: 1, createdAt: dayjs(currentDate).format(DATE_TIME_FORMAT), updatedBy: 'BBBBBB', ...new Token() };
         const returnedFromService = Object.assign(patchObject, elemDefault);
 
         const expected = { deprecateAt: currentDate, createdAt: currentDate, updatedAt: currentDate, ...returnedFromService };

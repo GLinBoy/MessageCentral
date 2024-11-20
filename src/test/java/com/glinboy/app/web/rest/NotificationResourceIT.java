@@ -869,7 +869,7 @@ class NotificationResourceIT {
             .username(UPDATED_USERNAME)
             .token(UPDATED_TOKEN)
             .subject(UPDATED_SUBJECT)
-            .image(UPDATED_IMAGE)
+            .content(UPDATED_CONTENT)
             .createdAt(UPDATED_CREATED_AT)
             .createdBy(UPDATED_CREATED_BY);
 
