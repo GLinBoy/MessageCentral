@@ -5,6 +5,9 @@ services:
     extends:
       file: ./postgresql.yml
       service: postgresql
+    profiles:
+      - ''
+      - prod
   jhipster-registry:
     extends:
       file: ./jhipster-registry.yml

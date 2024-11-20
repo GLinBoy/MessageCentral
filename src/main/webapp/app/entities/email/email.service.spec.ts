@@ -109,7 +109,7 @@ describe('Service Tests', () => {
       });
 
       it('should partial update a Email', async () => {
-        const patchObject = { emailType: 'BBBBBB', createdAt: dayjs(currentDate).format(DATE_TIME_FORMAT), ...new Email() };
+        const patchObject = { content: 'BBBBBB', createdBy: 'BBBBBB', ...new Email() };
         const returnedFromService = Object.assign(patchObject, elemDefault);
 
         const expected = { createdAt: currentDate, ...returnedFromService };
