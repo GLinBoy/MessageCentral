@@ -96,7 +96,7 @@ describe('Service Tests', () => {
       });
 
       it('should partial update a NotificationData', async () => {
-        const patchObject = { dataValue: 'BBBBBB', ...new NotificationData() };
+        const patchObject = { dataKey: 'BBBBBB', dataValue: 'BBBBBB', ...new NotificationData() };
         const returnedFromService = Object.assign(patchObject, elemDefault);
 
         const expected = { ...returnedFromService };

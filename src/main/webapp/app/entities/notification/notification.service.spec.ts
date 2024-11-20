@@ -110,12 +110,7 @@ describe('Service Tests', () => {
       });
 
       it('should partial update a Notification', async () => {
-        const patchObject = {
-          image: 'BBBBBB',
-          status: 'BBBBBB',
-          createdAt: dayjs(currentDate).format(DATE_TIME_FORMAT),
-          ...new Notification(),
-        };
+        const patchObject = { username: 'BBBBBB', token: 'BBBBBB', image: 'BBBBBB', createdBy: 'BBBBBB', ...new Notification() };
         const returnedFromService = Object.assign(patchObject, elemDefault);
 
         const expected = { createdAt: currentDate, ...returnedFromService };
