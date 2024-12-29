@@ -1,8 +1,7 @@
 package com.glinboy.app.domain;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
+import jakarta.validation.constraints.*;
 import java.io.Serializable;
 import java.time.Instant;
 import org.hibernate.annotations.Cache;
@@ -46,17 +45,17 @@ public class Token implements Serializable {
     private Boolean disable;
 
     @NotNull
-    @CreatedDate
-    @Column(name = "created_at", nullable = false)
-    private Instant createdAt;
-
-    @NotNull
     @Column(name = "deprecate_at", nullable = false)
     private Instant deprecateAt;
 
     @NotNull
     @Column(name = "roles", nullable = false)
     private Integer roles;
+
+    @NotNull
+    @CreatedDate
+    @Column(name = "created_at", nullable = false)
+    private Instant createdAt;
 
     @NotNull
     @CreatedBy
@@ -79,21 +78,17 @@ public class Token implements Serializable {
         return this.id;
     }
 
-    public void setId(Long id) {
-        this.id = id;
-    }
-
     public Token id(Long id) {
         this.setId(id);
         return this;
     }
 
-    public String getName() {
-        return this.name;
+    public void setId(Long id) {
+        this.id = id;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public String getName() {
+        return this.name;
     }
 
     public Token name(String name) {
@@ -101,12 +96,12 @@ public class Token implements Serializable {
         return this;
     }
 
-    public String getToken() {
-        return this.token;
+    public void setName(String name) {
+        this.name = name;
     }
 
-    public void setToken(String token) {
-        this.token = token;
+    public String getToken() {
+        return this.token;
     }
 
     public Token token(String token) {
@@ -114,12 +109,12 @@ public class Token implements Serializable {
         return this;
     }
 
-    public Boolean getDisable() {
-        return this.disable;
+    public void setToken(String token) {
+        this.token = token;
     }
 
-    public void setDisable(Boolean disable) {
-        this.disable = disable;
+    public Boolean getDisable() {
+        return this.disable;
     }
 
     public Token disable(Boolean disable) {
@@ -127,25 +122,12 @@ public class Token implements Serializable {
         return this;
     }
 
-    public Instant getCreatedAt() {
-        return this.createdAt;
-    }
-
-    public void setCreatedAt(Instant createdAt) {
-        this.createdAt = createdAt;
-    }
-
-    public Token createdAt(Instant createdAt) {
-        this.setCreatedAt(createdAt);
-        return this;
+    public void setDisable(Boolean disable) {
+        this.disable = disable;
     }
 
     public Instant getDeprecateAt() {
         return this.deprecateAt;
-    }
-
-    public void setDeprecateAt(Instant deprecateAt) {
-        this.deprecateAt = deprecateAt;
     }
 
     public Token deprecateAt(Instant deprecateAt) {
@@ -153,12 +135,12 @@ public class Token implements Serializable {
         return this;
     }
 
-    public Integer getRoles() {
-        return this.roles;
+    public void setDeprecateAt(Instant deprecateAt) {
+        this.deprecateAt = deprecateAt;
     }
 
-    public void setRoles(Integer roles) {
-        this.roles = roles;
+    public Integer getRoles() {
+        return this.roles;
     }
 
     public Token roles(Integer roles) {
@@ -166,12 +148,25 @@ public class Token implements Serializable {
         return this;
     }
 
-    public String getCreatedBy() {
-        return this.createdBy;
+    public void setRoles(Integer roles) {
+        this.roles = roles;
     }
 
-    public void setCreatedBy(String createdBy) {
-        this.createdBy = createdBy;
+    public Instant getCreatedAt() {
+        return this.createdAt;
+    }
+
+    public Token createdAt(Instant createdAt) {
+        this.setCreatedAt(createdAt);
+        return this;
+    }
+
+    public void setCreatedAt(Instant createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public String getCreatedBy() {
+        return this.createdBy;
     }
 
     public Token createdBy(String createdBy) {
@@ -179,12 +174,12 @@ public class Token implements Serializable {
         return this;
     }
 
-    public Instant getUpdatedAt() {
-        return this.updatedAt;
+    public void setCreatedBy(String createdBy) {
+        this.createdBy = createdBy;
     }
 
-    public void setUpdatedAt(Instant updatedAt) {
-        this.updatedAt = updatedAt;
+    public Instant getUpdatedAt() {
+        return this.updatedAt;
     }
 
     public Token updatedAt(Instant updatedAt) {
@@ -192,17 +187,21 @@ public class Token implements Serializable {
         return this;
     }
 
-    public String getUpdatedBy() {
-        return this.updatedBy;
+    public void setUpdatedAt(Instant updatedAt) {
+        this.updatedAt = updatedAt;
     }
 
-    public void setUpdatedBy(String updatedBy) {
-        this.updatedBy = updatedBy;
+    public String getUpdatedBy() {
+        return this.updatedBy;
     }
 
     public Token updatedBy(String updatedBy) {
         this.setUpdatedBy(updatedBy);
         return this;
+    }
+
+    public void setUpdatedBy(String updatedBy) {
+        this.updatedBy = updatedBy;
     }
 
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here
@@ -215,7 +214,7 @@ public class Token implements Serializable {
         if (!(o instanceof Token)) {
             return false;
         }
-        return id != null && id.equals(((Token) o).id);
+        return getId() != null && getId().equals(((Token) o).getId());
     }
 
     @Override
@@ -232,9 +231,9 @@ public class Token implements Serializable {
             ", name='" + getName() + "'" +
             ", token='" + getToken() + "'" +
             ", disable='" + getDisable() + "'" +
-            ", createdAt='" + getCreatedAt() + "'" +
             ", deprecateAt='" + getDeprecateAt() + "'" +
             ", roles=" + getRoles() +
+            ", createdAt='" + getCreatedAt() + "'" +
             ", createdBy='" + getCreatedBy() + "'" +
             ", updatedAt='" + getUpdatedAt() + "'" +
             ", updatedBy='" + getUpdatedBy() + "'" +

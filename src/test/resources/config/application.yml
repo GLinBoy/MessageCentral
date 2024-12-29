@@ -13,19 +13,9 @@
 # http://docs.spring.io/spring-boot/docs/current/reference/html/common-application-properties.html
 # ===================================================================
 
-eureka:
-  client:
-    enabled: false
-  instance:
-    appname: MessageCentral
-    instanceId: MessageCentral:${spring.application.instance-id:${random.value}}
-
 spring:
   application:
     name: MessageCentral
-  cloud:
-    config:
-      enabled: false
   # Replace by 'prod, faker' to add the faker context and have sample data loaded in production
   liquibase:
     contexts: test
@@ -85,7 +75,7 @@ jhipster:
     authentication:
       jwt:
         # This token must be encoded using Base64 (you can type `echo 'secret-key'|base64` on your command line)
-        base64-secret: MjM4NmU0MDA4ZWVmNDU5YWQ2ZDMzZDVjYWRjNDAxMWM3NGNhOTcxZWUwZTZjYmIwMDI2MzNhYTgwODRiMDNlZGQ2YjJmZjRjNjRjMTg3NjZhOWQwZjM2Zjg2NTA3MDY4Zjc1YThiMDBlMTZlODkyYjRlZDk5ZmI2YmJmZTY5OGU=
+        base64-secret: MGQ5MWMwMDMwODhkMTQzNTMwMWU5ZDQzNTZlM2IyYjg0ZjRiYmUyNmYyZmYxMGIzMTdiMzE4NWQ1MjA3ZjYxNmE3ODMyMzZhYjQxY2NkN2QyNzkxMDdiZWJlNGQ3N2FiZDgxMzlkODU3Y2I2YmZkODY3NWQ3Yzg2OGVkM2Q2Y2E=
         # Token is valid 24 hours
         token-validity-in-seconds: 86400
         token-validity-in-seconds-for-remember-me: 86400

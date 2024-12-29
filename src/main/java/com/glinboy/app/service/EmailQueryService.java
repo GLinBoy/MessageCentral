@@ -1,7 +1,7 @@
 package com.glinboy.app.service;
 
+import com.glinboy.app.domain.*; // for static metamodels
 import com.glinboy.app.domain.Email;
-import com.glinboy.app.domain.Email_;
 import com.glinboy.app.repository.EmailRepository;
 import com.glinboy.app.service.criteria.EmailCriteria;
 import com.glinboy.app.service.dto.EmailDTO;
@@ -20,7 +20,7 @@ import tech.jhipster.service.QueryService;
  * Service for executing complex queries for {@link Email} entities in the database.
  * The main input is a {@link EmailCriteria} which gets converted to {@link Specification},
  * in a way that all the filters must apply.
- * It returns a {@link List} of {@link EmailDTO} or a {@link Page} of {@link EmailDTO} which fulfills the criteria.
+ * It returns a {@link Page} of {@link EmailDTO} which fulfills the criteria.
  */
 @Service
 @Transactional(readOnly = true)

@@ -1,12 +1,9 @@
 {
   "annotations": {
-    "changelogDate": "20210421105843"
+    "changelogDate": "20241228112609"
   },
   "applications": ["MessageCentral"],
-  "changelogDate": "20210421105843",
   "dto": "mapstruct",
-  "embedded": false,
-  "entityTableName": "short_message",
   "fields": [
     {
       "fieldName": "phoneNumber",
@@ -39,11 +36,9 @@
       "fieldValidateRules": ["required"]
     }
   ],
-  "fluentMethods": true,
   "jpaMetamodelFiltering": true,
   "name": "ShortMessage",
   "pagination": "pagination",
-  "readOnly": false,
   "relationships": [],
   "searchEngine": "no",
   "service": "serviceImpl"

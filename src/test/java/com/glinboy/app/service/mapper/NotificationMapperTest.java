@@ -1,7 +1,7 @@
 package com.glinboy.app.service.mapper;
 
-import static com.glinboy.app.domain.NotificationAsserts.assertNotificationAllPropertiesEquals;
-import static com.glinboy.app.domain.NotificationTestSamples.getNotificationSample1;
+import static com.glinboy.app.domain.NotificationAsserts.*;
+import static com.glinboy.app.domain.NotificationTestSamples.*;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

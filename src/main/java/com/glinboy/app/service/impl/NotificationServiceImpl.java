@@ -24,7 +24,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
- * Service Implementation for managing {@link Notification}.
+ * Service Implementation for managing {@link com.glinboy.app.domain.Notification}.
  */
 @Service
 @Transactional

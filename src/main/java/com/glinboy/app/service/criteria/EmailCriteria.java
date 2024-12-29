@@ -7,10 +7,7 @@ import java.util.Objects;
 import java.util.Optional;
 import org.springdoc.core.annotations.ParameterObject;
 import tech.jhipster.service.Criteria;
-import tech.jhipster.service.filter.Filter;
-import tech.jhipster.service.filter.InstantFilter;
-import tech.jhipster.service.filter.LongFilter;
-import tech.jhipster.service.filter.StringFilter;
+import tech.jhipster.service.filter.*;
 
 /**
  * Criteria class for the {@link com.glinboy.app.domain.Email} entity. This class is used

@@ -2,8 +2,7 @@ package com.glinboy.app.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
+import jakarta.validation.constraints.*;
 import java.io.Serializable;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
@@ -104,7 +103,7 @@ public class NotificationData implements Serializable {
         if (!(o instanceof NotificationData)) {
             return false;
         }
-        return id != null && id.equals(((NotificationData) o).id);
+        return getId() != null && getId().equals(((NotificationData) o).getId());
     }
 
     @Override

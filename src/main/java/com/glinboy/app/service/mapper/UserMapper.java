@@ -13,7 +13,7 @@ import org.springframework.stereotype.Service;
 
 /**
  * Mapper for the entity {@link User} and its DTO called {@link UserDTO}.
- * <p>
+ *
  * Normal mappers are generated using MapStruct, this one is hand-coded as MapStruct
  * support is still in beta, and requires a manual step with an IDE.
  */
@@ -21,7 +21,7 @@ import org.springframework.stereotype.Service;
 public class UserMapper {
 
     public List<UserDTO> usersToUserDTOs(List<User> users) {
-        return users.stream().filter(Objects::nonNull).map(this::userToUserDTO).collect(Collectors.toList());
+        return users.stream().filter(Objects::nonNull).map(this::userToUserDTO).toList();
     }
 
     public UserDTO userToUserDTO(User user) {
@@ -29,7 +29,7 @@ public class UserMapper {
     }
 
     public List<AdminUserDTO> usersToAdminUserDTOs(List<User> users) {
-        return users.stream().filter(Objects::nonNull).map(this::userToAdminUserDTO).collect(Collectors.toList());
+        return users.stream().filter(Objects::nonNull).map(this::userToAdminUserDTO).toList();
     }
 
     public AdminUserDTO userToAdminUserDTO(User user) {
@@ -37,7 +37,7 @@ public class UserMapper {
     }
 
     public List<User> userDTOsToUsers(List<AdminUserDTO> userDTOs) {
-        return userDTOs.stream().filter(Objects::nonNull).map(this::userDTOToUser).collect(Collectors.toList());
+        return userDTOs.stream().filter(Objects::nonNull).map(this::userDTOToUser).toList();
     }
 
     public User userDTOToUser(AdminUserDTO userDTO) {

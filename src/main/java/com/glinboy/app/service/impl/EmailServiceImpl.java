@@ -24,7 +24,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
- * Service Implementation for managing {@link Email}.
+ * Service Implementation for managing {@link com.glinboy.app.domain.Email}.
  */
 @Service
 @Transactional
@@ -73,7 +73,8 @@ public class EmailServiceImpl implements EmailService {
                         e.setContent(es.getContent());
                         e.setStatus(MessageStatus.IN_QUEUE);
                         return e;
-                    }))
+                    })
+            )
             .collect(Collectors.toList());
         LOG.info("List of {} Emails: {}", emails.size(), emails);
         emails = this.emailRepository.saveAll(emails);

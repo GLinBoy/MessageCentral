@@ -3,9 +3,7 @@ package com.glinboy.app.domain;
 import com.glinboy.app.domain.enumeration.EmailType;
 import com.glinboy.app.domain.enumeration.MessageStatus;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Pattern;
-import jakarta.validation.constraints.Size;
+import jakarta.validation.constraints.*;
 import java.io.Serializable;
 import java.sql.Types;
 import java.time.Instant;
@@ -184,7 +182,7 @@ public class Email implements Serializable {
         if (!(o instanceof Email)) {
             return false;
         }
-        return id != null && id.equals(((Email) o).id);
+        return getId() != null && getId().equals(((Email) o).getId());
     }
 
     @Override

@@ -5,6 +5,7 @@ import com.glinboy.app.repository.ShortMessageRepository;
 import com.glinboy.app.rsql.CustomRsqlVisitor;
 import com.glinboy.app.service.ShortMessageQueryService;
 import com.glinboy.app.service.ShortMessageService;
+import com.glinboy.app.service.criteria.ShortMessageCriteria;
 import com.glinboy.app.service.dto.ShortMessageDTO;
 import com.glinboy.app.service.dto.ShortMessagesDTO;
 import com.glinboy.app.web.rest.errors.BadRequestAlertException;

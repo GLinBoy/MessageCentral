@@ -3,8 +3,7 @@ package com.glinboy.app.domain;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.glinboy.app.domain.enumeration.MessageStatus;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
+import jakarta.validation.constraints.*;
 import java.io.Serializable;
 import java.time.Instant;
 import java.util.HashSet;
@@ -82,21 +81,17 @@ public class Notification implements Serializable {
         return this.id;
     }
 
-    public void setId(Long id) {
-        this.id = id;
-    }
-
     public Notification id(Long id) {
         this.setId(id);
         return this;
     }
 
-    public String getUsername() {
-        return this.username;
+    public void setId(Long id) {
+        this.id = id;
     }
 
-    public void setUsername(String username) {
-        this.username = username;
+    public String getUsername() {
+        return this.username;
     }
 
     public Notification username(String username) {
@@ -104,12 +99,12 @@ public class Notification implements Serializable {
         return this;
     }
 
-    public String getToken() {
-        return this.token;
+    public void setUsername(String username) {
+        this.username = username;
     }
 
-    public void setToken(String token) {
-        this.token = token;
+    public String getToken() {
+        return this.token;
     }
 
     public Notification token(String token) {
@@ -117,12 +112,12 @@ public class Notification implements Serializable {
         return this;
     }
 
-    public String getSubject() {
-        return this.subject;
+    public void setToken(String token) {
+        this.token = token;
     }
 
-    public void setSubject(String subject) {
-        this.subject = subject;
+    public String getSubject() {
+        return this.subject;
     }
 
     public Notification subject(String subject) {
@@ -130,12 +125,12 @@ public class Notification implements Serializable {
         return this;
     }
 
-    public String getContent() {
-        return this.content;
+    public void setSubject(String subject) {
+        this.subject = subject;
     }
 
-    public void setContent(String content) {
-        this.content = content;
+    public String getContent() {
+        return this.content;
     }
 
     public Notification content(String content) {
@@ -143,12 +138,12 @@ public class Notification implements Serializable {
         return this;
     }
 
-    public String getImage() {
-        return this.image;
+    public void setContent(String content) {
+        this.content = content;
     }
 
-    public void setImage(String image) {
-        this.image = image;
+    public String getImage() {
+        return this.image;
     }
 
     public Notification image(String image) {
@@ -156,12 +151,12 @@ public class Notification implements Serializable {
         return this;
     }
 
-    public MessageStatus getStatus() {
-        return this.status;
+    public void setImage(String image) {
+        this.image = image;
     }
 
-    public void setStatus(MessageStatus status) {
-        this.status = status;
+    public MessageStatus getStatus() {
+        return this.status;
     }
 
     public Notification status(MessageStatus status) {
@@ -169,12 +164,12 @@ public class Notification implements Serializable {
         return this;
     }
 
-    public Instant getCreatedAt() {
-        return this.createdAt;
+    public void setStatus(MessageStatus status) {
+        this.status = status;
     }
 
-    public void setCreatedAt(Instant createdAt) {
-        this.createdAt = createdAt;
+    public Instant getCreatedAt() {
+        return this.createdAt;
     }
 
     public Notification createdAt(Instant createdAt) {
@@ -182,17 +177,21 @@ public class Notification implements Serializable {
         return this;
     }
 
-    public String getCreatedBy() {
-        return this.createdBy;
+    public void setCreatedAt(Instant createdAt) {
+        this.createdAt = createdAt;
     }
 
-    public void setCreatedBy(String createdBy) {
-        this.createdBy = createdBy;
+    public String getCreatedBy() {
+        return this.createdBy;
     }
 
     public Notification createdBy(String createdBy) {
         this.setCreatedBy(createdBy);
         return this;
+    }
+
+    public void setCreatedBy(String createdBy) {
+        this.createdBy = createdBy;
     }
 
     public Set<NotificationData> getData() {
@@ -236,7 +235,7 @@ public class Notification implements Serializable {
         if (!(o instanceof Notification)) {
             return false;
         }
-        return id != null && id.equals(((Notification) o).id);
+        return getId() != null && getId().equals(((Notification) o).getId());
     }
 
     @Override

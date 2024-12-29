@@ -1,9 +1,7 @@
 package com.glinboy.app.service.dto;
 
 import com.glinboy.app.domain.enumeration.MessageStatus;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Pattern;
-import jakarta.validation.constraints.Size;
+import jakarta.validation.constraints.*;
 import java.io.Serializable;
 import java.time.Instant;
 import java.util.Objects;

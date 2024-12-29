@@ -1,12 +1,9 @@
 {
   "annotations": {
-    "changelogDate": "20210415085652"
+    "changelogDate": "20241228112608"
   },
   "applications": ["MessageCentral"],
-  "changelogDate": "20210415085652",
   "dto": "mapstruct",
-  "embedded": false,
-  "entityTableName": "email",
   "fields": [
     {
       "fieldName": "receiver",
@@ -49,11 +46,9 @@
       "fieldValidateRules": ["required"]
     }
   ],
-  "fluentMethods": true,
   "jpaMetamodelFiltering": true,
   "name": "Email",
   "pagination": "pagination",
-  "readOnly": false,
   "relationships": [],
   "searchEngine": "no",
   "service": "serviceImpl"

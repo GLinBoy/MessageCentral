@@ -7,6 +7,9 @@ import com.glinboy.app.security.jwt.TokenProvider;
 import com.glinboy.app.service.TokenService;
 import com.glinboy.app.service.dto.TokenDTO;
 import com.glinboy.app.service.mapper.TokenMapper;
+import java.time.Instant;
+import java.util.Optional;
+import java.util.Set;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,12 +24,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.time.Instant;
-import java.util.Optional;
-import java.util.Set;
-
 /**
- * Service Implementation for managing {@link Token}.
+ * Service Implementation for managing {@link com.glinboy.app.domain.Token}.
  */
 @Service
 @Transactional
@@ -90,8 +89,9 @@ public class TokenServiceImpl implements TokenService {
     public void delete(Long id) {
         LOG.debug("Request to delete Token : {}", id);
         Token token =
-            this.tokenRepository.findById(id)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Couldn't find token with id: " + id));
+            this.tokenRepository.findById(id).orElseThrow(() ->
+                    new ResponseStatusException(HttpStatus.NOT_FOUND, "Couldn't find token with id: " + id)
+                );
         if (Instant.now().isBefore(token.getDeprecateAt())) {
             this.tokenRepository.updateTokenStatus(id, Boolean.TRUE);
         } else {

@@ -99,6 +99,31 @@ const datetimeFormats: IntlDateTimeFormats = {
       minute: 'numeric',
     },
   },
+  de: {
+    short: {
+      year: 'numeric',
+      month: 'short',
+      day: 'numeric',
+      hour: 'numeric',
+      minute: 'numeric',
+    },
+    medium: {
+      year: 'numeric',
+      month: 'short',
+      day: 'numeric',
+      weekday: 'short',
+      hour: 'numeric',
+      minute: 'numeric',
+    },
+    long: {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric',
+      weekday: 'long',
+      hour: 'numeric',
+      minute: 'numeric',
+    },
+  },
   // jhipster-needle-i18n-language-date-time-format - JHipster will add/remove format options in this object
 };
 

@@ -5,6 +5,7 @@ import com.glinboy.app.repository.EmailRepository;
 import com.glinboy.app.rsql.CustomRsqlVisitor;
 import com.glinboy.app.service.EmailQueryService;
 import com.glinboy.app.service.EmailService;
+import com.glinboy.app.service.criteria.EmailCriteria;
 import com.glinboy.app.service.dto.EmailDTO;
 import com.glinboy.app.service.dto.EmailsDTO;
 import com.glinboy.app.web.rest.errors.BadRequestAlertException;

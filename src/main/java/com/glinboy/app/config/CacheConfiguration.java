@@ -1,10 +1,8 @@
 package com.glinboy.app.config;
 
-import java.time.Duration;
-import org.ehcache.config.builders.CacheConfigurationBuilder;
-import org.ehcache.config.builders.ExpiryPolicyBuilder;
-import org.ehcache.config.builders.ResourcePoolsBuilder;
-import org.ehcache.jsr107.Eh107Configuration;
+import com.github.benmanes.caffeine.jcache.configuration.CaffeineConfiguration;
+import java.util.OptionalLong;
+import java.util.concurrent.TimeUnit;
 import org.hibernate.cache.jcache.ConfigSettings;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.cache.JCacheManagerCustomizer;
@@ -13,8 +11,7 @@ import org.springframework.boot.info.BuildProperties;
 import org.springframework.boot.info.GitProperties;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.cache.interceptor.KeyGenerator;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.*;
 import tech.jhipster.config.JHipsterProperties;
 import tech.jhipster.config.cache.PrefixedKeyGenerator;
 
@@ -27,17 +24,13 @@ public class CacheConfiguration {
     private final javax.cache.configuration.Configuration<Object, Object> jcacheConfiguration;
 
     public CacheConfiguration(JHipsterProperties jHipsterProperties) {
-        JHipsterProperties.Cache.Ehcache ehcache = jHipsterProperties.getCache().getEhcache();
+        JHipsterProperties.Cache.Caffeine caffeine = jHipsterProperties.getCache().getCaffeine();
 
-        jcacheConfiguration = Eh107Configuration.fromEhcacheCacheConfiguration(
-            CacheConfigurationBuilder.newCacheConfigurationBuilder(
-                Object.class,
-                Object.class,
-                ResourcePoolsBuilder.heap(ehcache.getMaxEntries())
-            )
-                .withExpiry(ExpiryPolicyBuilder.timeToLiveExpiration(Duration.ofSeconds(ehcache.getTimeToLiveSeconds())))
-                .build()
-        );
+        CaffeineConfiguration<Object, Object> caffeineConfiguration = new CaffeineConfiguration<>();
+        caffeineConfiguration.setMaximumSize(OptionalLong.of(caffeine.getMaxEntries()));
+        caffeineConfiguration.setExpireAfterWrite(OptionalLong.of(TimeUnit.SECONDS.toNanos(caffeine.getTimeToLiveSeconds())));
+        caffeineConfiguration.setStatisticsEnabled(true);
+        jcacheConfiguration = caffeineConfiguration;
     }
 
     @Bean
@@ -59,7 +52,7 @@ public class CacheConfiguration {
             createCache(cm, com.glinboy.app.domain.Notification.class.getName() + ".data");
             createCache(cm, com.glinboy.app.domain.NotificationData.class.getName());
             createCache(cm, com.glinboy.app.domain.Token.class.getName());
-            // jhipster-needle-ehcache-add-entry
+            // jhipster-needle-caffeine-add-entry
         };
     }
 

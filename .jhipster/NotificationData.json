@@ -1,12 +1,8 @@
 {
   "annotations": {
-    "changelogDate": "20210426100905"
+    "changelogDate": "20241228112611"
   },
   "applications": ["MessageCentral"],
-  "changelogDate": "20210426100905",
-  "dto": "no",
-  "embedded": false,
-  "entityTableName": "notification_data",
   "fields": [
     {
       "fieldName": "dataKey",
@@ -21,11 +17,7 @@
       "fieldValidateRulesMaxlength": "256"
     }
   ],
-  "fluentMethods": true,
-  "jpaMetamodelFiltering": false,
   "name": "NotificationData",
-  "pagination": "no",
-  "readOnly": false,
   "relationships": [
     {
       "otherEntityName": "notification",
@@ -36,6 +28,5 @@
       "relationshipValidateRules": "required"
     }
   ],
-  "searchEngine": "no",
-  "service": "no"
+  "searchEngine": "no"
 }

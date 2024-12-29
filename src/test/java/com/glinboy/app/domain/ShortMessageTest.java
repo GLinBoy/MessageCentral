@@ -1,7 +1,6 @@
 package com.glinboy.app.domain;
 
-import static com.glinboy.app.domain.ShortMessageTestSamples.getShortMessageSample1;
-import static com.glinboy.app.domain.ShortMessageTestSamples.getShortMessageSample2;
+import static com.glinboy.app.domain.ShortMessageTestSamples.*;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.glinboy.app.web.rest.TestUtil;

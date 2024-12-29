@@ -1,9 +1,7 @@
 package com.glinboy.app.service;
 
-// for static metamodels
-
+import com.glinboy.app.domain.*; // for static metamodels
 import com.glinboy.app.domain.ShortMessage;
-import com.glinboy.app.domain.ShortMessage_;
 import com.glinboy.app.repository.ShortMessageRepository;
 import com.glinboy.app.service.criteria.ShortMessageCriteria;
 import com.glinboy.app.service.dto.ShortMessageDTO;
@@ -22,7 +20,7 @@ import tech.jhipster.service.QueryService;
  * Service for executing complex queries for {@link ShortMessage} entities in the database.
  * The main input is a {@link ShortMessageCriteria} which gets converted to {@link Specification},
  * in a way that all the filters must apply.
- * It returns a {@link List} of {@link ShortMessageDTO} or a {@link Page} of {@link ShortMessageDTO} which fulfills the criteria.
+ * It returns a {@link Page} of {@link ShortMessageDTO} which fulfills the criteria.
  */
 @Service
 @Transactional(readOnly = true)
@@ -54,9 +52,8 @@ public class ShortMessageQueryService extends QueryService<ShortMessage> {
 
     /**
      * Return a {@link Page} of {@link ShortMessageDTO} which matches the criteria from the database.
-     *
      * @param criteria The object which holds all the filters, which the entities should match.
-     * @param page     The page, which should be returned.
+     * @param page The page, which should be returned.
      * @return the matching entities.
      */
     @Transactional(readOnly = true)
@@ -68,7 +65,6 @@ public class ShortMessageQueryService extends QueryService<ShortMessage> {
 
     /**
      * Return the number of matching entities in the database.
-     *
      * @param criteria The object which holds all the filters, which the entities should match.
      * @return the number of matching entities.
      */
@@ -93,7 +89,6 @@ public class ShortMessageQueryService extends QueryService<ShortMessage> {
 
     /**
      * Function to convert {@link ShortMessageCriteria} to a {@link Specification}
-     *
      * @param criteria The object which holds all the filters, which the entities should match.
      * @return the matching {@link Specification} of the entity.
      */

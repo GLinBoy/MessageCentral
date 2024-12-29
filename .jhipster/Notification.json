@@ -1,12 +1,9 @@
 {
   "annotations": {
-    "changelogDate": "20210424123846"
+    "changelogDate": "20241228112610"
   },
   "applications": ["MessageCentral"],
-  "changelogDate": "20210424123846",
   "dto": "mapstruct",
-  "embedded": false,
-  "entityTableName": "notification",
   "fields": [
     {
       "fieldName": "username",
@@ -54,11 +51,9 @@
       "fieldValidateRules": ["required"]
     }
   ],
-  "fluentMethods": true,
   "jpaMetamodelFiltering": true,
   "name": "Notification",
   "pagination": "pagination",
-  "readOnly": false,
   "relationships": [
     {
       "otherEntityName": "notificationData",

@@ -1,7 +1,6 @@
 package com.glinboy.app.service.dto;
 
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
+import jakarta.validation.constraints.*;
 import java.io.Serializable;
 import java.time.Instant;
 import java.util.Objects;
@@ -24,13 +23,13 @@ public class TokenDTO implements Serializable {
     @NotNull
     private Boolean disable;
 
-    private Instant createdAt;
-
     @NotNull
     private Instant deprecateAt;
 
     @NotNull
     private Integer roles;
+
+    private Instant createdAt;
 
     private String createdBy;
 
@@ -70,14 +69,6 @@ public class TokenDTO implements Serializable {
         this.disable = disable;
     }
 
-    public Instant getCreatedAt() {
-        return createdAt;
-    }
-
-    public void setCreatedAt(Instant createdAt) {
-        this.createdAt = createdAt;
-    }
-
     public Instant getDeprecateAt() {
         return deprecateAt;
     }
@@ -92,6 +83,14 @@ public class TokenDTO implements Serializable {
 
     public void setRoles(Integer roles) {
         this.roles = roles;
+    }
+
+    public Instant getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(Instant createdAt) {
+        this.createdAt = createdAt;
     }
 
     public String getCreatedBy() {
@@ -147,9 +146,9 @@ public class TokenDTO implements Serializable {
             ", name='" + getName() + "'" +
             ", token='" + getToken() + "'" +
             ", disable='" + getDisable() + "'" +
-            ", createdAt='" + getCreatedAt() + "'" +
             ", deprecateAt='" + getDeprecateAt() + "'" +
             ", roles=" + getRoles() +
+            ", createdAt='" + getCreatedAt() + "'" +
             ", createdBy='" + getCreatedBy() + "'" +
             ", updatedAt='" + getUpdatedAt() + "'" +
             ", updatedBy='" + getUpdatedBy() + "'" +

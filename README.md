@@ -1,8 +1,6 @@
 # MessageCentral
 
-This application was generated using JHipster 8.7.3, you can find documentation and help at [https://www.jhipster.tech/documentation-archive/v8.7.3](https://www.jhipster.tech/documentation-archive/v8.7.3).
-
-This application is configured for Service Discovery and Configuration with the JHipster-Registry. On launch, it will refuse to start if it is not able to connect to the JHipster-Registry at [http://localhost:8761](http://localhost:8761). For more information, read our documentation on [Service Discovery and Configuration with the JHipster-Registry][].
+This application was generated using JHipster 8.8.0, you can find documentation and help at [https://www.jhipster.tech/documentation-archive/v8.8.0](https://www.jhipster.tech/documentation-archive/v8.8.0).
 
 ## Project Structure
 
@@ -146,6 +144,16 @@ To launch your application's tests, run:
 ./mvnw verify
 ```
 
+### Gatling
+
+Performance tests are run by [Gatling][] and written in Scala. They're located in [src/test/java/gatling/simulations](src/test/java/gatling/simulations).
+
+You can execute all Gatling tests with
+
+```
+./mvnw gatling:test
+```
+
 ### Client tests
 
 Unit tests are run by [Jest][]. They're located in [src/test/javascript/](src/test/javascript/) and can be run with:
@@ -153,6 +161,15 @@ Unit tests are run by [Jest][]. They're located in [src/test/javascript/](src/te
 ```
 ./npmw test
 ```
+
+UI end-to-end tests are powered by [Cypress][]. They're located in [src/test/javascript/cypress](src/test/javascript/cypress)
+and can be run by starting Spring Boot in one terminal (`./mvnw spring-boot:run`) and running the tests (`./npmw run e2e`) in a second one.
+
+#### Lighthouse audits
+
+You can execute automated [Lighthouse audits](https://developers.google.com/web/tools/lighthouse/) with [cypress-audit](https://github.com/mfrachet/cypress-audit) by running `./npmw run e2e:cypress:audits`.
+You should only run the audits when your application is packaged with the production profile.
+The lighthouse report is created in `target/cypress/lhreport.html`
 
 ## Others
 
@@ -205,7 +222,7 @@ To stop and remove the containers, run:
 docker compose -f src/main/docker/services.yml down
 ```
 
-[Spring Docker Compose Integration](https://docs.spring.io/spring-boot/reference/features/dev-services.html) is enable by default. It's possible to disable it in application.yml:
+[Spring Docker Compose Integration](https://docs.spring.io/spring-boot/reference/features/dev-services.html) is enabled by default. It's possible to disable it in application.yml:
 
 ```yaml
 spring:
@@ -241,21 +258,22 @@ For more information refer to [Using Docker and Docker-Compose][], this page als
 To configure CI for your project, run the ci-cd sub-generator (`jhipster ci-cd`), this will let you generate configuration files for a number of Continuous Integration systems. Consult the [Setting up Continuous Integration][] page for more information.
 
 [JHipster Homepage and latest documentation]: https://www.jhipster.tech
-[JHipster 8.7.3 archive]: https://www.jhipster.tech/documentation-archive/v8.7.3
-[Using JHipster in development]: https://www.jhipster.tech/documentation-archive/v8.7.3/development/
-[Service Discovery and Configuration with the JHipster-Registry]: https://www.jhipster.tech/documentation-archive/v8.7.3/microservices-architecture/#jhipster-registry
-[Using Docker and Docker-Compose]: https://www.jhipster.tech/documentation-archive/v8.7.3/docker-compose
-[Using JHipster in production]: https://www.jhipster.tech/documentation-archive/v8.7.3/production/
-[Running tests page]: https://www.jhipster.tech/documentation-archive/v8.7.3/running-tests/
-[Code quality page]: https://www.jhipster.tech/documentation-archive/v8.7.3/code-quality/
-[Setting up Continuous Integration]: https://www.jhipster.tech/documentation-archive/v8.7.3/setting-up-ci/
+[JHipster 8.8.0 archive]: https://www.jhipster.tech/documentation-archive/v8.8.0
+[Using JHipster in development]: https://www.jhipster.tech/documentation-archive/v8.8.0/development/
+[Using Docker and Docker-Compose]: https://www.jhipster.tech/documentation-archive/v8.8.0/docker-compose
+[Using JHipster in production]: https://www.jhipster.tech/documentation-archive/v8.8.0/production/
+[Running tests page]: https://www.jhipster.tech/documentation-archive/v8.8.0/running-tests/
+[Code quality page]: https://www.jhipster.tech/documentation-archive/v8.8.0/code-quality/
+[Setting up Continuous Integration]: https://www.jhipster.tech/documentation-archive/v8.8.0/setting-up-ci/
 [Node.js]: https://nodejs.org/
 [NPM]: https://www.npmjs.com/
 [OpenAPI-Generator]: https://openapi-generator.tech
 [Swagger-Editor]: https://editor.swagger.io
-[Doing API-First development]: https://www.jhipster.tech/documentation-archive/v8.7.3/doing-api-first-development/
+[Doing API-First development]: https://www.jhipster.tech/documentation-archive/v8.8.0/doing-api-first-development/
+[Gatling]: https://gatling.io/
 [Webpack]: https://webpack.github.io/
 [BrowserSync]: https://www.browsersync.io/
 [Jest]: https://facebook.github.io/jest/
+[Cypress]: https://www.cypress.io/
 [Leaflet]: https://leafletjs.com/
 [DefinitelyTyped]: https://definitelytyped.org/

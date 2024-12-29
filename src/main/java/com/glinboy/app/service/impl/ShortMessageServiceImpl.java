@@ -24,7 +24,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
- * Service Implementation for managing {@link ShortMessage}.
+ * Service Implementation for managing {@link com.glinboy.app.domain.ShortMessage}.
  */
 @Service
 @Transactional
