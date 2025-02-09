@@ -1,0 +1,68 @@
+{
+  "annotations": {
+    "changelogDate": "20241228112610"
+  },
+  "applications": ["MessageCentral"],
+  "dto": "mapstruct",
+  "fields": [
+    {
+      "fieldName": "username",
+      "fieldType": "String",
+      "fieldValidateRules": ["required", "maxlength"],
+      "fieldValidateRulesMaxlength": "64"
+    },
+    {
+      "fieldName": "token",
+      "fieldType": "String",
+      "fieldValidateRules": ["required", "maxlength"],
+      "fieldValidateRulesMaxlength": "164"
+    },
+    {
+      "fieldName": "subject",
+      "fieldType": "String",
+      "fieldValidateRules": ["required", "maxlength"],
+      "fieldValidateRulesMaxlength": "128"
+    },
+    {
+      "fieldName": "content",
+      "fieldType": "String",
+      "fieldValidateRules": ["required", "maxlength"],
+      "fieldValidateRulesMaxlength": "4000"
+    },
+    {
+      "fieldName": "image",
+      "fieldType": "String",
+      "fieldValidateRules": ["maxlength"],
+      "fieldValidateRulesMaxlength": "256"
+    },
+    {
+      "fieldName": "status",
+      "fieldType": "MessageStatus",
+      "fieldValues": "IN_QUEUE,SENT,FAILED"
+    },
+    {
+      "fieldName": "createdAt",
+      "fieldType": "Instant",
+      "fieldValidateRules": ["required"]
+    },
+    {
+      "fieldName": "createdBy",
+      "fieldType": "String",
+      "fieldValidateRules": ["required"]
+    }
+  ],
+  "jpaMetamodelFiltering": true,
+  "name": "Notification",
+  "pagination": "pagination",
+  "relationships": [
+    {
+      "otherEntityName": "notificationData",
+      "otherEntityRelationshipName": "notification",
+      "relationshipName": "data",
+      "relationshipSide": "left",
+      "relationshipType": "one-to-many"
+    }
+  ],
+  "searchEngine": "no",
+  "service": "serviceImpl"
+}

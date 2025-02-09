@@ -1,0 +1,28 @@
+{
+  "messageCentralApp": {
+    "shortMessage": {
+      "home": {
+        "title": "Short Messages",
+        "refreshListLabel": "Liste aktualisieren",
+        "createLabel": "Short Message erstellen",
+        "createOrEditLabel": "Short Message erstellen oder bearbeiten",
+        "notFound": "Keine Short Messages gefunden"
+      },
+      "created": "Short Message erstellt mit ID { param }",
+      "updated": "Short Message aktualisiert mit ID { param }",
+      "deleted": "Short Message gelöscht mit ID { param }",
+      "delete": {
+        "question": "Soll Short Message { id } wirklich dauerhaft gelöscht werden?"
+      },
+      "detail": {
+        "title": "Short Message"
+      },
+      "id": "ID",
+      "phoneNumber": "Phone Number",
+      "content": "Content",
+      "status": "Status",
+      "createdAt": "Created At",
+      "createdBy": "Created By"
+    }
+  }
+}
