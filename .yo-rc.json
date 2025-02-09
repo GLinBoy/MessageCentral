@@ -19,7 +19,7 @@
     "enableTranslation": true,
     "entities": ["Email", "ShortMessage", "Notification", "NotificationData", "Token"],
     "feignClient": null,
-    "jhipsterVersion": "8.8.0",
+    "jhipsterVersion": "8.9.0",
     "jwtSecretKey": "MGQ5MWMwMDMwODhkMTQzNTMwMWU5ZDQzNTZlM2IyYjg0ZjRiYmUyNmYyZmYxMGIzMTdiMzE4NWQ1MjA3ZjYxNmE3ODMyMzZhYjQxY2NkN2QyNzkxMDdiZWJlNGQ3N2FiZDgxMzlkODU3Y2I2YmZkODY3NWQ3Yzg2OGVkM2Q2Y2E=",
     "languages": ["en", "fa", "de"],
     "lastLiquibaseTimestamp": 1735385172000,
