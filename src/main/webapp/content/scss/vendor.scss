@@ -14,6 +14,6 @@ eg $input-color: red;
 nav li.router-link-active .navbar-dropdown-menu {
   color: $navbar-dark-active-color;
 }
-@import 'src/main/webapp/content/scss/rtl.scss';
+@import '@content/scss/rtl.scss';
 
 /* jhipster-needle-scss-add-vendor JHipster will add new css style */
