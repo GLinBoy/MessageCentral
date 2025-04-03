@@ -119,12 +119,12 @@ class EmailResourceIT {
     }
 
     @BeforeEach
-    public void initTest() {
+    void initTest() {
         email = createEntity();
     }
 
     @AfterEach
-    public void cleanup() {
+    void cleanup() {
         if (insertedEmail != null) {
             emailRepository.delete(insertedEmail);
             insertedEmail = null;

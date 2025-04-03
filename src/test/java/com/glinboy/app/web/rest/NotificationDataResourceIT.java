@@ -104,12 +104,12 @@ class NotificationDataResourceIT {
     }
 
     @BeforeEach
-    public void initTest() {
+    void initTest() {
         notificationData = createEntity(em);
     }
 
     @AfterEach
-    public void cleanup() {
+    void cleanup() {
         if (insertedNotificationData != null) {
             notificationDataRepository.delete(insertedNotificationData);
             insertedNotificationData = null;

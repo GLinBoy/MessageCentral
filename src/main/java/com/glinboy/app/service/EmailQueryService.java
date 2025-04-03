@@ -70,30 +70,16 @@ public class EmailQueryService extends QueryService<Email> {
         Specification<Email> specification = Specification.where(null);
         if (criteria != null) {
             // This has to be called first, because the distinct method returns null
-            if (criteria.getDistinct() != null) {
-                specification = specification.and(distinct(criteria.getDistinct()));
-            }
-            if (criteria.getId() != null) {
-                specification = specification.and(buildRangeSpecification(criteria.getId(), Email_.id));
-            }
-            if (criteria.getReceiver() != null) {
-                specification = specification.and(buildStringSpecification(criteria.getReceiver(), Email_.receiver));
-            }
-            if (criteria.getSubject() != null) {
-                specification = specification.and(buildStringSpecification(criteria.getSubject(), Email_.subject));
-            }
-            if (criteria.getStatus() != null) {
-                specification = specification.and(buildSpecification(criteria.getStatus(), Email_.status));
-            }
-            if (criteria.getEmailType() != null) {
-                specification = specification.and(buildSpecification(criteria.getEmailType(), Email_.emailType));
-            }
-            if (criteria.getCreatedAt() != null) {
-                specification = specification.and(buildRangeSpecification(criteria.getCreatedAt(), Email_.createdAt));
-            }
-            if (criteria.getCreatedBy() != null) {
-                specification = specification.and(buildStringSpecification(criteria.getCreatedBy(), Email_.createdBy));
-            }
+            specification = Specification.allOf(
+                Boolean.TRUE.equals(criteria.getDistinct()) ? distinct(criteria.getDistinct()) : null,
+                buildRangeSpecification(criteria.getId(), Email_.id),
+                buildStringSpecification(criteria.getReceiver(), Email_.receiver),
+                buildStringSpecification(criteria.getSubject(), Email_.subject),
+                buildSpecification(criteria.getStatus(), Email_.status),
+                buildSpecification(criteria.getEmailType(), Email_.emailType),
+                buildRangeSpecification(criteria.getCreatedAt(), Email_.createdAt),
+                buildStringSpecification(criteria.getCreatedBy(), Email_.createdBy)
+            );
         }
         return specification;
     }

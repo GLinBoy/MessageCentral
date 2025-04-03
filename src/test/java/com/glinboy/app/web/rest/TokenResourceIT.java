@@ -128,12 +128,12 @@ class TokenResourceIT {
     }
 
     @BeforeEach
-    public void initTest() {
+    void initTest() {
         token = createEntity();
     }
 
     @AfterEach
-    public void cleanup() {
+    void cleanup() {
         if (insertedToken != null) {
             tokenRepository.delete(insertedToken);
             insertedToken = null;
