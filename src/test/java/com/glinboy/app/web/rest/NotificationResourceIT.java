@@ -123,12 +123,12 @@ class NotificationResourceIT {
     }
 
     @BeforeEach
-    public void initTest() {
+    void initTest() {
         notification = createEntity();
     }
 
     @AfterEach
-    public void cleanup() {
+    void cleanup() {
         if (insertedNotification != null) {
             notificationRepository.delete(insertedNotification);
             insertedNotification = null;

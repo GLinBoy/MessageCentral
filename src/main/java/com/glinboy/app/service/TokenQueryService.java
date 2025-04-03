@@ -96,30 +96,19 @@ public class TokenQueryService extends QueryService<Token> {
         Specification<Token> specification = Specification.where(null);
         if (criteria != null) {
             // This has to be called first, because the distinct method returns null
-            if (criteria.getDistinct() != null) {
-                specification = specification.and(distinct(criteria.getDistinct()));
-            }
-            if (criteria.getId() != null) {
-                specification = specification.and(buildRangeSpecification(criteria.getId(), Token_.id));
-            }
-            if (criteria.getName() != null) {
-                specification = specification.and(buildStringSpecification(criteria.getName(), Token_.name));
-            }
-            if (criteria.getToken() != null) {
-                specification = specification.and(buildStringSpecification(criteria.getToken(), Token_.token));
-            }
-            if (criteria.getDisable() != null) {
-                specification = specification.and(buildSpecification(criteria.getDisable(), Token_.disable));
-            }
-            if (criteria.getCreatedAt() != null) {
-                specification = specification.and(buildRangeSpecification(criteria.getCreatedAt(), Token_.createdAt));
-            }
-            if (criteria.getDeprecateAt() != null) {
-                specification = specification.and(buildRangeSpecification(criteria.getDeprecateAt(), Token_.deprecateAt));
-            }
-            if (criteria.getRoles() != null) {
-                specification = specification.and(buildRangeSpecification(criteria.getRoles(), Token_.roles));
-            }
+            specification = Specification.allOf(
+                Boolean.TRUE.equals(criteria.getDistinct()) ? distinct(criteria.getDistinct()) : null,
+                buildRangeSpecification(criteria.getId(), Token_.id),
+                buildStringSpecification(criteria.getName(), Token_.name),
+                buildStringSpecification(criteria.getToken(), Token_.token),
+                buildSpecification(criteria.getDisable(), Token_.disable),
+                buildRangeSpecification(criteria.getDeprecateAt(), Token_.deprecateAt),
+                buildRangeSpecification(criteria.getRoles(), Token_.roles),
+                buildRangeSpecification(criteria.getCreatedAt(), Token_.createdAt),
+                buildStringSpecification(criteria.getCreatedBy(), Token_.createdBy),
+                buildRangeSpecification(criteria.getUpdatedAt(), Token_.updatedAt),
+                buildStringSpecification(criteria.getUpdatedBy(), Token_.updatedBy)
+            );
         }
         return specification;
     }

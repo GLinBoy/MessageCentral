@@ -108,12 +108,12 @@ class ShortMessageResourceIT {
     }
 
     @BeforeEach
-    public void initTest() {
+    void initTest() {
         shortMessage = createEntity();
     }
 
     @AfterEach
-    public void cleanup() {
+    void cleanup() {
         if (insertedShortMessage != null) {
             shortMessageRepository.delete(insertedShortMessage);
             insertedShortMessage = null;
