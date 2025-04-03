@@ -1,0 +1,45 @@
+{
+  "annotations": {
+    "changelogDate": "20241228112609"
+  },
+  "applications": ["MessageCentral"],
+  "dto": "mapstruct",
+  "fields": [
+    {
+      "fieldName": "phoneNumber",
+      "fieldType": "String",
+      "fieldValidateRules": ["required", "minlength", "maxlength", "pattern"],
+      "fieldValidateRulesMaxlength": "15",
+      "fieldValidateRulesMinlength": "7",
+      "fieldValidateRulesPattern": "^\\+(?:[0-9]●?){6,14}[0-9]$"
+    },
+    {
+      "fieldName": "content",
+      "fieldType": "String",
+      "fieldValidateRules": ["required", "minlength", "maxlength"],
+      "fieldValidateRulesMaxlength": "160",
+      "fieldValidateRulesMinlength": "6"
+    },
+    {
+      "fieldName": "status",
+      "fieldType": "MessageStatus",
+      "fieldValues": "IN_QUEUE,SENT,FAILED"
+    },
+    {
+      "fieldName": "createdAt",
+      "fieldType": "Instant",
+      "fieldValidateRules": ["required"]
+    },
+    {
+      "fieldName": "createdBy",
+      "fieldType": "String",
+      "fieldValidateRules": ["required"]
+    }
+  ],
+  "jpaMetamodelFiltering": true,
+  "name": "ShortMessage",
+  "pagination": "pagination",
+  "relationships": [],
+  "searchEngine": "no",
+  "service": "serviceImpl"
+}

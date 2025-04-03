@@ -1,0 +1,30 @@
+{
+  "messageCentralApp": {
+    "email": {
+      "home": {
+        "title": "Emails",
+        "refreshListLabel": "Liste aktualisieren",
+        "createLabel": "Email erstellen",
+        "createOrEditLabel": "Email erstellen oder bearbeiten",
+        "notFound": "Keine Emails gefunden"
+      },
+      "created": "Email erstellt mit ID { param }",
+      "updated": "Email aktualisiert mit ID { param }",
+      "deleted": "Email gelöscht mit ID { param }",
+      "delete": {
+        "question": "Soll Email { id } wirklich dauerhaft gelöscht werden?"
+      },
+      "detail": {
+        "title": "Email"
+      },
+      "id": "ID",
+      "receiver": "Receiver",
+      "subject": "Subject",
+      "content": "Content",
+      "status": "Status",
+      "emailType": "Email Type",
+      "createdAt": "Created At",
+      "createdBy": "Created By"
+    }
+  }
+}

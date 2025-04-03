@@ -1,0 +1,32 @@
+{
+  "messageCentralApp": {
+    "notification": {
+      "home": {
+        "title": "Notifications",
+        "refreshListLabel": "Liste aktualisieren",
+        "createLabel": "Notification erstellen",
+        "createOrEditLabel": "Notification erstellen oder bearbeiten",
+        "notFound": "Keine Notifications gefunden"
+      },
+      "created": "Notification erstellt mit ID { param }",
+      "updated": "Notification aktualisiert mit ID { param }",
+      "deleted": "Notification gelöscht mit ID { param }",
+      "delete": {
+        "question": "Soll Notification { id } wirklich dauerhaft gelöscht werden?"
+      },
+      "detail": {
+        "title": "Notification"
+      },
+      "id": "ID",
+      "username": "Username",
+      "token": "Token",
+      "subject": "Subject",
+      "content": "Content",
+      "image": "Image",
+      "status": "Status",
+      "createdAt": "Created At",
+      "createdBy": "Created By",
+      "data": "Data"
+    }
+  }
+}

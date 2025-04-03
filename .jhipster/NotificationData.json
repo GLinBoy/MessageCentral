@@ -1,0 +1,32 @@
+{
+  "annotations": {
+    "changelogDate": "20241228112611"
+  },
+  "applications": ["MessageCentral"],
+  "fields": [
+    {
+      "fieldName": "dataKey",
+      "fieldType": "String",
+      "fieldValidateRules": ["required", "maxlength"],
+      "fieldValidateRulesMaxlength": "128"
+    },
+    {
+      "fieldName": "dataValue",
+      "fieldType": "String",
+      "fieldValidateRules": ["required", "maxlength"],
+      "fieldValidateRulesMaxlength": "256"
+    }
+  ],
+  "name": "NotificationData",
+  "relationships": [
+    {
+      "otherEntityName": "notification",
+      "otherEntityRelationshipName": "data",
+      "relationshipName": "notification",
+      "relationshipSide": "right",
+      "relationshipType": "many-to-one",
+      "relationshipValidateRules": "required"
+    }
+  ],
+  "searchEngine": "no"
+}
