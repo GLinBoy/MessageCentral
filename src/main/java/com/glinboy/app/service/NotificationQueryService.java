@@ -97,35 +97,19 @@ public class NotificationQueryService extends QueryService<Notification> {
         Specification<Notification> specification = Specification.where(null);
         if (criteria != null) {
             // This has to be called first, because the distinct method returns null
-            if (criteria.getDistinct() != null) {
-                specification = specification.and(distinct(criteria.getDistinct()));
-            }
-            if (criteria.getId() != null) {
-                specification = specification.and(buildRangeSpecification(criteria.getId(), Notification_.id));
-            }
-            if (criteria.getUsername() != null) {
-                specification = specification.and(buildStringSpecification(criteria.getUsername(), Notification_.username));
-            }
-            if (criteria.getToken() != null) {
-                specification = specification.and(buildStringSpecification(criteria.getToken(), Notification_.token));
-            }
-            if (criteria.getSubject() != null) {
-                specification = specification.and(buildStringSpecification(criteria.getSubject(), Notification_.subject));
-            }
-            if (criteria.getContent() != null) {
-                specification = specification.and(buildStringSpecification(criteria.getContent(), Notification_.content));
-            }
-            if (criteria.getImage() != null) {
-                specification = specification.and(buildStringSpecification(criteria.getImage(), Notification_.image));
-            }
-            if (criteria.getStatus() != null) {
-                specification = specification.and(buildSpecification(criteria.getStatus(), Notification_.status));
-            }
-            if (criteria.getDataId() != null) {
-                specification = specification.and(
-                    buildSpecification(criteria.getDataId(), root -> root.join(Notification_.data, JoinType.LEFT).get(NotificationData_.id))
-                );
-            }
+            specification = Specification.allOf(
+                Boolean.TRUE.equals(criteria.getDistinct()) ? distinct(criteria.getDistinct()) : null,
+                buildRangeSpecification(criteria.getId(), Notification_.id),
+                buildStringSpecification(criteria.getUsername(), Notification_.username),
+                buildStringSpecification(criteria.getToken(), Notification_.token),
+                buildStringSpecification(criteria.getSubject(), Notification_.subject),
+                buildStringSpecification(criteria.getContent(), Notification_.content),
+                buildStringSpecification(criteria.getImage(), Notification_.image),
+                buildSpecification(criteria.getStatus(), Notification_.status),
+                buildRangeSpecification(criteria.getCreatedAt(), Notification_.createdAt),
+                buildStringSpecification(criteria.getCreatedBy(), Notification_.createdBy),
+                buildSpecification(criteria.getDataId(), root -> root.join(Notification_.data, JoinType.LEFT).get(NotificationData_.id))
+            );
         }
         return specification;
     }

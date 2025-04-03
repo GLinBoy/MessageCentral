@@ -96,21 +96,15 @@ public class ShortMessageQueryService extends QueryService<ShortMessage> {
         Specification<ShortMessage> specification = Specification.where(null);
         if (criteria != null) {
             // This has to be called first, because the distinct method returns null
-            if (criteria.getDistinct() != null) {
-                specification = specification.and(distinct(criteria.getDistinct()));
-            }
-            if (criteria.getId() != null) {
-                specification = specification.and(buildRangeSpecification(criteria.getId(), ShortMessage_.id));
-            }
-            if (criteria.getPhoneNumber() != null) {
-                specification = specification.and(buildStringSpecification(criteria.getPhoneNumber(), ShortMessage_.phoneNumber));
-            }
-            if (criteria.getContent() != null) {
-                specification = specification.and(buildStringSpecification(criteria.getContent(), ShortMessage_.content));
-            }
-            if (criteria.getStatus() != null) {
-                specification = specification.and(buildSpecification(criteria.getStatus(), ShortMessage_.status));
-            }
+            specification = Specification.allOf(
+                Boolean.TRUE.equals(criteria.getDistinct()) ? distinct(criteria.getDistinct()) : null,
+                buildRangeSpecification(criteria.getId(), ShortMessage_.id),
+                buildStringSpecification(criteria.getPhoneNumber(), ShortMessage_.phoneNumber),
+                buildStringSpecification(criteria.getContent(), ShortMessage_.content),
+                buildSpecification(criteria.getStatus(), ShortMessage_.status),
+                buildRangeSpecification(criteria.getCreatedAt(), ShortMessage_.createdAt),
+                buildStringSpecification(criteria.getCreatedBy(), ShortMessage_.createdBy)
+            );
         }
         return specification;
     }
