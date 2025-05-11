@@ -1,9 +1,11 @@
 package com.glinboy.app.web.rest;
 
-import static com.glinboy.app.security.SecurityUtils.AUTHORITIES_KEY;
+import static com.glinboy.app.security.SecurityUtils.AUTHORITIES_CLAIM;
 import static com.glinboy.app.security.SecurityUtils.JWT_ALGORITHM;
+import static com.glinboy.app.security.SecurityUtils.USER_ID_CLAIM;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.glinboy.app.security.DomainUserDetailsService.UserWithId;
 import com.glinboy.app.web.rest.vm.LoginVM;
 import jakarta.validation.Valid;
 import java.security.Principal;
@@ -90,15 +92,17 @@ public class AuthenticateController {
         }
 
         // @formatter:off
-        JwtClaimsSet claims = JwtClaimsSet.builder()
+        JwtClaimsSet.Builder builder = JwtClaimsSet.builder()
             .issuedAt(now)
             .expiresAt(validity)
             .subject(authentication.getName())
-            .claim(AUTHORITIES_KEY, authorities)
-            .build();
+            .claim(AUTHORITIES_CLAIM, authorities);
+        if (authentication.getPrincipal() instanceof UserWithId user) {
+            builder.claim(USER_ID_CLAIM, user.getId());
+        }
 
         JwsHeader jwsHeader = JwsHeader.with(JWT_ALGORITHM).build();
-        return this.jwtEncoder.encode(JwtEncoderParameters.from(jwsHeader, claims)).getTokenValue();
+        return this.jwtEncoder.encode(JwtEncoderParameters.from(jwsHeader, builder.build())).getTokenValue();
     }
 
     /**

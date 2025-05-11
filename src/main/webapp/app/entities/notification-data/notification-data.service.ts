@@ -5,7 +5,7 @@ import { type INotificationData } from '@/shared/model/notification-data.model';
 const baseApiUrl = 'api/notification-data';
 
 export default class NotificationDataService {
-  public find(id: number): Promise<INotificationData> {
+  find(id: number): Promise<INotificationData> {
     return new Promise<INotificationData>((resolve, reject) => {
       axios
         .get(`${baseApiUrl}/${id}`)
@@ -18,7 +18,7 @@ export default class NotificationDataService {
     });
   }
 
-  public retrieve(): Promise<any> {
+  retrieve(): Promise<any> {
     return new Promise<any>((resolve, reject) => {
       axios
         .get(baseApiUrl)
@@ -31,7 +31,7 @@ export default class NotificationDataService {
     });
   }
 
-  public delete(id: number): Promise<any> {
+  delete(id: number): Promise<any> {
     return new Promise<any>((resolve, reject) => {
       axios
         .delete(`${baseApiUrl}/${id}`)
@@ -44,7 +44,7 @@ export default class NotificationDataService {
     });
   }
 
-  public create(entity: INotificationData): Promise<INotificationData> {
+  create(entity: INotificationData): Promise<INotificationData> {
     return new Promise<INotificationData>((resolve, reject) => {
       axios
         .post(`${baseApiUrl}`, entity)
@@ -57,7 +57,7 @@ export default class NotificationDataService {
     });
   }
 
-  public update(entity: INotificationData): Promise<INotificationData> {
+  update(entity: INotificationData): Promise<INotificationData> {
     return new Promise<INotificationData>((resolve, reject) => {
       axios
         .put(`${baseApiUrl}/${entity.id}`, entity)
@@ -70,7 +70,7 @@ export default class NotificationDataService {
     });
   }
 
-  public partialUpdate(entity: INotificationData): Promise<INotificationData> {
+  partialUpdate(entity: INotificationData): Promise<INotificationData> {
     return new Promise<INotificationData>((resolve, reject) => {
       axios
         .patch(`${baseApiUrl}/${entity.id}`, entity)

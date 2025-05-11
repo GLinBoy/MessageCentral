@@ -7,7 +7,7 @@ import { type IShortMessage, type IShortMessages } from '@/shared/model/short-me
 const baseApiUrl = 'api/short-messages';
 
 export default class ShortMessageService {
-  public find(id: number): Promise<IShortMessage> {
+  find(id: number): Promise<IShortMessage> {
     return new Promise<IShortMessage>((resolve, reject) => {
       axios
         .get(`${baseApiUrl}/${id}`)
@@ -20,7 +20,7 @@ export default class ShortMessageService {
     });
   }
 
-  public retrieve(paginationQuery?: any): Promise<any> {
+  retrieve(paginationQuery?: any): Promise<any> {
     return new Promise<any>((resolve, reject) => {
       axios
         .get(`${baseApiUrl}?${buildPaginationQueryOpts(paginationQuery)}`)
@@ -33,7 +33,7 @@ export default class ShortMessageService {
     });
   }
 
-  public delete(id: number): Promise<any> {
+  delete(id: number): Promise<any> {
     return new Promise<any>((resolve, reject) => {
       axios
         .delete(`${baseApiUrl}/${id}`)
@@ -46,7 +46,7 @@ export default class ShortMessageService {
     });
   }
 
-  public create(entity: IShortMessage): Promise<IShortMessage> {
+  create(entity: IShortMessage): Promise<IShortMessage> {
     return new Promise<IShortMessage>((resolve, reject) => {
       axios
         .post(`${baseApiUrl}`, entity)
@@ -59,7 +59,7 @@ export default class ShortMessageService {
     });
   }
 
-  public update(entity: IShortMessage): Promise<IShortMessage> {
+  update(entity: IShortMessage): Promise<IShortMessage> {
     return new Promise<IShortMessage>((resolve, reject) => {
       axios
         .put(`${baseApiUrl}/${entity.id}`, entity)
@@ -72,7 +72,7 @@ export default class ShortMessageService {
     });
   }
 
-  public partialUpdate(entity: IShortMessage): Promise<IShortMessage> {
+  partialUpdate(entity: IShortMessage): Promise<IShortMessage> {
     return new Promise<IShortMessage>((resolve, reject) => {
       axios
         .patch(`${baseApiUrl}/${entity.id}`, entity)
