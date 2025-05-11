@@ -7,7 +7,7 @@ import { type IToken } from '@/shared/model/token.model';
 const baseApiUrl = 'api/tokens';
 
 export default class TokenService {
-  public find(id: number): Promise<IToken> {
+  find(id: number): Promise<IToken> {
     return new Promise<IToken>((resolve, reject) => {
       axios
         .get(`${baseApiUrl}/${id}`)
@@ -20,7 +20,7 @@ export default class TokenService {
     });
   }
 
-  public retrieve(paginationQuery?: any): Promise<any> {
+  retrieve(paginationQuery?: any): Promise<any> {
     return new Promise<any>((resolve, reject) => {
       axios
         .get(`${baseApiUrl}?${buildPaginationQueryOpts(paginationQuery)}`)
@@ -33,7 +33,7 @@ export default class TokenService {
     });
   }
 
-  public delete(id: number): Promise<any> {
+  delete(id: number): Promise<any> {
     return new Promise<any>((resolve, reject) => {
       axios
         .delete(`${baseApiUrl}/${id}`)
@@ -46,7 +46,7 @@ export default class TokenService {
     });
   }
 
-  public create(entity: IToken): Promise<IToken> {
+  create(entity: IToken): Promise<IToken> {
     return new Promise<IToken>((resolve, reject) => {
       axios
         .post(`${baseApiUrl}`, entity)
@@ -59,7 +59,7 @@ export default class TokenService {
     });
   }
 
-  public update(entity: IToken): Promise<IToken> {
+  update(entity: IToken): Promise<IToken> {
     return new Promise<IToken>((resolve, reject) => {
       axios
         .put(`${baseApiUrl}/${entity.id}`, entity)
@@ -72,7 +72,7 @@ export default class TokenService {
     });
   }
 
-  public partialUpdate(entity: IToken): Promise<IToken> {
+  partialUpdate(entity: IToken): Promise<IToken> {
     return new Promise<IToken>((resolve, reject) => {
       axios
         .patch(`${baseApiUrl}/${entity.id}`, entity)

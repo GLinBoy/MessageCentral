@@ -20,7 +20,7 @@ import java.util.Optional;
 /**
  * Performance test for the ShortMessage entity.
  *
- * @see <a href="https://github.com/jhipster/generator-jhipster/tree/v8.10.0/generators/gatling#logging-tips">Logging tips</a>
+ * @see <a href="https://github.com/jhipster/generator-jhipster/tree/v8.11.0/generators/gatling#logging-tips">Logging tips</a>
  */
 public class ShortMessageGatlingTest extends Simulation {
 

@@ -7,7 +7,7 @@ import { type IEmail } from '@/shared/model/email.model';
 const baseApiUrl = 'api/emails';
 
 export default class EmailService {
-  public find(id: number): Promise<IEmail> {
+  find(id: number): Promise<IEmail> {
     return new Promise<IEmail>((resolve, reject) => {
       axios
         .get(`${baseApiUrl}/${id}`)
@@ -20,7 +20,7 @@ export default class EmailService {
     });
   }
 
-  public retrieve(paginationQuery?: any): Promise<any> {
+  retrieve(paginationQuery?: any): Promise<any> {
     return new Promise<any>((resolve, reject) => {
       axios
         .get(`${baseApiUrl}?${buildPaginationQueryOpts(paginationQuery)}`)
@@ -33,7 +33,7 @@ export default class EmailService {
     });
   }
 
-  public delete(id: number): Promise<any> {
+  delete(id: number): Promise<any> {
     return new Promise<any>((resolve, reject) => {
       axios
         .delete(`${baseApiUrl}/${id}`)
@@ -46,7 +46,7 @@ export default class EmailService {
     });
   }
 
-  public create(entity: IEmail): Promise<IEmail> {
+  create(entity: IEmail): Promise<IEmail> {
     return new Promise<IEmail>((resolve, reject) => {
       axios
         .post(`${baseApiUrl}`, entity)
@@ -59,7 +59,7 @@ export default class EmailService {
     });
   }
 
-  public update(entity: IEmail): Promise<IEmail> {
+  update(entity: IEmail): Promise<IEmail> {
     return new Promise<IEmail>((resolve, reject) => {
       axios
         .put(`${baseApiUrl}/${entity.id}`, entity)
@@ -72,7 +72,7 @@ export default class EmailService {
     });
   }
 
-  public partialUpdate(entity: IEmail): Promise<IEmail> {
+  partialUpdate(entity: IEmail): Promise<IEmail> {
     return new Promise<IEmail>((resolve, reject) => {
       axios
         .patch(`${baseApiUrl}/${entity.id}`, entity)

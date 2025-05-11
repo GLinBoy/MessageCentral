@@ -7,7 +7,7 @@ import { type INotification } from '@/shared/model/notification.model';
 const baseApiUrl = 'api/notifications';
 
 export default class NotificationService {
-  public find(id: number): Promise<INotification> {
+  find(id: number): Promise<INotification> {
     return new Promise<INotification>((resolve, reject) => {
       axios
         .get(`${baseApiUrl}/${id}`)
@@ -20,7 +20,7 @@ export default class NotificationService {
     });
   }
 
-  public retrieve(paginationQuery?: any): Promise<any> {
+  retrieve(paginationQuery?: any): Promise<any> {
     return new Promise<any>((resolve, reject) => {
       axios
         .get(`${baseApiUrl}?${buildPaginationQueryOpts(paginationQuery)}`)
@@ -33,7 +33,7 @@ export default class NotificationService {
     });
   }
 
-  public delete(id: number): Promise<any> {
+  delete(id: number): Promise<any> {
     return new Promise<any>((resolve, reject) => {
       axios
         .delete(`${baseApiUrl}/${id}`)
@@ -46,7 +46,7 @@ export default class NotificationService {
     });
   }
 
-  public create(entity: INotification): Promise<INotification> {
+  create(entity: INotification): Promise<INotification> {
     return new Promise<INotification>((resolve, reject) => {
       axios
         .post(`${baseApiUrl}`, entity)
@@ -59,7 +59,7 @@ export default class NotificationService {
     });
   }
 
-  public update(entity: INotification): Promise<INotification> {
+  update(entity: INotification): Promise<INotification> {
     return new Promise<INotification>((resolve, reject) => {
       axios
         .put(`${baseApiUrl}/${entity.id}`, entity)
@@ -72,7 +72,7 @@ export default class NotificationService {
     });
   }
 
-  public partialUpdate(entity: INotification): Promise<INotification> {
+  partialUpdate(entity: INotification): Promise<INotification> {
     return new Promise<INotification>((resolve, reject) => {
       axios
         .patch(`${baseApiUrl}/${entity.id}`, entity)
